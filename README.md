@@ -29,4 +29,4 @@ This repository contains code for detecting structural breaks in time series dat
 
 ## Baseline Model
 
-The baseline model implements a simple approach to detecting structural breaks in time series data. See `notebooks/baseline.ipynb` for details. 
+The baseline model implements a simple approach to detecting structural breaks in time series data. See `notebooks/baseline.ipynb` for details
