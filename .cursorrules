@@ -1,0 +1,54 @@
+[formatting]
+# Enforce Black formatting
+formatter = black
+line_length = 88
+skip_string_normalization = false
+
+[linting]
+# Enable flake8 with useful plugins
+linter = flake8
+extend_ignore = E203, W503
+max-line-length = 88
+plugins = flake8-bugbear, flake8-comprehensions, flake8-docstrings
+
+[naming]
+# Google-style naming conventions
+variable_case = snake_case
+function_case = snake_case
+class_case = PascalCase
+constant_case = UPPER_CASE
+
+[docstrings]
+# Use NumPy-style docstrings
+style = numpy
+require_docstrings = true
+require_return_type = true
+require_param_type = true
+
+[imports]
+# Use isort for import sorting
+sorter = isort
+profile = black
+force_single_line = false
+combine_as_imports = true
+lines_between_types = 1
+
+[testing]
+# Use pytest and coverage
+test_framework = pytest
+min_coverage = 85
+
+[notebooks]
+# Clean outputs before commit
+clear_outputs_on_save = true
+trusted_sources = true
+
+[version_control]
+# Prevent commits to main directly
+protect_branches = main
+allow_merge_requests_only = true
+
+[security]
+# Scan for secrets
+scan_for_secrets = true
+check_dependencies = true
