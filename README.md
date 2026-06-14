@@ -7,19 +7,22 @@ Detect structural breaks in time-series data using a reproducible baseline workf
 
 Structural breaks are abrupt changes in the data-generating process of a time series. In finance and economics, these changes can correspond to regime shifts, policy changes, market stress, volatility transitions, or changes in relationships between variables.
 
-This repository currently contains a baseline machine-learning approach and notebook artifacts. The project is being cleaned up into a more professional research codebase with reproducible scripts, tests, and documented modeling workflows.
+This repository contains a machine-learning baseline plus a set of classical and modern change-point detectors, all behind a small, tested Python package.
 
 ## Current status
 
-This is an active research project. The current baseline uses engineered time-series features and a Random Forest classifier to predict whether each observation contains a structural break.
+This is an active research project. Implemented today:
 
-Planned upgrades include:
+- A supervised baseline: engineered time-series features + a Random Forest classifier.
+- Statistical / change-point detectors on a shared interface: **CUSUM**, **rolling z-score**, and **PELT** (via `ruptures`).
+- Synthetic data generators with known break points, a method-comparison workflow, and a plotting helper.
+- An importable package under `src/structural_break/`, a pytest suite, and GitHub Actions CI.
 
-- Statistical change-point methods such as CUSUM and PELT
-- Cleaner package structure under `src/structural_break/`
-- Unit tests and GitHub Actions CI
-- Better experiment tracking and model comparison tables
-- Example charts showing detected break points
+Planned upgrades (see [Roadmap](#professionalization-roadmap)):
+
+- HMM regime detection and Bai-Perron-style multiple-break tests.
+- Experiment tracking and richer visual diagnostics.
+- A notebook walkthrough on the official challenge data.
 
 ## Repository layout
 
@@ -30,10 +33,14 @@ structural-break/
 │       ├── data.py         # CSV loading + column validation
 │       ├── features.py     # Baseline feature engineering
 │       ├── models.py       # scikit-learn pipeline builder
-│       ├── evaluation.py   # Metric helpers
+│       ├── detectors.py    # CUSUM / rolling z-score / PELT detectors
+│       ├── synthetic.py    # Synthetic series with known break points
+│       ├── evaluation.py   # Per-row + point-based metrics
+│       ├── visualization.py# Optional plotting helper
 │       └── predict.py      # Submission/prediction helpers
 ├── scripts/
-│   └── baseline.py         # Thin argparse CLI around the package
+│   ├── baseline.py         # Thin argparse CLI around the package
+│   └── compare_methods.py  # Detector comparison workflow (synthetic data)
 ├── data/                   # Small synthetic sample data (see data/README.md); raw files stay untracked
 │   ├── train.csv
 │   ├── test.csv
@@ -143,20 +150,63 @@ pytest         # tests (synthetic data only — no competition data required)
 The same two commands run in [GitHub Actions](.github/workflows/ci.yml) on every
 push to `main` and every pull request.
 
-## Baseline methodology
+## Methods
 
-The current baseline creates simple time-series features from the `value` column:
+The project pairs a supervised ML baseline with classical/modern change-point
+detectors. Every detector shares one interface — `detector.detect(df)` returns a
+DataFrame with `timestamp`, `break_score`, `has_structural_break`, and `method`:
 
-- Rolling mean and standard deviation
-- Lag features
-- First and second differences
+```python
+from structural_break import CusumDetector, PeltDetector, RollingZScoreDetector
 
-It then fits a scikit-learn pipeline containing:
+result = PeltDetector().detect(df)   # df has 'timestamp' and 'value' columns
+```
 
-- `StandardScaler`
-- `RandomForestClassifier`
+| Method | Detects | Strength | Limitation |
+| ------ | ------- | -------- | ---------- |
+| ML baseline (Random Forest) | Per-row break label from engineered features | Learns from labelled data | Needs labels; not a true change-point model |
+| CUSUM | A single dominant mean shift | Simple, interpretable, parameter-light | Finds only the strongest break; mean-only |
+| Rolling z-score | Local deviations / transitions / outliers | Transparent, no training | Flags transition points, not whole regimes |
+| PELT (`ruptures`) | One or more mean shifts (penalised segmentation) | Handles multiple breaks well | Penalty tuning; mean-shift focused (`l2`) |
 
-This is a useful benchmark, but it should not be considered a final structural-break methodology. Future versions should compare the machine-learning baseline against classical change-point detection methods.
+The **ML baseline** engineers `rolling_mean_3`, `rolling_std_3`, `lag_1`, `lag_2`,
+`diff_1`, and `diff_2` from the `value` column and fits a `StandardScaler` +
+`RandomForestClassifier` pipeline. Each detector documents its scoring and break
+semantics in its class docstring in `src/structural_break/detectors.py`.
+
+### Compare methods
+
+`scripts/compare_methods.py` runs all detectors on a synthetic series with known
+break points and scores each with windowed point-based precision/recall/F1:
+
+```bash
+python scripts/compare_methods.py \
+  --dataset mean_shift \
+  --output outputs/method_comparison.csv \
+  --figure outputs/figures/example_break_detection.png
+```
+
+`--dataset` accepts `mean_shift`, `multiple`, or `variance`.
+
+### Results (synthetic)
+
+The numbers below are computed by the command above on the **synthetic**
+`mean_shift` dataset (single mean shift at index 60, tolerance ±5). They are not
+official competition results — they demonstrate detector behaviour on data with a
+known ground truth.
+
+| Method | Precision | Recall | F1 | Notes |
+| ------ | --------: | -----: | -: | ----- |
+| CUSUM | 1.00 | 1.00 | 1.00 | Single dominant mean shift |
+| Rolling z-score | 1.00 | 1.00 | 1.00 | Flags the transition |
+| PELT | 1.00 | 1.00 | 1.00 | Penalised segmentation |
+| ML baseline | 1.00 | 1.00 | 1.00 | Trained on an independent series |
+
+On harder cases the tradeoffs show: on the `multiple` dataset CUSUM recovers only
+the dominant break (recall 0.5) while PELT recovers both; on the `variance`
+dataset the mean-based detectors miss the volatility shift that the rolling
+z-score still flags. Results against the official ADIA Lab challenge data are
+**pending** and will be reported only when reproducible.
 
 ## Professionalization roadmap
 
