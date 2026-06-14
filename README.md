@@ -1,5 +1,8 @@
 # Structural Break Detection
 
+[![CI](https://github.com/WolfpackOfOne/structural-break/actions/workflows/ci.yml/badge.svg)](https://github.com/WolfpackOfOne/structural-break/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 Detect structural breaks in time-series data using a reproducible baseline workflow built for the ADIA Lab Structural Break Challenge hosted by CrunchDAO.
 
 Structural breaks are abrupt changes in the data-generating process of a time series. In finance and economics, these changes can correspond to regime shifts, policy changes, market stress, volatility transitions, or changes in relationships between variables.
@@ -123,6 +126,22 @@ from structural_break import (
     build_submission,
 )
 ```
+
+## Development
+
+Install the development dependencies (runtime requirements plus `pytest` and `ruff`)
+and run the checks locally:
+
+```bash
+pip install -r requirements-dev.txt
+pip install -e .
+
+ruff check .   # lint
+pytest         # tests (synthetic data only — no competition data required)
+```
+
+The same two commands run in [GitHub Actions](.github/workflows/ci.yml) on every
+push to `main` and every pull request.
 
 ## Baseline methodology
 

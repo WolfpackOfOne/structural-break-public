@@ -1,0 +1,4 @@
+# Development dependencies. Installs the runtime requirements plus tooling.
+-r requirements.txt
+pytest>=7.0
+ruff>=0.1
