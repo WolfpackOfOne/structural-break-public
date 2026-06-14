@@ -2,12 +2,41 @@
 
 [![CI](https://github.com/WolfpackOfOne/structural-break/actions/workflows/ci.yml/badge.svg)](https://github.com/WolfpackOfOne/structural-break/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 
-Detect structural breaks in time-series data using a reproducible baseline workflow built for the ADIA Lab Structural Break Challenge hosted by CrunchDAO.
+> Detecting regime shifts and structural breaks in time-series data using
+> statistical change-point methods and machine-learning baselines.
 
-Structural breaks are abrupt changes in the data-generating process of a time series. In finance and economics, these changes can correspond to regime shifts, policy changes, market stress, volatility transitions, or changes in relationships between variables.
+Structural breaks are abrupt changes in the data-generating process of a time
+series. In finance and economics they show up as **regime shifts, market-stress
+periods, volatility transitions, model instability, and changing relationships
+between variables** — exactly the moments risk and quant teams most need to catch.
 
-This repository contains a machine-learning baseline plus a set of classical and modern change-point detectors, all behind a small, tested Python package.
+This repository contains a machine-learning baseline plus a set of classical and
+modern change-point detectors (CUSUM, rolling z-score, PELT), all behind a small,
+tested Python package. It was built around the ADIA Lab Structural Break Challenge
+hosted by CrunchDAO.
+
+![PELT change-point detection on a synthetic multi-regime series](docs/images/example_break_detection.png)
+
+*PELT recovering both break points on a synthetic three-regime series. Green lines
+mark the true breaks; red dashes mark the predicted breaks. Reproduce with
+`python scripts/compare_methods.py --dataset multiple --figure out.png`.*
+
+### Why structural breaks matter
+
+When a market regime changes, models trained on the old regime quietly degrade,
+risk estimates drift, and relationships that held for years stop holding. Detecting
+*where* and *when* the data-generating process changes is foundational to risk
+management, macro-regime analysis, and robust financial machine learning. This
+project is a compact, reproducible reference for how to approach that problem — from
+a competition baseline to a maintainable research workflow.
+
+### Documentation
+
+- [Methodology](docs/methodology.md) — what a structural break is and how each detector works.
+- [Data note](docs/data.md) — challenge context, schema, and what is / isn't included.
+- [Contributing](CONTRIBUTING.md) — setup, checks, and conventions.
 
 ## Current status
 
@@ -18,7 +47,7 @@ This is an active research project. Implemented today:
 - Synthetic data generators with known break points, a method-comparison workflow, and a plotting helper.
 - An importable package under `src/structural_break/`, a pytest suite, and GitHub Actions CI.
 
-Planned upgrades (see [Roadmap](#professionalization-roadmap)):
+Planned upgrades (see [Roadmap](#roadmap)):
 
 - HMM regime detection and Bai-Perron-style multiple-break tests.
 - Experiment tracking and richer visual diagnostics.
@@ -54,6 +83,34 @@ structural-break/
 ```
 
 > Note: The repository previously included local virtual environment files. New virtual environments should be created locally and left untracked.
+
+## Architecture
+
+The package separates data handling, modelling, and evaluation; two thin CLI
+scripts wire them into runnable workflows.
+
+```mermaid
+flowchart LR
+    A[CSV / synthetic series<br/>timestamp, value] --> B[data.py<br/>load + validate]
+    B --> C[features.py<br/>engineered features]
+    B --> D[detectors.py<br/>CUSUM · z-score · PELT]
+    C --> E[models.py<br/>Random Forest baseline]
+    E --> F[predict.py<br/>submission]
+    D --> G[evaluation.py<br/>point-based metrics]
+    E --> G
+    F --> H[(outputs/)]
+    G --> H
+    D --> I[visualization.py<br/>plots]
+
+    subgraph CLI
+        J[scripts/baseline.py]
+        K[scripts/compare_methods.py]
+    end
+    J -.-> C
+    J -.-> E
+    K -.-> D
+    K -.-> G
+```
 
 ## Setup
 
@@ -208,49 +265,29 @@ dataset the mean-based detectors miss the volatility shift that the rolling
 z-score still flags. Results against the official ADIA Lab challenge data are
 **pending** and will be reported only when reproducible.
 
-## Professionalization roadmap
+## Roadmap
 
-### Phase 1 — Repository hygiene
+**Done**
 
-- Remove committed virtual environment files
-- Keep generated outputs out of version control
-- Ensure a fresh clone can run the baseline
-- Add a concise, accurate README
+- [x] Repository hygiene and a reproducible baseline (Phase 1).
+- [x] Refactor into an importable `src/structural_break/` package (Phase 2).
+- [x] pytest suite + Ruff + GitHub Actions CI (Phase 3).
+- [x] Change-point detectors — CUSUM, rolling z-score, PELT — with synthetic
+      datasets, a comparison workflow, and visualization (Phase 4).
 
-### Phase 2 — Package the project
+**Planned**
 
-Move reusable logic out of notebooks/scripts and into:
+- [ ] HMM regime detection.
+- [ ] Bai-Perron-style multiple-break test (or a `statsmodels` approximation).
+- [ ] Bayesian / online change-point detection.
+- [ ] Experiment tracking and a results dashboard.
+- [ ] Richer visual diagnostics (score overlays, multi-method comparison plots).
+- [ ] A notebook walkthrough on the official challenge data.
 
-```text
-src/structural_break/
-├── features.py
-├── models.py
-├── evaluation.py
-└── io.py
-```
+## Suggested GitHub topics
 
-### Phase 3 — Testing and CI
-
-Add:
-
-- `pytest`
-- Unit tests for feature engineering
-- Unit tests for prediction output shape
-- GitHub Actions for linting and tests
-
-### Phase 4 — Research methods
-
-Add and compare:
-
-- CUSUM
-- PELT
-- Bai-Perron-style multiple break tests
-- Bayesian change-point detection
-- Hidden Markov Models for regime detection
-
-## Why this project matters
-
-Structural-break detection is directly relevant to quantitative research, risk management, macroeconomic analysis, and financial machine learning. A polished version of this repository can serve as a public research example showing how to move from a competition baseline to a maintainable research workflow.
+`time-series` · `structural-breaks` · `change-point-detection` · `quant-finance` ·
+`machine-learning` · `python` · `scikit-learn`
 
 ## License
 
