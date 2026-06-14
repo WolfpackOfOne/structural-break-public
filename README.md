@@ -1,204 +1,159 @@
-# Structural Break Detection - ADIA Lab Challenge
+# Structural Break Detection
 
-## 🔍 Project Overview
+Detect structural breaks in time-series data using a reproducible baseline workflow built for the ADIA Lab Structural Break Challenge hosted by CrunchDAO.
 
-This repository contains our solution for the [ADIA Lab Structural Break Challenge](https://www.crunchdao.com/competitions/structural-break) hosted by CrunchDAO. The goal is to identify structural breaks in time series data using a hybrid approach that combines statistical methods, machine learning, and deep learning techniques.
+Structural breaks are abrupt changes in the data-generating process of a time series. In finance and economics, these changes can correspond to regime shifts, policy changes, market stress, volatility transitions, or changes in relationships between variables.
 
-Structural breaks are sudden changes in time series data that represent significant shifts in underlying patterns or relationships. Detecting these breaks is crucial in financial markets, economic forecasting, and risk management. Our approach aims to provide robust and accurate detection methods that can be applied across various domains.
+This repository currently contains a baseline machine-learning approach and notebook artifacts. The project is being cleaned up into a more professional research codebase with reproducible scripts, tests, and documented modeling workflows.
 
-## 📁 Directory Structure
+## Current status
 
-```
+This is an active research project. The current baseline uses engineered time-series features and a Random Forest classifier to predict whether each observation contains a structural break.
+
+Planned upgrades include:
+
+- Statistical change-point methods such as CUSUM and PELT
+- Cleaner package structure under `src/structural_break/`
+- Unit tests and GitHub Actions CI
+- Better experiment tracking and model comparison tables
+- Example charts showing detected break points
+
+## Repository layout
+
+```text
 structural-break/
-│
-├── data/                         # Data files
-│   ├── train.csv                 # Training dataset
-│   ├── test.csv                  # Test dataset
-│   └── metadata.csv              # Additional information about the data
-│
-├── notebooks/                    # Jupyter notebooks
-│   ├── exploratory_analysis.ipynb    # Initial data exploration
-│   ├── feature_engineering.ipynb     # Feature creation and processing
-│   ├── statistical_methods.ipynb     # Implementation of statistical approaches
-│   ├── ml_models.ipynb               # Machine learning models
-│   ├── deep_learning.ipynb           # Deep learning implementations
-│   └── baseline.ipynb                # Simple baseline approach
-│
-├── src/                          # Source code
-│   ├── data_processing/          # Data processing modules
-│   │   ├── __init__.py
-│   │   ├── preprocessing.py      # Data preprocessing functions
-│   │   └── feature_engineering.py # Feature creation
-│   │
-│   ├── models/                   # Model implementations
-│   │   ├── __init__.py
-│   │   ├── statistical.py        # Statistical methods (CUSUM, PELT, etc.)
-│   │   ├── ml_models.py          # Machine learning models
-│   │   └── deep_learning.py      # Deep learning implementations
-│   │
-│   ├── evaluation/               # Evaluation code
-│   │   ├── __init__.py
-│   │   ├── metrics.py            # Performance metrics calculations
-│   │   └── visualization.py      # Result visualization
-│   │
-│   └── utils/                    # Utility functions
-│       ├── __init__.py
-│       └── helpers.py            # Helper functions
-│
-├── scripts/                      # Execution scripts
-│   ├── train.py                  # Model training script
-│   ├── predict.py                # Prediction script for new data
-│   ├── evaluate.py               # Evaluation script
-│   └── baseline.py               # Baseline model implementation
-│
-├── outputs/                      # Model outputs
-│   ├── models/                   # Saved model files
-│   ├── predictions/              # Model predictions
-│   ├── visualizations/           # Generated plots and visualizations
-│   └── submission.csv            # Competition submission file
-│
-├── tests/                        # Unit tests
-│   ├── test_preprocessing.py
-│   ├── test_models.py
-│   └── test_evaluation.py
-│
-├── configs/                      # Configuration files
-│   ├── model_config.yaml         # Model hyperparameters
-│   └── training_config.yaml      # Training configuration
-│
-├── README.md                     # Project documentation
-├── requirements.txt              # Project dependencies
-└── setup.py                      # Package setup script
+├── data/                  # Competition data; large/raw files should not be committed
+├── notebooks/             # Exploratory notebooks
+├── outputs/               # Generated predictions and model outputs; ignored going forward
+├── scripts/
+│   └── baseline.py        # Current baseline training/prediction script
+├── requirements.txt       # Python dependencies
+├── .gitignore             # Local files, virtualenvs, and generated artifacts
+├── LICENSE                # MIT license
+└── README.md
 ```
 
-## 🛠️ Setup Instructions
+> Note: The repository previously included local virtual environment files. New virtual environments should be created locally and left untracked.
 
-### Prerequisites
+## Setup
 
-- Python 3.9+
-- pip package manager
-- Virtual environment tool (optional but recommended)
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/structural-break-detection.git
-   cd structural-break-detection
-   ```
-
-2. Create and activate a virtual environment (optional):
-   ```bash
-   python -m venv venv
-   
-   # On Windows
-   venv\Scripts\activate
-   
-   # On macOS/Linux
-   source venv/bin/activate
-   ```
-
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. Download the competition data and place it in the `data/` directory.
-
-## 🚀 How to Train and Evaluate Models
-
-### Data Preprocessing
+Clone the repository:
 
 ```bash
-python scripts/preprocessing.py --input data/train.csv --output data/processed/train_processed.csv
+git clone https://github.com/WolfpackOfOne/structural-break.git
+cd structural-break
 ```
 
-### Training Models
-
-To train the model with default parameters:
+Create and activate a virtual environment:
 
 ```bash
-python scripts/train.py --data data/processed/train_processed.csv --model-type ensemble
+python -m venv .venv
+source .venv/bin/activate  # macOS/Linux
+# .venv\Scripts\activate   # Windows PowerShell
 ```
 
-For specific models:
+Install dependencies:
 
 ```bash
-# Statistical methods
-python scripts/train.py --data data/processed/train_processed.csv --model-type statistical --method cusum
-
-# Machine learning models
-python scripts/train.py --data data/processed/train_processed.csv --model-type ml --method lightgbm
-
-# Deep learning models
-python scripts/train.py --data data/processed/train_processed.csv --model-type dl --method lstm
+pip install -r requirements.txt
 ```
 
-### Making Predictions
+## Data
+
+This project was built around the ADIA Lab Structural Break Challenge. Place the competition data under `data/` with the expected filenames:
+
+```text
+data/train.csv
+data/test.csv
+```
+
+The current baseline expects the following columns:
+
+- `timestamp`
+- `value`
+- `has_structural_break` in the training data
+
+If the official competition schema differs, the next cleanup step should add a dedicated data-loading layer that maps the raw challenge format into the baseline modeling format.
+
+## Run the baseline
+
+From the repository root:
 
 ```bash
-python scripts/predict.py --model outputs/models/best_model.pkl --data data/test.csv --output outputs/submission.csv
+cd scripts
+python baseline.py
 ```
 
-### Evaluation
+The script reads from `../data/train.csv` and `../data/test.csv`, trains a Random Forest baseline, and writes predictions to `../outputs/submission.csv`.
+
+A near-term refactor should replace these hardcoded relative paths with command-line arguments, for example:
 
 ```bash
-python scripts/evaluate.py --predictions outputs/predictions/prediction.csv --ground-truth data/validation.csv
+python scripts/baseline.py \
+  --train data/train.csv \
+  --test data/test.csv \
+  --output outputs/submission.csv
 ```
 
-## 🧠 Methodology and Techniques
+## Baseline methodology
 
-Our approach integrates three categories of methods:
+The current baseline creates simple time-series features from the `value` column:
 
-### Statistical Methods
-- **CUSUM (Cumulative Sum)**: Detects changes in the mean of a process
-- **Bayesian Change Point Detection**: Probabilistic approach to identifying changes in data distributions
-- **PELT (Pruned Exact Linear Time)**: Efficient algorithm for multiple change point detection
+- Rolling mean and standard deviation
+- Lag features
+- First and second differences
 
-### Machine Learning Models
-- **LightGBM**: Gradient boosting framework using tree-based algorithms
-- **XGBoost**: Scalable gradient boosting implementation
-- **Feature Engineering**: Extensive time series features including lags, rolling statistics, and spectral features
+It then fits a scikit-learn pipeline containing:
 
-### Deep Learning Models
-- **LSTM (Long Short-Term Memory)**: Recurrent neural networks for capturing temporal dependencies
-- **CNN (Convolutional Neural Networks)**: For detecting localized patterns in time series
-- **Autoencoders**: For anomaly detection and representation learning
+- `StandardScaler`
+- `RandomForestClassifier`
 
-### Explainability
-- **SHAP (SHapley Additive exPlanations)**: For interpreting model predictions and understanding feature importance
+This is a useful benchmark, but it should not be considered a final structural-break methodology. Future versions should compare the machine-learning baseline against classical change-point detection methods.
 
-## 📊 Evaluation Metrics
+## Professionalization roadmap
 
-We evaluate our models using:
+### Phase 1 — Repository hygiene
 
-- **ROC AUC**: Area under the Receiver Operating Characteristic curve
-- **Precision**: Ratio of correctly predicted positive observations to total predicted positives
-- **Recall**: Ratio of correctly predicted positive observations to all actual positives
-- **F1 Score**: Harmonic mean of precision and recall
-- **Time-to-Detection**: How quickly breaks are detected after they occur
+- Remove committed virtual environment files
+- Keep generated outputs out of version control
+- Ensure a fresh clone can run the baseline
+- Add a concise, accurate README
 
-## 🤝 Contribution Guidelines
+### Phase 2 — Package the project
 
-We welcome contributions to improve our structural break detection methods:
+Move reusable logic out of notebooks/scripts and into:
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature-name`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin feature/your-feature-name`
-5. Submit a pull request
+```text
+src/structural_break/
+├── features.py
+├── models.py
+├── evaluation.py
+└── io.py
+```
 
-Please ensure your code follows our coding standards:
-- PEP 8 compliant
-- Properly documented with docstrings
-- Includes appropriate unit tests
+### Phase 3 — Testing and CI
 
-## 📄 License
+Add:
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+- `pytest`
+- Unit tests for feature engineering
+- Unit tests for prediction output shape
+- GitHub Actions for linting and tests
 
-## 🙏 Acknowledgements
+### Phase 4 — Research methods
 
-- ADIA Lab and CrunchDAO for hosting the competition
-- All contributors who have helped improve this codebase
-- Open-source libraries used in this project
+Add and compare:
+
+- CUSUM
+- PELT
+- Bai-Perron-style multiple break tests
+- Bayesian change-point detection
+- Hidden Markov Models for regime detection
+
+## Why this project matters
+
+Structural-break detection is directly relevant to quantitative research, risk management, macroeconomic analysis, and financial machine learning. A polished version of this repository can serve as a public research example showing how to move from a competition baseline to a maintainable research workflow.
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
