@@ -22,17 +22,24 @@ Planned upgrades include:
 
 ```text
 structural-break/
-├── data/                  # Small synthetic sample data (see data/README.md); raw files stay untracked
+├── src/
+│   └── structural_break/   # Importable package
+│       ├── data.py         # CSV loading + column validation
+│       ├── features.py     # Baseline feature engineering
+│       ├── models.py       # scikit-learn pipeline builder
+│       ├── evaluation.py   # Metric helpers
+│       └── predict.py      # Submission/prediction helpers
+├── scripts/
+│   └── baseline.py         # Thin argparse CLI around the package
+├── data/                   # Small synthetic sample data (see data/README.md); raw files stay untracked
 │   ├── train.csv
 │   ├── test.csv
 │   └── README.md
-├── outputs/               # Generated predictions; created at runtime and git-ignored
-├── scripts/
-│   └── baseline.py        # Current baseline training/prediction script
-├── baseline.ipynb         # Competition quickstarter notebook (requires crunch-cli)
-├── requirements.txt       # Python dependencies
-├── .gitignore             # Local files, virtualenvs, and generated artifacts
-├── LICENSE                # MIT license
+├── outputs/                # Generated predictions; created at runtime and git-ignored
+├── baseline.ipynb          # Competition quickstarter notebook (requires crunch-cli)
+├── pyproject.toml          # Package metadata / build configuration
+├── requirements.txt        # Python dependencies
+├── LICENSE                 # MIT license
 └── README.md
 ```
 
@@ -61,6 +68,13 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
+Optionally, install the package itself (editable) so you can `import structural_break`
+from anywhere:
+
+```bash
+pip install -e .
+```
+
 ## Data
 
 The repository ships with **small synthetic sample data** under `data/` so the
@@ -83,22 +97,31 @@ against it, place the real files at `data/train.csv` / `data/test.csv`
 
 ## Run the baseline
 
-From the repository root:
-
-```bash
-cd scripts
-python baseline.py
-```
-
-The script reads from `../data/train.csv` and `../data/test.csv`, trains a Random Forest baseline, and writes predictions to `../outputs/submission.csv`.
-
-A near-term refactor should replace these hardcoded relative paths with command-line arguments, for example:
+The baseline is a thin CLI around the `structural_break` package. Run it from the
+repository root:
 
 ```bash
 python scripts/baseline.py \
   --train data/train.csv \
   --test data/test.csv \
   --output outputs/submission.csv
+```
+
+All three paths default to the values shown above, so `python scripts/baseline.py`
+works out of the box against the bundled synthetic samples. The command engineers
+baseline features, trains a Random Forest classifier, prints training metrics, and
+writes a submission CSV with `timestamp` and `has_structural_break` columns. Missing
+files or missing columns are reported with a clear error message and a non-zero exit
+code.
+
+To use the package directly:
+
+```python
+from structural_break import (
+    create_baseline_features,
+    build_random_forest_baseline,
+    build_submission,
+)
 ```
 
 ## Baseline methodology
