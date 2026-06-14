@@ -22,11 +22,14 @@ Planned upgrades include:
 
 ```text
 structural-break/
-├── data/                  # Competition data; large/raw files should not be committed
-├── notebooks/             # Exploratory notebooks
-├── outputs/               # Generated predictions and model outputs; ignored going forward
+├── data/                  # Small synthetic sample data (see data/README.md); raw files stay untracked
+│   ├── train.csv
+│   ├── test.csv
+│   └── README.md
+├── outputs/               # Generated predictions; created at runtime and git-ignored
 ├── scripts/
 │   └── baseline.py        # Current baseline training/prediction script
+├── baseline.ipynb         # Competition quickstarter notebook (requires crunch-cli)
 ├── requirements.txt       # Python dependencies
 ├── .gitignore             # Local files, virtualenvs, and generated artifacts
 ├── LICENSE                # MIT license
@@ -60,20 +63,23 @@ pip install -r requirements.txt
 
 ## Data
 
-This project was built around the ADIA Lab Structural Break Challenge. Place the competition data under `data/` with the expected filenames:
+The repository ships with **small synthetic sample data** under `data/` so the
+baseline runs immediately after cloning — no downloads required. These samples
+each contain one ordered series with a single injected structural break and are
+**not** the official challenge data. See [`data/README.md`](data/README.md) for
+the schema and details.
 
-```text
-data/train.csv
-data/test.csv
-```
-
-The current baseline expects the following columns:
+The baseline expects the following columns:
 
 - `timestamp`
 - `value`
 - `has_structural_break` in the training data
 
-If the official competition schema differs, the next cleanup step should add a dedicated data-loading layer that maps the raw challenge format into the baseline modeling format.
+This project was built around the ADIA Lab Structural Break Challenge hosted by
+CrunchDAO. The official competition data is **not redistributed** here. To run
+against it, place the real files at `data/train.csv` / `data/test.csv`
+(replacing the samples) or keep large raw files under the git-ignored
+`data/raw/`.
 
 ## Run the baseline
 

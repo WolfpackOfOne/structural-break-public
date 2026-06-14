@@ -5,7 +5,8 @@
 Baseline model for structural break detection.
 """
 
-import numpy as np
+import os
+
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
@@ -38,8 +39,8 @@ def create_features(df):
     df['diff_1'] = df['value'].diff(1)
     df['diff_2'] = df['value'].diff(2)
     
-    # Fill NaN values
-    df = df.fillna(method='bfill')
+    # Fill NaN values produced by rolling/lag/diff windows
+    df = df.bfill()
     
     return df
 
@@ -91,8 +92,9 @@ def main():
     # Predict on test data
     results = predict(model, test_df, features)
     
-    # Save predictions
+    # Save predictions (create the output directory if it does not exist)
     submission = results[['timestamp', 'has_structural_break']]
+    os.makedirs('../outputs', exist_ok=True)
     submission.to_csv('../outputs/submission.csv', index=False)
     print("Predictions saved to '../outputs/submission.csv'")
 
