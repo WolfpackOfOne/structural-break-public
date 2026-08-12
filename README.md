@@ -15,7 +15,8 @@ between variables** — exactly the moments risk and quant teams most need to ca
 This repository contains a machine-learning baseline plus a set of classical and
 modern change-point detectors (CUSUM, rolling z-score, PELT), all behind a small,
 tested Python package. It was built around the ADIA Lab Structural Break Challenge
-hosted by CrunchDAO.
+hosted by CrunchDAO, and now also targets the **Real-Time Edition** of that
+challenge (see below).
 
 ![PELT change-point detection on a synthetic multi-regime series](docs/images/example_break_detection.png)
 
@@ -37,6 +38,59 @@ a competition baseline to a maintainable research workflow.
 - [Methodology](docs/methodology.md) — what a structural break is and how each detector works.
 - [Data note](docs/data.md) — challenge context, schema, and what is / isn't included.
 - [Contributing](CONTRIBUTING.md) — setup, checks, and conventions.
+
+## Real-Time Edition
+
+The [ADIA Lab Structural Break Challenge: Real-Time Edition](https://hub.crunchdao.com/competitions/structural-break-real-time)
+is a distinct, newer CrunchDAO competition, meaningfully different from the
+original challenge the rest of this repository targets:
+
+| | Original challenge | Real-Time Edition |
+| - | - | - |
+| Break location | Known boundary point | Unknown, anywhere in the online segment (or absent) |
+| Output | One score per series | One score **per online time step** |
+| `infer()` shape | Batch over a list of DataFrames | Streaming generator, one point at a time, **iterable only once** |
+| Metric | ROC AUC | Time-Stratified AUC (cross-sectional AUC at each step, weighted average) |
+
+Each series has a break-free **historical segment** (1,000–5,000 observations)
+followed by an **online segment** (10–1,000 observations) revealed one point at
+a time; the submission must yield one score in `[0, 1]` per online observation,
+in order, without ever revisiting a previous point.
+
+**What's here:**
+
+- `src/structural_break/realtime.py` — a tested, importable `StreamingBreakDetector`
+  (EWMA z-score + two-sided CUSUM + EWMA variance-ratio, combined via a noisy-OR),
+  plus the `train`/`infer` entry points, a local `time_stratified_auc` implementation
+  of the official metric, and synthetic-data generators for the `(id, x_historical,
+  x_online, tau)` tuple format this challenge uses.
+- `tests/test_realtime.py` — unit tests against synthetic data (mean shifts, variance
+  shifts, no-break series, degenerate inputs, and a `train()`/`infer()` round trip).
+- `scripts/realtime_baseline.py` — CLI to evaluate the detector on synthetic data
+  and print the Time-Stratified AUC:
+
+  ```bash
+  python scripts/realtime_baseline.py --n-series 40 --seed 0
+  ```
+
+- `realtime_submission.ipynb` — the **actual submission notebook**. It embeds the
+  same detector logic inline (self-contained — the CrunchDAO runner only sees this
+  notebook, not the rest of the repo) in the format the platform expects. To submit:
+
+  1. Open the notebook (locally, in Jupyter, or in Colab).
+  2. Get your personal setup command/token from
+     https://hub.crunchdao.com/competitions/structural-break-real-time/submit/notebook
+     (requires login — this is tied to your account and can't be automated on your behalf).
+  3. Run `crunch setup-notebook structural-break-real-time <your-token>` to pull the
+     real competition data locally.
+  4. Run the notebook top to bottom; `crunch_tools.test()` reproduces the cloud
+     evaluation flow locally and reports a local Time-Stratified AUC.
+  5. Submit via `crunch push` (CLI) or `crunch_tools.submit(...)` (Colab only), then
+     create a run on the competition page to validate against the full test set.
+
+  No official competition data is bundled here (same licensing restriction as the
+  original challenge) — the notebook downloads it via `crunch setup-notebook` using
+  your token.
 
 ## Current status
 
@@ -66,16 +120,19 @@ structural-break/
 │       ├── synthetic.py    # Synthetic series with known break points
 │       ├── evaluation.py   # Per-row + point-based metrics
 │       ├── visualization.py# Optional plotting helper
-│       └── predict.py      # Submission/prediction helpers
+│       ├── predict.py      # Submission/prediction helpers
+│       └── realtime.py     # Real-Time Edition: streaming detector + train/infer
 ├── scripts/
 │   ├── baseline.py         # Thin argparse CLI around the package
-│   └── compare_methods.py  # Detector comparison workflow (synthetic data)
+│   ├── compare_methods.py  # Detector comparison workflow (synthetic data)
+│   └── realtime_baseline.py# Real-Time streaming detector vs. synthetic data (TS-AUC)
 ├── data/                   # Small synthetic sample data (see data/README.md); raw files stay untracked
 │   ├── train.csv
 │   ├── test.csv
 │   └── README.md
 ├── outputs/                # Generated predictions; created at runtime and git-ignored
-├── baseline.ipynb          # Competition quickstarter notebook (requires crunch-cli)
+├── baseline.ipynb          # Original-challenge quickstarter notebook (requires crunch-cli)
+├── realtime_submission.ipynb # Real-Time Edition submission notebook (requires crunch-cli)
 ├── pyproject.toml          # Package metadata / build configuration
 ├── requirements.txt        # Python dependencies
 ├── LICENSE                 # MIT license

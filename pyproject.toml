@@ -26,7 +26,7 @@ where = ["src"]
 [tool.ruff]
 line-length = 100
 target-version = "py39"
-extend-exclude = ["baseline.ipynb"]
+extend-exclude = ["baseline.ipynb", "realtime_submission.ipynb"]
 
 [tool.ruff.lint]
 # pycodestyle, Pyflakes, isort, pyupgrade, flake8-bugbear.

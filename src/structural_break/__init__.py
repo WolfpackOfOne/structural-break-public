@@ -29,6 +29,13 @@ from .features import (
 )
 from .models import build_random_forest_baseline
 from .predict import SUBMISSION_COLUMNS, build_submission
+from .realtime import (
+    DetectorParams,
+    StreamingBreakDetector,
+    make_realtime_dataset,
+    make_realtime_series,
+    time_stratified_auc,
+)
 from .synthetic import (
     make_mean_shift,
     make_multiple_breaks,
@@ -44,8 +51,10 @@ __all__ = [
     "TARGET_COLUMN",
     "BreakDetector",
     "CusumDetector",
+    "DetectorParams",
     "PeltDetector",
     "RollingZScoreDetector",
+    "StreamingBreakDetector",
     "build_random_forest_baseline",
     "build_submission",
     "create_baseline_features",
@@ -54,7 +63,10 @@ __all__ = [
     "load_csv",
     "make_mean_shift",
     "make_multiple_breaks",
+    "make_realtime_dataset",
+    "make_realtime_series",
     "make_variance_shift",
     "point_based_metrics",
+    "time_stratified_auc",
     "validate_required_columns",
 ]
