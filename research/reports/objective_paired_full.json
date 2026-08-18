@@ -1,0 +1,11 @@
+{
+  "binary": {
+    "ts_auc": 0.6263119222394724,
+    "runtime_s": 235.5
+  },
+  "pairwise_t": {
+    "ts_auc": 0.623016399397132,
+    "runtime_s": 300.8
+  },
+  "delta_pairwise_minus_binary": -0.0032955228423403593
+}

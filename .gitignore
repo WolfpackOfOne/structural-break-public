@@ -46,6 +46,10 @@ models/
 *.joblib
 *.parquet
 
+# ...but the permanent fold assignment IS the experiment record and must be
+# version controlled: regenerating it would silently invalidate every past result.
+!research/folds/*.parquet
+
 # Local environment
 .env
 .env.*
