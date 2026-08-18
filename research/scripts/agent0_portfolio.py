@@ -19,7 +19,7 @@ import numpy as np
 from sbr.pipeline import Data
 from sbr.metric import ts_auc_flat
 
-STREAMS = ["RT-100", "RT-120", "RT-121", "RT-122"]
+STREAMS = ["RT-100", "RT-120", "RT-121", "RT-122", "RT-123", "RT-124", "RT-125"]
 d = Data()
 dev = d.rows_for([0, 1, 2, 3, 4])
 y = d.y[dev]; t = d.t[dev].astype(np.int64); rf = d.row_fold[dev]
@@ -111,10 +111,40 @@ for f in range(5):
 sc, pf = score_blend(blend2)
 out["blends"]["lofo_lgbm_stack"] = {"ts_auc": sc, "per_fold": pf}
 
+# --- is SUBSET SELECTION worth anything, honestly measured?
+# Greedy forward selection fitted on four folds, scored on the fifth.  Picking
+# the best of 120 subsets on the pooled OOF and reporting that number would be
+# selecting on the score we report.
+lofo_sel = {}
+lofo_pred = np.empty(len(y))
+for f in range(5):
+    tr = rf != f
+    chosen, cur = [], -1.0
+    while True:
+        cand = [(float(ts_auc_flat(M[tr][:, chosen + [i]].mean(axis=1), y[tr], t[tr])), i)
+                for i in range(len(names)) if i not in chosen]
+        sc_i, i_best = max(cand)
+        if sc_i <= cur + 1e-6:
+            break
+        cur, _ = sc_i, chosen.append(i_best)
+    lofo_sel[str(f)] = [names[i] for i in chosen]
+    lofo_pred[rf == f] = M[rf == f][:, chosen].mean(axis=1)
+sc, pf = score_blend(lofo_pred)
+out["blends"]["lofo_greedy_subset"] = {"ts_auc": sc, "per_fold": pf, "subset_per_fold": lofo_sel}
+
 best = max(out["blends"].items(), key=lambda kv: kv[1]["ts_auc"])
 champ = out["streams"].get("RT-100", {}).get("ts_auc", float("nan"))
-out["summary"] = {"champion_RT-100": champ, "best_blend": best[0],
-                  "best_blend_ts_auc": best[1]["ts_auc"], "ensemble_delta": best[1]["ts_auc"] - champ}
+all_eq = out["blends"]["eq_" + "+".join(names)]["ts_auc"]
+out["summary"] = {
+    "champion_RT-100": champ,
+    "all_streams_equal_average": all_eq,          # parameter-free, no selection
+    "all_streams_delta": all_eq - champ,
+    "best_blend_in_hindsight": best[0],           # diagnostic only -- selected on the reported score
+    "best_blend_ts_auc": best[1]["ts_auc"],
+    "honest_subset_selection_lofo": out["blends"]["lofo_greedy_subset"]["ts_auc"],
+    "selection_premium_over_all_streams":
+        out["blends"]["lofo_greedy_subset"]["ts_auc"] - all_eq,
+}
 np.save("/home/claude/sb/research/oof/RT-130.blend.npy", blend)
 json.dump(out, open("/home/claude/sb/research/reports/portfolio.json", "w"), indent=2)
 print(json.dumps(out["streams"], indent=2))

@@ -1,41 +1,59 @@
 # STATE OF RESEARCH — 2026 ADIA Lab / CrunchDAO Structural Break Challenge (Real-Time Edition)
-**Research Director (Agent 0) · 2026-08-18 · 74 logged experiments · 8 agents · waves 1-5 complete**
+**Research Director (Agent 0) · 2026-08-18 · 78 logged experiments · 8 agents · waves 1-6 complete**
 
 ---
 
-## CURRENT CHAMPION — four-stream rank-average ensemble (`RT-130`)
+## CURRENT CHAMPION — seven-stream rank-average ensemble (`RT-131`)
 
 | | |
 |---|---|
-| **Architecture** | 4 LightGBM streams → equal-weight average of **within-timestep rank percentiles** |
-| **Mean OOF TS-AUC** | **0.62394** (pooled 0.62374) |
-| **Per-fold** | 0.63647 / 0.61704 / 0.63308 / 0.61762 / 0.61548 (std 0.00894) |
-| **LOCKBOX (2,000 series never used for anything)** | **0.61214** |
-| **Ensemble delta over the best single model** | **+0.00875 OOF, +0.00618 on the lockbox** |
-| **Weights** | none — parameter-free, so there is nothing here that could be tuned on the lockbox |
+| **Architecture** | 7 LightGBM streams → equal-weight average of **within-timestep rank percentiles** |
+| **Mean OOF TS-AUC** | **0.62541** (pooled 0.62524) |
+| **Per-fold** | 0.63667 / 0.62004 / 0.63598 / 0.61715 / 0.61722 (std 0.00895) |
+| **Ensemble delta over the best single model** | **+0.01025** |
+| **Weights** | none, and none is the right answer — see below |
 
 The blend operates on within-timestep rank percentiles because TS-AUC is
 invariant to any monotone transform applied identically inside a timestep: ranks
 are the metric's own view of a score, and averaging there is the only blend that
-respects it. **Learned stacks lose to the equal average** — leave-one-fold-out
-logistic 0.62318, leave-one-fold-out LightGBM 0.61999 — which is what you expect
-when four streams are of similar quality and the weights have nothing real to fit.
+respects it.
 
-### The four streams
+**Weighting and selection both lose.** Honest leave-one-fold-out greedy subset
+selection scores 0.62442 (−0.0008 against simply using everything); a LOFO
+logistic stack 0.62514; a LOFO LightGBM stack 0.62144. The best subset *chosen in
+hindsight* beats the plain average by 0.0003 — and the gap between that 0.0003
+and the honest −0.0008 is exactly the self-deception on offer. With seven streams
+inside a 0.010 band and a per-fold spread of 0.011, any weighting scheme is
+fitting fold noise. **The equal average has no parameters, so it has no parameter
+variance.** The submission blend rule is therefore: average the rank percentiles
+of every stream you have.
 
-| stream | features | model bias | OOF | lockbox | within-t rank corr. with `RT-100` |
-|---|---|---|---|---|---|
-| `RT-100` full bank | all 7 modules, 500 cols | 63 leaves, ff 0.5 | **0.61500** | 0.60596 | — |
-| `RT-122` extra-trees | all 7 modules, 500 cols | 255 leaves, extra_trees, per-series sampling | 0.61307 | 0.60501 | 0.685 |
-| `RT-120` evidence-heavy | `m00`+`m01`+`m07`, 261 cols | 127 leaves, ff 0.35 | 0.60855 | 0.60482 | 0.662 |
-| `RT-121` shape/dynamics | `m02`+`m03`+`m04`+`m06`, 239 cols | 31 leaves, ff 0.7 | 0.60468 | 0.59815 | 0.617 |
+**Lockbox.** The 4-stream version of this ensemble scored **0.61214** on the 2,000
+untouched series against a 0.62374 dev estimate (−0.0116). The 7-stream blend has
+*not* been re-measured there and deliberately will not be: the composition rule
+gained no free parameters, so there is nothing new to confirm, and the lockbox is
+worth more unspent. Expect the same ~0.011 haircut, i.e. roughly **0.614**.
 
-**Global Pearson correlations are 0.73–0.88; within-timestep rank correlations are
-0.40–0.69.** The global figure is inflated by a shared time trend the metric never
+### The seven streams
+
+| stream | features | model bias | OOF | corr. with `RT-100` (within-t / global) |
+|---|---|---|---|---|
+| `RT-100` full bank | all 7 modules, 500 cols | 63 leaves, ff 0.5, 1M rows | **0.61500** | — |
+| `RT-123` pairwise | 500 cols | pairwise-t ranking loss | 0.61444 | 0.780 / 0.717 |
+| `RT-125` GOSS | 500 cols | gradient-based one-side sampling | 0.61355 | 0.780 / 0.927 |
+| `RT-122` extra-trees | 500 cols | 255 leaves, per-series sampling | 0.61307 | 0.685 / 0.879 |
+| `RT-124` recursion-only | `m01`+`m06`+`m07`, 170 cols | no window-bank features at all | 0.61064 | 0.613 / 0.862 |
+| `RT-120` evidence-heavy | `m00`+`m01`+`m07`, 261 cols | 127 leaves, ff 0.35 | 0.60855 | 0.662 / 0.876 |
+| `RT-121` shape/dynamics | `m02`+`m03`+`m04`+`m06`, 239 cols | 31 leaves, ff 0.7 | 0.60468 | 0.617 / 0.841 |
+
+**Global Pearson correlations run 0.60–0.93; within-timestep rank correlations run
+0.39–0.78.** The global figure is inflated by a shared time trend the metric never
 scores. Measured in the space the metric actually compares, these are genuinely
-different models — and the most decorrelated pair (`RT-120`/`RT-121`, ρ = 0.396)
-blends to 0.61945, beating *both* its components by more than 0.011 despite being
-the two weakest streams. That is the portfolio effect in its cleanest form.
+different models — and the most decorrelated pair (`RT-121`/`RT-124`, ρ = 0.393)
+are two of the three *weakest* streams. Note also `RT-123` and `RT-125`: nearly
+identical within-timestep correlation to the champion (0.780 both) but wildly
+different global correlation (0.717 vs 0.927), which is a clean demonstration that
+the global number carries almost no information about blend value here.
 
 ### Best single model (`RT-100`)
 
@@ -81,7 +99,8 @@ research gain.
 | `RT-000` shipped EWMA + CUSUM + variance noisy-OR | 0.52051 | — |
 | `RT-101` `m00_core` alone (calibrated null evidence + LightGBM) | 0.56349 | +0.0430 |
 | `RT-100` best single model | 0.61500 | +0.0945 |
-| **`RT-130` ensemble champion** | **0.62374** | **+0.1032** |
+| `RT-130` 4-stream ensemble | 0.62374 | +0.1032 |
+| **`RT-131` 7-stream ensemble** | **0.62524** | **+0.1047** |
 
 Paired series-level bootstrap (120 replicates, resampling whole series):
 champion − baseline 0 = **+0.0951, 95 % CI [+0.0841, +0.1059], 120/120 replicates positive**;
@@ -101,9 +120,9 @@ their code, so this is a reconstruction on our folds, not a byte-level replicati
 | + residual monitoring (~0.557) | `m00_core`+`m04_resid` | 0.6024 (screen fold 0) |
 | + LightGBM stack (~0.575–0.579) | `RT-101` `m00_core` alone, full 5-fold | 0.5635 |
 | — | `RT-100` best single model, full 5-fold | 0.6150 |
-| — | **`RT-130` ensemble, full 5-fold** | **0.6237** |
+| — | **`RT-131` ensemble, full 5-fold** | **0.6252** |
 
-We clear the public band by ~0.045 on 5-fold series-level OOF and by ~0.033 on
+We clear the public band by ~0.046 on 5-fold series-level OOF and by ~0.033 on
 the untouched lockbox.
 
 ## BREAK TAXONOMY — what the competition actually contains
@@ -227,8 +246,10 @@ Full detail in `research/FAILED_EXPERIMENTS.md` (17 recorded negatives). Headlin
   i.e. 50 near-continuous series-constant columns give each training series a unique
   signature that LightGBM memorises. H1 ("history predicts whether a break occurs")
   is **rejected** on three independent tests.
-- **Pairwise-t ranking objective** — +0.0072 on screen, **−0.0033 in a properly paired
-  full-scale test** (`RT-111`). Did not survive promotion.
+- **Pairwise-t ranking objective** — +0.0072 on screen, −0.0033 in a paired fold-0
+  test, and **0.61444 vs 0.61510 over five folds on 30 % fewer training rows**, i.e.
+  a dead heat. *My* −0.0033 was as much noise as their +0.0072; see the amendment in
+  `FAILED_EXPERIMENTS.md`. It is now a permanent ensemble member.
 - **GARCH(1,1) volatility normalisation** — 0.50012 standalone. Literally zero signal:
   the filter adapts on the same timescale as the break it is meant to reveal.
 - **Trend family** (cumulative slopes, Mann-Kendall) — −0.005; consistent with the
@@ -239,6 +260,12 @@ Full detail in `research/FAILED_EXPERIMENTS.md` (17 recorded negatives). Headlin
   `scale_pos_weight=4` −0.009, XE-NDCG −0.014. Binary `1[t ≥ τ]` survived every attack.
 - **Slope-of-evidence channels, mixture-GLR, EWMA level banks** — zero gain, dominated
   by the peak channels.
+- **DGP-cluster gated specialists** — +0.032 on screen, **−0.0219 at full scale on
+  both folds tested**. The clusters carry real information (gating beats its own
+  permutation control by +0.0064) but partitioning 6,400 training series into six
+  groups costs far more than the routing gains.
+- **Ensemble weighting and subset selection** — honest LOFO subset selection −0.0008,
+  logistic stack −0.0001, LightGBM stack −0.0038, all against the plain equal average.
 
 ## SURPRISING FINDINGS
 
@@ -255,7 +282,14 @@ Full detail in `research/FAILED_EXPERIMENTS.md` (17 recorded negatives). Headlin
 4. **AR order matters in the opposite direction to the public folklore.** AR(5) beats
    AR(1) by +0.016 standalone and is the best single 8-column addition; the danger is
    not high order but *matching* the filter to the break.
-5. Standalone and incremental value are anti-correlated: raw representations are the
+5. **Three of three screen-level *architectural* wins reversed at full scale**
+   (context block, pairwise objective, gating) while every screen-level *feature*
+   addition transferred. All three reversals are the same mechanism: they help a
+   data-starved model and stop helping once the model is not data-starved. The
+   operating rule this bought us — **the screen store is valid triage for features
+   and is not evidence for objectives, architectures, or anything that repartitions
+   the training data** — is worth more than any single one of the results.
+6. Standalone and incremental value are anti-correlated: raw representations are the
    best standalone and the worst incremental (−0.002); AR(2) is the worst standalone
    and among the best incremental (+0.021).
 
@@ -321,29 +355,29 @@ Full detail in `research/FAILED_EXPERIMENTS.md` (17 recorded negatives). Headlin
   examples). **Not attempted at all.**
 - Synthetic augmentation and hard-negative training (transients that revert).
 
-## NEXT EXPERIMENTS, RANKED (updated after wave 5)
+## NEXT EXPERIMENTS, RANKED (updated after wave 6)
 
 | # | Experiment | Payoff | Uncertainty | Effort | Compute | Ensemble value |
 |---|---|---|---|---|---|---|
-| 1 | **Streaming port + batch/stream parity tests** — required for submission; the modules are batch-first today | — | low | high | low | — |
-| 2 | More streams for the portfolio: the pairwise-ranking model, a DGP-gated model, an `m07`-only model. The blend gained +0.0087 from four; the marginal stream is still positive | high | low | med | high | high |
-| 3 | Raise the shared context AR order from 2 to 5–6 and rebuild — forensics measured AR(6)-residual log-sd at 0.603, the strongest single statistic anywhere in the project | high | low | low | med | — |
-| 4 | DGP-cluster gated specialists (+0.032 at equal capacity on screen; never promoted, and it composes with the ensemble rather than competing) | high | med | med | med | med |
-| 5 | Localisation v2: better τ̂, more segment statistics. `m06_loc` was built by an agent that ran out of budget before tuning it | high | med | med | high | med |
-| 6 | 2025 data transfer as pseudo-real-time training series — never attempted | high | high | high | med | med |
-| 7 | Hard-negative augmentation: synthesised transients that revert, to sharpen the persistence discrimination | med | med | med | med | med |
-| 8 | Seed and fold-assignment stability study of the ensemble | med | low | low | high | — |
-| 9 | Per-series adaptive window grid (currently one fixed log grid for every series) | med | med | low | med | — |
-| 10 | Multi-task teacher (break state + time-since-break + effect size) → distil | med | high | med | high | med |
-| 11 | Explicit false-positive head trained on the 17 % transient-bearing no-break series | med | med | med | low | med |
-| 12 | Cross-series conditioning: a series' rank *within the current timestep* as an input | med | high | med | med | high |
-| 13 | Extend `m07_bayes` mixture mass over dependence changes (currently 15 %) | med | med | med | med | med |
-| 14 | Deploy the top-300 column subset (−0.0004 for a 40 % inference-cost cut) | — | low | low | low | — |
-| 15 | Byte-level parity check of our TS-AUC against the live Crunch scorer | — | low | low | — | — |
+| 1 | **Streaming port + batch/stream parity tests** — the submission blocker. Nothing here can be submitted today | — | low | high | low | — |
+| 2 | More streams. Every stream added so far has paid: 4 streams +0.0087, 7 streams +0.0102. Cheapest next ones: a DART-boosted model, a different-seed champion, a soft-gated model (the gated model is bad alone but structurally different) | med | low | low | high | high |
+| 3 | Raise the shared context AR order from 2 to 5–6 and rebuild. Forensics measured AR(6)-residual log-sd at 0.603, the strongest single statistic in the project. Partly redundant with `m04`/`m07`, which fit their own | med | med | low | high | — |
+| 4 | Localisation v2: better τ̂, more segment statistics. `m06_loc` was built by an agent that ran out of budget before tuning it, and still delivered +0.0315 | med | med | med | high | med |
+| 5 | 2025 data transfer as pseudo-real-time training series — never attempted, and the only idea left that adds *data* rather than model variety | high | high | high | med | med |
+| 6 | Hard-negative augmentation: synthesised transients that revert | med | med | med | med | med |
+| 7 | Seed and fold-assignment stability study of the ensemble | med | low | low | high | — |
+| 8 | Explicit false-positive head trained on the 17 % transient-bearing no-break series | med | med | med | low | med |
+| 9 | Cross-series conditioning: a series' rank *within the current timestep* as an input | med | high | med | med | high |
+| 10 | Deploy the top-300 column subset (−0.0004 for a 40 % inference-cost cut) | — | low | low | low | — |
+| 11 | Byte-level parity check of our TS-AUC against the live Crunch scorer | — | low | low | — | — |
+
+**Closed by wave 6:** DGP-gated specialists (−0.0219 at full scale, rejected),
+ensemble weighting and subset selection (both negative — use the plain average),
+and the pairwise objective question (a dead heat; it is now a blend member).
 
 **Closed by wave 5:** feature selection over the 500-column bank (no gain — the
-bank is not redundant), the ensemble itself (built, +0.0087, confirmed on the
-lockbox), and learned stacking (loses to the equal rank average).
+bank is not redundant), the ensemble itself (built and confirmed on the lockbox),
+and learned stacking (loses to the equal rank average).
 
 ## MOONSHOTS
 

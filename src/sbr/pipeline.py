@@ -169,8 +169,15 @@ def run(exp_id, modules, hypothesis, falsification, agent="agent0", model="lgbm"
 
         Xtr = _stack(mats, names, tr_rows, keep_idx)
         ytr = d.y[tr_rows]
-        ds = lgb.Dataset(Xtr, label=ytr, feature_name=[f"f{i}" for i in range(len(keep_idx))])
-        booster = lgb.train(p, ds, num_boost_round=n_round)
+        pf = dict(p)
+        if pf.get("objective") == "pairwise_t":
+            # RankNet-style pairwise logistic whose pairs are drawn WITHIN the
+            # same online index -- the metric's own stratification.  Built here
+            # because it needs the sampled training rows' t and y.
+            pf["objective"] = _make_pairwise_t(d.t[tr_rows], ytr, seed=seed)
+        ds = lgb.Dataset(Xtr, label=ytr, params=dict(pf, objective="binary"),
+                         feature_name=[f"f{i}" for i in range(len(keep_idx))])
+        booster = lgb.train(pf, ds, num_boost_round=n_round)
         del Xtr, ds
 
         Xva = _stack(mats, names, va_rows, keep_idx)
@@ -190,7 +197,7 @@ def run(exp_id, modules, hypothesis, falsification, agent="agent0", model="lgbm"
         "experiment_id": exp_id, "date": time.strftime("%Y-%m-%d %H:%M"), "git_sha": git_sha(),
         "agent": agent, "hypothesis": hypothesis, "falsification_condition": falsification,
         "feature_set": ",".join(modules), "n_features": len(keep_idx), "model": model,
-        "objective": p.get("objective", ""), "folds": ",".join(map(str, folds)), "random_seed": seed,
+        "objective": (params or {}).get("objective", "binary"), "folds": ",".join(map(str, folds)), "random_seed": seed,
         "train_series": int((~np.isin(d.series_fold, [-1])).sum()),
         "train_rows": int(min(max_train_rows, len(d.rows_for([x for x in (0,1,2,3,4) if x != folds[0]])))),
         "mean_oof_ts_auc": float(np.mean(per_fold)), "pooled_oof_ts_auc": float(overall),
@@ -213,6 +220,44 @@ def run(exp_id, modules, hypothesis, falsification, agent="agent0", model="lgbm"
     print(json.dumps({k: res[k] for k in ("experiment_id", "mean_oof_ts_auc", "pooled_oof_ts_auc",
                                           "per_fold_ts_auc", "fold_std", "n_features")}, indent=2))
     return res
+
+
+def _make_pairwise_t(t, y, m_neg=8, seed=0):
+    """Pairwise logistic loss over (positive, negative) pairs sharing an online index.
+
+    TS-AUC only ever asks whether a broken series outranks a not-yet-broken one
+    at the SAME t, so the groups here are online indices, not series.
+    """
+    t = np.asarray(t, np.int64)
+    y = np.asarray(y).astype(np.int8)
+    n = len(t)
+    order = np.lexsort((y, t))          # negatives first inside each group
+    ts, ys = t[order], y[order]
+    gstart = np.flatnonzero(np.r_[True, ts[1:] != ts[:-1]])
+    gend = np.r_[gstart[1:], n]
+    gid = np.repeat(np.arange(len(gstart)), gend - gstart)
+    nneg = np.array([int((ys[a:b] == 0).sum()) for a, b in zip(gstart, gend)])
+    npos = (gend - gstart) - nneg
+    ok = (nneg > 0) & (npos > 0)
+    pm = np.flatnonzero((ys == 1) & ok[gid])
+    pos_rows, pos_gid = order[pm], gid[pm]
+    neg_pool = order[np.flatnonzero(ys == 0)]
+    negoff = np.r_[0, np.cumsum(nneg)[:-1]]
+    rng = np.random.default_rng(seed)
+    scale = n / max(len(pos_rows) * m_neg, 1)
+
+    def obj(preds, dset):
+        j = (rng.random((len(pos_rows), m_neg)) * nneg[pos_gid][:, None]).astype(np.int64)
+        jj = neg_pool[negoff[pos_gid][:, None] + j].ravel()
+        ii = np.repeat(pos_rows, m_neg)
+        pr = 1.0 / (1.0 + np.exp(-np.clip(preds[ii] - preds[jj], -60, 60)))
+        g = -(1.0 - pr) * scale
+        h = np.maximum(pr * (1.0 - pr), 1e-6) * scale
+        grad = np.bincount(ii, weights=g, minlength=n) + np.bincount(jj, weights=-g, minlength=n)
+        hess = np.bincount(ii, weights=h, minlength=n) + np.bincount(jj, weights=h, minlength=n)
+        return grad, np.maximum(hess, 1e-6)
+
+    return obj
 
 
 def apply_persistence(pred, d, rows, mode):

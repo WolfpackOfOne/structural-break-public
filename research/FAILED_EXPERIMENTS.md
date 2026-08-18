@@ -390,9 +390,26 @@ data-starved, and worth nothing once there is enough data for the pointwise mode
 to learn the ordering anyway. The pairwise sampler also only ever uses positives
 that share a timestep with a negative, discarding rows the pointwise loss keeps.
 
-**Retry warranted?** Only as an ensemble component — the pairwise model is a
-differently-biased stream and its blend delta was never measured. Not as a
-champion objective. Do not re-derive this on screen data and re-promote it.
+**Retry warranted?** Yes — and this entry has since been **partly retracted**.
+
+### AMENDMENT (RT-123, five folds)
+
+Running the pairwise objective properly over all five folds gives **0.61450**
+against the binary champion's 0.61510 — on **700k training rows versus the
+champion's 1M**. That is a dead heat, not a −0.0033 loss. The single paired
+fold-0 comparison that produced the −0.0033 was itself inside the noise: the same
+objective scored 0.62302 there and 0.63073 on the same fold in the five-fold run,
+a 0.008 swing from nothing but the row sample and the pair draw.
+
+**The honest conclusion is that the two objectives are equivalent within noise on
+this data, and neither the screen-level +0.0072 nor my −0.0033 was real.** The
+methodological lesson is aimed at me, not at the objective: **one fold is not a
+result, however well paired it is.** A per-fold spread of 0.011 means any
+single-fold delta below ~0.01 is unresolvable, and I promoted a conclusion from
+one anyway.
+
+The pairwise model is now a permanent ensemble member (`RT-123`); its
+within-timestep rank correlation with the champion is 0.780.
 
 **Process note.** The first attempt (RT-110) compared pairwise-at-800k against
 the champion-at-1M and would have reported −0.006; that number was not a paired
@@ -400,3 +417,76 @@ test and was discarded in favour of RT-111. Screen-level objective results in
 general did not survive: lambdarank +0.0005, XE-NDCG −0.014, scale_pos_weight=4
 −0.009, soft-ramp target −0.012, log-hazard regression −0.018, all measured
 against a binary control on the screen store.
+
+## agent0 / RT-150 — DGP-cluster GATED SPECIALISTS failed to promote
+
+**Hypothesis.** Agent 8 measured that the historical-context vector is worth ~0 as
+features but **+0.032 as a router**: KMeans the series by their historical
+characterisation, train a specialist per cluster. Routing is architectural, so it
+should compose with everything else rather than compete with it.
+
+**What happened at full scale.** k=6, gate fitted on training-fold series only,
+every arm sharing one materialised matrix per fold so the comparison is exact:
+
+| arm | fold 0 | fold 1 | mean |
+|---|---|---|---|
+| global (600 trees) | 0.62291 | 0.61012 | **0.61652** |
+| gated, equal total capacity (6 x 100 trees) | 0.60617 | 0.59762 | 0.60190 |
+| gated, equal per-model capacity (6 x 600) | 0.60080 | 0.58823 | 0.59452 |
+| rank-blend of global + gated | 0.62224 | 0.60619 | 0.61422 |
+| **permuted-cluster control** (6 x 600) | 0.58606 | 0.58186 | 0.58396 |
+
+**gated − global = −0.0219** (−0.0219 and −0.0219 on the two folds independently).
+**gated − permuted = +0.0064.**
+
+**Why it failed, and why the screen result was not wrong.** The clusters do carry
+real information — gating beats its own permutation control on both folds. But
+partitioning 6,400 training series into six groups costs far more than the routing
+gains. Agent 8's +0.032 was measured against a **151-column** global model on
+**2,000** screen series; that global model could not express the conditioning
+itself, so an explicit router supplied it. With 500 columns and 600 trees on
+6,400 series, the global model already learns the same interactions, and the data
+split is pure loss. Note the largest cluster holds ~47 % of series while the
+smallest holds ~3 % — the small specialists are badly data-starved.
+
+**Retry warranted?** Only as an ensemble member (the gated model makes structurally
+different errors and was never measured for blend delta), or with soft gating that
+shrinks each specialist toward the global model instead of replacing it. Not as an
+architecture.
+
+**THE PATTERN — worth stating plainly.** This is the **third** screen-level win to
+reverse at full scale, after the context block (+0.0009 → −0.0177) and the
+pairwise-t objective (+0.0072 → −0.0033). All three are the same failure mode:
+they help a **data-starved** model and stop helping once the model is not
+data-starved. Meanwhile every *feature-addition* screened on the same store has
+transferred. Operating rule for the rest of this project: **the screen store is
+valid triage for new features, and is not evidence for objectives, architectures,
+or anything that changes how the training data is partitioned.** Those must be
+tested at full scale from the start.
+
+## agent0 / RT-131 — ENSEMBLE WEIGHTING AND SUBSET SELECTION both fail
+
+With seven streams available, the obvious next move is to weight them, or to keep
+only the good ones. Both lose to doing nothing:
+
+| blend of 7 streams | pooled OOF TS-AUC |
+|---|---|
+| **equal-weight rank average (all seven)** | **0.62524** |
+| best subset, chosen in hindsight on the reported score | 0.62556 (+0.0003, not a real option) |
+| leave-one-fold-out greedy forward subset selection | 0.62442 (**−0.0008**) |
+| leave-one-fold-out logistic stack | 0.62514 (−0.0001) |
+| leave-one-fold-out LightGBM stack | 0.62144 (−0.0038) |
+
+The hindsight-best subset beats the plain average by 0.0003 — and when subset
+choice is made honestly (fitted on four folds, scored on the fifth) it *loses* by
+0.0008. The gap between those two numbers is the size of the self-deception on
+offer.
+
+**Why.** Seven streams within 0.010 of each other, and a per-fold spread of 0.011,
+means the fold-to-fold ranking of streams is unstable. Any weighting or selection
+scheme is fitting that instability. The equal average is the estimator with no
+variance in its parameters because it has no parameters.
+
+**Consequence for the submission:** the blend rule is "average the within-timestep
+rank percentiles of every stream you have" — nothing to tune, nothing to leak,
+and one fewer thing that can silently overfit between now and the deadline.
