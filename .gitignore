@@ -49,3 +49,7 @@ models/
 # Local environment
 .env
 .env.*
+
+# crunch-cli workspace state -- .crunchdao/token is a personal credential.
+.crunchdao/
+prediction/

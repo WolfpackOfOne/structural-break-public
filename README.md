@@ -81,8 +81,17 @@ in order, without ever revisiting a previous point.
   2. Get your personal setup command/token from
      https://hub.crunchdao.com/competitions/structural-break-real-time/submit/notebook
      (requires login — this is tied to your account and can't be automated on your behalf).
-  3. Run `crunch setup-notebook structural-break-real-time <your-token>` to pull the
-     real competition data locally.
+  3. Put **only the token** into an untracked `.env` file at the repository root:
+
+     ```
+     CRUNCH_TOKEN=<the token from the setup command>
+     ```
+
+     The setup cell reads it from there (or from a `CRUNCH_TOKEN` environment
+     variable) and runs `crunch setup-notebook` for you. The token is a personal
+     credential: it must never be pasted into the notebook or committed. Both
+     `.env` and the `.crunchdao/` directory the CLI creates (which stores its own
+     copy of the token) are listed in `.gitignore`.
   4. Run the notebook top to bottom; `crunch_tools.test()` reproduces the cloud
      evaluation flow locally and reports a local Time-Stratified AUC.
   5. Submit via `crunch push` (CLI) or `crunch_tools.submit(...)` (Colab only), then
