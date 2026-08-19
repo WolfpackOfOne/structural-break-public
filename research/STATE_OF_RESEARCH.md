@@ -1,22 +1,29 @@
 # STATE OF RESEARCH — 2026 ADIA Lab / CrunchDAO Structural Break Challenge (Real-Time Edition)
-**Research Director (Agent 0) · 2026-08-18 · 78 logged experiments · 8 agents · waves 1-6 complete**
+**Research Director (Agent 0) · 2026-08-19 · 79 logged experiments · 8 agents · waves 1-6 complete**
 
 ---
 
-## CURRENT CHAMPION — seven-stream rank-average ensemble (`RT-131`)
+## CURRENT CHAMPION — seven-stream **logit-average** ensemble (`RT-160`)
 
 | | |
 |---|---|
-| **Architecture** | 7 LightGBM streams → equal-weight average of **within-timestep rank percentiles** |
-| **Mean OOF TS-AUC** | **0.62541** (pooled 0.62524) |
-| **Per-fold** | 0.63667 / 0.62004 / 0.63598 / 0.61715 / 0.61722 (std 0.00895) |
+| **Architecture** | 7 LightGBM streams → equal-weight average of **logits** |
+| **Mean OOF TS-AUC** | **0.62561** (pooled 0.62544) |
+| **Per-fold** | 0.63653 / 0.61998 / 0.63622 / 0.61762 / 0.61772 (std 0.00868) |
 | **Ensemble delta over the best single model** | **+0.01025** |
 | **Weights** | none, and none is the right answer — see below |
 
-The blend operates on within-timestep rank percentiles because TS-AUC is
-invariant to any monotone transform applied identically inside a timestep: ranks
-are the metric's own view of a score, and averaging there is the only blend that
-respects it.
+**The blend must be a per-series function, and this nearly went wrong.** The
+previous champion (`RT-131`) averaged *within-timestep rank percentiles* — the
+rank of a series' score among all series alive at that online index. That is a
+function of the cross-section, and the crunch runner is series-sequential and
+single-pass: it must emit series `i`'s score at step `t` before it has seen series
+`i+1`. **The cross-section does not exist at inference, so RT-131 could never have
+been submitted.** Averaging logits is deployable, and it costs nothing —
+0.62544 against the rank average's 0.62524, fractionally *better*. Frozen
+per-stream quantile normalisation gives 0.62500; raw probability averaging gives
+0.62288 and should be avoided, because the pairwise stream emits an unbounded
+margin rather than a probability and a plain mean is scale-mismatched.
 
 **Weighting and selection both lose.** Honest leave-one-fold-out greedy subset
 selection scores 0.62442 (−0.0008 against simply using everything); a LOFO
@@ -28,11 +35,12 @@ fitting fold noise. **The equal average has no parameters, so it has no paramete
 variance.** The submission blend rule is therefore: average the rank percentiles
 of every stream you have.
 
-**Lockbox.** The 4-stream version of this ensemble scored **0.61214** on the 2,000
-untouched series against a 0.62374 dev estimate (−0.0116). The 7-stream blend has
-*not* been re-measured there and deliberately will not be: the composition rule
-gained no free parameters, so there is nothing new to confirm, and the lockbox is
-worth more unspent. Expect the same ~0.011 haircut, i.e. roughly **0.614**.
+**Lockbox.** The 4-stream rank-average version scored **0.61214** on the 2,000
+untouched series against a 0.62374 dev estimate (−0.0116). The 7-stream logit
+blend has *not* been re-measured there and deliberately will not be: the
+composition rule gained no free parameters, so there is nothing new to confirm,
+and the lockbox is worth more unspent. Expect the same ~0.011 haircut, i.e.
+roughly **0.614**.
 
 ### The seven streams
 
@@ -100,7 +108,8 @@ research gain.
 | `RT-101` `m00_core` alone (calibrated null evidence + LightGBM) | 0.56349 | +0.0430 |
 | `RT-100` best single model | 0.61500 | +0.0945 |
 | `RT-130` 4-stream ensemble | 0.62374 | +0.1032 |
-| **`RT-131` 7-stream ensemble** | **0.62524** | **+0.1047** |
+| `RT-131` 7-stream rank average (not implementable) | 0.62524 | — |
+| **`RT-160` 7-stream logit average (deployable)** | **0.62544** | **+0.1049** |
 
 Paired series-level bootstrap (120 replicates, resampling whole series):
 champion − baseline 0 = **+0.0951, 95 % CI [+0.0841, +0.1059], 120/120 replicates positive**;
@@ -120,7 +129,7 @@ their code, so this is a reconstruction on our folds, not a byte-level replicati
 | + residual monitoring (~0.557) | `m00_core`+`m04_resid` | 0.6024 (screen fold 0) |
 | + LightGBM stack (~0.575–0.579) | `RT-101` `m00_core` alone, full 5-fold | 0.5635 |
 | — | `RT-100` best single model, full 5-fold | 0.6150 |
-| — | **`RT-131` ensemble, full 5-fold** | **0.6252** |
+| — | **`RT-160` ensemble, full 5-fold** | **0.6254** |
 
 We clear the public band by ~0.046 on 5-fold series-level OOF and by ~0.033 on
 the untouched lockbox.
@@ -335,12 +344,16 @@ Full detail in `research/FAILED_EXPERIMENTS.md` (17 recorded negatives). Headlin
 
 ## COMPUTE / DEPLOYMENT RISKS
 
-- Feature build is ~0.25 s/series (shared context 0.06 s + modules), fully vectorised,
-  memory-bounded, single-pass. That is comfortably inside a streaming budget, but the
-  modules are currently written **batch-first**: they compute the whole online
-  trajectory at once from cumulative sums. A true streaming port with incremental state
-  is required and has **not been written or parity-tested**. This is the largest
-  outstanding deployment risk.
+- **Streaming port is under way — see `research/reports/streaming_port.md`.** A
+  provably-correct path now exists (`ReferenceStreamer`, bitwise identical to the
+  batch matrix), the context is dual-mode so module code is shared between batch and
+  stream, `m00_core` is ported with bitwise parity, and `tests/test_streaming.py`
+  guards it. But the reference path costs **93 ms/point** across the seven champion
+  modules, and six modules remain unported. Roughly the first fifth of the job.
+- The remaining bottleneck is **per-column numpy call overhead**, not algorithmic
+  cost: `m00_core` alone issues ~80 null-calibration calls and ~129 clips per emitted
+  row, each on a length-1 array. Batching those into one vectorised call per step (or
+  a numba row builder) is where the last order of magnitude lives.
 - 500 columns × 600 trees is a large but deployable model; distillation has not been
   needed or tested.
 - All research ran on **2 CPU cores and 7 GB RAM**, which shaped what was attempted:

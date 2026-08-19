@@ -490,3 +490,42 @@ variance in its parameters because it has no parameters.
 **Consequence for the submission:** the blend rule is "average the within-timestep
 rank percentiles of every stream you have" — nothing to tune, nothing to leak,
 and one fewer thing that can silently overfit between now and the deadline.
+
+## agent0 / RT-131 — the rank-average champion was NOT IMPLEMENTABLE (caught before the port)
+
+**What was wrong.** `RT-131` blends seven streams by averaging their
+**within-timestep rank percentiles** — the rank of a series' score among all
+series alive at online index `t`. That is a function of the cross-section at `t`.
+
+The crunch runner is **series-sequential and single-pass**: `infer(datasets, ...)`
+walks one series at a time and must emit the score for online step `t` of series
+`i` before series `i+1` has been seen at all. The cross-section at `t` does not
+exist at inference. **RT-131 could never have been submitted**, and it was the
+recorded champion for a full wave.
+
+**How it was missed.** Rank-averaging was chosen for a correct reason — TS-AUC is
+invariant to monotone transforms applied identically within a timestep, so ranks
+are the metric's own view of a score. That argument is about *evaluation*, where
+the whole cross-section is in hand. It silently smuggled in an assumption about
+*inference* that the interface does not grant. **A blend rule is only deployable
+if it is a fixed per-series function of one series' own scores.**
+
+**The fix, and its cost:**
+
+| blend | pooled OOF | deployable? |
+|---|---|---|
+| within-timestep rank average (`RT-131`) | 0.62524 | **no** |
+| **logit average (`RT-160`)** | **0.62544** | **yes** |
+| frozen per-stream quantile normalisation, then average | 0.62500 | yes |
+| raw probability average | 0.62288 | yes |
+
+**Deployability costs −0.0002, i.e. nothing** — the logit average is fractionally
+*better*. Raw-probability averaging is the one to avoid: the pairwise stream emits
+an unbounded margin rather than a probability, so a plain mean is scale-mismatched
+and loses 0.0024.
+
+**The lesson is about sequencing, not about ranks.** This was found by reading the
+inference contract *before* starting the streaming port. Had the port been built
+first, the discovery would have come after writing seven models' worth of
+incremental state around a blend that cannot exist. **Check what the runtime
+interface can actually observe before optimising anything that assumes more.**

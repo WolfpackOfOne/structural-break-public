@@ -50,7 +50,7 @@ def build(ctx):
     cols: list[str] = []
     out: list[np.ndarray] = []
 
-    L = np.arange(1, n + 1, dtype=np.float64)
+    L = ctx.idx()
 
     # ---- expanding-window evidence, robust-z against the length-matched null
     for name in TR_EXP:

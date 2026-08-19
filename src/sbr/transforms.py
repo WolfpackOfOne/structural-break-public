@@ -112,10 +112,24 @@ def build_transforms(x: np.ndarray, hp: HistParams, ar_resid: np.ndarray | None 
         out["res_mean"] = e
         out["res_sq"] = e * e
         out["res_abs"] = np.abs(e)
-        out["res_lag1"] = np.concatenate([[0.0], e[1:] * e[:-1]])
-        out["res_sq_lag1"] = np.concatenate([[0.0], (e[1:] ** 2) * (e[:-1] ** 2)])
+        out["res_lag1"] = _lag_product(e, e, 1)
+        out["res_sq_lag1"] = _lag_product(e ** 2, e ** 2, 1)
     # lag products for ACF-style monitoring on the standardised raw series
-    out["lag1"] = np.concatenate([[0.0], z[1:] * z[:-1]])
-    out["lag2"] = np.concatenate([[0.0, 0.0], z[2:] * z[:-2]])
-    out["abslag1"] = np.concatenate([[0.0], np.abs(z[1:]) * np.abs(z[:-1])])
+    out["lag1"] = _lag_product(z, z, 1)
+    out["lag2"] = _lag_product(z, z, 2)
+    out["abslag1"] = _lag_product(np.abs(z), np.abs(z), 1)
+    return out
+
+
+def _lag_product(a: np.ndarray, b: np.ndarray, k: int) -> np.ndarray:
+    """``a[t] * b[t-k]``, zero for the first k positions, always length ``len(a)``.
+
+    Written this way because the obvious ``concatenate([[0]*k, a[k:] * b[:-k]])``
+    returns length ``k`` instead of 1 when the array is shorter than the lag --
+    harmless in batch mode where every online segment has at least 10 points, and
+    an immediate crash at the first point of a streaming series.
+    """
+    out = np.zeros(len(a), dtype=np.float64)
+    if len(a) > k:
+        out[k:] = a[k:] * b[:-k]
     return out

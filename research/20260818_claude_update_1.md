@@ -19,10 +19,19 @@ All figures are the official Time-Stratified AUC on **series-level** folds. The
 | `m00_core` alone — calibrated null evidence + LightGBM (`RT-101`) | 0.56349 | — |
 | Best single model, 500 causal features (`RT-100`) | 0.61510 | 0.60791 |
 | Four-stream ensemble (`RT-130`) | 0.62394 | **0.61214** |
-| **Seven-stream ensemble (`RT-131`) — current champion** | **0.62541** | not re-measured |
+| Seven-stream **rank**-average ensemble (`RT-131`) — *not implementable, see below* | 0.62541 | — |
+| **Seven-stream logit-average ensemble (`RT-160`) — current champion** | **0.62561** | not re-measured |
 
-Per-fold for the champion: 0.63667 / 0.62004 / 0.63598 / 0.61715 / 0.61722
-(std 0.00896). Paired series-level bootstrap against the shipped detector:
+Per-fold for the champion: 0.63653 / 0.61998 / 0.63622 / 0.61762 / 0.61772
+(std 0.00868).
+
+> **Correction logged 2026-08-19.** `RT-131` blended streams by averaging
+> within-timestep rank percentiles across series. The crunch runner is
+> series-sequential and single-pass, so that cross-section does not exist at
+> inference and `RT-131` could never have been submitted. Averaging logits is a
+> per-series function, is deployable, and scores 0.62544 against the rank
+> average's 0.62524 — deployability costs nothing. Found by reading the inference
+> contract before starting the streaming port rather than after. Paired series-level bootstrap against the shipped detector:
 **+0.0951, 95 % CI [+0.0841, +0.1059], 120/120 replicates positive.**
 
 For context, the strongest public 2026 approaches described in the deep-research
