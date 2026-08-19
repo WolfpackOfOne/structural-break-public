@@ -53,3 +53,13 @@ models/
 # Local environment
 .env
 .env.*
+
+# Wave-2: rebuilt artifacts, never committed (see REPRODUCIBILITY_MANIFEST.json)
+cache/
+logs/
+research/oof/
+*.npy
+research/RESULTS.csv.lock
+
+# built submission notebooks are artifacts: rebuild with research/scripts/build_submission.py
+submissions/*.ipynb

@@ -1,0 +1,39 @@
+{
+  "protocol": "battery protocol: 400k training rows, champion hyperparameters, folds 0 and 1, scored against TRUE labels with the official TS-AUC",
+  "label_permutation": {
+    "per_fold": [
+      0.50946,
+      0.48804
+    ],
+    "mean": 0.48875,
+    "design": "whole-series label permutation: each series inherits another series' RELATIVE tau, preserving the label-trajectory shape. Row-level permutation would destroy the time structure and make the control trivially easy.",
+    "verdict": "PASS - indistinguishable from chance"
+  },
+  "time_only": {
+    "per_fold": [
+      0.5,
+      0.5
+    ],
+    "mean": 0.5,
+    "design": "the only inputs are m00_core::t_online and log_t_online",
+    "verdict": "PASS - EXACTLY 0.5, as theory requires: under TS-AUC any function of t alone is constant inside every comparison"
+  },
+  "random_feature_block": {
+    "status": "INCOMPLETE - the process was OOM-killed after the first control arm (fold 0 without the block, 0.62567). A memory-light rerun is scripted at research/scripts/wave2_nc_randomblock.py.",
+    "partial": {
+      "without_fold0": 0.62567
+    }
+  },
+  "series_id_and_context_permutation": {
+    "status": "NOT RERUN",
+    "note": "covered by wave 1's m05_ctx within-fold derangement control (-0.057 below no-context at all); see research/FAILED_EXPERIMENTS.md"
+  },
+  "future_poisoning": {
+    "verdict": "PASS",
+    "note": "tests/test_stream_engine_parity.py and research/scripts/local_runner.py; rewriting every observation after t leaves every emitted row bit-identical"
+  },
+  "n_online_leak_guard": {
+    "verdict": "PASS",
+    "note": "tests/test_production_contract.py::test_n_online_is_never_a_feature; red team measured AUC(score -> n_online>median) = 0.488-0.514 across six timestep bands"
+  }
+}
