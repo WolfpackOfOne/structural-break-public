@@ -25,7 +25,9 @@ import numpy as np
 from sbr.pipeline import Data
 from sbr.metric import ts_auc_flat
 
-STREAMS = ["RT-100", "RT-120", "RT-121", "RT-122", "RT-123", "RT-124", "RT-125"]
+import os
+STREAMS = os.environ.get("SBR_STREAMS", "RT-100,RT-120,RT-121,RT-122,RT-123,RT-124,RT-125").split(",")
+OUT = os.environ.get("SBR_BLEND_OUT", "/home/claude/sb/research/reports/deployable_blend.json")
 d = Data()
 dev = d.rows_for([0, 1, 2, 3, 4])
 y, t, rf = d.y[dev], d.t[dev].astype(np.int64), d.row_fold[dev]
@@ -99,5 +101,5 @@ out["summary"] = {
     "cost_of_deployability": out[best_dep]["ts_auc"] - out["rank_average_NOT_DEPLOYABLE"]["ts_auc"],
     "still_beats_best_single_by": out[best_dep]["ts_auc"] - max(out["per_stream"].values()),
 }
-json.dump(out, open("/home/claude/sb/research/reports/deployable_blend.json", "w"), indent=2)
+json.dump(out, open(OUT, "w"), indent=2)
 print(json.dumps(out, indent=2))

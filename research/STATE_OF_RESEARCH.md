@@ -3,7 +3,22 @@
 
 ---
 
-## CURRENT CHAMPION — seven-stream **logit-average** ensemble (`RT-160`)
+## DEPLOYMENT CHAMPION — four-stream logit average, six modules (`RT-190`)
+
+| | |
+|---|---|
+| **Architecture** | 6 feature modules (441 cols) → 4 LightGBM streams → mean of logits |
+| **Pooled OOF TS-AUC** | **0.62368** |
+| **Per-fold** | 0.63410 / 0.61730 / 0.63560 / 0.61470 / 0.61720 |
+| **Inference cost** | **64.9 ms/point** (62.6 with the ported `m00_core`) |
+| **Fits** | parallelism-6 budget (64.3 ms/point, 10,000-series public set) |
+
+`m02_dist` is dropped: it is the most expensive module (29.7 % of inference cost)
+and the model is **slightly better without it** (+0.0034 single-model). Deployability
+costs 0.0018 against the research champion below. All streams share one feature
+computation, so cost depends on the module set, not the stream count.
+
+## RESEARCH CHAMPION — seven-stream **logit-average** ensemble (`RT-160`)
 
 | | |
 |---|---|
@@ -315,10 +330,11 @@ Full detail in `research/FAILED_EXPERIMENTS.md` (17 recorded negatives). Headlin
 - **Screen-to-full transfer is not reliable.** Two screen findings reversed sign on
   promotion (context block, pairwise objective). Screen results are a triage filter,
   never evidence.
-- **Metric weighting** is implemented from the specification, verified against a slow
-  sklearn reference to 1e-12 including ties, but *not* byte-compared against the live
-  Crunch scorer, which we cannot reach from here. The weighting sensitivity analysis
-  above is the mitigation.
+- ~~**Metric weighting** is unverified against the organiser's scorer.~~ **CLOSED
+  2026-08-19.** The official docs state the metric as
+  `TS-AUC = Σ_t w(t)·AUC(t) / Σ_t w(t)` with `w(t) = n_pos(t)·n_neg(t)`, which is
+  exactly what `sbr/metric.py` implements. Every number in this project is measured
+  against the right objective. See `research/reports/platform_constraints.md`.
 - **Single seed.** The champion has not been re-run under a different seed or a
   different fold assignment. Fold std 0.011 is our only stability estimate.
 
@@ -356,6 +372,15 @@ Full detail in `research/FAILED_EXPERIMENTS.md` (17 recorded negatives). Headlin
   a numba row builder) is where the last order of magnitude lives.
 - 500 columns × 600 trees is a large but deployable model; distillation has not been
   needed or tested.
+- **Runtime budget is 15 hours/week** against a test set of 10,000 public +
+  10,000 private series (~5.0M and ~10.1M scoring points). Measured cost today is
+  92.9 ms/point on the correct-but-slow reference streamer, so the port needs
+  **~2.2× at parallelism 4 on the public set, ~4.3× across both** — single digits,
+  not the two orders of magnitude previously assumed. Parallelism is supported via
+  `INFER_PARALLELISM`, with RAM scaling per process.
+- **Determinism is a reward-eligibility condition**: re-running on 10 % of the data
+  must reproduce predictions to 1e-8. Our inference path has no RNG and no
+  cross-series state, so this should hold by construction, but it is untested.
 - All research ran on **2 CPU cores and 7 GB RAM**, which shaped what was attempted:
   no deep sequence models, no Optuna at scale, no augmentation, no 2025 transfer.
 

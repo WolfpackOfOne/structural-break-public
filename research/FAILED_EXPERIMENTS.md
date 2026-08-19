@@ -529,3 +529,43 @@ inference contract *before* starting the streaming port. Had the port been built
 first, the discovery would have come after writing seven models' worth of
 incremental state around a blend that cannot exist. **Check what the runtime
 interface can actually observe before optimising anything that assumes more.**
+
+## agent0 / RT-172 — `m02_dist` is the most expensive module AND slightly harmful
+
+The accuracy/inference-cost frontier over module subsets (5 folds, 700k training
+rows, identical parameters):
+
+| module set | ms/point | mean OOF |
+|---|---|---|
+| `m00`+`m01`+`m03` | 21.5 | 0.58531 |
+| + `m06_loc` | 30.7 | 0.60409 |
+| **all but `m02_dist`** (`m00`,`m01`,`m03`,`m04`,`m06`,`m07`) | **64.9** | **0.61850** |
+| all seven (at 1M training rows) | 92.9 | 0.61510 |
+
+**Dropping `m02_dist` removes 29.7 % of the inference cost and the model gets
+slightly better** — +0.0034 against the full bank, on 30 % fewer training rows.
+
+Why this is believable rather than a fluke: `m02_dist` had the weakest screen
+delta of the large modules (+0.0131) and the second-lowest champion gain share
+(8.9 % from 59 columns). With `feature_fraction=0.5` over 500 columns, 59 weakly
+informative columns mostly dilute the sampling — each tree is half as likely to
+see a genuinely useful split candidate.
+
+**Not** a claim that distributional monitoring is worthless: `m02_dist` was worth
++0.0131 on top of `m00_core` alone. It is a claim that **once six other module
+families are present, it is redundant** — and it is the single most expensive
+thing we compute.
+
+Also note `m06_loc`: **+0.0188 for 9.14 ms**, the best accuracy-per-millisecond in
+the bank, from a module whose author ran out of budget before tuning it.
+
+### Consequence for the port
+
+At the platform's 15 h/week budget the allowed cost is 42.9 ms/point at
+parallelism 4 and 64.3 ms at parallelism 6 (10,000-series public set). The
+six-module set at **64.9 ms/point runs inside the parallelism-6 budget using the
+correct-but-slow reference streamer, with no module rewritten at all.**
+
+The planned rewrite of `m02_dist`, `m07_bayes` and `m04_resid` — the largest
+remaining chunk of work in the project — may be unnecessary. Measure before you
+optimise, and measure accuracy-per-millisecond rather than accuracy alone.

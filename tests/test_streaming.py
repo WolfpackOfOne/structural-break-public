@@ -55,3 +55,45 @@ def test_single_online_point_does_not_crash():
     for name, mod in base.REGISTRY.items():
         cols, A = mod.fn(ctx)
         assert A.shape == (1, len(cols)), f"{name} emitted {A.shape} for a single online point"
+
+
+def test_streaming_is_deterministic():
+    """The platform re-runs inference on 10 % of the data and requires agreement
+    to 1e-8; non-deterministic solutions are ineligible for rewards.
+
+    Our inference path has no RNG and carries no cross-series state, so this
+    should hold by construction -- which is exactly the kind of claim worth a
+    test rather than an assertion.
+    """
+    base.load_all()
+    hist, online = _series(seed=11)
+    mods = ["m00_core"]
+    runs = []
+    for _ in range(2):
+        st = streaming.IncrementalStreamer(hist, mods)
+        runs.append(np.array([st.update(x) for x in online]))
+    assert np.array_equal(runs[0], runs[1], equal_nan=True), "streaming output is not reproducible"
+
+
+def test_streaming_carries_no_cross_series_state():
+    """Scoring another series first must not change this series' scores.
+
+    Cross-series state is what would be needed to approximate within-timestep
+    rank normalisation at inference. The organisers warn it breaks determinism
+    under their parallelism, so the property we want is its absence.
+    """
+    base.load_all()
+    h1, o1 = _series(seed=1)
+    h2, o2 = _series(seed=2)
+    mods = ["m00_core"]
+
+    st = streaming.IncrementalStreamer(h1, mods)
+    alone = np.array([st.update(x) for x in o1])
+
+    warm = streaming.IncrementalStreamer(h2, mods)
+    for x in o2:
+        warm.update(x)
+    st2 = streaming.IncrementalStreamer(h1, mods)
+    after = np.array([st2.update(x) for x in o1])
+
+    assert np.array_equal(alone, after, equal_nan=True), "a prior series changed this series' output"
