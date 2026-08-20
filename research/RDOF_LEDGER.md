@@ -296,3 +296,101 @@ or exceeds 7-booster cost by more than 2x end-to-end.
 
 **Measured before any score is read**: 1, 7, 14 and 35 boosters on the same
 feature stream, p50 and p95 ms/point, model load time, memory, artifact size.
+
+---
+
+# WAVE 4 — RESULTS AGAINST THE PRE-REGISTRATION
+
+## W4-E1 — **H1 CONFIRMED.** Specialist diversity beats bagging, but bagging is more than half the gain.
+
+Bar fixed before the first run: `> +0.0030` mean **and** positive on `>= 4 of 5`
+folds. Measured: **+0.00417, positive on 5 of 5.** Both conditions met.
+
+| | mean OOF | per fold |
+|---|---|---|
+| single champion `RT-300` | 0.61605 | 0.62903 / 0.61061 / 0.62688 / 0.61223 / 0.60152 |
+| seven seed clones, SCDF | 0.62164 | 0.63817 / 0.61667 / 0.63020 / 0.61437 / 0.60879 |
+| seven specialists, SCDF | **0.62581** | 0.63828 / 0.62040 / 0.63392 / 0.61750 / 0.61894 |
+
+Paired series bootstrap, 200 replicates, common random numbers:
+
+| contrast | mean | 95% CI | positive |
+|---|---|---|---|
+| specialist − seed clone | +0.00409 | [+0.00199, +0.00614] | 200/200 |
+| specialist − single | +0.00957 | [+0.00662, +0.01227] | 200/200 |
+| seed clone − single | +0.00548 | [+0.00285, +0.00810] | 200/200 |
+
+**The decomposition, which is the actual answer to the question asked:**
+
+```
+single champion                    0.61605
+  + ordinary bagging (7 seeds)     +0.00559   <- 57% of the total
+  + genuine specialist diversity   +0.00417   <- 43% of the total
+= seven-stream deployable          0.62581
+```
+
+So the seven-stream architecture is **not** a bagging illusion — it clears its
+own pre-registered bar on every fold with a bootstrap CI well clear of zero.
+But **the majority of its advertised advantage is reproducible by training one
+model seven times with different seeds**, and no wave-2 document says so. The
+honest headline is "+0.0042 for specialisation on top of +0.0056 for bagging",
+not "+0.0106 for a seven-stream architecture".
+
+**Cross-platform corroboration.** This macOS specialist ensemble scores 0.62581;
+the Linux wave-2 `RT-250` scored 0.62589. A 0.00008 gap across two platforms,
+two rebuilds of every stream, and a complete loss of the original OOF vectors.
+`RT-250` is now independently reproduced.
+
+### Four things the arms say that were not asked for
+
+1. **Calibration only matters when the members disagree about scale.** On the
+   specialist arm the family spread is large — raw 0.62314, logit 0.62479,
+   global CDF 0.62550, SCDF 0.62581, a +0.00267 spread. On the seed-clone arm
+   every family lands within 0.00016. The SCDF machinery is not a general
+   improvement; it is specifically a fix for heterogeneous score scales, which
+   is exactly what the seven specialists have and seven seed clones do not.
+
+2. **The legal calibration is not "recovering a fraction of the oracle" — it
+   matches it.** Specialist SCDF 0.62581 vs the illegal within-timestep rank
+   oracle 0.62580; seed-clone SCDF 0.62164 vs oracle 0.62160. In both arms the
+   deployable transform is *at or above* the ceiling it was supposed to be
+   approximating. The oracle framing has outlived its usefulness.
+
+3. **Correlation did separate the arms, but only in the aggregate.** Specialist
+   pairwise within-t rank correlation averages 0.6362 over [0.400, 0.782];
+   seed clones average 0.7996 over [0.795, 0.803]. Wave 3's warning stands — the
+   *top* of the specialist range (0.782) is indistinguishable from a seed clone,
+   so per-stream correlation is still not a promotion credential. What separates
+   the arms is the spread, not any single number.
+
+4. **The specialists are individually WORSE.** Specialist members average
+   0.61227; seed clones average 0.61544. The specialist arm wins the blend while
+   losing on every member-quality measure — which is the ensemble effect working
+   as designed, and a reminder that stream-level TS-AUC is the wrong thing to
+   optimise for a member.
+
+## W4-E3 — corrected SCDF time coordinate: **NEUTRAL, adopt for cleanliness**
+
+`log(n_seen) = log(t+1)` vs the incumbent `log(max(t,1))`, cross-fitted,
+identical anchors/grid/min_n:
+
+| arm | incumbent | corrected | delta |
+|---|---|---|---|
+| specialist | 0.625814 | 0.625815 | +0.000001 |
+| seed clone | 0.621640 | 0.621640 | 0.000000 |
+
+Inside the pre-registered no-regression band by three orders of magnitude. The
+adoption rule fixed in advance says the corrected definition wins ties, so it is
+adopted: it is the coordinate that does not collapse t=0 onto t=1 and does not
+score t=0 rows against a grid they were excluded from building. The gain is
+correctness at the youngest online index, not TS-AUC — and TS-AUC at age 0–5 is
+0.513, so there was never much there to win.
+
+### Degrees of freedom spent in W4-E1/E3
+
+17 full-protocol runs, 2 pre-declared ensemble compositions, 5 blend families all
+reported and none selected from, 1 seed list fixed in advance and not revised,
+0 hyperparameter searches, 0 calibration tuning. The hybrid composition
+(4 specialists + 3 seed clones) was **not** tested, because it was not
+pre-registered and testing it after seeing both arms is exactly the selection
+this experiment exists to avoid.
