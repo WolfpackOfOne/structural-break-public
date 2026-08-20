@@ -4,7 +4,13 @@ from __future__ import annotations
 import contextlib, json, os, sys
 import numpy as np
 
-ROOT = os.environ.get("SBR_ROOT", "/home/claude/sb")
+# Integration (wave3): repo-relative ROOT fallback from codex/wave3-engineering
+# (works in any checkout, not just the dead container path); the SBR_FEATURES
+# override in cols_of() below is kept from research/wave2-2026.
+ROOT = os.environ.get(
+    "SBR_ROOT",
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")),
+)
 sys.path.insert(0, f"{ROOT}/src")
 import sbr.pipeline as PL
 
@@ -53,6 +59,7 @@ def alt_folds(name: str):
 def cols_of(modules):
     names = []
     for m in modules:
-        meta = json.load(open(os.path.join(os.environ.get("SBR_FEATURES", f"{ROOT}/cache/features"), f"{m}.cols.json")))
+        meta = json.load(open(os.path.join(
+            os.environ.get("SBR_FEATURES", f"{ROOT}/cache/features"), f"{m}.cols.json")))
         names += [f"{m}::{c}" for c in meta["cols"]]
     return names

@@ -8,8 +8,12 @@ break-free historical segment, the rest the online segment.
 """
 import numpy as np, pandas as pd, pyarrow.parquet as pq, os, sys
 
-RAW = "/mnt/user-data/uploads/crunch 2026/structural-break/data"
-OUT = sys.argv[1] if len(sys.argv) > 1 else "/home/claude/sb/cache/store"
+ROOT = os.environ.get(
+    "SBR_ROOT",
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")),
+)
+RAW = os.environ.get("SBR_RAW_DIR", f"{ROOT}/data")
+OUT = sys.argv[1] if len(sys.argv) > 1 else f"{ROOT}/cache/store"
 XF = sys.argv[2] if len(sys.argv) > 2 else "X_train.parquet"
 YIF = sys.argv[3] if len(sys.argv) > 3 else "y_train_index.parquet"
 

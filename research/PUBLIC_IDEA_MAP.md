@@ -1710,3 +1710,30 @@ robots) · x.com/adia_lab/status/1986732959710498829 (robots) ·
 kaggle.com/code/crunchdao/structural-break-real-time-baseline (no content served) ·
 github.com/crunchdao/competitions tree pages (robots) · github.com/search (robots) ·
 sciencedirect NUNC full text (robots) · api.hub.crunchdao.com leaderboard (404)
+
+---
+
+## CODEX WAVE3 ADDENDUM — 2025 repo re-access and translation
+
+Date: 2026-08-20 UTC. Detailed table: `research/reports/codex_2025_translation.md`.
+
+- `VERIFIED` — `github.com/aParsecFromFuture/ADIA-Lab-Structural-Break-Challenge-Solution`
+  was reachable through the GitHub connector. Repository listing, `README.md`, and
+  `submission.ipynb` were read. The technical findings in entries 4, 9, and related
+  aParsec references remain source-backed: transform bank, multi-window stats,
+  F-test/Levene/KS on absolute values, TabPFN OOF meta-feature, SHAP/gain feature
+  selection, and four averaged LightGBM classifiers. The repo's 2nd-place claim is
+  `ATTESTED` by the repo/README, not independently re-ranked in this pass.
+
+- `VERIFIED` — `github.com/StefanConstantin707/adia-lab-structural-break-challenge`
+  was reachable through the GitHub connector. Repository listing, `README.md`,
+  `main.py`, and high-signal feature modules under `src/features/` were read.
+  Verified reusable ideas include distribution/residual distances
+  (Wasserstein, energy, KS, Cramer-von Mises, Epps-Singleton), CUSUM/CUSUMSQ
+  residual diagnostics, Chow-style AR regression break features, spectral
+  distances, volatility/vol-of-vol/asymmetry features, and ACF/PACF/Ljung-Box
+  dependence descriptors.
+
+- `NOT FOUND` in this pass — no new public 2026 real-time solution repo or
+  notebook was identified while reading these two 2025 repositories. This addendum
+  did not re-run the broader web search from Alpha Team 16.
