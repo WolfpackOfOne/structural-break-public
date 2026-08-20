@@ -66,11 +66,60 @@ Both source branches are untouched and still on `origin`.
 
 | experiment | what | status |
 |---|---|---|
-| W4-E1 | seven specialists vs seven seed clones, identical SCDF calibration | **RUNNING** — 12 trainings, logs `w4a/w4b/w4c` |
+| W4-E1 | seven specialists vs seven seed clones, identical SCDF calibration | **seed arm DONE, specialist arm running** — see below |
 | W4-E3 | SCDF time coordinate `log(t+1)` vs `log(max(t,1))` | code done and parity-checked, awaits E1's OOF |
 | W4-E5 | exact wave-1 streams for the RT-131 apples-to-apples audit | configs staged as `RT-430`..`RT-434`, not launched |
 | W4-E2 | ensemble delta under `folds_alt1/2/3` | not launched |
 | W4-E4 | 1 / 7 / 14 / 35 booster inference cost | not launched |
+
+### W4-E1 SEED-CLONE ARM — COMPLETE
+
+Seven champion-protocol models differing **only in seed**, from the seed list
+fixed before the first run (0, 1, 7, 42, 2026, 31415, 271828):
+
+| seed | id | OOF |
+|---|---|---|
+| 0 | `RT-300` | 0.61605 |
+| 1 | `RT-401` | 0.61661 |
+| 7 | `RT-402` | 0.61357 |
+| 42 | `RT-403` | 0.61687 |
+| 2026 | `RT-404` | 0.61485 |
+| 31415 | `RT-405` | 0.61498 |
+| 271828 | `RT-406` | 0.61517 |
+
+members 0.61544 +/- 0.00106 — the ledger's "seed SD ~0.0012" holds.
+
+| blend, cross-fitted | mean OOF |
+|---|---|
+| raw mean | 0.62180 |
+| logit mean | 0.62172 |
+| global CDF | 0.62166 |
+| **smooth time CDF (incumbent)** | **0.62164** |
+| smooth time CDF (n_seen = t+1) | 0.62164 |
+| oracle within-t rank average (ILLEGAL) | 0.62160 |
+
+**Zero new information buys +0.00559 over the single champion** (0.61605 ->
+0.62164). The wave-2 specialist ensemble's headline gain over its single model
+was +0.01057. So roughly **half** of the seven-stream ensemble's advertised
+advantage is reproducible by bagging one model seven times. The Mac-to-Mac
+specialist number is still training; that is what settles it.
+
+Three things fall out of this arm on their own:
+
+1. **The calibration machinery buys nothing when the members are exchangeable.**
+   All five families land within 0.00016 of each other. Every elaborate transform
+   in the deployable stack only earns its keep because the wave-2 streams are on
+   *different scales*.
+2. **The oracle is not a ceiling here — it is a floor.** The illegal
+   within-timestep rank average (0.62160) is *below* the legal SCDF blend
+   (0.62164). "Recovering a percentage of the oracle gain" is a meaningless frame
+   for exchangeable members, and the 99.7% figure needs the W4-E5 audit before it
+   can be quoted at all.
+3. **Seed clones sit at within-t rank correlation 0.7996** (range 0.795–0.803).
+   `portfolio.json` puts the original specialists at 0.617–0.780 against the
+   champion. The specialists are more decorrelated — but the margin is far
+   narrower than the wave-2 story implies, and correlation alone was never going
+   to separate them.
 
 ### Already established before any of it runs
 
