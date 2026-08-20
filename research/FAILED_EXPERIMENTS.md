@@ -490,3 +490,141 @@ variance in its parameters because it has no parameters.
 **Consequence for the submission:** the blend rule is "average the within-timestep
 rank percentiles of every stream you have" — nothing to tune, nothing to leak,
 and one fewer thing that can silently overfit between now and the deadline.
+
+---
+
+## WAVE 3 / W3-A1 `m08_chan` — CANNOT BE VERIFIED FROM THIS REPOSITORY
+
+`BRIEF_CLAUDE_wave3_alpha.md` section 4 and `HANDOFF_WAVE3.md` section 5 both
+report a completed and rejected wave-3 experiment: a transformed detector bank
+(`m08_chan`, CUSUM / Page-Hinkley / Shiryaev-Roberts over six channels, 72
+columns) with a matched ABL delta of **−0.00073**, a deployable ensemble delta
+of +0.00023, and a standalone of 0.61201, under experiment IDs `RT-301`/`RT-302`.
+
+**None of it exists in the repository.**
+
+| claimed artifact | actual state |
+|---|---|
+| `src/sbr/features/m08_chan.py` "is on disk" | absent from the working tree **and** from every commit of every branch |
+| write-up "in `FAILED_EXPERIMENTS.md`" | no such section existed in this file before this one |
+| `RT-301` / `RT-302` rows | absent from `research/RESULTS.csv`; the string `RT-30` appears nowhere in `research/` in any commit |
+| pre-registration "in `RDOF_LEDGER.md`" | absent |
+
+The result may well be exactly as described — the mechanism and the numbers are
+plausible and internally consistent — but it is prose, not evidence, and under
+`VALIDATION_V2.md` it cannot be cited. Two consequences, both acted on:
+
+1. **The IDs `RT-301`/`RT-302` are treated as unallocated** and are used in wave 3
+   for the backward-CUSUM experiment, pre-registered in `RDOF_LEDGER.md`.
+2. **The derived advice is not inherited.** The brief's recommendation that "only
+   `sgn·sgn` and `e_t e_{t-1}` are worth isolating" rests on an ablation nobody
+   can inspect. Those two channels are neither privileged nor excluded; if a
+   dependence-channel experiment is run it gets its own pre-registration and its
+   own matched control.
+
+**Lesson, and it is the same lesson as the 66 `nogit` rows.** A result that lives
+only in a handoff document is not a result. The ledger row, the OOF artifact and
+the code are what make a negative result reusable — without them the next agent
+either repeats the work or, worse, trusts it.
+
+---
+
+## WAVE 3 / RT-302 — `m09_back` backward suffix-vs-prefix contrast — **NOT PROMOTED**
+
+**Hypothesis (pre-registered in `RDOF_LEDGER.md` before the run).** The metric
+loses its mass on late breaks. A *two-sample* contrast of the last `k` online
+points against the earlier online points,
+
+    D_k(t) = ( M_suffix(k) - M_prefix(t+1-k) ) / sqrt( sd_null(k)^2 + sd_null(t+1-k)^2 )
+
+maximised over `k`, should see a late break that `m00_core`'s *one-sample*
+trailing-window bank cannot, because the one-sample form carries the series'
+persistent online-vs-historical offset in every window while the contrast
+differences it out.
+
+**What I built.** `src/sbr/features/m09_back.py`, 51 columns, six channels
+(level, robust scale, PIT, AR-residual level, innovation scale, lag-1 product),
+`k` grid (4, 8, 16, 32, 64, 128, 256) fixed a priori from `m00_core`'s grid with
+no tuning. 64 ms/series. Bitwise prefix-invariant (atol=0.0) on 10 series
+including the shortest in the dataset. Per-column audit clean: the `d8/d32/d128`
+columns sit at median ~0, sd ~1, which is what a correctly studentised
+two-sample statistic should look like.
+
+**The numbers.** Matched ABL protocol, 5 canonical folds, 400k training rows,
+seed 0, identical parameters, same session.
+
+| arm | mean OOF | per fold |
+|---|---|---|
+| `RT-301` control, 7 modules | 0.61257 | 0.62567 / 0.60719 / 0.62018 / 0.60506 / 0.60475 |
+| `RT-302` + `m09_back` | 0.61413 | 0.62880 / 0.61113 / 0.62178 / 0.60843 / 0.60049 |
+| **delta** | **+0.00156** | +0.00313 / +0.00394 / +0.00160 / +0.00337 / **−0.00426** |
+
+Positive on 4 of 5 folds, delta sd 0.00301 (1.9x the mean). It therefore
+**survives its own falsification conditions** — and fails every promotion bar.
+
+**1. The mechanism is falsified by its own diagnostic.** TS-AUC by post-break age,
+the measurement the brief asks for precisely because that is where the mass is
+lost:
+
+| post-break age | RT-301 | RT-302 | delta |
+|---|---|---|---|
+| 0–5 | 0.51278 | 0.51186 | **−0.00092** |
+| 5–10 | 0.52594 | 0.52560 | **−0.00035** |
+| 10–20 | 0.54279 | 0.54063 | **−0.00215** |
+| 20–50 | 0.56866 | 0.56564 | **−0.00302** |
+| 50–100 | 0.59150 | 0.59252 | +0.00102 |
+| 100+ | 0.64569 | 0.64917 | +0.00349 |
+
+The module makes **young breaks worse and mature breaks better** — the exact
+opposite of what it was built for. All of the aggregate gain comes from the 100+
+bucket, which holds 706k of the ~1.03M post-break rows. Feature importance says
+the same thing: `m09_back` takes 1.25 % of total gain from 9.3 % of the columns,
+and six of its top eight columns are the `_pre` family — the prefix-vs-history
+*nuisance* term included as a conditioning variable — not the suffix-vs-prefix
+contrast that was the hypothesis. What got built is a lagged expanding-drift
+channel, not a late-break detector.
+
+**2. The bootstrap route to promotion is closed.** Paired series-level bootstrap,
+300 replicates: CI **[−0.00190, +0.00494]**, median +0.00156, 81.3 % of replicates
+favouring the treatment. The CI straddles zero, so it is not "materially
+favourable" under VALIDATION_V2 section 7.
+
+**3. The ensemble route is closed by its own negative control — and this is the
+part worth remembering.** The deployable logit blend `RT-301`+`RT-302` scores
+0.61627, **+0.00371** over the control, which is the alternative promotion route.
+So `RT-303` was pre-registered and run: the identical 7 modules at the identical
+protocol with **seed 1** — a stream containing no new information at all.
+
+| deployable logit blend | mean | delta vs `RT-301` |
+|---|---|---|
+| `RT-301` + `RT-302` (+ m09_back, 51 new columns) | 0.61627 | +0.00371 |
+| **`RT-301` + `RT-303` (seed clone, zero new information)** | **0.61753** | **+0.00496** |
+
+**The null-information clone blends better than the new module does**, by 0.00126.
+The ensemble delta was generic two-model variance reduction the whole time.
+
+Worse for the diversity argument: within-timestep rank correlation with the
+control is **0.8219** for `m09_back` and **0.7846** for the seed clone. *Changing
+the random seed decorrelates more than adding 51 columns of new statistics did.*
+
+**LESSON — the one to carry forward.** A deployable ensemble delta is not
+evidence for a candidate unless it beats a same-strength stream that is known to
+contain nothing new; and low within-timestep rank correlation with the champion
+is **not** a diversity credential, because a seed change buys more of it than a
+new feature family does. Every future "this stream is decorrelated and the blend
+gains" claim in this project must carry a seed-clone control. Wave 2's seven
+streams were never measured against one.
+
+**Retry warranted?** Not as a late-break specialist — that hypothesis is dead in
+this form. The `_pre` family (a lagged expanding mean, calibrated at matched
+length) is the only part that earned its gain and is worth **6 columns**, not 51,
+tested against a control that already contains `m00_core`'s expanding block. The
+suffix-vs-prefix contrast itself should not be retried by widening the `k` grid:
+the failure is that the pre-break online prefix is a *worse* reference than
+history for exactly the young breaks it was meant to help, because at small
+post-break age the suffix is short and the contrast is dominated by prefix noise.
+
+**Artifacts.** `research/reports/wave3_RT-301_vs_RT-302.json`,
+`research/reports/wave3_ensemble_control.json`, OOF vectors
+`research/oof/RT-30{0,1,2,3}.npy` (gitignored by repo policy — regenerate with
+`research/scripts/wave3_queue_a.py`).

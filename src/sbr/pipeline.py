@@ -20,7 +20,7 @@ import pandas as pd
 from sbr.metric import ts_auc_flat
 from sbr.store import load_store
 
-ROOT = "/home/claude/sb"
+ROOT = os.environ.get("SBR_ROOT", "/home/claude/sb")
 FEAT = f"{ROOT}/cache/features"
 FEAT_SCREEN = f"{ROOT}/cache/features_screen"
 FOLDS = f"{ROOT}/research/folds/folds.parquet"

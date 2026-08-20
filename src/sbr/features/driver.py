@@ -17,12 +17,13 @@ import numpy as np
 from sbr.features.base import load_all, make_ctx, REGISTRY
 from sbr.store import load_store
 
-OUT = "/home/claude/sb/cache/features"
+OUT = os.environ.get("SBR_FEATURES", os.environ.get("SBR_ROOT", "/home/claude/sb") + "/cache/features")
 
 
 def _worker(args):
     lo, hi, mods, store_path = args
     from sbr.store import load_store as _ls
+    load_all()          # spawn-start workers begin with an empty REGISTRY (macOS); fork inherited it
     st = _ls(store_path)
     res = {m: [] for m in mods}
     for i in range(lo, hi):
@@ -37,7 +38,7 @@ def _worker(args):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--modules", required=True)
-    ap.add_argument("--store", default="/home/claude/sb/cache/store")
+    ap.add_argument("--store", default=os.environ.get("SBR_STORE", os.environ.get("SBR_ROOT", "/home/claude/sb") + "/cache/store"))
     ap.add_argument("--out", default=OUT)
     ap.add_argument("--workers", type=int, default=2)
     ap.add_argument("--chunk", type=int, default=100)

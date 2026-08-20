@@ -4,7 +4,8 @@ from __future__ import annotations
 import contextlib, json, os, sys
 import numpy as np
 
-sys.path.insert(0, "/home/claude/sb/src")
+ROOT = os.environ.get("SBR_ROOT", "/home/claude/sb")
+sys.path.insert(0, f"{ROOT}/src")
 import sbr.pipeline as PL
 
 FULL = ["m00_core", "m01_seq", "m02_dist", "m03_dyn", "m04_resid", "m06_loc", "m07_bayes"]
@@ -33,13 +34,13 @@ def alt_folds(name: str):
     only the 8,000 dev series, so we materialise a full-length folds table with
     the lockbox series still marked -1 and untouched.
     """
-    base = PL.pd.read_parquet(f"/home/claude/sb/research/folds/folds.parquet")
-    alt = PL.pd.read_parquet(f"/home/claude/sb/research/folds/folds_{name}.parquet")
+    base = PL.pd.read_parquet(f"{ROOT}/research/folds/folds.parquet")
+    alt = PL.pd.read_parquet(f"{ROOT}/research/folds/folds_{name}.parquet")
     mp = dict(zip(alt.id.tolist(), alt.fold.tolist()))
     new = base.copy()
     new["fold"] = [mp.get(i, -1) for i in base.id.tolist()]
     assert (new.fold.to_numpy() >= 0).sum() == len(alt)
-    tmp = f"/home/claude/sb/cache/_folds_{name}.parquet"
+    tmp = f"{ROOT}/cache/_folds_{name}.parquet"
     new.to_parquet(tmp, index=False)
     old = PL.FOLDS
     PL.FOLDS = tmp
@@ -52,6 +53,6 @@ def alt_folds(name: str):
 def cols_of(modules):
     names = []
     for m in modules:
-        meta = json.load(open(f"/home/claude/sb/cache/features/{m}.cols.json"))
+        meta = json.load(open(os.path.join(os.environ.get("SBR_FEATURES", f"{ROOT}/cache/features"), f"{m}.cols.json")))
         names += [f"{m}::{c}" for c in meta["cols"]]
     return names
