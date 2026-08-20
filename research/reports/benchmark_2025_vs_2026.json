@@ -1,0 +1,137 @@
+{
+  "label": "2025 actual offline task benchmark; separate from 2026 oracle diagnostics",
+  "data": {
+    "path": "/home/user/Documents - Graham\u2019s MacBook Pro/structural-break-project/competitions/structural-break/quickstarters/baseline/data",
+    "files": [
+      {
+        "name": "X_test.reduced.parquet",
+        "bytes": 2380918,
+        "sha256": "de086be65642e70b38312690c65afefd044e292920df189c3be94ab02756c8db"
+      },
+      {
+        "name": "X_train.parquet",
+        "bytes": 204327238,
+        "sha256": "3f01c01bad9ecbc63f3d2c6741421f2fc1899aa84668eee4edffe26d0f99ce4a"
+      },
+      {
+        "name": "prediction.parquet",
+        "bytes": 3240,
+        "sha256": "351282716cef7993ce21b53c238512ba8fcdac12ca75bcc47149c0b9016c41ed"
+      },
+      {
+        "name": "test.csv",
+        "bytes": 145,
+        "sha256": "282334cdc5a8ae14cc5f0df681b2ebadbbfc7d754abb591722be44661f0da805"
+      },
+      {
+        "name": "train.csv",
+        "bytes": 178,
+        "sha256": "b2b192ab9ce31540a8450f6a6a441fd9b161a62d9dfd1b7e86057bea188bde35"
+      },
+      {
+        "name": "y_test.reduced.parquet",
+        "bytes": 2655,
+        "sha256": "4d65989fe02e7e834347a4212c3436f4a04dad628cec1f1af16bf7b14ea91033"
+      },
+      {
+        "name": "y_train.parquet",
+        "bytes": 61003,
+        "sha256": "84356084ce1564f8017c06fc9c961570d610e88879961284252c783b0aef5a54"
+      }
+    ],
+    "n_series": 10001,
+    "n_pos": 2909,
+    "n_neg": 7092,
+    "schema": {
+      "X_train": "MultiIndex(id,time), columns value, period; period 0 is pre-boundary and period 1 is post-boundary",
+      "y_train": "Index(id), one boolean column structural_breakpoint"
+    }
+  },
+  "folds": "generated deterministic StratifiedKFold(n_splits=5, shuffle=True, random_state=2026)",
+  "models": {
+    "n_features_rich": 280,
+    "n_features_basic": 30,
+    "best_single": {
+      "auc": 0.5716111501792384,
+      "per_fold": [
+        0.6007994110367642,
+        0.5918194068936574,
+        0.5970548034839254,
+        0.5937759004260392,
+        0.5968803164032397
+      ],
+      "selections": [
+        {
+          "fold": 0,
+          "feature": "pre500__cvm",
+          "train_auc_abs": 0.6002996272044897,
+          "sign": 1
+        },
+        {
+          "fold": 1,
+          "feature": "resid_hist__ks",
+          "train_auc_abs": 0.6033841497949836,
+          "sign": 1
+        },
+        {
+          "fold": 2,
+          "feature": "resid_hist__ks",
+          "train_auc_abs": 0.6023074514606013,
+          "sign": 1
+        },
+        {
+          "fold": 3,
+          "feature": "pre500__cvm",
+          "train_auc_abs": 0.6021075029321997,
+          "sign": 1
+        },
+        {
+          "fold": 4,
+          "feature": "resid_hist__ks",
+          "train_auc_abs": 0.6022284566442668,
+          "sign": 1
+        }
+      ]
+    },
+    "logistic": {
+      "auc": 0.6091269737402081,
+      "per_fold": [
+        0.6067314235619199,
+        0.5950737410530069,
+        0.6153517126391655,
+        0.6126629151944321,
+        0.6157176508222704
+      ]
+    },
+    "lgbm_basic": {
+      "auc": 0.6465182737045135,
+      "per_fold": [
+        0.6306447355356489,
+        0.6464371530216304,
+        0.6555116106611606,
+        0.6521527343579603,
+        0.6482655499493503
+      ]
+    },
+    "lgbm_rich": {
+      "auc": 0.664327183835606,
+      "per_fold": [
+        0.6345860910713466,
+        0.6661924047746407,
+        0.6815525957376684,
+        0.6642383881271237,
+        0.6765615382005535
+      ]
+    }
+  },
+  "bootstrap": {
+    "lgbm_rich": {
+      "mean": 0.6639890967959271,
+      "ci95": [
+        0.6481729210951802,
+        0.6765450664586473
+      ]
+    }
+  },
+  "runtime_s": 225.2
+}
