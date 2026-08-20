@@ -18,10 +18,19 @@ import numpy as np
 
 from sbr.production.model import ProductionModel
 
-#: The runner honours this. Series are independent, so parallelism is safe --
-#: and the fact that it is safe is itself the proof that no illegal
+#: The runner honours this. Series are independent, so parallelism is LEGAL --
+#: and the fact that it is legal is itself the proof that no illegal
 #: cross-series state exists.
-INFER_PARALLELISM = 4
+#:
+#: It is nevertheless 1, not 4. On the official macOS runner, P=4 segfaulted
+#: LightGBM in two workers (`exit codes: 0=-11, 1=-11`) across three separate
+#: attempts -- shared payload, process-local payload with a lazy LightGBM
+#: import, and native thread caps -- see research/reports/crunch_test_rt150.md.
+#: P=1 passed with the determinism check and projects 7.8 h on the private set
+#: against a 15 h budget, so there is nothing to buy and a submission to lose.
+#: research/scripts/build_submission.py already emits 1; this constant used to
+#: disagree with the artifact that was actually tested.
+INFER_PARALLELISM = 1
 
 
 def train(datasets: List[Tuple[int, List[float], List[float], Optional[int]]],
