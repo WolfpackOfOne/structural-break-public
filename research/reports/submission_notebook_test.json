@@ -1,14 +1,14 @@
 {
-  "runtime_s": 85.50358700752258,
-  "n_series": 40,
-  "n_points": 18709,
-  "ms_per_point": 4.570184777781955,
+  "runtime_s": 29.047447681427002,
+  "n_series": 20,
+  "n_points": 10476,
+  "ms_per_point": 2.7727613288876483,
   "deterministic": true,
   "order_independent": true,
   "future_poison_safe": true,
   "all_finite": true,
   "in_range": true,
-  "ts_auc_diagnostic_in_sample_do_not_quote": 0.9661394224390819,
+  "ts_auc_diagnostic_in_sample_do_not_quote": 0.970255244897131,
   "PASS": true,
-  "notebook": "submissions/C_ensemble_deployable.ipynb"
+  "notebook": "/path/to/workspace/structural-break-codex-wave3/submissions/C_ensemble_deployable.ipynb"
 }

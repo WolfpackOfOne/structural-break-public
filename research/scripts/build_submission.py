@@ -19,7 +19,10 @@ from __future__ import annotations
 
 import argparse, base64, hashlib, io, json, os, subprocess, zipfile
 
-ROOT = "/home/claude/sb"
+ROOT = os.environ.get(
+    "SBR_ROOT",
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")),
+)
 
 
 def pack_dir(path, arc_prefix, skip_pycache=True):
@@ -50,10 +53,14 @@ CELL_BOOT = '''\
 # ---------------------------------------------------------------------------
 import base64, hashlib, io, os, sys, zipfile
 
+for _k in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS",
+           "VECLIB_MAXIMUM_THREADS", "NUMEXPR_NUM_THREADS"):
+    os.environ.setdefault(_k, "1")
+
 _SRC_B64 = "{src_b64}"
 _MDL_B64 = "{mdl_b64}"
 
-_WORK = os.path.abspath("./_sbr_payload")
+_WORK = os.path.abspath(f"./_sbr_payload_{{os.getpid()}}")
 os.makedirs(_WORK, exist_ok=True)
 
 
@@ -80,16 +87,22 @@ CELL_ENTRY = '''\
 import os
 from typing import Iterable, Iterator, List, Optional, Tuple
 
-import numpy as np
-
-from sbr.production.model import ProductionModel
-
-# Series are independent by construction -- there is no cross-series state
-# anywhere in this submission, which is exactly why parallel inference is safe.
+# Series are independent by construction -- there is no cross-series state.
+# The official macOS Crunch runner segfaults LightGBM under forked P=4 workers,
+# so the deployable artifact uses one worker and stays within the time budget.
 # @crunch/keep:on
-INFER_PARALLELISM = 4
+INFER_PARALLELISM = 1
 
 _MODEL = None
+
+
+def _load_model(model_directory_path: str):
+    """Load LightGBM only inside the process that will run inference."""
+    global _MODEL
+    if _MODEL is None:
+        from sbr.production.model import ProductionModel
+        _MODEL = ProductionModel.load(model_directory_path)
+    return _MODEL
 
 
 def train(datasets, model_directory_path: str):
@@ -101,11 +114,18 @@ def train(datasets, model_directory_path: str):
     runner would add an hour of feature construction and a large amount of
     avoidable risk for no change in the resulting function.
     """
+    import json
     import shutil
     os.makedirs(model_directory_path, exist_ok=True)
     for f in os.listdir(MODEL_DIRECTORY):
         shutil.copy2(os.path.join(MODEL_DIRECTORY, f), os.path.join(model_directory_path, f))
-    ProductionModel.load(model_directory_path)      # raises on any mismatch
+    with open(os.path.join(model_directory_path, "manifest.json"), "r", encoding="utf-8") as fh:
+        manifest = json.load(fh)
+    n_models = len(manifest.get("streams") or manifest.get("modules") or [])
+    missing = [f"model.txt.{i}" for i in range(n_models)
+               if not os.path.exists(os.path.join(model_directory_path, f"model.txt.{i}"))]
+    if missing:
+        raise RuntimeError(f"missing copied model files: {missing}")
 
 
 def infer(datasets: Iterable[Tuple[List[float], Iterable[float]]],
@@ -117,7 +137,8 @@ def infer(datasets: Iterable[Tuple[List[float], Iterable[float]]],
     the online length -- which is unknowable at t and was the leak that
     invalidated the pre-2026-06-08 predictions.
     """
-    model = ProductionModel.load(model_directory_path)
+    import numpy as np
+    model = _load_model(model_directory_path)
 
     yield                                      # readiness handshake
 
@@ -169,9 +190,8 @@ series (`tests/test_stream_engine_parity.py`). Streaming predictions match batch
 predictions to 0.0 over 12,727 points end to end.
 
 **No cross-series information.** Scores depend only on this series' history and
-its online points up to the current index. `INFER_PARALLELISM` is safe precisely
-because there is no shared state; the local harness asserts that shuffling the
-series order leaves every score unchanged.
+its online points up to the current index. The local harness asserts that
+shuffling the series order leaves every score unchanged.
 
 **`n_online` is never observed.** Asserted by `tests/test_production_contract.py::test_n_online_is_never_a_feature`.
 

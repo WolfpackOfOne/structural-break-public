@@ -25,8 +25,13 @@ from __future__ import annotations
 import argparse, hashlib, json, os, subprocess, sys, time
 import numpy as np
 
-sys.path.insert(0, "/home/claude/sb/src")
-sys.path.insert(0, "/home/claude/sb/research/scripts")
+ROOT = os.environ.get(
+    "SBR_ROOT",
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")),
+)
+
+sys.path.insert(0, f"{ROOT}/src")
+sys.path.insert(0, f"{ROOT}/research/scripts")
 import lightgbm as lgb
 
 from sbr.pipeline import Data, load_features, _stack, _make_pairwise_t
@@ -50,7 +55,7 @@ DEFAULT = dict(objective="binary", learning_rate=0.05, num_leaves=63, min_data_i
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default="/home/claude/sb/models/rt150_ensemble")
+    ap.add_argument("--out", default=f"{ROOT}/models/rt150_ensemble")
     ap.add_argument("--only", default="")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
@@ -72,7 +77,7 @@ def main():
         slices.append(sel.tolist())
 
         # ---- calibration from the CROSS-FITTED OOF of this exact configuration
-        oof = np.load(f"/home/claude/sb/research/oof/{exp}.npy")
+        oof = np.load(f"{ROOT}/research/oof/{exp}.npy")
         cals.append(SmoothTimeCDFCal.fit(oof[dev], d.t[dev]))
 
         path = os.path.join(a.out, f"model.txt.{k}")
@@ -112,7 +117,7 @@ def main():
         b.save_model(path)
         print(f"{exp}: {len(rows)} rows x {len(sel)} cols -> {path} ({time.time()-t0:.0f}s)", flush=True)
 
-    sha = subprocess.check_output(["git", "-C", "/home/claude/sb", "rev-parse", "HEAD"]).decode().strip()
+    sha = subprocess.check_output(["git", "-C", ROOT, "rev-parse", "HEAD"]).decode().strip()
     man = {
         "modules": list(man_eng["modules"]), "columns": names, "n_features": len(names),
         "feature_manifest_sha256": man_eng["feature_manifest_sha256"],
