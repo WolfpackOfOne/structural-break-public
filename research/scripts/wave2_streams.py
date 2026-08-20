@@ -13,9 +13,11 @@ DEPLOYABLE-ENSEMBLE question can be answered with real OOF predictions.
 
 Configurations are taken verbatim from research/RESULTS.csv wave-6 rows.
 """
-import sys
-sys.path.insert(0, "/home/claude/sb/src")
-sys.path.insert(0, "/home/claude/sb/research/scripts")
+import os, sys
+ROOT = os.environ.get(
+    "SBR_ROOT", os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+sys.path.insert(0, f"{ROOT}/src")
+sys.path.insert(0, f"{ROOT}/research/scripts")
 from sbr.pipeline import run
 from wave2_lib import FULL
 

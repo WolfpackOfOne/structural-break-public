@@ -186,3 +186,113 @@ discount beyond the cumulative ledger.
    blend delta that has not been measured against a seed-clone control. Wave 2's
    seven-stream ensemble was never given this control and its diversity claim is
    correspondingly unaudited.
+
+---
+
+# WAVE 4 — PRE-REGISTRATION
+
+**Written 2026-08-20, BEFORE the first wave-4 run. Nothing below was edited after
+a result was seen; corrections appear as dated amendments, never as rewrites.**
+
+Integration commit: `c4fb01e` on `research/wave3-integration`
+(parents `bfcb232` research + `24675a6` engineering).
+
+## W4-E1 — SPECIALIST DIVERSITY vs ORDINARY BAGGING
+
+**The question.** The deployable seven-stream ensemble scores 0.62589 against the
+single champion's 0.61510, a reported +0.01057. Wave 3 proved that a seed clone —
+a model containing *zero* new information — can produce a *larger* blend delta and
+a *lower* within-timestep rank correlation than a genuine new feature family. The
+seven-stream ensemble's diversity claim therefore rests on two instruments that
+are now known to be uncalibrated. This experiment calibrates them.
+
+**Hypothesis (H1).** The seven wave-2 specialist streams — differing in feature
+modules, tree depth, row-sampling policy, objective and boosting type — carry
+information that seven seed clones of the champion do not, so under an identical
+deployable calibration the specialist ensemble beats the seed-clone ensemble.
+
+**Null (H0).** Most of the ensemble gain is ordinary bagging. Seven seed clones
+land within noise of the seven specialists.
+
+**Falsification of H1, fixed in advance.** H1 is rejected unless
+
+    specialist SCDF ensemble  -  seed-clone SCDF ensemble  >  +0.0030
+
+as a mean over the five canonical folds, **and** the difference is positive on at
+least 4 of 5 folds. A difference in `(0.0010, 0.0030]` is declared INDETERMINATE
+and resolved in favour of the simpler system. A difference `<= 0.0010` is noise
+and H0 is accepted.
+
+**Why +0.0030.** Wave 3 measured fold-to-fold SD 0.0085, partition-draw SD 0.0050
+and seed SD 0.0012. 0.0030 is above seed noise and below partition noise; it is
+also the brief's own "deserves investigation" line. It is chosen before the data.
+
+**Arms — both seven members, both sharing member 1.**
+
+| set | members | varies |
+|---|---|---|
+| SPECIALIST | `RT-300` (=`RT-100R`), `RT-410`..`RT-415` (=`RT-120R`..`RT-125R`) | modules, leaves, rows, sampling, objective, boosting, seed |
+| SEED CLONE | `RT-300` (seed 0), `RT-401`..`RT-406` | **seed only** |
+
+**PRE-REGISTERED SEED LIST — 0, 1, 7, 42, 2026, 31415, 271828.** Fixed here
+before the first run. No substitution, no "best seven of ten", no dropping a
+weak seed. Sharing `RT-300` between the arms is deliberate: it pairs the
+comparison at member 1 and removes one run's worth of platform noise.
+
+**Held constant across both arms.** The 10,000-series store, the canonical
+`folds.parquet`, the 500-column feature cache, `num_threads=2`, macOS/arm64,
+lightgbm 4.7.0, the SCDF calibration family and its cross-fitting scheme, the
+equal-weight average, and the evaluation code.
+
+**Analysis, fixed in advance.** For each arm: individual fold scores; the mean;
+within-timestep and global pairwise correlations; and four blends — raw mean,
+logit mean, global-CDF mean, smooth-time-CDF mean — each CROSS-FITTED so that
+fold *k*'s calibration is fitted only on folds != *k*. The headline comparison is
+SCDF-vs-SCDF. Paired series-level bootstrap, 200 replicates, common random
+numbers across arms.
+
+**Degrees of freedom this spends.** 12 new full-protocol runs, 2 ensemble
+compositions, 0 hyperparameter searches, 0 seed selection, 0 calibration tuning.
+The four blend families are all reported, not selected from.
+
+**Stopping rule.** The comparison is made once, on the five canonical folds, and
+then the alternate partitions (W4-E2) are read. No re-run of an arm with a
+different seed if the answer is unwelcome.
+
+## W4-E2 — DOES THE ENSEMBLE DELTA SURVIVE THE PARTITION DRAW?
+
+**Hypothesis.** The ensemble delta (winner-of-W4-E1 minus single champion) is a
+property of the method, not of the canonical fold draw, so it stays positive
+under `folds_alt1`, `folds_alt2` and `folds_alt3`.
+
+**Falsification.** The delta is negative on any alternate partition, or its
+across-partition SD exceeds its canonical mean.
+
+**Candidates declared BEFORE any alternate score is read:** exactly three — the
+single champion, the seven-way seed ensemble, and the seven-way specialist
+ensemble. The alternate partitions are a robustness diagnostic and will not be
+used to select anything.
+
+## W4-E3 — SCDF TIME COORDINATE, n_seen = t + 1
+
+**Hypothesis.** The competition's online index is zero-based, so the calibrator's
+`log(max(t,1))` maps t=0 and t=1 to the same anchor position. `log(t+1)` is the
+mathematically clean coordinate and should be at least as good.
+
+**Falsification / adoption rule, fixed in advance.** This is a BUGFIX CANDIDATE,
+not a tuning knob. It is adopted only if, cross-fitted on the same folds and the
+same streams, it does not regress by more than 0.0005. If the two are
+indistinguishable the corrected definition wins on cleanliness. Anchor count,
+grid size and `min_n` are NOT tuned — they stay at 12 / 256 / 400.
+
+## W4-E4 — FOLD-MODEL DEPLOYMENT COST
+
+**Hypothesis.** Because one shared feature engine dominates inference cost,
+deploying 35 fold-boosters instead of 7 full-data boosters costs far less than
+5x end-to-end.
+
+**Falsification.** Measured ms/point with 35 boosters exceeds the 15-hour budget,
+or exceeds 7-booster cost by more than 2x end-to-end.
+
+**Measured before any score is read**: 1, 7, 14 and 35 boosters on the same
+feature stream, p50 and p95 ms/point, model load time, memory, artifact size.
