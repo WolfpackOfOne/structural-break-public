@@ -719,3 +719,41 @@ license it.
 Submission #4 carries byte-identical predictions and is 2.7× faster, so
 terminating a long-running #3 costs nothing scientifically: both compute the same
 function, and only the schedule differs.
+
+---
+
+# 18. Submission #5 — requeue of the P=4 artifact
+
+Byte-identical requeue of submission #4: entrypoint
+`74894ed1cd774c5e081629114206927c036d1666bb20f4b11f29fd0baf6ee18e`, nothing
+rebuilt, tree clean, validator 30/30 immediately before the push.
+
+| field | value |
+| --- | --- |
+| submission ID | **#5** |
+| message | `RT600-P4-RERUN \| P=4 \| entrypoint 74894ed1 \| requirements 1998B \| identical predictions to submission 3` |
+| uploaded (UTC) | 2026-08-21T20:21:38Z |
+| `crunch push` exit | 0 |
+| push log confirms | `using original file: requirements.txt (2 KB)` |
+| status | SUBMITTED / PENDING |
+
+**Why a requeue.** The platform began executing the *backlog*: run #106858 ran
+submission **#1** (`submissions/74704/`, 194-byte requirements.txt, 28,047,061-byte
+entrypoint) and failed at `/context/code/_sbr_payload_97` — the read-only-cwd
+defect, replayed faithfully against the one artifact that still has it. Those
+failures are history, not regressions.
+
+## Telling the runs apart from the log
+
+Every run log names its submission in the download URLs and its dependency file in
+the second line. That is enough to identify an artifact without opening it:
+
+| | old/broken | current (#4, #5) |
+| --- | --- | --- |
+| `submissions/<ID>/` | `74704` = #1, `74718` = #3 | above `74718` |
+| `requirements.txt` | **194 bytes** | **1998 bytes** |
+| entrypoint size | 28,047,061 (#1), 28,048,243 (#3) | **28,048,791** |
+| payload traceback | line 21, `/context/code/_sbr_payload_<pid>` | line 25, `/tmp/sbr_payload_<random>` |
+
+The `requirements.txt` byte count is the fastest discriminator: 194 means the
+submission predates the lightgbm fix and cannot score, whatever else the log says.
