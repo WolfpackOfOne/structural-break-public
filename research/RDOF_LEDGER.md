@@ -512,3 +512,73 @@ union costs one number while testing the lattice costs a false positive.
 
 **Degrees of freedom spent.** 0 new training runs, 1 new composition, 1
 threshold fixed in advance, 0 members selected.
+
+---
+
+# WAVE 5 — PRE-REGISTRATION AND DEGREES-OF-FREEDOM RECORD
+
+**Branch `research/wave5-alpha`, forked from `research/wave3-integration` @
+`17bb5df`. Written 2026-08-21. The full design is `research/WAVE5_PREREG.md`,
+committed at `5488644` BEFORE the first wave-5 number existed.**
+
+**The external anchor.** LB-001 = **0.6268** on the Crunch public board, from the
+RT-600 artifact whose development architecture scores 0.62581 on the canonical
+partition. Internal → external transfer was flat to slightly positive, so wave 5
+is an alpha-discovery project, not a validation-repair project.
+
+**The binding standard, for every candidate.** Not "beats the champion blend".
+`(S + candidate) − (S + seed clone)` ≥ +0.0030, on ≥4/5 canonical folds, with a
+supportive paired bootstrap and directionally stable alternate partitions. Wave 3
+(`m09_back`) and wave 4 (W4-E6) each produced a candidate that beat `S` and lost
+to a same-strength stream carrying no information at all.
+
+**Validation surface.** Canonical 8,000-series development folds and the three
+alternate partitions. `RT-500`..`RT-506` (the all-10k OOF vectors),
+`folds_final10k`, fold −1, `X_test.reduced` and the leaderboard are **not**
+selection surfaces and are not reachable from `research/scripts/wave5_lib.py`.
+
+## Experiments declared before any was scored
+
+| id | question | new training runs | thresholds fixed in advance |
+|---|---|---|---|
+| W5-E1 | does a SMALL bagging component help, where the 13-way union did not? | **0** | λ grid {1.00, 0.90, 0.80, 0.70}, fixed at four values; screening bar +0.0010 on ≥4/5 |
+| W5-E2 | `m10_persist` — outlier-driven vs bulk scale change | 1 | §4 bar |
+| W5-E3 | hard-negative curriculum | 3 + 20 mining models | §4 bar; must not degrade ages 0–20 |
+| W5-E4/5/6 | `m12_rdep` — residual distances, residual CUSUM/CUSUMSQ, dependence LR | 1 | §4 bar |
+| W5-E7 | `m11_focus` — exact maximisation over candidate τ | 1 (+1 if it survives) | §4 bar |
+| W5-E8 | absorbing-state BOCPD | **0 — already implemented** | see below |
+| W5-E9 | TS-AUC-shaped pair weighting | 3 | §4 bar |
+| W5-E10 | union of the surviving blocks | 1 | §4 bar |
+
+**W5-E8 is declared NOT RUN, with a reason rather than an excuse.**
+`src/sbr/features/m07_bayes.py` already implements the absorbing-state posterior
+the brief asks for — its docstring reads "the latent state NOT-BROKEN → BROKEN is
+ABSORBING, so the exact filtering recursion for P(broken at t | x_1:t) collapses
+to one log-space accumulator per alternative parameter value", and it ships 50
+columns of it inside the RT-600 artifact. Building a second one would have
+measured the seed, not the mechanism.
+
+## Degrees of freedom spent in wave 5
+
+* **Seed lists**: none chosen. Every control reuses the seed list fixed in wave 4
+  before its first run.
+* **Hyperparameter searches**: 0. Every arm runs the ABL or CHAMP protocol
+  verbatim from `research/scripts/wave2_lib.py`.
+* **Calibration tuning**: 0. `SCDF_NSEEN`, 12 anchors, 256-point grids,
+  `min_n=400`, frozen.
+* **Ensemble weight optimisation**: 0. Only the four-point λ grid of W5-E1,
+  declared in advance and not enlarged after it returned a null.
+* **Curriculum constants** (`ALPHA=3.0`, `POWER=2.0`, `HARD_FRAC=0.10`,
+  `OVER_K=4`): fixed in `research/scripts/wave5_e3_hardneg.py` before the first
+  arm ran, one value each, no sweep.
+* **A design chosen after seeing a result, stated plainly**: `m10_persist` was
+  specified *after* the W5-D2 false-positive forensics reported, and targets the
+  mechanism those forensics found rather than the generic family the brief
+  listed. That is legitimate — a diagnostic suggesting the next experiment is how
+  research works — but it means W5-E2 carries the multiplicity of having been
+  chosen with knowledge of D2, and it is judged against the same unmoved §4 bar.
+* **Causality**: every new module passes `check_prefix_invariance` at `atol=0.0`
+  on 7 series including both length-10 series in the dataset. The gate earned its
+  keep: the first `m12_rdep` sized its expanding nulls by `n_online`, the single
+  forbidden input, and the check failed it on every series before any score was
+  taken from it.
