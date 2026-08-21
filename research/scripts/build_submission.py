@@ -113,11 +113,21 @@ CELL_ENTRY = '''\
 import os
 from typing import Iterable, Iterator, List, Optional, Tuple
 
-# Series are independent by construction -- there is no cross-series state.
-# The official macOS Crunch runner segfaults LightGBM under forked P=4 workers,
-# so the deployable artifact uses one worker and stays within the time budget.
+# Series are independent by construction -- there is no cross-series state, so
+# fanning series across workers cannot change any score.  This is a scheduling
+# knob, not a modelling one: it lives in this wrapper and not in src/sbr, so the
+# source and model zip hashes are identical whatever value it takes.
+#
+# It was 1 because the official *macOS* runner segfaults LightGBM under forked
+# P=4 workers.  That is a macOS fork+OpenMP hazard; the cloud runner is Linux,
+# where LB-003 was observed pinning exactly one core of ~14 -- roughly 93% of the
+# machine left idle, and a 2h+ inference as the price.
+#
+# 4, not 14: a worker costs ~380 MB RSS and the container's limit is unknown.
+# Raise it only after a P=4 run proves both the memory headroom and that forking
+# is safe there.
 # @crunch/keep:on
-INFER_PARALLELISM = 1
+INFER_PARALLELISM = 4
 
 _MODEL = None
 
