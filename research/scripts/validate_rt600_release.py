@@ -36,18 +36,26 @@ import subprocess
 import sys
 import zipfile
 
-# The frozen RT-600 identity, from research/FINAL_REPRODUCIBILITY_MANIFEST.json.
-# These are the hashes of the artifact submitted as LB-001 on 2026-08-21.
+# The frozen RT-600 identity.  These are the hashes of the artifact submitted as
+# LB-002 on 2026-08-21 -- the read-only-cwd fix rebuild of LB-001.
+#
+# The source and model zip hashes are UNCHANGED from LB-001 and are the ones that
+# matter: the boot cell lives in neither zip, so a wrapper fix cannot move them.
+# If either of those two ever changes, the model changed; if only the entrypoint
+# and notebook hashes moved, the packaging changed.
 EXPECTED = {
     "source_zip": "199db8c9f5db7e1429f6ae09fa018d43cc58c5eb47b5c623a017799537a413a0",
     "model_zip": "6c8960ddc7331afecfc6980974f2879401a1eb583f15f5cad34c2ea03299ea8c",
-    "python_entrypoint": "660c88c104c990626a5758f8d36af49c87273a587e399d86bbc353cc9bba2647",
-    "notebook": "8332b698b6dbe91376c79d2051c5d294f515f77dea835a278b858b45bda73cc5",
+    "python_entrypoint": "acc166842ecb31e1de3bdf1363a2ea119f78a018a248bbc9d17cf097b7312d16",
+    "notebook": "830ae6f2d40ca8f5b56dc41052c1094c8b3b3a4bf4f102d2ff8efc460ab75d47",
     "feature_manifest": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced",
     "model_manifest": "1483a59a268ded18b6af804a5f0eb0b191376a1dc86526f286751bf1613ec940",
 }
 COMPETITION = "structural-break-real-time"
 MODEL_CODE_SHA = "41ab0695a906834361298b4a61c3636909ceb79c"
+# LB-001 died on the cloud at import because the payload unpacked into a
+# read-only cwd.  tests/test_artifact_readonly_cwd.py is therefore a
+# release-critical gate, not a nicety: no `crunch test` can catch that failure.
 ENTRYPOINT = "submissions/C_ensemble_deployable.py"
 NOTEBOOK = "submissions/C_ensemble_deployable.ipynb"
 
@@ -248,7 +256,8 @@ def main() -> int:
             [sys.executable, "-m", "pytest",
              "tests/test_no_n_online_leakage.py",
              "tests/test_calibration_time_coord.py",
-             "tests/test_production_contract.py", "-q", "-rs"],
+             "tests/test_production_contract.py",
+             "tests/test_artifact_readonly_cwd.py", "-q", "-rs"],
             cwd=REPO, env=env, capture_output=True, text=True)
         tail = (r.stdout or "").strip().splitlines()
         summary = tail[-1] if tail else "(no output)"

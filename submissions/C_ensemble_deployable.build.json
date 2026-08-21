@@ -1,10 +1,11 @@
 {
-  "built_at": "2026-08-21T12:39:22Z",
-  "code_git_sha": "73b566202bc0670d114c25ec9d0abcb277443a2f",
+  "built_at": "2026-08-21T14:36:56Z",
+  "code_git_sha": "38ce203767931ba991fc128153e14fac7808ddce",
   "embedded_source_clean": true,
   "embedded_source_dirty_paths": [],
   "worktree_other_changes": [
-    "M submissions/C_ensemble_deployable.ipynb",
+    "M submissions/C_ensemble_deployable.build.json",
+    " M submissions/C_ensemble_deployable.ipynb",
     " M submissions/C_ensemble_deployable.py"
   ],
   "model_directory": "/path/to/workspace/structural-break-claude-wave3/models/final10k_ensemble",
@@ -14,13 +15,13 @@
   "model_manifest_sha256": "1483a59a268ded18b6af804a5f0eb0b191376a1dc86526f286751bf1613ec940",
   "notebook": {
     "path": "/path/to/workspace/structural-break-claude-wave3/submissions/C_ensemble_deployable.ipynb",
-    "sha256": "8332b698b6dbe91376c79d2051c5d294f515f77dea835a278b858b45bda73cc5",
-    "bytes": 28049853
+    "sha256": "830ae6f2d40ca8f5b56dc41052c1094c8b3b3a4bf4f102d2ff8efc460ab75d47",
+    "bytes": 28051232
   },
   "python_entrypoint": {
     "path": "/path/to/workspace/structural-break-claude-wave3/submissions/C_ensemble_deployable.py",
-    "sha256": "660c88c104c990626a5758f8d36af49c87273a587e399d86bbc353cc9bba2647",
-    "bytes": 28047061
+    "sha256": "acc166842ecb31e1de3bdf1363a2ea119f78a018a248bbc9d17cf097b7312d16",
+    "bytes": 28048243
   },
   "infer_parallelism": 1,
   "manifest_code_git_sha": "41ab0695a906834361298b4a61c3636909ceb79c",
