@@ -2,17 +2,17 @@
   "experiment_id": "RT-600",
   "what": "FINAL competition artifact: 7-stream deployable ensemble, all 10,000 labelled series",
   "frozen_by": "research/FINAL_ARCHITECTURE_FREEZE.md",
-  "code_git_sha": "61eec56f745eef77e10a23d7c7b5233a9c5146ff",
+  "code_git_sha": "73b566202bc0670d114c25ec9d0abcb277443a2f",
   "model_code_git_sha": "41ab0695a906834361298b4a61c3636909ceb79c",
   "src_sbr_identical_between_them": true,
   "embedded_source_clean": true,
   "hashes": {
-    "source_zip_sha256": "e3efa5fc81a50fb4abdcf12f6072ade046b33b581e50434326bc05cef7c87cb7",
-    "model_zip_sha256": "6bbab7ed5a0ccef8c4b3c9258c319d93e8a639907872cc342901fc3f6f65329b",
+    "source_zip_sha256": "199db8c9f5db7e1429f6ae09fa018d43cc58c5eb47b5c623a017799537a413a0",
+    "model_zip_sha256": "6c8960ddc7331afecfc6980974f2879401a1eb583f15f5cad34c2ea03299ea8c",
     "model_manifest_sha256": "1483a59a268ded18b6af804a5f0eb0b191376a1dc86526f286751bf1613ec940",
     "feature_manifest_sha256": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced",
-    "notebook_sha256": "8753659f908673ce1f1f7ddd8ab087c9efa2c6e048200ba53f902c14db64910b",
-    "python_entrypoint_sha256": "f61871aaf6a8c0b961115b7f2a1e9a29e0e40baddf5dfadcaeee5a6b69d4a47c",
+    "notebook_sha256": "8332b698b6dbe91376c79d2051c5d294f515f77dea835a278b858b45bda73cc5",
+    "python_entrypoint_sha256": "660c88c104c990626a5758f8d36af49c87273a587e399d86bbc353cc9bba2647",
     "folds_final10k_sha256": "bf0cdf642bde018a632663ae7d211714a173fb64ef824b15416caf2649e0c716",
     "notebook_bytes": 28049853,
     "python_entrypoint_bytes": 28047061
@@ -88,10 +88,10 @@
     "machine": "arm64"
   },
   "local_harness": {
-    "runtime_s": 18.68767523765564,
+    "runtime_s": 20.002827167510986,
     "n_series": 20,
     "n_points": 10476,
-    "ms_per_point": 1.7838559791576594,
+    "ms_per_point": 1.9093954913622553,
     "deterministic": true,
     "order_independent": true,
     "future_poison_safe": true,
@@ -107,13 +107,27 @@
     "exit_code": 0,
     "infer_parallelism": 1,
     "determinism_check": "passed (tolerance 1e-08)",
-    "duration": "00:01:40",
-    "memory_consumed": "2.55 GB",
+    "duration": "00:01:43",
+    "memory_consumed": "1.81 GB",
     "log": "research/reports/final_crunch_test.md"
   },
   "lockbox": {
     "touched_for_evaluation": false,
     "note": "the 2,000-series lockbox is FINAL-FIT TRAINING DATA here; no wave-4 score was taken from it"
   },
-  "test_reduced_touched_for_research": false
+  "test_reduced_touched_for_research": false,
+  "zip_determinism": {
+    "content_addressed": true,
+    "note": "pack_dir stamps every member with the 1980 zip epoch and fixed permissions, so source_zip_sha256 and model_zip_sha256 depend on contents and paths only. Before this fix they encoded checkout mtimes and could never have matched a rebuild."
+  },
+  "clean_checkout_reproduction": {
+    "performed": true,
+    "method": "fresh git clone of the branch into a new directory",
+    "source_zip_reproduces": true,
+    "model_zip_reproduces_from_committed_notebook": true,
+    "manifest_code_git_sha_reachable_in_clone": true,
+    "trained_on_n_series": 10000,
+    "calibration_time_coord": "log_n_seen",
+    "caveat": "the notebook and .py themselves are NOT bit-reproducible across builds: the boot cell embeds a build timestamp. The source and model zip hashes are the reproducible identities and are what to verify."
+  }
 }
