@@ -73,7 +73,7 @@ CELL_BOOT = '''\
 #   code git sha      : {git_sha}
 #   built at          : {built}
 # ---------------------------------------------------------------------------
-import base64, hashlib, io, os, sys, zipfile
+import base64, hashlib, io, os, sys, tempfile, zipfile
 
 for _k in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS",
            "VECLIB_MAXIMUM_THREADS", "NUMEXPR_NUM_THREADS"):
@@ -82,7 +82,11 @@ for _k in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS",
 _SRC_B64 = "{src_b64}"
 _MDL_B64 = "{mdl_b64}"
 
-_WORK = os.path.abspath(f"./_sbr_payload_{{os.getpid()}}")
+# The payload must land somewhere WRITABLE.  This used to be `./_sbr_payload_<pid>`,
+# which works locally and fails on the cloud runner, whose cwd (/context/code) is
+# read-only -- and it fails at import, before train() or infer() is ever reached.
+# tempfile honours TMPDIR and falls back to /tmp; SBR_PAYLOAD_DIR overrides both.
+_WORK = os.environ.get("SBR_PAYLOAD_DIR") or tempfile.mkdtemp(prefix="sbr_payload_")
 os.makedirs(_WORK, exist_ok=True)
 
 
@@ -119,11 +123,20 @@ _MODEL = None
 
 
 def _load_model(model_directory_path: str):
-    """Load LightGBM only inside the process that will run inference."""
+    """Load LightGBM only inside the process that will run inference.
+
+    Prefers the directory the runner hands us, but falls back to the embedded
+    payload -- which is sha256-verified at unpack -- if train() could not write
+    there.  Both are the same bytes, so this changes the model not at all; it
+    only removes a dependency on the model directory being writable.
+    """
     global _MODEL
     if _MODEL is None:
         from sbr.production.model import ProductionModel
-        _MODEL = ProductionModel.load(model_directory_path)
+        d = model_directory_path
+        if not os.path.exists(os.path.join(d, "manifest.json")):
+            d = MODEL_DIRECTORY
+        _MODEL = ProductionModel.load(d)
     return _MODEL
 
 
@@ -137,9 +150,17 @@ def train(datasets, model_directory_path: str):
     """
     import json
     import shutil
-    os.makedirs(model_directory_path, exist_ok=True)
-    for f in os.listdir(MODEL_DIRECTORY):
-        shutil.copy2(os.path.join(MODEL_DIRECTORY, f), os.path.join(model_directory_path, f))
+    try:
+        os.makedirs(model_directory_path, exist_ok=True)
+        for f in os.listdir(MODEL_DIRECTORY):
+            shutil.copy2(os.path.join(MODEL_DIRECTORY, f),
+                         os.path.join(model_directory_path, f))
+    except OSError as exc:
+        # A read-only model directory is survivable: infer() falls back to the
+        # embedded copy.  Failing here would strand a working model.
+        print(f"train: could not populate {model_directory_path} ({exc}); "
+              f"inference will use the embedded payload at {MODEL_DIRECTORY}")
+        return
     with open(os.path.join(model_directory_path, "manifest.json"), "r", encoding="utf-8") as fh:
         manifest = json.load(fh)
     n_models = len(manifest.get("streams") or manifest.get("modules") or [])
