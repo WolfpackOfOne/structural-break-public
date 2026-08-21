@@ -628,3 +628,52 @@ post-break age the suffix is short and the contrast is dominated by prefix noise
 `research/reports/wave3_ensemble_control.json`, OOF vectors
 `research/oof/RT-30{0,1,2,3}.npy` (gitignored by repo policy — regenerate with
 `research/scripts/wave3_queue_a.py`).
+
+---
+
+## W4-E6 — UNION OF SPECIALISTS AND SEED CLONES — **REJECTED**
+
+**Pre-registered** in `RDOF_LEDGER.md` before scoring, with the provenance
+stated: the hypothesis was chosen *after* W4-E1 reported, so the bar carried an
+extra bootstrap condition.
+
+**Hypothesis.** W4-E1 decomposed the seven-stream ensemble's gain into +0.00559
+from ordinary bagging and +0.00417 from specialist diversity. The deployed
+champion harvests the second and only incidentally the first — each
+*configuration* appears exactly once. If the two effects are even partly
+additive, blending both arms should beat either.
+
+**Implementation.** Zero new training. The union of the two W4-E1 arms,
+deduplicated on the shared member `RT-300`: 13 boosters, same cross-fitted SCDF
+calibration, same folds, same equal-weight mean.
+
+**Control.** The incumbent seven specialists, measured in the same run.
+
+| composition | n | mean OOF | per fold |
+|---|---|---|---|
+| `RT-420` specialists | 7 | **0.62581** | 0.63828 / 0.62040 / 0.63392 / 0.61750 / 0.61894 |
+| `RT-421` seed clones | 7 | 0.62164 | 0.63817 / 0.61667 / 0.63020 / 0.61437 / 0.60879 |
+| `RT-422` union | 13 | 0.62486 | 0.63967 / 0.61973 / 0.63303 / 0.61673 / 0.61513 |
+
+**Result: −0.00095, positive on 1 of 5 folds**, paired series bootstrap
+−0.00094 with 95% CI [−0.00202, +0.00007], 4% of replicates positive. Every
+pre-registered condition failed. **The gains do not stack — they anti-stack.**
+
+**Mechanism.** The union is not "specialists plus bagging". Under an
+equal-weight mean it is "specialists with the champion configuration up-weighted
+seven-fold": 7 of the 13 members are the `RT-100R` configuration at different
+seeds, so that configuration carries 54% of the blend weight instead of 14%.
+The ensemble's value comes from averaging models that are wrong in *different*
+directions, and this composition spends more than half its weight on one
+direction. The bagging gain measured in W4-E1 was real, but it was measured on
+an arm where nothing else competed for weight.
+
+**What this does NOT license.** Weight-tuned variants, `k` clones per
+specialist, or any best-of composition. Those are precisely the lattice W4-E6's
+pre-registration excluded, and searching it after a negative result is how a
+null becomes a false positive. The mechanism above is recorded as an
+explanation, not as the seed of a follow-up.
+
+**What it does establish.** The incumbent seven-stream composition is not
+merely adequate, it is *better than the obvious enrichment of it*. That is a
+stronger position for the champion than W4-E1 alone gave it.
