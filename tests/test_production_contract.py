@@ -17,7 +17,8 @@ import pytest
 
 from sbr.stream.engine import MODULE_ORDER, StreamEngine
 
-MODEL_DIR = os.environ.get("SBR_MODEL_DIR", "/home/claude/sb/models/rt100_smoke")
+_REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MODEL_DIR = os.environ.get("SBR_MODEL_DIR", os.path.join(_REPO, "models", "rt150_ensemble"))
 _HAS_MODEL = os.path.exists(os.path.join(MODEL_DIR, "manifest.json"))
 needs_model = pytest.mark.skipif(not _HAS_MODEL, reason="no trained model directory")
 
@@ -96,7 +97,10 @@ def test_feature_order_is_immutable():
     eng = StreamEngine().fit_historical(_hist(rng))
     cols = eng.cols
     assert len(cols) == 500
-    assert cols == sorted(cols, key=lambda c: (MODULE_ORDER.index(c.split("::")[0]),)) or True
+    # NOTE: the columns are NOT sorted within a module -- each module emits its
+    # own fixed order and only the BLOCKS are ordered.  An earlier version of
+    # this test asserted `... or True`, which cannot fail; the real invariant is
+    # below and it is the one the model manifest depends on.
     # the module blocks must be contiguous and in MODULE_ORDER
     seen = [c.split("::")[0] for c in cols]
     blocks = [k for i, k in enumerate(seen) if i == 0 or seen[i - 1] != k]
@@ -112,7 +116,6 @@ def test_n_online_is_never_a_feature():
     h = _hist(rng, 2000)
     o_short = rng.standard_normal(120)
     o_long = np.r_[o_short, rng.standard_normal(500)]
-    a = np.vstack([StreamEngine().fit_historical(h).step(x) for x in o_short]) if False else None
     e1 = StreamEngine().fit_historical(h)
     r1 = np.vstack([e1.step(x) for x in o_short])
     e2 = StreamEngine().fit_historical(h)
@@ -136,7 +139,7 @@ def test_model_rejects_a_mismatched_feature_manifest(tmp_path):
 @needs_model
 def test_infer_contract_single_pass_and_range():
     import sys
-    sys.path.insert(0, "/home/claude/sb/research/scripts")
+    sys.path.insert(0, os.path.join(_REPO, "research", "scripts"))
     from local_runner import run_infer
     from sbr.production.submission import infer
     rng = np.random.default_rng(5)
@@ -154,7 +157,7 @@ def test_infer_contract_single_pass_and_range():
 @needs_model
 def test_infer_is_deterministic_and_order_independent():
     import sys
-    sys.path.insert(0, "/home/claude/sb/research/scripts")
+    sys.path.insert(0, os.path.join(_REPO, "research", "scripts"))
     from local_runner import run_infer
     from sbr.production.submission import infer
     rng = np.random.default_rng(6)
