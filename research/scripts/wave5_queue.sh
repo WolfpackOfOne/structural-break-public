@@ -2,21 +2,27 @@
 # Wave-5 stage-C queue.  Waits for the feature caches, then runs the block arms
 # one at a time so the machine is never oversubscribed.
 set -u
-cd "$(dirname "$0")/../.."
-ROOT="$PWD"
+ROOT="/path/to/workspace/structural-break-wave5"
 PY="/path/to/workspace/structural-break/.venv/bin/python"
 export SBR_ROOT="$ROOT"
+cd "$ROOT"
 
-wait_for() {
-  local f="$1"
-  while [ ! -s "$f" ]; do sleep 10; done
-  # the driver writes the .npy last; give it a moment to close
-  sleep 5
+# The driver preallocates the .npy with open_memmap(mode="w+"), so the file is
+# FULL SIZE from the first second and testing for its existence proves nothing.
+# Wait for the driver's own completion line instead.  This is not hypothetical:
+# an earlier version of this script started RT-740 twice on a cache that was
+# mostly zeros, which would have produced a real-looking and entirely fake
+# number had either run been allowed to finish.
+wait_build() {
+  local log="$1"
+  while ! grep -q '^total ' "$log" 2>/dev/null; do sleep 10; done
+  sleep 3
+  echo "  build complete: $log"
 }
 
 echo "waiting for feature caches..."
-wait_for "$ROOT/cache/features/m12_rdep.npy"
-wait_for "$ROOT/cache/features/m10_persist.npy"
+wait_build "$ROOT/logs/build_m12.log"
+wait_build "$ROOT/logs/build_m10.log"
 echo "caches ready $(date)"
 
 for exp in RT-740 RT-750 RT-760; do
