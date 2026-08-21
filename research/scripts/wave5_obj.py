@@ -112,7 +112,19 @@ def _make_pairwise(t, y, m_neg=8, seed=0):
         yv = np.asarray(y, dtype=np.float64)
         if rows is None or len(rows) != len(yv):
             raise RuntimeError("row capture failed; refusing to guess the weight alignment")
-        w = np.asarray(SPEC["weights"], dtype=np.float64)[rows]
+        if "weights_by_fold" in SPEC:
+            # Which OUTER fold is this?  Read it off the rows LightGBM is about
+            # to see -- the one fold absent from them -- rather than counting
+            # calls.  If the training rows are not exactly four folds, something
+            # about the pipeline has changed and guessing would be unsafe.
+            rf = np.asarray(SPEC["row_fold"])[rows]
+            present = set(int(v) for v in np.unique(rf))
+            missing = sorted(set(range(5)) - present)
+            if len(present) != 4 or len(missing) != 1:
+                raise RuntimeError(f"cannot identify the held-out fold from rows: {sorted(present)}")
+            w = np.asarray(SPEC["weights_by_fold"][missing[0]], dtype=np.float64)[rows]
+        else:
+            w = np.asarray(SPEC["weights"], dtype=np.float64)[rows]
         if not np.isfinite(w).all() or (w < 0).any():
             raise ValueError("weights must be finite and non-negative")
         w = w * (len(w) / w.sum())          # mean weight 1: same effective lr
