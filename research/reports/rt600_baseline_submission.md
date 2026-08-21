@@ -1,4 +1,10 @@
-# LB-001 — RT-600 external calibration baseline
+# LB-001 / LB-002 — RT-600 external calibration baseline
+
+> **STATUS: the live submission is LB-002 (submission #2).** LB-001 (submission #1)
+> uploaded cleanly but **failed on the cloud runner at import** with a
+> `PermissionError` and never produced a score. LB-002 is the same model with a
+> fixed boot cell — the source and model zip hashes are bit-identical. Sections 1–13
+> below describe LB-001 and remain accurate for it; **section 14 is the live record.**
 
 **PURPOSE: EXTERNAL CALIBRATION BASELINE — NOT FINAL MODEL SELECTION.**
 
@@ -285,3 +291,141 @@ minor variants. Tuning to this number would destroy the only thing it is good fo
 Read-only; 30 gates covering checkout, artifact hashes, embedded-payload identity,
 provenance, competition config, and the release-critical tests. It fails loudly rather
 than skipping. Result at release time: **30/30 PASSED**.
+
+
+---
+
+# 14. LB-002 — the cloud-runnable rebuild (LIVE)
+
+## 14.1 What happened to LB-001
+
+LB-001 uploaded successfully and then died on the cloud runner **at import**, before
+`train()` or `infer()` was ever called:
+
+    File "/context/code/submissions/C_ensemble_deployable.py", line 21, in <module>
+      os.makedirs(_WORK, exist_ok=True)
+    PermissionError: [Errno 13] Permission denied: '/context/code/_sbr_payload_96'
+
+The boot cell unpacked its payload into `./_sbr_payload_<pid>` — relative to the
+current working directory. That is writable on a laptop and **read-only** at
+`/context/code` on the runner.
+
+**No local gate could have caught this.** `crunch test` runs with a writable cwd, so
+the local run didn't fail — it silently created `_sbr_payload_56927/` in the repo
+root. That directory was noted during the LB-001 release and deleted as harmless
+residue. It was not residue; it was the symptom, and it was visible in the LB-001
+record before the submission went out.
+
+## 14.2 The fix
+
+Two changes, both in the generated wrapper, none in the model:
+
+1. **Payload extraction** — `research/scripts/build_submission.py`, boot cell:
+
+       -_WORK = os.path.abspath(f"./_sbr_payload_{os.getpid()}")
+       +_WORK = os.environ.get("SBR_PAYLOAD_DIR") or tempfile.mkdtemp(prefix="sbr_payload_")
+
+   `tempfile` honours `TMPDIR` and falls back to `/tmp`; `SBR_PAYLOAD_DIR` is an
+   explicit operator override.
+
+2. **A second failure that was queued behind the first** — `train()` copied 45 MB
+   into `model_directory_path` and raised if it couldn't. A read-only model directory
+   would have produced a fresh traceback one step later. `train()` now degrades to a
+   printed warning, and `_load_model()` falls back to the embedded, sha256-verified
+   payload when the handed-in directory has no `manifest.json`. Both are the same
+   bytes, so the scored function is identical either way; what disappears is the
+   dependency on anything outside the artifact being writable.
+
+## 14.3 Why this is not a model change
+
+| identity | LB-001 | LB-002 | |
+| --- | --- | --- | --- |
+| **source zip sha256** | `199db8c9…a413a0` | `199db8c9…a413a0` | **UNCHANGED** |
+| **model zip sha256** | `6c8960dd…99ea8c` | `6c8960dd…99ea8c` | **UNCHANGED** |
+| **feature manifest** | `1646c3b9…80cced` | `1646c3b9…80cced` | **UNCHANGED** |
+| **model manifest** | `1483a59a…613ec940` | `1483a59a…613ec940` | **UNCHANGED** |
+| python entrypoint | `660c88c1…ba2647` | `acc16684…7312d16` | changed (wrapper) |
+| notebook | `8332b698…a73cc5` | `830ae6f2…ab75d47` | changed (wrapper) |
+
+The boot cell is in **neither** embedded zip, so a wrapper fix cannot move the two
+content-addressed identities — which is precisely what the deterministic-ZIP change
+in `73b5662` was built to guarantee. The rule to read this table by:
+
+> If the source or model zip hash moves, the model changed.
+> If only the entrypoint and notebook move, the packaging changed.
+
+Re-verified against the manifest embedded in the **new** build, not carried over from
+the old one: 10,000 series, 500 features, SCDF/`log_n_seen` on all 7 calibrators,
+seven streams RT-100R/120R/121R/122R/123R/124R/125R, `INFER_PARALLELISM = 1`, and the
+33-file `src/sbr` tree still byte-identical to the tree at training SHA `41ab069`.
+
+**LB-002 is therefore the same calibration experiment as LB-001, not a new one.** No
+seed, feature, weight, or calibration parameter was touched, and nothing was tuned to
+any leaderboard result — there was no leaderboard result to tune to.
+
+## 14.4 New release gate
+
+`tests/test_artifact_readonly_cwd.py` imports the built artifact with cwd set to a
+directory the process cannot write to, reproducing the runner's constraint directly.
+
+- Against the **LB-001** artifact (`660c88c1…`): all three cases **FAIL** with the
+  same `PermissionError: [Errno 13] … /_sbr_payload_<pid>` the cloud produced.
+- Against the **LB-002** artifact (`acc16684…`): all three **PASS**.
+
+It also asserts the artifact writes *nothing* into its cwd, and that
+`SBR_PAYLOAD_DIR` is honoured. It is now in the validator's release-critical set,
+because this is a failure class `crunch test` structurally cannot see.
+
+## 14.5 Verification of LB-002
+
+    python3 research/scripts/validate_rt600_release.py    →  30/30 PASSED
+
+Release-critical tests (`test_no_n_online_leakage`, `test_calibration_time_coord`,
+`test_production_contract`, `test_artifact_readonly_cwd`), with `SBR_MODEL_DIR` set:
+**97 passed, 0 failed, 0 skipped.** The four no-`n_online` causality gates ran.
+
+Official `crunch test`:
+
+| field | value |
+| --- | --- |
+| start / finish (UTC) | 2026-08-21T14:39:20Z → 14:41:12Z |
+| duration | 00:01:47 |
+| memory | before 211.91 MB → after 605.09 MB, consumed 393.18 MB |
+| parallelism | 1 |
+| determinism | **passed** (tolerance 1e-08) |
+| exit code | **0** |
+| dataset files | **6** — the real-time sentinel |
+| competition | `structural-break-real-time` |
+| cwd after the run | **clean** — no `_sbr_payload_*` directory, unlike LB-001 |
+
+Artifact hash `acc166842ecb31e1de3bdf1363a2ea119f78a018a248bbc9d17cf097b7312d16` before
+the test, after the test, before the push, and after the push. Model manifest
+`1483a59a…613ec940` at all four.
+
+## 14.6 Submission record
+
+| field | value |
+| --- | --- |
+| submitted | **YES** |
+| **submission ID** | **#2** |
+| competition | `structural-break-real-time` |
+| dashboard URL | https://hub.crunchdao.com/competitions/structural-break-real-time/projects/8776/treaming-detector-v1/submissions/2 |
+| upload start / finish (UTC) | 2026-08-21T14:41:34Z → 14:46:22Z |
+| `crunch push` exit code | 0 |
+| CLI confirmation | `submission #2 succesfully uploaded!` |
+| git SHA | `fcf21aa2b521ed38be3d3bd854ddbfc7180b32ab` |
+| branch | `claude/rt600-baseline-submission` |
+| status | **SUBMITTED / PENDING SCORING** |
+
+## 14.7 Cloud training setting
+
+Leave **training enabled**. `train()` is a copy, not a fit: it installs the embedded
+pre-trained ensemble and ignores `datasets` entirely, taking ~6 seconds. Enabling it
+reproduces the locally validated path and is now self-sufficient in both directions —
+if the model directory is unwritable, `train()` warns and `infer()` uses the embedded
+copy; if `train()` never runs, `infer()` still finds a model.
+
+## 14.8 Standing rule, restated
+
+Section 12 applies unchanged to LB-002. It is an external calibration point. It may
+redirect research priorities; it may not select anything inside RT-600.
