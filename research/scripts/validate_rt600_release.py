@@ -36,8 +36,8 @@ import subprocess
 import sys
 import zipfile
 
-# The frozen RT-600 identity.  These are the hashes of the artifact submitted as
-# LB-002 on 2026-08-21 -- the read-only-cwd fix rebuild of LB-001.
+# The frozen RT-600 identity.  These are the hashes of the stage-1 build (P=4),
+# the successor to the artifact submitted as LB-003.
 #
 # The source and model zip hashes are UNCHANGED from LB-001 and are the ones that
 # matter: the boot cell lives in neither zip, so a wrapper fix cannot move them.
@@ -46,12 +46,13 @@ import zipfile
 EXPECTED = {
     "source_zip": "199db8c9f5db7e1429f6ae09fa018d43cc58c5eb47b5c623a017799537a413a0",
     "model_zip": "6c8960ddc7331afecfc6980974f2879401a1eb583f15f5cad34c2ea03299ea8c",
-    "python_entrypoint": "acc166842ecb31e1de3bdf1363a2ea119f78a018a248bbc9d17cf097b7312d16",
-    "notebook": "830ae6f2d40ca8f5b56dc41052c1094c8b3b3a4bf4f102d2ff8efc460ab75d47",
+    "python_entrypoint": "74894ed1cd774c5e081629114206927c036d1666bb20f4b11f29fd0baf6ee18e",
+    "notebook": "840a94f744e12d065854eb142e30cb01a0651436e603faa804eae7ae834e2d6d",
     "feature_manifest": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced",
     "model_manifest": "1483a59a268ded18b6af804a5f0eb0b191376a1dc86526f286751bf1613ec940",
 }
 COMPETITION = "structural-break-real-time"
+EXPECTED_PARALLELISM = 4
 MODEL_CODE_SHA = "41ab0695a906834361298b4a61c3636909ceb79c"
 # Two release-critical gates exist because the cloud broke where `crunch test`
 # structurally cannot look:
@@ -204,7 +205,11 @@ def main() -> int:
 
     text = open(py_path, encoding="utf-8").read()
     m = re.search(r"INFER_PARALLELISM\s*=\s*(\d+)", text)
-    check(bool(m) and m.group(1) == "1", "INFER_PARALLELISM == 1",
+    # A scheduling knob, not a modelling one: series carry no cross-series state,
+    # and it lives in the wrapper, so the source/model zip hashes above are
+    # unchanged whatever it is set to.  Pinned so it cannot drift unnoticed.
+    check(bool(m) and m.group(1) == str(EXPECTED_PARALLELISM),
+          f"INFER_PARALLELISM == {EXPECTED_PARALLELISM}",
           m.group(1) if m else "not found")
 
     # embedded src/sbr must equal the tree the model was trained from
