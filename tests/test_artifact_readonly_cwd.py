@@ -33,7 +33,8 @@ import importlib.util, sys
 spec = importlib.util.spec_from_file_location("artifact", sys.argv[1])
 mod = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mod)
-assert mod.INFER_PARALLELISM == 1, mod.INFER_PARALLELISM
+assert isinstance(mod.INFER_PARALLELISM, int) and mod.INFER_PARALLELISM >= 1, \
+    mod.INFER_PARALLELISM   # the exact value is pinned by validate_rt600_release.py
 assert callable(mod.train) and callable(mod.infer)
 assert os.path.exists(os.path.join(mod.MODEL_DIRECTORY, "manifest.json")), \
     mod.MODEL_DIRECTORY
