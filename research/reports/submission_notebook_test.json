@@ -1,8 +1,8 @@
 {
-  "runtime_s": 18.68767523765564,
+  "runtime_s": 20.002827167510986,
   "n_series": 20,
   "n_points": 10476,
-  "ms_per_point": 1.7838559791576594,
+  "ms_per_point": 1.9093954913622553,
   "deterministic": true,
   "order_independent": true,
   "future_poison_safe": true,
