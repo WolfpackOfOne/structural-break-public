@@ -17,7 +17,7 @@ mismatched pair fails loudly at import rather than silently scoring nonsense.
 """
 from __future__ import annotations
 
-import argparse, base64, hashlib, io, json, os, subprocess, zipfile
+import argparse, base64, hashlib, io, json, os, subprocess, time, zipfile
 
 ROOT = os.environ.get(
     "SBR_ROOT",
@@ -108,11 +108,10 @@ def _load_model(model_directory_path: str):
 def train(datasets, model_directory_path: str):
     """Install the pre-trained, pre-validated model.
 
-    The model is a frozen function of the training data and was fitted offline
-    on the 8,000 development series with the full 500-column causal feature bank
-    (see research/REPRODUCIBILITY_MANIFEST.json).  Refitting it inside the
-    runner would add an hour of feature construction and a large amount of
-    avoidable risk for no change in the resulting function.
+    The model is a frozen function of the training data, fitted offline against
+    the causal feature bank described by the manifest it ships with.  Refitting
+    it inside the runner would add an hour of feature construction and a large
+    amount of avoidable risk for no change in the resulting function.
     """
     import json
     import shutil
@@ -162,6 +161,7 @@ def main():
     ap.add_argument("--model", default=f"{ROOT}/models/rt100_stream")
     ap.add_argument("--out", default=f"{ROOT}/submissions/rt100_streaming.ipynb")
     ap.add_argument("--title", default="RT-100 streaming (single booster, 500 causal features)")
+    ap.add_argument("--py", default="", help="Python entrypoint path; defaults alongside --out")
     a = ap.parse_args()
     os.makedirs(os.path.dirname(a.out), exist_ok=True)
 
@@ -169,7 +169,6 @@ def main():
     mdl_raw, mdl_sha = pack_dir(a.model, "model")
     man = json.load(open(os.path.join(a.model, "manifest.json")))
     git_sha = subprocess.check_output(["git", "-C", ROOT, "rev-parse", "HEAD"]).decode().strip()
-    import time
     boot = CELL_BOOT.format(
         src_sha=src_sha, mdl_sha=mdl_sha, feat_sha=man["feature_manifest_sha256"],
         git_sha=git_sha, built=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -198,14 +197,70 @@ shuffling the series order leaves every score unchanged.
 Built from git `{git_sha[:10]}`, feature manifest `{man['feature_manifest_sha256'][:16]}`.
 """
 
-    nb = {"cells": [nb_cell("markdown", md), nb_cell("code", boot), nb_cell("code", CELL_ENTRY)],
+    code_cells = [boot, CELL_ENTRY]
+    nb = {"cells": [nb_cell("markdown", md)] + [nb_cell("code", c) for c in code_cells],
           "metadata": {"kernelspec": {"display_name": "Python 3", "language": "python",
                                       "name": "python3"},
                        "language_info": {"name": "python", "version": "3.11"}},
           "nbformat": 4, "nbformat_minor": 5}
     json.dump(nb, open(a.out, "w"), indent=1)
+
+    # The Crunch CLI (11.11.0) cannot take an .ipynb as --main-file: it fails
+    # before user code with "AttributeError: 'NoneType' object has no attribute
+    # 'loader'".  `crunch convert` is not usable either -- it comments out the
+    # embedded payload variables and the unpack calls, which silently produces a
+    # submission with no model in it.  So the .py is emitted HERE, from the same
+    # `code_cells` list the notebook is built from, rather than by a shell
+    # one-liner run afterwards.  Both artifacts are outputs of one template and
+    # cannot drift apart.
+    py_out = a.py or os.path.splitext(a.out)[0] + ".py"
+    py_text = "\n\n".join(code_cells) + "\n"
+    with open(py_out, "w") as fh:
+        fh.write(py_text)
+
+    def _sha(path):
+        h = hashlib.sha256()
+        with open(path, "rb") as fh:
+            for c in iter(lambda: fh.read(1 << 20), b""):
+                h.update(c)
+        return h.hexdigest()
+
+    dirty = subprocess.check_output(["git", "-C", ROOT, "status", "--porcelain"]).decode().strip()
+    build = {
+        "built_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "code_git_sha": git_sha,
+        "code_git_clean": dirty == "",
+        "model_directory": os.path.abspath(a.model),
+        "source_zip_sha256": src_sha,
+        "model_zip_sha256": mdl_sha,
+        "feature_manifest_sha256": man["feature_manifest_sha256"],
+        "model_manifest_sha256": _sha(os.path.join(a.model, "manifest.json")),
+        "notebook": {"path": os.path.abspath(a.out), "sha256": _sha(a.out),
+                     "bytes": os.path.getsize(a.out)},
+        "python_entrypoint": {"path": os.path.abspath(py_out), "sha256": _sha(py_out),
+                              "bytes": os.path.getsize(py_out)},
+        "infer_parallelism": 1,
+        "manifest_code_git_sha": man.get("code_git_sha"),
+        "manifest_matches_build_sha": man.get("code_git_sha") == git_sha,
+    }
+    bm = os.path.splitext(a.out)[0] + ".build.json"
+    json.dump(build, open(bm, "w"), indent=2)
+
     print(f"wrote {a.out}  ({os.path.getsize(a.out)/1e6:.1f} MB)")
-    print(f"  source sha {src_sha}\n  model  sha {mdl_sha}\n  feature manifest {man['feature_manifest_sha256']}")
+    print(f"wrote {py_out}  ({os.path.getsize(py_out)/1e6:.1f} MB)")
+    print(f"wrote {bm}")
+    print(f"  source sha  {src_sha}")
+    print(f"  model  sha  {mdl_sha}")
+    print(f"  notebook    {build['notebook']['sha256']}")
+    print(f"  python      {build['python_entrypoint']['sha256']}")
+    print(f"  feature manifest {man['feature_manifest_sha256']}")
+    if not build["code_git_clean"]:
+        print("\n*** WORKING TREE IS DIRTY -- code_git_sha does not describe this "
+              "artifact's source. Do not ship it. ***")
+    if not build["manifest_matches_build_sha"]:
+        print(f"\n*** NOTE: the model was trained at {man.get('code_git_sha')} but this "
+              f"build is at {git_sha}. Fine if only build tooling changed since; "
+              f"NOT fine if src/sbr changed. ***")
 
 
 if __name__ == "__main__":
