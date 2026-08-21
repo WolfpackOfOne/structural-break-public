@@ -1,10 +1,17 @@
 # LB-001 / LB-002 — RT-600 external calibration baseline
 
-> **STATUS: the live submission is LB-002 (submission #2).** LB-001 (submission #1)
-> uploaded cleanly but **failed on the cloud runner at import** with a
-> `PermissionError` and never produced a score. LB-002 is the same model with a
-> fixed boot cell — the source and model zip hashes are bit-identical. Sections 1–13
-> below describe LB-001 and remain accurate for it; **section 14 is the live record.**
+> **STATUS: the live submission is LB-003 (submission #3).** Three uploads, one
+> model — every one of them the same seven-stream ensemble, `199db8c9` / `6c8960dd`
+> unchanged throughout. Two packaging faults, each invisible to `crunch test`:
+>
+> | | fate | cause |
+> | --- | --- | --- |
+> | LB-001 (#1) | died at **import** | payload unpacked into a read-only cwd |
+> | LB-002 (#2) | died in **infer** | `requirements.txt` never declared lightgbm |
+> | LB-003 (#3) | **live, pending** | — |
+>
+> Sections 1–13 describe LB-001 and remain accurate for it; **section 14** covers
+> LB-002 and **section 15 is the live record.**
 
 **PURPOSE: EXTERNAL CALIBRATION BASELINE — NOT FINAL MODEL SELECTION.**
 
@@ -429,3 +436,133 @@ copy; if `train()` never runs, `infer()` still finds a model.
 
 Section 12 applies unchanged to LB-002. It is an external calibration point. It may
 redirect research priorities; it may not select anything inside RT-600.
+
+
+---
+
+# 15. LB-003 — the runnable environment (LIVE)
+
+## 15.1 What happened to LB-002
+
+The boot-cell fix worked: the payload extracted to `/tmp/sbr_payload_usnhdc7o` and
+execution reached `infer()`. It died there:
+
+    File ".../sbr/production/model.py", line 48, in load
+      import lightgbm as lgb
+    ModuleNotFoundError: No module named 'lightgbm'
+
+`crunch push` uploads `requirements.txt` and the runner builds its environment from
+it — `using original file: requirements.txt` appears in the push log of every
+submission we have made. That file was still the 2025 baseline's core list:
+
+    numpy, pandas, scikit-learn, scipy, joblib, ruptures, matplotlib
+
+No lightgbm. **The seven boosters are LightGBM text models — that library is the
+model.** Inference could never have run, in any submission, under that file.
+
+## 15.2 The part that is worth remembering
+
+The dependency was never unknown. `requirements-research.txt` has listed lightgbm and
+numba all along, under a header reading *"The core package (requirements.txt) stays
+deliberately lighter than this."* The information was correct and sat in the file the
+runner does not read. Being lighter than the thing you deploy is not a virtue.
+
+Both cloud failures share one shape: **`crunch test` cannot see them.** It runs in
+your own venv, where lightgbm and numba are already installed from research work, and
+with a writable cwd. It is a test of the code, not of the deployment. Everything that
+distinguishes the runner from a laptop — the filesystem, the environment — is outside
+its field of view. Two green local runs shipped two dead submissions.
+
+## 15.3 The fix
+
+`requirements.txt` is now the **measured** import closure of
+`sbr.production.submission.infer` — obtained by running inference in a subprocess and
+reading `sys.modules`, not by reading the source and guessing — pinned to the
+versions in `research/FINAL_REPRODUCIBILITY_MANIFEST.json`, the set the reported
+validation was produced on:
+
+    lightgbm==4.7.0     numba==0.67.0      numpy==2.4.6      scipy==1.17.1
+    pandas==3.0.5       pyarrow==25.0.1    scikit-learn==1.9.0
+
+A `pip install --dry-run --python-version 3.12 --only-binary=:all:` confirms every
+one resolves to a cp312 wheel for the runner's Python 3.12.
+
+**numba deserves a specific note.** Its Shiryaev-Roberts and Bayesian change-point
+kernels (`m01_seq.py`, `m07_bayes.py`) each sit in a `try: from numba import njit`
+with a pure-Python fallback. A missing numba is therefore **silent**: the artifact
+still produces scores, just slowly and down a numeric path the validation never
+exercised. lightgbm missing is loud and stops everything; numba missing would have
+quietly scored us on an unvalidated code path. The louder bug was the safer one.
+
+## 15.4 New release gate
+
+`tests/test_requirements_cover_runtime.py`:
+
+1. measures the inference import closure in a subprocess and asserts
+   `requirements.txt` declares every third-party module in it;
+2. asserts `lightgbm` and `numba` are pinned with `==`, not floating, because they
+   determine the function that gets scored;
+3. asserts the runtime file is never weaker than `requirements-research.txt` — the
+   precise gap that shipped LB-002.
+
+Against the `requirements.txt` submitted as LB-002, **all three fail**, the first
+naming `lightgbm`, `numba`, `pyarrow` and their transitive dependencies. Against this
+one, all three pass. `charset_normalizer` and `yaml` are excluded as verified-guarded
+optional imports inside numpy and numba respectively — each wrapped in a
+`try/except ImportError` and confirmed absent from both packages' `Requires-Dist`.
+
+## 15.5 The artifact did not change at all
+
+`requirements.txt` is uploaded as a separate code file; it is not embedded in the
+entrypoint. So unlike the LB-001 → LB-002 rebuild, this submission did not rebuild
+anything:
+
+| | LB-002 | LB-003 | |
+| --- | --- | --- | --- |
+| python entrypoint | `acc16684…7312d16` | `acc16684…7312d16` | **UNCHANGED** |
+| source zip | `199db8c9…a413a0` | `199db8c9…a413a0` | **UNCHANGED** |
+| model zip | `6c8960dd…99ea8c` | `6c8960dd…99ea8c` | **UNCHANGED** |
+| model manifest | `1483a59a…613ec940` | `1483a59a…613ec940` | **UNCHANGED** |
+| `requirements.txt` | 194 bytes, no lightgbm | 2 KB, measured + pinned | changed |
+
+LB-003 is the LB-002 artifact, bit for bit, in an environment that can run it.
+
+## 15.6 Verification and submission
+
+    python3 research/scripts/validate_rt600_release.py    →  30/30 PASSED
+
+Release-critical tests: **100 passed, 0 failed, 0 skipped** — the four no-`n_online`
+causality gates, the read-only-cwd gates, and the new requirements gates.
+
+Official `crunch test`: exit **0**, determinism **passed**, parallelism **1**,
+00:01:45, 1.02 GB consumed, **six-file** real-time layout, competition
+`structural-break-real-time`.
+
+| field | value |
+| --- | --- |
+| submitted | **YES** |
+| **submission ID** | **#3** |
+| dashboard URL | https://hub.crunchdao.com/competitions/structural-break-real-time/projects/8776/treaming-detector-v1/submissions/3 |
+| upload start / finish (UTC) | 2026-08-21T15:33:39Z → 15:38:28Z |
+| `crunch push` exit code | 0 |
+| push log confirms | `using original file: requirements.txt (2 KB)` |
+| git SHA | `6b638f61818c132dc4050259ea48e8136b481272` |
+| status | **SUBMITTED / PENDING SCORING** |
+
+Artifact hash `acc16684…7312d16` before the test, after the test, before the push, and
+after the push.
+
+## 15.7 What this run of failures does and does not mean
+
+Nothing about the model has been learned, and nothing about the model has changed.
+Three submissions carried the identical scored function; the two failures were a
+filesystem assumption and an environment declaration. The predeclared bins in section
+9 and the standing rule in section 12 are untouched and still apply: LB-003 is an
+external calibration point, and no seed, feature, weight, or calibration parameter may
+be selected from whatever it returns.
+
+What has been learned is about the release process: `crunch test` validates code, not
+deployment. The two gates added here — read-only cwd, and requirements coverage —
+cover the two ways that gap has bitten us. Both fail loudly against the exact
+artifacts that failed in the cloud, which is the only real evidence that a regression
+test works.
