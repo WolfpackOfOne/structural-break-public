@@ -1,9 +1,43 @@
-# Core dependencies for the structural-break workflow.
-numpy>=1.21
-pandas>=1.3
-scikit-learn>=1.0
-scipy>=1.7
+# Runtime dependencies for the deployable submission.
+#
+# THIS FILE DEFINES THE CLOUD RUNNER ENVIRONMENT.  `crunch push` uploads it and
+# the runner builds from it ("using original file: requirements.txt"), so a
+# package missing here is a package missing at inference time -- and no local
+# `crunch test` can catch that, because the local test uses the local venv.
+#
+# LB-002 failed on the runner with:
+#     ModuleNotFoundError: No module named 'lightgbm'
+# The dependencies were not unknown -- requirements-research.txt has listed
+# lightgbm and numba all along.  They were declared in the file the runner does
+# not read, while this one stayed the 2025 baseline's "deliberately lighter"
+# core list.  Being lighter than the thing you deploy is not a virtue.
+#
+# The inference stack below is the MEASURED import closure of
+# sbr.production.submission.infer, pinned to the versions in
+# research/FINAL_REPRODUCIBILITY_MANIFEST.json -- the exact set the reported
+# validation was produced on.  All resolve to cp312 wheels for the runner.
+# tests/test_requirements_cover_runtime.py re-measures the closure and fails if
+# this file drifts from what the code actually imports.
+
+# --- the scored function ---------------------------------------------------
+# The 7 boosters are LightGBM text models; this library IS the model.
+lightgbm==4.7.0
+
+# --- the streaming feature engine ------------------------------------------
+# numba JITs the Shiryaev-Roberts and Bayesian change-point kernels
+# (sbr/features/m01_seq.py, m07_bayes.py).  Both have pure-Python fallbacks, so
+# its absence is SILENT rather than loud: the artifact still runs, just far
+# slower and down a numeric path the validation never exercised.
+numba==0.67.0
+
+numpy==2.4.6
+scipy==1.17.1
+pandas==3.0.5
+pyarrow==25.0.1
+scikit-learn==1.9.0
 joblib>=1.1
-# Change-point detection and visualization.
+
+# --- research/offline only, not imported at inference ----------------------
+# Retained because this exact set is known to install cleanly on the runner.
 ruptures>=1.1
 matplotlib>=3.4

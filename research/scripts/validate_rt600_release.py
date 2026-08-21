@@ -53,9 +53,12 @@ EXPECTED = {
 }
 COMPETITION = "structural-break-real-time"
 MODEL_CODE_SHA = "41ab0695a906834361298b4a61c3636909ceb79c"
-# LB-001 died on the cloud at import because the payload unpacked into a
-# read-only cwd.  tests/test_artifact_readonly_cwd.py is therefore a
-# release-critical gate, not a nicety: no `crunch test` can catch that failure.
+# Two release-critical gates exist because the cloud broke where `crunch test`
+# structurally cannot look:
+#   LB-001 unpacked its payload into a read-only cwd  -> test_artifact_readonly_cwd
+#   LB-002 ran on an env built from requirements.txt,
+#          which never mentioned lightgbm                -> test_requirements_cover_runtime
+# The local test uses your venv and a writable cwd, so it is green in both cases.
 ENTRYPOINT = "submissions/C_ensemble_deployable.py"
 NOTEBOOK = "submissions/C_ensemble_deployable.ipynb"
 
@@ -257,7 +260,8 @@ def main() -> int:
              "tests/test_no_n_online_leakage.py",
              "tests/test_calibration_time_coord.py",
              "tests/test_production_contract.py",
-             "tests/test_artifact_readonly_cwd.py", "-q", "-rs"],
+             "tests/test_artifact_readonly_cwd.py",
+             "tests/test_requirements_cover_runtime.py", "-q", "-rs"],
             cwd=REPO, env=env, capture_output=True, text=True)
         tail = (r.stdout or "").strip().splitlines()
         summary = tail[-1] if tail else "(no output)"
