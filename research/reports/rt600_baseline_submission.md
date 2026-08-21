@@ -675,3 +675,47 @@ response to a **wall-clock** observation: a job holding 7% of a machine for two
 hours. The scored function is bitwise unchanged and provably so, which is what
 keeps LB-004 the same calibration point as LB-003 rather than a new experiment.
 The predeclared bins in §9 and the standing rule in §12 apply to it unaltered.
+
+
+---
+
+# 17. The runner's actual specification
+
+Read off the run dashboard for run #106819 (submission #3), which removes the
+guesswork the speed plan had to work around.
+
+| | |
+| --- | --- |
+| runtime type | CPU |
+| **vCPU** | **16** |
+| **RAM** | **64 GB** |
+| region | europe-west1 |
+
+Two consequences.
+
+**The 7% CPU plateau is now arithmetic, not inference.** One core of sixteen is
+6.25%. The observed constant ~7% during LB-003's inference was exactly
+`INFER_PARALLELISM = 1` saturating a single core, with fifteen idle beside it.
+
+**Memory was never the binding constraint.** The speed plan recommended P=4 over
+anything larger because "a worker costs ~380 MB RSS and the container's limit is
+unknown". The limit is 64 GB:
+
+| | model RAM | share of 64 GB | cores used |
+| --- | --- | --- | --- |
+| P=1 (LB-003) | 0.4 GB | 0.6% | 6% |
+| P=4 (LB-004) | 1.5 GB | 2.4% | 25% |
+| P=8 | 3.0 GB | 4.7% | 50% |
+| P=12 | 4.5 GB | 7.0% | 75% |
+
+So P=4 is conservative by roughly a factor of three. That was the right call while
+the limit was unknown and fork-safety on Linux was unverified — both are now
+settled, the first by this dashboard and the second by the container harness in
+§16.3. If more speed is ever wanted, P=12 is the headroom, and the same
+bitwise-identity check in `research/docker/Dockerfile.linux-verify` is what should
+license it.
+
+**Note on run ordering.** Run #106819 is submission **#3**, the P=1 artifact.
+Submission #4 carries byte-identical predictions and is 2.7× faster, so
+terminating a long-running #3 costs nothing scientifically: both compute the same
+function, and only the schedule differs.
