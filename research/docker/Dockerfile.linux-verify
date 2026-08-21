@@ -1,0 +1,45 @@
+# Linux verification harness for the deployable artifact.
+#
+# WHY THIS EXISTS
+#
+# `crunch test` on macOS cannot validate INFER_PARALLELISM > 1. The macOS runner
+# segfaults LightGBM under forked workers -- reproducibly:
+#
+#     using a parallelism of 4
+#     [debug] error during inference: 2 worker(s) died (exit codes: 0=-11, 1=-11)
+#
+# -11 is SIGSEGV. That is a macOS fork+OpenMP hazard, not a defect in the
+# artifact: the identical artifact passes at P=4 on Linux with determinism green.
+# Without this image the only way to find that out is to submit and watch.
+#
+# It doubles as a check on requirements.txt: the image installs from that file
+# alone on Python 3.12, which is what the cloud runner does. If the build fails,
+# the submission would have failed the same way -- which is exactly how LB-002
+# died (no lightgbm in requirements.txt).
+#
+# BUILD  (context must contain requirements.txt)
+#     cp requirements.txt research/docker/ && cd research/docker
+#     docker build -f Dockerfile.linux-verify -t sbr-linux-verify .
+#
+# RUN    (from the repo root; mounts the checkout, keeps files non-root)
+#     docker run --rm -u "$(id -u):$(id -g)" -e HOME=/tmp -e SBR_ROOT=/work \
+#       -v "$PWD":/work -w /work sbr-linux-verify \
+#       crunch test --main-file /work/submissions/C_ensemble_deployable.py \
+#                   --model-directory /work/resources
+#
+# TO PROVE A PARALLELISM CHANGE IS INERT, run it once per artifact and compare
+# prediction/prediction.parquet bitwise. P=1 and P=4 must produce identical
+# bytes; if they do not, series are not independent and something is wrong that
+# no timing argument can excuse.
+#
+# CAVEAT: on Apple silicon this image is linux/aarch64 while the cloud runner is
+# most likely linux/amd64. Fork+OpenMP safety is an OS-level property, so this
+# answers the question that matters, but it is not an architecture match. Add
+# --platform=linux/amd64 for a closer (emulated, slow) comparison.
+FROM python:3.12-slim
+RUN apt-get update && apt-get install -y --no-install-recommends libgomp1 procps \
+    && rm -rf /var/lib/apt/lists/*
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt \
+    && pip install --no-cache-dir "crunch-cli==11.11.0"
+WORKDIR /work

@@ -8,7 +8,8 @@
 > | --- | --- | --- |
 > | LB-001 (#1) | died at **import** | payload unpacked into a read-only cwd |
 > | LB-002 (#2) | died in **infer** | `requirements.txt` never declared lightgbm |
-> | LB-003 (#3) | **live, pending** | — |
+> | LB-003 (#3) | ran >2 h at P=1, pending | — |
+> | LB-004 (#4) | **live, pending** | supersedes #3: identical predictions, 2.7× faster |
 >
 > Sections 1–13 describe LB-001 and remain accurate for it; **section 14** covers
 > LB-002 and **section 15 is the live record.**
@@ -566,3 +567,111 @@ deployment. The two gates added here — read-only cwd, and requirements coverag
 cover the two ways that gap has bitten us. Both fail loudly against the exact
 artifacts that failed in the cloud, which is the only real evidence that a regression
 test works.
+
+
+---
+
+# 16. LB-004 — same predictions, four workers
+
+## 16.1 Why
+
+LB-003 ran for over two hours holding a **constant ~7% CPU** — one saturated core
+on a ~14-vCPU runner. That is `INFER_PARALLELISM = 1` doing exactly what it says,
+and leaving roughly 93% of the machine idle.
+
+`INFER_PARALLELISM` was 1 because the official **macOS** runner segfaults LightGBM
+under forked workers. Reproduced here, so the constraint was real:
+
+    using a parallelism of 4
+    [debug] error during inference: 2 worker(s) died (exit codes: 0=-11, 1=-11)
+
+`-11` is SIGSEGV. But it is a macOS fork+OpenMP hazard, and the cloud runner is
+Linux — a distinction the constant never made.
+
+## 16.2 Why it cannot change a score
+
+Series are independent by construction: there is no cross-series state anywhere in
+the engine. Distributing series across workers cannot alter a score, because no
+score ever depended on another series.
+
+And the knob lives in the generated wrapper, not in `src/sbr`, so:
+
+| | LB-003 | LB-004 | |
+| --- | --- | --- | --- |
+| **source zip** | `199db8c9…a413a0` | `199db8c9…a413a0` | **UNCHANGED** |
+| **model zip** | `6c8960dd…99ea8c` | `6c8960dd…99ea8c` | **UNCHANGED** |
+| **model manifest** | `1483a59a…613ec940` | `1483a59a…613ec940` | **UNCHANGED** |
+| python entrypoint | `acc16684…7312d16` | `74894ed1…f6ee18e` | changed (wrapper) |
+| notebook | `830ae6f2…ab75d47` | `840a94f7…4e2d6d` | changed (wrapper) |
+
+Diffing the generated code against LB-003 with the base64 payload masked: **six
+lines removed, sixteen added, and the only functional one is
+`INFER_PARALLELISM 1 → 4`.** `train()`, `_load_model()` and `infer()` are
+byte-identical.
+
+## 16.3 Verified on Linux, not asserted
+
+The macOS `crunch test` gate is unreachable at P>1, so the claim was settled in a
+container instead: `python:3.12-slim` built from the pinned `requirements.txt`
+alone — numpy 2.4.6, pandas 3.0.5, scipy 1.17.1, scikit-learn 1.9.0, lightgbm
+4.7.0, numba 0.67.0, pyarrow 25.0.1 on Python 3.12.14, i.e. the runner's Python.
+
+Both artifacts were run through the real `crunch test` on identical hardware:
+
+| | P=1 (LB-003 artifact) | P=4 (LB-004 artifact) |
+| --- | --- | --- |
+| exit code | 0 | **0** |
+| worker deaths | — | **none** |
+| determinism check | passed | **passed** |
+| inference | 106 s | **39 s** |
+| total duration | 02:01 | **00:58** |
+| memory consumed | 412.89 MB | 203.04 MB |
+
+**Inference speedup 2.7×.** Not 4× — each worker pays its own ~6 s model load and
+the VM shares 10 CPUs. On the cloud this should turn a >2 h inference into roughly
+45 minutes.
+
+**The predictions are bitwise identical.** Both runs' `prediction.parquet`, all
+**50,983** rows, hash to the same `dd082590d15aa38d6b3ec83833961d22`:
+
+    prediction: bitwise identical = True
+
+That is the acceptance bar from the speed plan — `atol=0`, not `allclose` — met
+with evidence rather than argument. Parallelism changed the schedule and nothing
+else.
+
+The harness is kept at `research/docker/Dockerfile.linux-verify` so the next
+parallelism change can be settled the same way. It also re-checks
+`requirements.txt` end to end, since the image installs from that file alone —
+the LB-002 failure would have surfaced at build time.
+
+## 16.4 A gate caught a real defect
+
+Raising the constant turned `tests/test_artifact_readonly_cwd.py` red — all three
+cases. It had hardcoded `INFER_PARALLELISM == 1` inside a test about read-only
+filesystems. A test about the filesystem had no business pinning a release
+constant; the assertion moved to `validate_rt600_release.py`, which is where such
+constants belong, and that file now pins the expected value explicitly.
+
+## 16.5 Submission record
+
+| field | value |
+| --- | --- |
+| submitted | **YES** |
+| **submission ID** | **#4** |
+| dashboard URL | https://hub.crunchdao.com/competitions/structural-break-real-time/projects/8776/treaming-detector-v1/submissions/4 |
+| upload start / finish (UTC) | 2026-08-21T19:28:29Z → 19:33:23Z |
+| `crunch push` exit code | 0 |
+| entrypoint sha256 | `74894ed1cd774c5e081629114206927c036d1666bb20f4b11f29fd0baf6ee18e` |
+| git SHA | `de660aa` + this record |
+| validator | 30/30 |
+| tests | 100 passed, 0 failed, 0 skipped |
+| status | **SUBMITTED / PENDING SCORING** |
+
+## 16.6 What this is not
+
+This is not a response to a leaderboard result — there has not been one. It is a
+response to a **wall-clock** observation: a job holding 7% of a machine for two
+hours. The scored function is bitwise unchanged and provably so, which is what
+keeps LB-004 the same calibration point as LB-003 rather than a new experiment.
+The predeclared bins in §9 and the standing rule in §12 apply to it unaltered.
