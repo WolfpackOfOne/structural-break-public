@@ -451,3 +451,64 @@ tuned after freeze. It is stated, bounded and accepted.
 **Nothing scored under `folds_final10k` is evidence for any model choice.** By
 the time it runs there are no model choices left to make. Any number it produces
 is a FINAL-FIT diagnostic and is labelled as such.
+
+---
+
+# W4-E6 — PRE-REGISTRATION: DOES THE CHAMPION WANT BOTH?
+
+**Written 2026-08-20, AFTER W4-E1 reported and BEFORE this experiment was run.
+The provenance is stated plainly because it matters: W4-E1's decomposition is
+what motivates the hypothesis. That is legitimate — a result suggesting the next
+experiment is how research works — but it means this test carries the
+multiplicity of having been chosen with knowledge of W4-E1, and its bar is set
+accordingly.**
+
+**The observation.** W4-E1 separated the seven-stream ensemble's gain into
++0.00559 from ordinary bagging and +0.00417 from specialist diversity. The
+deployed champion currently harvests the second and only incidentally the first:
+its seven members differ in seed, but each *configuration* appears exactly once.
+If the two effects are even partly additive, a system carrying both should beat
+one carrying mainly the second.
+
+**Hypothesis (H1).** Blending the seven specialists together with the six extra
+seed clones — 13 boosters over the same shared feature engine — beats the seven
+specialists alone.
+
+**Null (H0).** The two gains overlap. Once seven heterogeneous streams are
+averaged, additional exchangeable members add nothing that averaging the
+specialists has not already done.
+
+**Compositions declared now, before any of them is scored.** Exactly three, and
+they are unions, not selections — no member is chosen, dropped or reordered on
+the basis of a score:
+
+| id | composition | n |
+|---|---|---|
+| `RT-420` | the seven specialists (the incumbent) | 7 |
+| `RT-421` | the seven seed clones | 7 |
+| `RT-422` | **the union of both, deduplicated on `RT-300`** | 13 |
+
+**Falsification of H1, fixed in advance.** H1 is rejected unless
+
+    RT-422  -  RT-420  >  +0.0020   over the five canonical folds
+    AND positive on at least 4 of 5 folds
+    AND the paired series bootstrap's 95% CI excludes zero.
+
+The threshold is lower than W4-E1's +0.0030 because this is a strictly cheaper
+change — no new feature module, no new configuration, no new research surface,
+just more of a thing already proven to work — but the extra bootstrap condition
+is added because the hypothesis was chosen after seeing W4-E1.
+
+**Cost condition, and it is binding.** A promotion also requires W4-E4 to show
+that 13 boosters fit the runtime budget with margin. If 13 boosters cost more
+than the budget allows, H1 being true is irrelevant and the incumbent stands.
+The cost measurement is independent of the score measurement and neither is
+allowed to move the other's threshold.
+
+**What is NOT tested, and why.** Every intermediate composition — 4 specialists
++ 3 clones, 7 specialists + 2 clones, best-k of anything — is out of scope.
+Those are exactly the selections this ledger exists to prevent, and testing the
+union costs one number while testing the lattice costs a false positive.
+
+**Degrees of freedom spent.** 0 new training runs, 1 new composition, 1
+threshold fixed in advance, 0 members selected.
