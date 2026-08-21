@@ -11,15 +11,44 @@ applied per series at inference:
 
     F_m(s | t)  ~=  P[ model m scores below s, among rows at online index ~t ]
 
-estimated at a log-spaced set of time anchors and interpolated in log t between
-the two neighbouring anchors. Each anchor's CDF is a 256-point quantile grid, so
-the whole payload is 7 models x 12 anchors x 256 floats.
+estimated at a log-spaced set of time anchors and interpolated in log time
+between the two neighbouring anchors. Each anchor's CDF is a 256-point quantile
+grid, so the whole payload is 7 models x 12 anchors x 256 floats.
 
-Measured: this recovers 99.7% of the oracle rank-average's gain over the best
-single model, and the family is selected by nested CV rather than by looking at
-the evaluation folds. See research/reports/deployable_ensemble_v2.json.
+WHAT THIS IS ACTUALLY WORTH, measured in wave 4 (W4-E1). On seven heterogeneous
+specialist streams the calibration family moves the blend by +0.00267 -- raw
+mean 0.62314, logit mean 0.62479, global CDF 0.62550, this 0.62581. On seven
+seed clones of one model it moves it by 0.00016. So this is not a general
+improvement to blending: it is specifically a fix for members whose score scales
+disagree, which heterogeneous streams have and seed clones do not. On the same
+comparison the blend reached 0.62581 against the ILLEGAL within-timestep rank
+oracle's 0.62580 -- it matches the ceiling rather than recovering a fraction of
+it, and the older "recovers 99.7% of the oracle gain" phrasing is retired.
 
 Cost at inference: two binary searches per model per observation.
+
+TIME COORDINATE -- read before changing anything here.
+The competition's online index is ZERO-BASED: the first scored point of every
+series is t = 0. Two coordinates are supported and the payload records which one
+it was fitted with, because a payload fitted under one and evaluated under the
+other is silently wrong.
+
+    "log_t_clamped"  the ORIGINAL. Anchor windows cut on raw t, interpolation on
+                     log(max(t, 1)). It maps t=0 and t=1 to the same position,
+                     and scores t=0 rows against an anchor grid that excluded
+                     them. This is what the wave-2 artifact shipped with, so it
+                     is preserved exactly and remains the default for any
+                     payload that does not say otherwise.
+
+    "log_n_seen"     the CORRECTED default for new fits. n_seen = t + 1 is the
+                     number of online observations seen, strictly positive by
+                     construction, used consistently for both the anchor windows
+                     and the interpolation.
+
+Cross-fitted over five folds on both wave-4 arms the two agree to six decimals
+(specialist 0.625814 vs 0.625815, seed clone identical). The corrected one is
+adopted for correctness at t=0, not for score -- TS-AUC at post-break age 0-5 is
+0.513, so there was never much there to win. See research/RDOF_LEDGER.md W4-E3.
 """
 from __future__ import annotations
 
@@ -29,35 +58,61 @@ DEFAULT_ANCHORS = 12
 DEFAULT_GRID = 256
 MIN_N = 400
 
+#: coordinate used for any payload that predates the field
+LEGACY_COORD = "log_t_clamped"
+#: coordinate used for new fits
+DEFAULT_COORD = "log_n_seen"
+COORDS = (LEGACY_COORD, DEFAULT_COORD)
+
 
 class SmoothTimeCDFCal:
-    """F_m(s | t): log-spaced time anchors, quantile grids, linear in log t."""
+    """F_m(s | t): log-spaced time anchors, quantile grids, linear in log time."""
 
-    def __init__(self, anchors, grids):
+    def __init__(self, anchors, grids, time_coord=LEGACY_COORD):
+        if time_coord not in COORDS:
+            raise ValueError(f"unknown time_coord {time_coord!r}, expected one of {COORDS}")
         self.anchors = np.asarray(anchors, dtype=np.int64)
         self.grids = [np.asarray(g, dtype=np.float64) for g in grids]
+        self.time_coord = time_coord
         self._la = np.log(np.maximum(self.anchors, 1).astype(np.float64))
+
+    # ------------------------------------------------------------ coordinate
+    def _u(self, t):
+        """Online index -> evaluation coordinate."""
+        if self.time_coord == DEFAULT_COORD:
+            return float(t) + 1.0
+        return max(float(t), 1.0)
 
     # ------------------------------------------------------------------- fit
     @classmethod
-    def fit(cls, scores, t, n_anchor=DEFAULT_ANCHORS, grid=DEFAULT_GRID, min_n=MIN_N):
+    def fit(cls, scores, t, n_anchor=DEFAULT_ANCHORS, grid=DEFAULT_GRID, min_n=MIN_N,
+            time_coord=DEFAULT_COORD):
         scores = np.asarray(scores, dtype=np.float64)
         t = np.asarray(t)
+        if time_coord == DEFAULT_COORD:
+            cut = t.astype(np.float64) + 1.0        # n_seen, used for windows too
+            top = max(float(cut.max()), 2.0)
+        elif time_coord == LEGACY_COORD:
+            cut = t.astype(np.float64)              # raw t, as originally shipped
+            top = max(float(t.max()), 2.0)
+        else:
+            raise ValueError(f"unknown time_coord {time_coord!r}")
         anchors = np.unique(np.round(np.exp(
-            np.linspace(np.log(1), np.log(max(int(t.max()), 2)), n_anchor))).astype(int))
-        half = np.diff(np.log(np.maximum(anchors, 1))).mean() if len(anchors) > 1 else 1.0
+            np.linspace(np.log(1.0), np.log(top), n_anchor))).astype(int))
+        la = np.log(np.maximum(anchors, 1).astype(np.float64))
+        half = np.diff(la).mean() if len(anchors) > 1 else 1.0
         allg = _quantile_grid(scores, grid)
         grids = []
         for a in anchors:
-            m = (t >= a * np.exp(-half)) & (t <= a * np.exp(half))
+            m = (cut >= a * np.exp(-half)) & (cut <= a * np.exp(half))
             g = scores[m]
             grids.append(_quantile_grid(g, grid) if len(g) >= min_n else allg)
-        return cls(anchors, grids)
+        return cls(anchors, grids, time_coord=time_coord)
 
     # ------------------------------------------------------------- inference
     def __call__(self, s: float, t: int) -> float:
         la = self._la
-        lt = np.log(max(float(t), 1.0))
+        lt = np.log(self._u(t))
         j = int(np.searchsorted(la, lt, side="right"))
         j = min(max(j, 1), len(la) - 1)
         denom = la[j] - la[j - 1]
@@ -70,11 +125,15 @@ class SmoothTimeCDFCal:
     # ------------------------------------------------------------------- io
     def to_json(self):
         return {"anchors": self.anchors.tolist(),
-                "grids": [g.tolist() for g in self.grids]}
+                "grids": [g.tolist() for g in self.grids],
+                "time_coord": self.time_coord}
 
     @classmethod
     def from_json(cls, d):
-        return cls(d["anchors"], d["grids"])
+        # a payload without the field predates it and is therefore legacy;
+        # defaulting to the CORRECTED coordinate here would silently re-map
+        # every shipped grid.
+        return cls(d["anchors"], d["grids"], time_coord=d.get("time_coord", LEGACY_COORD))
 
 
 def _quantile_grid(x, q):
