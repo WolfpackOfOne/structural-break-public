@@ -116,6 +116,40 @@ class Ctx:
             out[va] = cols @ w
         return out
 
+    def crossfit_streams(self, P, names, cal=None, cache=True):
+        """Cross-fitted calibrated vector for EACH stream, computed once.
+
+        A stream's calibration map is fitted on its own OOF scores over folds
+        != k and does not depend on which other streams share the blend, so
+        these vectors are reusable: any equal- or fixed-weight blend is then
+        just a weighted mean of them.  That turns "score another composition"
+        from a ten-minute refit into an array operation, which is what makes
+        the promotion battery affordable.
+        """
+        cal = cal or CANON_CAL
+        tag = cal.__name__
+        out = {}
+        for s in names:
+            f = f"{OOFDIR}/wave5_cal_{tag}_{s}.npy"
+            if cache and os.path.exists(f):
+                out[s] = np.load(f)
+                continue
+            v = np.full(len(self.d.y), np.nan)
+            for k in FOLDS:
+                tr = np.concatenate([self.rows[g] for g in FOLDS if g != k])
+                va = self.rows[k]
+                v[va] = cal(P[s][tr], self.d.t[tr])(P[s][va], self.d.t[va])
+            out[s] = v
+            if cache:
+                np.save(f, v)
+        return out
+
+    @staticmethod
+    def blend(Q, names, weights=None):
+        w = np.ones(len(names)) if weights is None else np.asarray(weights, float)
+        w = w / w.sum()
+        return np.column_stack([Q[s] for s in names]) @ w
+
     def crossfit_single(self, p, cal=None):
         """Cross-fitted calibrated version of ONE stream (for fair mixing)."""
         return self.crossfit_blend({"x": p}, ["x"], cal=cal)
