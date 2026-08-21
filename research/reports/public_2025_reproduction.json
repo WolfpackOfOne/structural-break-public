@@ -1,0 +1,222 @@
+{
+  "base_sha": "5a3b8a0377eb9d42e4188e2af38ffd0fdff6e527",
+  "branch": "codex/reproduce-2025-public-solution",
+  "calibration_gate": {
+    "decision": "FAIL",
+    "may_interpret_2026_strong_oracle_as_information_frontier": "NO",
+    "reason": "No executable strong 2025 public-solution reproduction was produced."
+  },
+  "data": {
+    "identity_assessment": "Local byte lengths match public notebook Crunch release-146 output exactly; public repo publishes no hashes.",
+    "manifest": [
+      {
+        "byte_length_matches_public_notebook_output": true,
+        "bytes": 2380918,
+        "exists": true,
+        "expected_public_release_146_bytes": 2380918,
+        "name": "X_test.reduced.parquet",
+        "path": "/home/user/Documents - Graham\u2019s MacBook Pro/structural-break-project/competitions/structural-break/quickstarters/baseline/data/X_test.reduced.parquet",
+        "sha256": "de086be65642e70b38312690c65afefd044e292920df189c3be94ab02756c8db"
+      },
+      {
+        "byte_length_matches_public_notebook_output": true,
+        "bytes": 204327238,
+        "exists": true,
+        "expected_public_release_146_bytes": 204327238,
+        "name": "X_train.parquet",
+        "path": "/home/user/Documents - Graham\u2019s MacBook Pro/structural-break-project/competitions/structural-break/quickstarters/baseline/data/X_train.parquet",
+        "sha256": "3f01c01bad9ecbc63f3d2c6741421f2fc1899aa84668eee4edffe26d0f99ce4a"
+      },
+      {
+        "byte_length_matches_public_notebook_output": true,
+        "bytes": 2655,
+        "exists": true,
+        "expected_public_release_146_bytes": 2655,
+        "name": "y_test.reduced.parquet",
+        "path": "/home/user/Documents - Graham\u2019s MacBook Pro/structural-break-project/competitions/structural-break/quickstarters/baseline/data/y_test.reduced.parquet",
+        "sha256": "4d65989fe02e7e834347a4212c3436f4a04dad628cec1f1af16bf7b14ea91033"
+      },
+      {
+        "byte_length_matches_public_notebook_output": true,
+        "bytes": 61003,
+        "exists": true,
+        "expected_public_release_146_bytes": 61003,
+        "name": "y_train.parquet",
+        "path": "/home/user/Documents - Graham\u2019s MacBook Pro/structural-break-project/competitions/structural-break/quickstarters/baseline/data/y_train.parquet",
+        "sha256": "84356084ce1564f8017c06fc9c961570d610e88879961284252c783b0aef5a54"
+      }
+    ],
+    "path": "/home/user/Documents - Graham\u2019s MacBook Pro/structural-break-project/competitions/structural-break/quickstarters/baseline/data",
+    "shape_summary": {
+      "X_train_columns": [
+        "value",
+        "period"
+      ],
+      "X_train_index_names": [
+        "id",
+        "time"
+      ],
+      "X_train_rows": 23715734,
+      "audit_method": "Values recorded from current-turn parquet inspection.  The generator avoids re-reading parquet here because the base environment has NumPy 2.4.6 ABI warnings in optional pandas/pyarrow extensions.",
+      "n_neg": 7092,
+      "n_pos": 2909,
+      "n_series": 10001,
+      "period_counts": {
+        "0": 17469105,
+        "1": 6246629
+      },
+      "read_success": true,
+      "y_train_columns": [
+        "structural_breakpoint"
+      ],
+      "y_train_rows": 10001
+    }
+  },
+  "environment": {
+    "dependency_install_attempt": {
+      "attempted": true,
+      "command": ".venv/bin/pip install numpy==2.1.2 pandas==2.3.2 scipy==1.16.1 scikit-learn==1.6.1 polars==1.2.1 lightgbm==4.6.0 shap==0.48.0 pyarrow matplotlib joblib==1.5.2",
+      "result": "sandboxed DNS failed; escalated install rejected by permission reviewer"
+    },
+    "missing_required_reproduction_deps": [
+      "polars",
+      "lightgbm",
+      "shap",
+      "tabpfn"
+    ],
+    "packages": {
+      "joblib": "1.5.3",
+      "lightgbm": "NOT_INSTALLED",
+      "matplotlib": "3.11.0",
+      "numpy": "2.4.6",
+      "pandas": "2.3.3",
+      "polars": "NOT_INSTALLED",
+      "pyarrow": "24.0.0",
+      "python": "3.11.6 | packaged by conda-forge | (main, Oct  3 2023, 10:37:07) [Clang 15.0.7 ]",
+      "scikit-learn": "1.9.0",
+      "scipy": "1.17.1",
+      "shap": "NOT_INSTALLED",
+      "tabpfn": "NOT_INSTALLED",
+      "torch": "2.5.1"
+    },
+    "public_notebook_import_version_comments": {
+      "joblib": "1.5.2",
+      "lightgbm": "4.6.0",
+      "numpy": "2.1.2",
+      "pandas": "2.3.2",
+      "polars": "1.2.1",
+      "scikit-learn": "1.6.1",
+      "scipy": "1.16.1",
+      "shap": "0.48.0",
+      "tabpfn": "2.1.3"
+    }
+  },
+  "feature_manifest": {
+    "counts_by_stage": {
+      "FirstFeatureGenerator": 8,
+      "FourthFeatureGenerator": 6,
+      "SecondFeatureGenerator": 56,
+      "TabPFN OOF meta-feature": 1,
+      "ThirdFeatureGenerator:diff": 840,
+      "ThirdFeatureGenerator:pivot": 1260
+    },
+    "manifest_path": "/path/to/workspace/structural-break-reproduce-2025/research/reports/aParsec_feature_manifest.csv",
+    "manifest_vs_readme_delta": -237,
+    "readme_claimed_generated_features": 2408,
+    "source_derived_manifest_rows": 2171
+  },
+  "generated_at_unix": 1787279008,
+  "git": {
+    "branch": "codex/reproduce-2025-public-solution",
+    "head": "5a3b8a0377eb9d42e4188e2af38ffd0fdff6e527",
+    "status_short": "?? research/reports/aParsec_feature_manifest.csv\n?? research/reports/public_2025_reported_metrics.md\n?? research/reports/public_2025_reproduction.json\n?? research/reports/public_2025_reproduction.md\n?? research/reports/public_2025_reproduction_sources.md\n?? research/scripts/reproduce_aparsec_2025.py\n?? tests/test_aparsec_reproduction.py"
+  },
+  "public_repository": {
+    "commit_sha": "6316693333edc5831c2408ca5b155ffa24c302bd",
+    "declared_license": null,
+    "files": [
+      {
+        "inspected": true,
+        "path": "README.md",
+        "purpose": "Prose description, dependencies, feature count claim, second-place claim.",
+        "sha": "not recorded by API output in this audit"
+      },
+      {
+        "inspected": true,
+        "path": "submission.ipynb",
+        "purpose": "Only implementation source in the public repository.",
+        "sha": "71aa82494d31320148f7a191cce3339135701a61"
+      },
+      {
+        "inspected": false,
+        "path": "diagram.png",
+        "purpose": "Workflow image only; not executable logic.",
+        "sha": "not needed"
+      }
+    ],
+    "notebook_blob_sha": "71aa82494d31320148f7a191cce3339135701a61",
+    "reported_rank": "GitHub repository description says: 2nd place solution.",
+    "url": "https://github.com/aParsecFromFuture/ADIA-Lab-Structural-Break-Challenge-Solution"
+  },
+  "reproduction_ladder": [
+    {
+      "auc": 0.6643,
+      "name": "previous 280-feature diagnostic",
+      "reason": "blocked: missing required public-solution dependencies: polars, lightgbm, shap, tabpfn",
+      "stage_id": "R25-000",
+      "status": "not rerun"
+    },
+    {
+      "auc": null,
+      "name": "public transform/stat bank, single LGBM",
+      "reason": "blocked: missing required public-solution dependencies: polars, lightgbm, shap, tabpfn",
+      "stage_id": "R25-010",
+      "status": "blocked"
+    },
+    {
+      "auc": null,
+      "name": "+ exact public feature selection",
+      "reason": "blocked: missing required public-solution dependencies: polars, lightgbm, shap, tabpfn",
+      "stage_id": "R25-020",
+      "status": "blocked"
+    },
+    {
+      "auc": null,
+      "name": "+ four-LightGBM ensemble",
+      "reason": "blocked: missing required public-solution dependencies: polars, lightgbm, shap, tabpfn",
+      "stage_id": "R25-030",
+      "status": "blocked"
+    },
+    {
+      "auc": null,
+      "name": "+ TabPFN OOF meta-feature",
+      "reason": "blocked: missing required public-solution dependencies: polars, lightgbm, shap, tabpfn",
+      "stage_id": "R25-040",
+      "status": "blocked"
+    },
+    {
+      "auc": null,
+      "name": "closest faithful full public pipeline",
+      "reason": "blocked: missing required public-solution dependencies: polars, lightgbm, shap, tabpfn",
+      "stage_id": "R25-050",
+      "status": "blocked"
+    }
+  ],
+  "source_reproduction": {
+    "approximated": [],
+    "exactly_mapped": [
+      "transform bank",
+      "window grid",
+      "hypothesis tests",
+      "KFold random_state for TabPFN OOF",
+      "global SHAP/gain selection behavior",
+      "four-model LightGBM ensemble specification"
+    ],
+    "not_executed": [
+      "Polars feature materialization",
+      "LightGBM baseline/ensemble",
+      "SHAP selection",
+      "TabPFN OOF/meta-feature"
+    ]
+  }
+}
