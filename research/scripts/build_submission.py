@@ -25,17 +25,39 @@ ROOT = os.environ.get(
 )
 
 
+#: Fixed timestamp for every archive member.  1980-01-01 is the zip epoch --
+#: the earliest value the format can represent.
+_ZIP_EPOCH = (1980, 1, 1, 0, 0, 0)
+
+
 def pack_dir(path, arc_prefix, skip_pycache=True):
+    """Pack a directory into a zip whose bytes depend ONLY on file contents.
+
+    z.write() stores each file's mtime, so the naive version produced a
+    different sha256 for byte-identical source depending on when the files
+    happened to be checked out.  That silently made `source_zip_sha256` useless
+    for its one job: a clean clone of the recorded commit rebuilt a zip that
+    hashed differently, and the reproduction check could never pass.
+
+    Deterministic here means: directory order sorted, file order sorted, every
+    member stamped with the zip epoch, fixed permissions, fixed compression.
+    """
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
         for d, dirs, fs in os.walk(path):
             if skip_pycache:
                 dirs[:] = [x for x in dirs if x != "__pycache__"]
+            dirs.sort()                       # os.walk order is filesystem order
             for f in sorted(fs):
                 if f.endswith((".pyc", ".pyo")):
                     continue
                 full = os.path.join(d, f)
-                z.write(full, os.path.join(arc_prefix, os.path.relpath(full, path)))
+                arc = os.path.join(arc_prefix, os.path.relpath(full, path))
+                info = zipfile.ZipInfo(arc, date_time=_ZIP_EPOCH)
+                info.compress_type = zipfile.ZIP_DEFLATED
+                info.external_attr = 0o644 << 16
+                with open(full, "rb") as fh:
+                    z.writestr(info, fh.read())
     raw = buf.getvalue()
     return raw, hashlib.sha256(raw).hexdigest()
 
