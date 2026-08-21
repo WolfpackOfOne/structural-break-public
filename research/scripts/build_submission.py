@@ -225,11 +225,22 @@ Built from git `{git_sha[:10]}`, feature manifest `{man['feature_manifest_sha256
                 h.update(c)
         return h.hexdigest()
 
-    dirty = subprocess.check_output(["git", "-C", ROOT, "status", "--porcelain"]).decode().strip()
+    # Provenance is a claim about the EMBEDDED SOURCE, not about the whole tree.
+    # The build writes its own artifacts into submissions/, so a whole-tree check
+    # flags itself and gets ignored -- which is how a meaningless warning becomes
+    # a shipped artifact with an unresolvable code_git_sha.  Check exactly what
+    # goes into the payload: src/sbr, plus the script that packs it.
+    tracked = subprocess.check_output(
+        ["git", "-C", ROOT, "status", "--porcelain", "--",
+         "src/sbr", "research/scripts/build_submission.py"]).decode().strip()
+    dirty = tracked
+    whole = subprocess.check_output(["git", "-C", ROOT, "status", "--porcelain"]).decode().strip()
     build = {
         "built_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "code_git_sha": git_sha,
-        "code_git_clean": dirty == "",
+        "embedded_source_clean": dirty == "",
+        "embedded_source_dirty_paths": [l for l in dirty.splitlines()],
+        "worktree_other_changes": [l for l in whole.splitlines() if l not in dirty.splitlines()],
         "model_directory": os.path.abspath(a.model),
         "source_zip_sha256": src_sha,
         "model_zip_sha256": mdl_sha,
@@ -254,9 +265,14 @@ Built from git `{git_sha[:10]}`, feature manifest `{man['feature_manifest_sha256
     print(f"  notebook    {build['notebook']['sha256']}")
     print(f"  python      {build['python_entrypoint']['sha256']}")
     print(f"  feature manifest {man['feature_manifest_sha256']}")
-    if not build["code_git_clean"]:
-        print("\n*** WORKING TREE IS DIRTY -- code_git_sha does not describe this "
-              "artifact's source. Do not ship it. ***")
+    if not build["embedded_source_clean"]:
+        print("\n*** EMBEDDED SOURCE IS UNCOMMITTED -- code_git_sha does not describe "
+              "what is inside this artifact. Do not ship it. ***\n" + dirty)
+    else:
+        print(f"  embedded source clean at {git_sha[:10]} (payload is reachable)")
+        other = build["worktree_other_changes"]
+        if other:
+            print(f"  note: {len(other)} unrelated worktree change(s), not in the payload")
     if not build["manifest_matches_build_sha"]:
         print(f"\n*** NOTE: the model was trained at {man.get('code_git_sha')} but this "
               f"build is at {git_sha}. Fine if only build tooling changed since; "
