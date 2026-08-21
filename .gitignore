@@ -63,3 +63,12 @@ research/RESULTS.csv.lock
 
 # built submission notebooks are artifacts: rebuild with research/scripts/build_submission.py
 submissions/*.ipynb
+
+# Crunch CLI project state. .crunchdao/token is an AUTH TOKEN -- never commit it.
+# It also has to EXIST in the working tree: without it the CLI walks up the
+# directory tree and, on this machine, finds a May-2025 project.json in $HOME
+# for the *2025* `structural-break` competition. `crunch test` then silently
+# runs against the wrong competition's data release and fails deep inside
+# infer() with `could not convert string to float: 'value'`.
+.crunchdao/
+resources/
