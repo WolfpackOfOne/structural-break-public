@@ -734,3 +734,57 @@ leaving it as a research branch is equally defensible.
 this ensemble has almost no headroom left for statistics that overlap what it
 already computes, measured that four independent ways, and corrected three
 premises the project had been carrying — while moving the score not at all.
+
+---
+
+## PART 13 — MEASURED 2026-08-22: THE CALIBRATION IS AIMED AT THE WRONG PLACE
+
+W6-C was ranked third on cost. This measurement moves it to first on evidence.
+
+The shipped `SmoothTimeCDFCal` uses **12 log-spaced anchors**, frozen and, per
+the architecture freeze, **never tuned**:
+
+    1, 2, 4, 7, 12, 23, 43, 81, 152, 285, 533, 999
+
+Against where the official `n_pos(t)·n_neg(t)` weight actually sits:
+
+| anchor band | share of pair weight |
+|---|---|
+| [1, 2) | 0.01% |
+| [2, 4) | 0.03% |
+| [4, 7) | 0.08% |
+| [7, 12) | 0.21% |
+| [12, 23) | 0.71% |
+| [23, 43) | 2.01% |
+| [43, 81) | 5.52% |
+| [81, 152) | 13.12% |
+| **[152, 285)** | **26.62%** |
+| **[285, 533)** | **35.90%** |
+| **[533, 999)** | **15.78%** |
+
+**Nine of twelve anchors sit at t ≤ 168, covering 25% of the pair weight.
+Exactly ONE anchor (t = 285) lies inside t ∈ (168, 451], the band carrying 50%
+of it. The first seven anchors together cover 1.05% of the metric.**
+
+Over half the calibration's resolution is spent on one percent of what is
+scored. This is not a tuning opinion — it is a measured mismatch between where
+the calibration can express a change in the score distribution and where the
+metric weighs one.
+
+It matters because the calibration family is not a minor term: W4-E1 measured it
+at **+0.00267** on the specialist arm, one of the largest single effects in the
+project, and it is the mechanism that makes seven heterogeneous streams
+comparable at a fixed `t` — which is what TS-AUC rewards.
+
+**Do this first.** It needs **no training**: the anchor scheme is applied to OOF
+vectors already on disk, so the whole family is minutes of compute.
+
+**And pre-register it tightly, because this is the most dangerous surface in the
+project.** It is a direct knob on the evaluation metric's own geometry, fitted
+on the same folds that judge it. Declare a **tiny structured family in advance**
+— for example exactly three schemes: incumbent log-spaced, uniform-in-
+pair-weight, and a hybrid — with **no continuous search, no anchor-count sweep,
+no grid-size sweep**, and the same +0.0030/≥4-of-5/bootstrap/alternate-partition
+bar as everything else. A calibration tuned against these folds would transfer
+worse than a feature does, and the +0.0027 that makes this attractive is exactly
+the size of gain that a tuned-in artefact would fake.
