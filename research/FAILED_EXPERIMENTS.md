@@ -758,3 +758,70 @@ weighting is not the same as spending training capacity well.**
 *capping* the weight, or that spends the extra pairs on late timesteps instead,
 is a different experiment and would need its own pre-registration; nothing here
 licenses tuning `m_neg` or the weight exponent against these folds.
+
+---
+
+## W5-E2 — `m10_persist`, OUTLIER-DRIVEN vs BULK SCALE CHANGE — **REJECTED**
+
+**Pre-registered** in `research/WAVE5_PREREG.md` §6. Its *design* was chosen
+after the W5-D2 forensics reported, which is stated in the ledger — the bar was
+not moved for it.
+
+**Hypothesis, and it was well aimed.** W5-D2 found the champion's highest-ranked
+no-break series are dominated by heavy-tail/outlier and variance-burst mechanisms
+(`tail_rate_online` +1.89 IQR in the top 1%; heavy-tail 40% of that group against
+a 25.9% base rate). Nothing in the incumbent bank computes a trimmed statistic,
+an energy-concentration statistic or an exceedance run length, so a scale
+excursion driven by two points and one driven by the bulk arrive at the booster
+looking alike. The load-bearing column was the contrast `*_gap` = calibrated
+untrimmed scale − calibrated trimmed scale.
+
+| arm | id | TS-AUC | per fold |
+|---|---|---|---|
+| control | `RT-301` | 0.61257 | 0.62567 / 0.60719 / 0.62018 / 0.60506 / 0.60475 |
+| + `m10_persist` | `RT-740` | 0.61459 | 0.62401 / 0.61363 / 0.62767 / 0.60776 / 0.59986 |
+| delta | | +0.00202 | −0.00166 / +0.00644 / +0.00749 / +0.00270 / −0.00489 — **3/5** |
+
+**And the comparison that decides:**
+
+| blend | TS-AUC | vs control |
+|---|---|---|
+| `RT-301` + `RT-303` (seed clone, no information) | 0.61753 | +0.00496 |
+| `RT-301` + `RT-740` | 0.61713 | +0.00456 |
+| **candidate − seed clone** | | **−0.00041**, 2/5 folds |
+
+**It loses to a seed clone.** The whole blend gain, and more, is ordinary
+variance reduction.
+
+**Why it failed — and the answer was already in the repository.** The wave-1
+taxonomy measured exactly the right thing and I did not weight it heavily enough
+when designing this: **17.0% of no-break series contain a break-lookalike
+transient in their online segment, and 15.6% of equally long break-free
+HISTORICAL windows contain one too.** Transients are a property of the DGP, not
+of the online period. So a per-series historical null — which every column in
+this project is already calibrated against — has *already* priced the series'
+own propensity to throw outliers. Measuring the outlier-vs-bulk split more
+sharply does not help, because the champion was never confused about which
+series are outlier-prone; it is confused about the same series the null is.
+
+The age profile confirms the mechanism did not fire where it was aimed:
+
+| age | Δ vs control |
+|---|---|
+| 0–5 | **−0.00094** |
+| 5–10 | **−0.00075** |
+| 10–20 | **−0.00398** |
+| 20–50 | −0.00373 |
+| 50–100 | +0.00270 |
+| 100+ | +0.00427 |
+
+All of the aggregate gain is at 50+ and it makes ages 0–50 worse — the same
+shape as `m09_back`, which is what a module that is adding smoothing rather than
+discrimination looks like under this metric's weighting.
+
+**Retry warranted?** Not against no-break tails. The evidence says the residual
+false-positive problem is not "the model cannot tell an outlier from a scale
+break" but "for these series the historical null and the online segment are drawn
+from distributions that genuinely overlap". A different attack — for example
+conditioning the null on the series' own tail index rather than sharpening the
+online statistic — would be a new hypothesis and needs its own pre-registration.
