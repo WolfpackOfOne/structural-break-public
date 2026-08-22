@@ -90,16 +90,28 @@ def required_env() -> dict:
     return {k: os.environ[k] for k in ("SBR_STORE", "SBR_FEATURES", "SBR_MODEL_DIR")}
 
 
-def run_suite() -> tuple[list[str], dict]:
+#: torch and LightGBM each ship their own libomp.dylib, and loading both into
+#: one process SEGFAULTS on macOS/arm64 -- reproduced: the suite dies inside
+#: lightgbm/basic.py once tests/test_neural_causality.py has imported torch.
+#: The suite is therefore run in TWO processes and the results unioned. This is
+#: an environment hazard, not a test failure, and papering over it with
+#: KMP_DUPLICATE_LIB_OK would trade a loud crash for silent corruption.
+TORCH_TESTS = "tests/test_neural_causality.py"
+
+
+def _pytest(args) -> tuple[set, dict, int]:
     env = dict(os.environ)
     env.setdefault("SBR_ROOT", ROOT)
-    p = subprocess.run(
-        [sys.executable, "-m", "pytest", f"{ROOT}/tests", "-q", "--tb=no", "-rf",
-         "-p", "no:randomly"],
-        capture_output=True, text=True, env=env, cwd=ROOT)
+    p = subprocess.run([sys.executable, "-m", "pytest", *args, "-q", "--tb=no",
+                        "-rf", "-p", "no:randomly"],
+                       capture_output=True, text=True, env=env, cwd=ROOT)
     out = p.stdout + p.stderr
-    failed = sorted({m.group(1).strip() for m in
-                     re.finditer(r"^FAILED (\S+)", out, re.M)})
+    if "Fatal Python error" in out or "Segmentation fault" in out:
+        raise SystemExit(
+            "pytest CRASHED rather than failed. If this is the torch/LightGBM "
+            "libomp collision, the two-process split below has been broken.\n"
+            + out[-2000:])
+    failed = {m.group(1).strip() for m in re.finditer(r"^FAILED (\S+)", out, re.M)}
     tail = re.search(r"(\d+) failed, (\d+) passed(?:, (\d+) skipped)?", out)
     if tail is None:
         tail = re.search(r"(\d+) passed(?:, (\d+) skipped)?", out)
@@ -108,7 +120,18 @@ def run_suite() -> tuple[list[str], dict]:
     else:
         counts = {"failed": int(tail.group(1)), "passed": int(tail.group(2)),
                   "skipped": int(tail.group(3) or 0)}
-    return failed, counts
+    if counts["passed"] < 0:
+        raise SystemExit(f"could not parse a pytest summary from:\n{out[-2000:]}")
+    return failed, counts, p.returncode
+
+
+def run_suite() -> tuple[list[str], dict]:
+    """Two processes, unioned. See TORCH_TESTS above for why."""
+    a_fail, a_cnt, _ = _pytest([f"{ROOT}/tests", f"--ignore={ROOT}/{TORCH_TESTS}"])
+    b_fail, b_cnt, _ = _pytest([f"{ROOT}/{TORCH_TESTS}"])
+    counts = {k: a_cnt[k] + b_cnt[k] for k in ("failed", "passed", "skipped")}
+    counts["processes"] = {"non_torch": a_cnt, "torch_only": b_cnt}
+    return sorted(a_fail | b_fail), counts
 
 
 def generate():
@@ -124,6 +147,16 @@ def generate():
         "baseline_sha": BASELINE_SHA, "baseline_branch": BASELINE_BRANCH,
         "baseline_note": BASELINE_NOTE,
         "required_env": {k: "(path)" for k in envs},
+        "execution": {
+            "two_processes": True,
+            "reason": ("torch and LightGBM each ship libomp.dylib and loading "
+                       "both into one process segfaults on macOS/arm64 -- "
+                       "reproduced inside lightgbm/basic.py. Process 1 runs the "
+                       "suite excluding " + TORCH_TESTS + "; process 2 runs only "
+                       "that file. Results are unioned."),
+            "do_not": ("do NOT set KMP_DUPLICATE_LIB_OK to run them together -- "
+                       "that trades a loud crash for silent numerical corruption"),
+        },
         "counts": counts,
         "classes": CLASSES,
         "known_failures": [{"node_id": n, "class": classify(n)} for n in failed],
