@@ -8,5 +8,21 @@
     "cand_blend": 0.6108206649651899,
     "delta_vs_seed_clone": -0.0002471632908238597,
     "n_folds_blend": 2
+  },
+  "alt2": {
+    "control": 0.6163302288697268,
+    "candidate": 0.6196037394235117,
+    "standalone_delta": 0.0032735105537848863,
+    "n_folds_standalone": 4,
+    "seed_blend": 0.6200942597099612,
+    "cand_blend": 0.6219973549668942,
+    "delta_vs_seed_clone": 0.0019030952569329962,
+    "n_folds_blend": 4
+  },
+  "canonical": {
+    "standalone_delta": 0.00479,
+    "n_folds_standalone": 4,
+    "delta_vs_seed_clone": 0.00141,
+    "n_folds_blend": 4
   }
 }

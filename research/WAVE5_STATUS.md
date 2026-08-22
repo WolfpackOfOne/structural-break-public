@@ -794,3 +794,43 @@ changes sign twice. **The effect is below this framework's resolution, and the
 strongest single framing was the most favourable one.** That is exactly the
 failure mode the pre-registration's four conditions exist to catch, and all four
 were needed — the canonical ABL blend alone would have promoted it.
+
+## 20. THREE PARTITIONS — THE CLEANEST STATEMENT OF WHAT `m12_rdep` IS
+
+| partition | standalone delta | folds | vs seed clone | folds |
+|---|---|---|---|---|
+| canonical | +0.00479 | 4/5 | **+0.00141** | 4/5 |
+| alt1 | +0.00344 | 4/5 | **−0.00025** | 2/5 |
+| alt2 | +0.00327 | 4/5 | **+0.00190** | 4/5 |
+| **mean ± SD** | **+0.00383 ± 0.00068** | **4/5 on all three** | **+0.00102 ± 0.00092** | signs **+, −, +** |
+
+**The two rows say different things and both are true.**
+
+The **standalone** delta is one of the most stable effects in this project:
++0.0038 ± 0.0007 across three independent fold draws, positive on 4 of 5 folds
+every time. `m12_rdep` genuinely makes a single booster better. The residual
+CUSUM/CUSUMSQ paths carry real information about structural breaks.
+
+The delta **over ordinary seed diversity** is +0.00102 ± 0.00092 — a standard
+deviation nearly as large as the mean, and negative on one of three partitions.
+Under §28's bands that is *exploratory*, not a candidate; under §4 it is a third
+of the bar. And the architecture-level test says the same thing more sharply:
+appending the block to all seven streams costs **−0.00268**.
+
+**The honest synthesis: the information is real and it is redundant.** A single
+booster that does not have `m01_seq`'s CUSUM paths, `m07_bayes`'s absorbing-state
+posterior and `m04_resid`'s residual monitors benefits from residual CUSUM
+evidence. The seven-stream bank has all three, and averaging seven heterogeneous
+models over 500 columns already recovers what those 57 columns add — while the
+columns still cost their dilution. That is why the effect shrinks monotonically
+as the comparison gets closer to the deployed system:
+
+    single booster, standalone      +0.0038  (stable, 3/3 partitions)
+    two-model blend vs seed clone   +0.0010  (sign flips, 1/3 partitions negative)
+    eight-member ensemble           +0.0005  (3/5 folds)
+    full architecture rebuild       -0.0027  (1/5 folds)
+
+**This is the most useful thing wave 5 measured.** It is not "the feature
+failed"; it is a quantitative statement of how much headroom a mature ensemble
+leaves for a new statistic that overlaps it — and the answer, four ways, is
+approximately none.
