@@ -41,6 +41,24 @@ Objective: maximise TRUE out-of-sample **Time-Stratified AUC (TS-AUC)**.
   synthetic-data performance, never "it looked better".
 - Record every experiment through `sbr.pipeline.run(...)`, which appends to the
   ledger under a file lock. Never hand-edit `RESULTS.csv`.
+- **TRUE τ IS UNUSABLE UNDER ROW-LEVEL TS-AUC.** *(standing rule added 2026-08-22
+  after `RT-900` / W6-E2 was voided — see `research/WAVE6_PREREG.md` §16–17.)*
+  The row-level target is `y[t] = 1[t >= tau]`, so **any** experiment that gives
+  the learner true τ, directly or indirectly, is invalid for predictive-
+  performance measurement. "Indirectly" includes any feature whose
+  **availability, support, length, missingness, denominator, calibration window
+  or segment boundary** depends on true τ in a way the learner can see — a
+  placebo cut for no-break series does **not** repair this, because for break
+  series the cut *is* τ and its missingness mask *is* the label.
+  True τ may be used only for post-hoc diagnostics, age-bucket evaluation,
+  offline oracle studies under a **series-level** (one row per series, series
+  ROC AUC) protocol, and teacher analysis with leakage explicitly quarantined.
+  It may never reach a real-time row classifier. Enforced by
+  `tests/test_no_tau_leakage.py`.
+- **Every oracle or boundary-conditioned study runs its sentinels first.**
+  Boundary-metadata-only, missingness-only, support/length-only, permuted-label
+  and placebo-boundary controls are computed and read **before** the arms are
+  interpreted, not after a surprising number appears.
 
 ## 2. Compute reality (read this, it changes what you should attempt)
 This container has **2 CPU cores and 7 GB RAM**, shared with every other agent

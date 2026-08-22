@@ -663,3 +663,64 @@ number, testing the lattice costs a false positive.
 **Degrees of freedom spent.** 6 new training runs (`RT-751` is already declared
 under stage D), 1 composition, 1 threshold fixed in advance, 0 members selected,
 0 hyperparameters touched.
+
+---
+
+## WAVE 6
+
+### W6-E1 — calibration anchor placement · **RESOLVED, FALSIFIED**
+
+3 declared schemes + 1 random-anchor null, 0 selected, 1 threshold fixed in
+advance (+0.0010), 0 hyperparameters touched, 0 submissions. Total spread across
+every scheme including random placement: **0.00006**. Closed; may not be
+reopened by a re-parameterisation of the same idea
+(`research/WAVE6_STOPPING_RULE_AMENDMENT.md` §3(a)).
+
+### W6-E2 / `RT-900` — **ATTEMPTED BUT VOID**
+
+**This row counts as a spent degree of freedom, not as evidence.** One training
+run (1,000,000 rows, CHAMP protocol, 906 s) was executed and produced an invalid
+number. Recording it as "nothing happened" would understate the search; recording
+its 0.86552 as a result would be fraud. It is therefore filed as **attempted but
+void**: it consumed budget, it selected nothing, and it may not appear on either
+side of any comparison.
+
+| | |
+|---|---|
+| runs spent | 1 |
+| results contributed | **0** |
+| selection events | **0** |
+| multiplicity charged | 1 attempt |
+
+### W6-E2R — the corrected series-level oracle diagnostic
+
+| | count |
+|---|---|
+| arms declared in advance | 6 (`A_rich`, `A_basic`, `B_causal`, `B_causal_withpos`, `C_nobound`, `AB`) |
+| arms selected | **0** — this is a diagnostic and can promote nothing |
+| leakage sentinels declared in advance | 7 |
+| pseudo-τ seeds | 5, the prior study's, unchanged |
+| thresholds fixed in advance | 3 (±0.010 reproduction, 0.005 case B, 0.010 case C) |
+| hyperparameters it may select | **0** — explicitly forbidden from touching any neural hyperparameter (`WAVE6_PREREG.md` §18.8) |
+| Crunch submissions | **0** |
+
+**Falsification, fixed in advance.** The instrument is declared uncalibrated —
+and nothing is inferred — if `A_rich` on the unfiltered population misses the
+prior study's 0.6497 by more than ±0.010, or if any sentinel exceeds its
+frontier counterpart materially (metadata 0.5379, permuted 0.5075,
+random-boundary 0.5821).
+
+**Why the learner is held fixed across arms.** Same 150-tree LGBM, same
+hyperparameters, same cross-fit, same `pseudo_seed + 17` learner seed. Only the
+representation changes, so a difference is attributable to representation or to
+nothing. Changing the learner and the representation together would have made
+the result uninterpretable in exactly the way `WAVE6_PREREG.md` §7 forbids.
+
+### W6-N — the neural track
+
+Declared in advance: 2 families now (`N1` MLP, `N2` TCN), 1 conditional (`N3`
+GRU), ≤ 2 architecture sizes and ≤ 2 regularisation settings per family, 1 loss
+(BCE) plus at most 1 pre-registered metric-aligned alternative. No architecture
+search, no loss sweep, no seed fishing. Each family costs its runs whether or not
+it works, and each is charged against multiplicity at declaration time, not at
+publication time.

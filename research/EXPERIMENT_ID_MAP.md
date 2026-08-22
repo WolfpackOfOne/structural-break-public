@@ -213,3 +213,50 @@ the level (W4-E2: levels move ~0.009 across partitions, deltas ~0.003).
 * **`W5-D1`..`W5-D4`** are diagnostics, not experiments: metric geometry,
   false-positive forensics, age profile, break-family mix. D2 and D4 use `tau`
   and post-break data and are **never** readable by production code.
+
+---
+
+## Wave 6
+
+### `RT-900` — **VOID**, and not reusable
+
+| ID | is | verdict |
+|---|---|---|
+| `RT-900` | champion config + the `w6oracle` true-τ block | **VOID — LABEL LEAK VIA THE MISSINGNESS MASK.** 0.86552 TS-AUC is not alpha; the block is `NaN` exactly when `t < cut`, and for a break series `cut = tau`, so the mask *is* `y[t]`. The bare indicator `1[t>=cut]` scores 0.81442 alone. Never in a comparison table, an ensemble, a promotion decision, feature selection, production or a submission. See `research/FAILED_EXPERIMENTS.md`. |
+
+**The ID is retired.** It is not reused, reassigned or recycled. `w6oracle` was
+never a registered module and never reachable from `load_all()`.
+
+### `RT-940`–`RT-944` — W6-E2R, the corrected **series-level** oracle diagnostic
+
+| ID | arm | representation |
+|---|---|---|
+| `RT-940` | `A_rich` | the oracle-frontier study's generic known-boundary bank — **the reproduction control**, target 0.6497 |
+| `RT-941` | `A_basic` | the same study's basic bank, target 0.6418 |
+| `RT-942` | `B_causal` | **our 500 production columns at the boundary split** — the candidate representation |
+| `RT-943` | `C_nobound` | our 500 columns at the end of the series, no boundary — the matched representation control |
+| `RT-944` | `AB` | `A_rich ++ B_causal`, complementarity |
+
+**These have NO `research/RESULTS.csv` row, deliberately.** `RESULTS.csv` is the
+row-level TS-AUC ledger; a series-ROC-AUC number sitting in it is exactly how a
+diagnostic gets mistaken for alpha six weeks later. They live in
+`research/reports/wave6_corrected_oracle.{md,json,csv}`.
+Runner: `research/scripts/wave6_e2r.py`. Pre-registration:
+`research/WAVE6_PREREG.md` §18.
+
+### `RT-960` / `RT-970` / `RT-980` — the neural track
+
+| ID | is |
+|---|---|
+| `RT-960` | W6-N1 — compact MLP on the existing 500 causal features (**learner** capacity) |
+| `RT-970` | W6-N2 — compact causal dilated TCN on compact legal channels (**representation** learning) |
+| `RT-980` | W6-N3 — GRU, **only** if N1/N2 justify escalation |
+
+Pre-registration: `research/WAVE6_NEURAL_PREREG.md` and `WAVE6_PREREG.md` §20.
+
+### IDs deliberately NOT allocated
+
+`RT-901`–`RT-908`. `RT-903`, `RT-906`, `RT-907` and `RT-908` already name
+2025-reproduction *ideas* throughout `research/WAVE5_PREREG.md` and
+`research/STATE_OF_RESEARCH_V5.md`; re-using them as experiment IDs would
+collide in text even though it would not collide in the ledger.

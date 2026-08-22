@@ -883,3 +883,61 @@ sampling, or any best-of composition — the lattice the pre-registration exclud
 promoted, the question "does `m11_focus` add to it" should be asked once, with
 `feature_fraction` held at a value that keeps the effective per-tree column count
 constant, and pre-registered as its own experiment.
+
+---
+
+## W6-E2 / `RT-900` — VOID: LABEL LEAK VIA THE TRUE-τ MISSINGNESS MASK
+
+*2026-08-22. This is not a rejected hypothesis. It is an **invalid measurement**,
+and it is kept here so nobody re-derives it.*
+
+**What it claimed.** 0.86552 TS-AUC against the champion's 0.61605 — **+0.24947,
+5/5 folds**, by-age deltas from +0.40 at age 0–5 down to +0.19 at 100+. Under
+the pre-registered §4.3 rule that reads "localisation is the lever."
+
+**What it actually was.** The oracle block is `NaN` for every row with
+`t < cut`, because there is no post-cut segment to compute over. For a break
+series `cut = tau`, so the block's **missingness mask is the row-level target**.
+LightGBM splits on missingness natively.
+
+| diagnostic | value |
+|---|---:|
+| TS-AUC of the bare indicator `1[t >= cut]`, nothing else | **0.81442** |
+| share of dev rows where the oracle block is `NaN` | 49.1% |
+| **share of those `NaN` rows that are negatives** | **100.00%** |
+
+An indicator that never looks at the data beats the champion by +0.198.
+
+**Why the placebo cut did not save it.** Giving no-break series a placebo cut
+drawn from the positives' relative-τ distribution is the wave-1 taxonomy's
+construction and the oracle-frontier study's, and it is correct **at the series
+level**: "does this series contain a break?" is not answered by knowing where
+the boundary is. It cannot work **at the row level**, because "has the break
+happened by now?" is answered by the boundary *exactly*. Same cut, different
+question.
+
+**Why no patch is authorised.** Not imputation, not dropping `or_elapsed` or
+`or_frac`, not a missing indicator, not zero/null fill, not column masking, not
+changing LightGBM's missing handling. Removing the explicit timing columns kills
+the `NaN` mask, but the same information returns through `or_frac = 1.0` exactly
+when `t < cut` and through the segment length the null calibration matches on.
+Under TS-AUC, "give the model τ" is degenerate: **τ is the label.** The failure
+is in the experimental design, not in the code.
+
+**Blast radius: none.** `w6oracle` was never registered with
+`sbr.features.base.load_all()`, never in a production manifest, never in a
+`crunch test`, never in an ensemble, never in a submission. `RT-900` carries
+`status=VOID` in `research/RESULTS.csv` and appears in no comparison table as
+valid alpha.
+
+**What replaced it.** `W6-E2R` (`research/WAVE6_PREREG.md` §18) — the same
+question at **one row per series**, scored with **series ROC AUC**, against the
+prior oracle-information-frontier control it must first reproduce. Standing rule
+in `research/PROTOCOL.md` §1; regression test in `tests/test_no_tau_leakage.py`.
+
+**The general lesson, stated so it is reusable.** A control that is valid at one
+unit of analysis is not thereby valid at another. Before trusting any oracle
+study, ask what the *unit* is and whether the oracle quantity determines the
+*target at that unit*. And treat an implausibly large effect as a bug signal
+first and a discovery second — +0.249 on a saturated ensemble was never going to
+be real.

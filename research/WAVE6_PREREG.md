@@ -499,3 +499,294 @@ a real SHA and seed · the §0 stopping rule still governs W6-E1 and W6-E2.
 
 **And the §8 exclusions still hold.** A neural family is not a licence to sweep
 architectures. One named configuration per rung, declared before it runs.
+
+---
+
+# AMENDMENT 2 — 2026-08-22: W6-E2 IS VOID; THE ORACLE QUESTION MOVES TO THE SERIES LEVEL
+
+**Written after RT-900 was diagnosed and voided, and BEFORE any W6-E2R number
+exists.** The corrected experiment had not been run when this section was
+committed; the git history is the proof.
+
+---
+
+## 16. W6-E2 / RT-900 IS PERMANENTLY VOID
+
+`RT-900` scored **0.86552** against the champion's 0.61605, +0.24947, 5/5 folds.
+Under §4.3 that reads "localisation is the lever". **It is not evidence of
+anything.**
+
+The oracle block is `NaN` for every row with `t < cut` — there is no post-cut
+segment to compute over. For a break series `cut = tau`, so the block's
+missingness mask **is** the row-level target `y[t] = 1[t >= tau]`, and LightGBM
+splits on missingness natively.
+
+| diagnostic | value |
+|---|---|
+| TS-AUC of the bare indicator `1[t >= cut]`, nothing else | **0.81442** |
+| share of dev rows where the oracle block is `NaN` | 49.1% |
+| **share of those `NaN` rows that are negatives** | **100.00%** |
+
+`RT-900` is retained in `research/RESULTS.csv` with `status=VOID`, in
+`research/EXPERIMENT_ID_MAP.md`, in `research/FAILED_EXPERIMENTS.md` and in
+`research/RDOF_LEDGER.md`. It is never to enter a model-comparison table as
+valid alpha, an ensemble, a promotion decision, feature selection, production or
+a submission. **No production path was touched:** `w6oracle` was never a
+registered module, never reachable from `sbr.features.base.load_all()`, never in
+a manifest, never in a `crunch test`.
+
+**It is not patchable, and no repair is authorised.** Not by imputing the NaNs,
+not by dropping `or_elapsed` or `or_frac`, not by adding a missing indicator,
+not by zero- or null-filling, not by masking columns, not by changing LightGBM's
+missing handling. The placebo cut — the wave-1 taxonomy's construction and the
+oracle-frontier study's — is the right protection at the **series** level and
+cannot work at the **row** level, because the series-level question ("does this
+series contain a break?") is not answered by the boundary while the row-level
+question ("has the break happened by now?") is answered by it exactly.
+
+---
+
+## 17. STANDING RULE — TRUE τ UNDER ROW-LEVEL TS-AUC
+
+**For the row-level real-time target, any experiment that gives the learner true
+τ, directly or indirectly, is invalid for predictive-performance measurement.**
+
+"Indirectly" includes any feature whose **availability, support, length,
+missingness, denominator, calibration window or segment boundary** depends on
+true τ in a way visible to the learner.
+
+True τ may be used only for: post-hoc diagnostics; age-bucket evaluation;
+offline oracle studies under a **non-degenerate** protocol; teacher analysis
+where target leakage is explicitly quarantined. It may never be exposed to a
+real-time row classifier. Mirrored into `research/PROTOCOL.md` §1 and enforced
+by `tests/test_no_tau_leakage.py`.
+
+---
+
+## 18. W6-E2R — THE CORRECTED, SERIES-LEVEL, KNOWN-BOUNDARY REPRESENTATION TEST
+
+### 18.1 Why the series level is non-degenerate
+
+At **one row per series** there is no before/after target for the boundary to
+encode. Knowing τ does not tell you whether the series is positive; it tells you
+*where to look*. This is precisely the prior oracle-information-frontier
+protocol, so W6-E2R inherits an instrument that has already passed its own
+permutation, metadata and random-boundary controls.
+
+### 18.2 The question
+
+> At the FULL horizon — the only horizon where the frontier measured real
+> headroom (+0.0396 over legal `RT-300`) — does **our 500-column causal bank**,
+> given the same boundary, beat the frontier's **generic 150-tree bank** at
+> **0.6497**?
+
+This is a **representation-capacity** question, nothing else.
+
+### 18.3 Protocol — matched to the prior study, item by item
+
+| item | value |
+|---|---|
+| population | canonical dev folds 0–4, 8,000 series, fold −1 excluded |
+| store | `structural-break-claude-wave3/cache/store`, sha256 `2c6aab9b…3971` / `10c22b00…c06b` |
+| folds | `research/folds/folds.parquet`, sha256 `ba4f71fe…c312` |
+| unit | **one row per series** (asserted in code) |
+| label | series `has_break` |
+| metric | **series ROC AUC** — never row-level TS-AUC |
+| horizon | `FULL` only |
+| boundary | positives: true `tau_index`. negatives: `assign_pseudo_taus` verbatim |
+| pseudo seeds | `0, 1, 7, 42, 2026` |
+| learner | `LGBMClassifier(n_estimators=150, lr=0.04, num_leaves=31, min_child_samples=20, subsample=0.85/freq 1, colsample 0.85, reg_lambda 2.0, class_weight balanced)` behind a median `SimpleImputer` |
+| learner seed | `pseudo_seed + 17` for every rich arm — identical across arms |
+| cross-fit | the frontier's `crossfit_model` over folds 0–4, unmodified |
+| runner | `research/scripts/wave6_e2r.py`, which **imports the original frontier script by path and does not modify it** |
+
+The frontier module is loaded from
+`structural-break-oracle/research/scripts/oracle_information_frontier.py` at
+sha256 `0b56baae4fb4331ee6d95035a9230ba7c8e4d0aa5ac8e45edce4aa541cf27bc8`, and
+its sha is recorded in the output JSON.
+
+### 18.4 The arms
+
+| arm | representation |
+|---|---|
+| `A_rich` | the frontier's generic known-boundary bank — **the reproduction target, 0.6497** |
+| `A_basic` | the frontier's basic bank — secondary reproduction target, 0.6418 |
+| **`B_causal`** | **our 500 production columns, evaluated at the boundary split** |
+| `B_causal_withpos` | the same, keeping `t_online`/`log_t_online` — diagnostic only |
+| `C_nobound` | our 500 columns at the end of the series, **no boundary at all** — the matched representation control |
+| `AB` | `A_rich ++ B_causal` — are the two banks complementary |
+
+**How arm B is given the boundary.** The engine runs **unmodified** on a
+re-split series: `hist' = hist ++ online[:boundary]`, `online' =
+online[boundary:]`, and the **last row** of its `(n_online', 500)` output is the
+series vector. This is the exact analogue of the frontier's
+`compare_segment(post, hist)`: the post-boundary segment against a pre-boundary
+reference. No feature is invented, no module is modified, nothing is fitted to
+the label.
+
+**`t_online` and `log_t_online` are dropped from the primary arm.** At the last
+row those two columns **are** `post_len`, which the frontier excludes from every
+model via `MODEL_EXCLUDE_COLUMNS`. Keeping them would hand arm B a metadata
+channel arm A does not have. `B_causal_withpos` reports the undropped variant so
+the size of that channel is visible rather than assumed.
+
+**Eligibility: `post_len >= 10`.** The shipped store's shortest online segment
+is 10 points, so a re-split with fewer post-boundary points is outside anything
+the modules were built for — several blocks are literally undefined there and
+the engine raises. The filter is applied **identically to every head-to-head
+arm**, and `A_rich` is **also** scored on the unfiltered population, which is
+the reproduction check against 0.6497. Both numbers are reported; the dropped
+counts are reported per class.
+
+### 18.5 Leakage sentinels — run and read BEFORE the arms are interpreted
+
+| id | uses only | must show |
+|---|---|---|
+| `S1` | `boundary`, `rel_boundary`, `n_hist`, `n_online`, `post_len` | no material prediction |
+| `S2` | the **missingness pattern** of arm B (and of arm A) | no material prediction |
+| `S3` | valid-column counts, pre length, post length | no material prediction |
+| `S4` | arm B with **permuted labels** | ≈ 0.50 |
+| `S5` | arm B and arm A with a **placebo boundary drawn for both classes** | no large AUC |
+
+The frontier's own FULL-horizon controls are the calibration for "material":
+metadata-only **0.5379**, permuted **0.5075**, random-boundary-both **0.5821**.
+A sentinel materially above its frontier counterpart invalidates the run.
+
+**S5 will not be zero and is not expected to be.** The frontier's own
+random-boundary control at FULL is 0.5821: a randomly placed cut still splits a
+break series into segments that differ on average. S5 is read as a *floor*, and
+the reportable quantity is `B_causal − S5_placebo_B` alongside
+`A_rich − S5_placebo_A`.
+
+### 18.6 Pre-registered interpretation — fixed now
+
+Let `Δ = mean(B_causal) − mean(A_rich)` over the five pseudo seeds, both on the
+eligible population.
+
+| case | condition | reading | consequence |
+|---|---|---|---|
+| **A** | `|Δ| < 0.005` | the frontier's generic bank was already near representation saturation; the remaining real-time gap is dominated by unknown τ, early evidence, localisation and sequential uncertainty | **lowers** the priority of large new representation models |
+| **B** | `Δ >= +0.005`, robust | representation quality is a meaningful lever and the generic bank was underpowered | **strengthens** the case for learned sequence representation |
+| **C** | `Δ >= +0.010`, robust | representation is clearly still live | proceed into the neural track aggressively |
+| **D** | reproduction fails, or any sentinel fires | the instrument is uncalibrated | **infer nothing**; do not report a frontier |
+
+"Robust" means: positive on **at least 4 of the 5 pseudo seeds**, and the paired
+series bootstrap (400 resamples over series, common random numbers) 95% CI on
+`B − A` excludes zero.
+
+**Case D is checked first.** Reproduction is declared successful only if
+`A_rich` on the unfiltered population lands within **±0.010** of the prior
+`0.6497` — roughly three times the prior study's own across-seed std of 0.0035.
+If it does not, the comparison is not run against a stale scalar; the run is
+reported as a failed reproduction and nothing is concluded.
+
+### 18.7 What this experiment cannot prove — binding on the write-up
+
+Whatever number arm B returns, it is **not** an information ceiling, **not**
+Bayes-optimal performance, **not** an information-theoretic limit. It is the
+performance of *one representation* and *one learner* under *known-boundary
+series-level* evaluation. The write-up uses "representation diagnostic",
+"known-boundary benchmark", "measuring instrument". It does not use "true
+information frontier".
+
+It also says nothing about the real-time row-level task directly: the series
+question and the row question are different questions, which is the entire
+lesson of RT-900.
+
+### 18.8 Discipline
+
+The oracle diagnostic **may** decide whether representation research looks
+promising. It **may not** select TCN depth, hidden size, kernel width, dropout,
+learning rate or sequence length. Those belong to §20.
+
+No Crunch submission during the diagnostic. `RT-600` = 0.6268 remains LB-001.
+
+---
+
+## 19. ID ALLOCATION — RT-900 IS NOT REUSED
+
+`RT-901`–`RT-908` are **not** allocated: `RT-903`, `RT-906`, `RT-907`, `RT-908`
+already name 2025-reproduction ideas throughout `research/WAVE5_PREREG.md` and
+`research/STATE_OF_RESEARCH_V5.md`, and re-using them would collide in text.
+
+| new id | is | namespace |
+|---|---|---|
+| `RT-940` | W6-E2R arm `A_rich` — frontier bank reproduction | series-level diagnostic |
+| `RT-941` | W6-E2R arm `A_basic` | series-level diagnostic |
+| `RT-942` | W6-E2R arm `B_causal` — our bank at the boundary | series-level diagnostic |
+| `RT-943` | W6-E2R arm `C_nobound` — our bank, no boundary | series-level diagnostic |
+| `RT-944` | W6-E2R arm `AB` union | series-level diagnostic |
+| `RT-960` | W6-N1 — MLP on the 500 causal features | row-level TS-AUC candidate |
+| `RT-970` | W6-N2 — causal dilated TCN | row-level TS-AUC candidate |
+| `RT-980` | W6-N3 — GRU, only if N1/N2 justify it | row-level TS-AUC candidate |
+
+**`RT-940`–`RT-944` get no `research/RESULTS.csv` row.** That file is the
+row-level TS-AUC ledger, and putting a series-ROC-AUC number in it is exactly
+how a diagnostic gets mistaken for alpha later. They are filed in
+`research/reports/wave6_corrected_oracle.{md,json,csv}` and indexed in
+`research/EXPERIMENT_ID_MAP.md`.
+
+---
+
+## 20. W6-N — THE NEURAL TRACK
+
+Pre-registered in full in **`research/WAVE6_NEURAL_PREREG.md`**, which is
+binding and must be committed before any neural number exists. Summary of the
+parts that are fixed here:
+
+**Permission.** The neural track is **allowed**, and its permission does not
+depend on the W6-E2R outcome (§18.6 sets its *priority*, not its legality).
+Justification: a causal learned sequence representation is the strongest
+materially different model family the project has never tested, and Amendment 1
+established that the model class was never the constraint.
+
+**Order — no jumping ahead.** `N1` compact MLP on the existing 500 causal
+features → `N2` compact causal dilated TCN → `N3` GRU only if N1/N2 justify
+escalation. A transformer is not authorised by this amendment.
+
+**Two input tracks, never conflated.** Track A (500-feature vector → MLP) tests
+**learner** capacity. Track B (compact causal channels → TCN) tests
+**representation** learning. If A helps and B does not, the learner is the
+lever; if B helps materially beyond A, learned temporal representation is.
+
+**Budget.** At most two architecture sizes per family and at most two
+regularisation settings. BCE first; at most one pre-registered metric-aligned
+alternative (same-timestep pairwise ranking loss). No loss sweep, no
+architecture search, no seed fishing.
+
+**Hard constraints.** No τ, no future observations, no `n_online`, no final
+online length, no boundary-conditioned availability or missingness, no oracle
+features in any deployable neural input. No bidirectional RNNs, no unmasked
+attention, no full-sequence normalisation, no padding mask encoding final
+length. Normalisation must be historical / causal-running / a fixed training-set
+transform — never full-online or future-aware batch statistics. Prefix
+invariance is required to `<= 1e-8` on shared prefixes with different futures.
+
+**Promotion bar (in addition to §2, not instead of it).** Robust positive
+aggregate delta; positive on ≥ 4/5 folds; paired bootstrap support; incremental
+value over the specialist ensemble; **gain beyond a matched seed clone**; no
+regression in the causality/prefix tests. Major architectural promotion also
+requires alternate partitions to support the direction. Beating one LightGBM
+model is not sufficient and never was.
+
+**Deployment is a separate question.** A neural model does not have to ship. The
+offline-teacher route of §14 stays open: probability, embedding, hard-negative
+score, auxiliary target or motif cluster, distilled into LightGBM / XGBoost / a
+small MLP.
+
+---
+
+## 21. DEGREES OF FREEDOM ADDED BY THIS AMENDMENT
+
+| | count |
+|---|---|
+| W6-E2R arms | 6 (5 declared + 1 diagnostic variant), 0 selected |
+| W6-E2R sentinels | 7, all pre-declared, none selectable |
+| pseudo seeds | 5, the prior study's, unchanged |
+| thresholds fixed in advance | 3 (`±0.010` reproduction, `0.005` case B, `0.010` case C) |
+| neural families authorised | 2 now (`N1`, `N2`), 1 conditional (`N3`) |
+| hyperparameters the diagnostic may select | **0** |
+| Crunch submissions authorised | **0** |
+
+`RT-900` counts in the ledger as **attempted but void** — not as evidence, and
+not as nothing.
