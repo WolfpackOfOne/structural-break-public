@@ -1,0 +1,56 @@
+{
+ "HARD_FRAC": 0.1,
+ "folds": {
+  "0": {
+   "eligible_inner_negatives": 2403027,
+   "selected": 240303,
+   "realised_fraction": 0.10000012484254234,
+   "selected_in_heldout_fold": 0,
+   "selected_positives": 0,
+   "training_index_len": 3947099,
+   "training_index_expected": 3947099,
+   "heldout_rows_in_training_index": 0
+  },
+  "1": {
+   "eligible_inner_negatives": 2394857,
+   "selected": 239486,
+   "realised_fraction": 0.10000012526843982,
+   "selected_in_heldout_fold": 0,
+   "selected_positives": 0,
+   "training_index_len": 3938043,
+   "training_index_expected": 3938043,
+   "heldout_rows_in_training_index": 0
+  },
+  "2": {
+   "eligible_inner_negatives": 2398522,
+   "selected": 239854,
+   "realised_fraction": 0.10000075046215962,
+   "selected_in_heldout_fold": 0,
+   "selected_positives": 0,
+   "training_index_len": 3945395,
+   "training_index_expected": 3945395,
+   "heldout_rows_in_training_index": 0
+  },
+  "3": {
+   "eligible_inner_negatives": 2402115,
+   "selected": 240212,
+   "realised_fraction": 0.10000020814990124,
+   "selected_in_heldout_fold": 0,
+   "selected_positives": 0,
+   "training_index_len": 3950654,
+   "training_index_expected": 3950654,
+   "heldout_rows_in_training_index": 0
+  },
+  "4": {
+   "eligible_inner_negatives": 2398607,
+   "selected": 239861,
+   "realised_fraction": 0.10000012507259422,
+   "selected_in_heldout_fold": 0,
+   "selected_positives": 0,
+   "training_index_len": 3948053,
+   "training_index_expected": 3948053,
+   "heldout_rows_in_training_index": 0
+  }
+ },
+ "heldout_rows_in_any_training_index": 0
+}

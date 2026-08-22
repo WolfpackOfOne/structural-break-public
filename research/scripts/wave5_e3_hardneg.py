@@ -140,12 +140,31 @@ def build_weights(d, H, k, kind):
 
 
 def oversample_pool(d, H, k):
-    """Row pool for outer fold k with the hardest negatives repeated OVER_K x."""
-    m = np.isfinite(H[k]) & (d.y == 0)
+    """Row pool for outer fold k with the hardest negatives repeated OVER_K x.
+
+    Selection is by QUANTILE of the same-t inversion rank over the ELIGIBLE
+    inner-fold negatives -- `np.quantile(r[m], 1 - HARD_FRAC)` -- not by a fixed
+    threshold on the rank.  Those differ once hardness stopped being a global
+    percentile: `r >= 0.90` would select whatever share of rows happens to sit
+    above 0.90, while this selects the hardest HARD_FRAC.  The realised fraction
+    is 0.10000 on every outer fold, recorded in
+    research/reports/wave5_e3_conformance.json.
+
+    FOLD EXCLUSION IS AN INVARIANT OF THIS FUNCTION, not a property inherited
+    from the caller.  `H[k]` is NaN on fold k by construction of the nested
+    mining, so `m` already excludes it; the explicit `row_fold != k` term makes
+    that structural rather than incidental.  Verified identical to the executed
+    RT-712 mask: 0 selected rows lay in the held-out fold on all five folds, so
+    the added term changes no value and cannot have changed the observed result.
+    """
+    m = np.isfinite(H[k]) & (d.y == 0) & (d.row_fold != k)
     r = np.zeros(len(d.y))
     r[m] = _within_t_rank(H[k][m].astype(np.float64), d.t[m])
     thr = np.quantile(r[m], 1.0 - HARD_FRAC)
-    return (r >= thr) & m
+    sel = (r >= thr) & m
+    assert not sel[d.row_fold == k].any(), "oversample pool leaked the held-out fold"
+    assert not sel[d.y == 1].any(), "oversample pool selected a POSITIVE row"
+    return sel
 
 
 # ------------------------------------------------------------------- arms
@@ -162,14 +181,21 @@ def install_oversampler(hard_mask_by_fold):
     def patched(self, folds):
         rows = _ORIG_ROWS_FOR(self, folds)
         f = list(np.atleast_1d(folds))
-        if len(f) != 4:
-            return rows
         k = [x for x in FOLDS if x not in f]
-        if len(k) != 1:
+        # "four folds means training" is a CONVENTION; everything below turns it
+        # into a checked invariant.  The duplicated rows are drawn from `rows`,
+        # never from arange(n_rows), so a held-out row cannot enter even once.
+        if len(f) != 4 or len(k) != 1 or not set(f) <= set(FOLDS):
             return rows
-        mask = hard_mask_by_fold[k[0]]
+        held = k[0]
+        mask = hard_mask_by_fold[held]
+        assert not mask[self.row_fold == held].any(), (
+            f"hard mask for outer fold {held} contains held-out rows")
         extra = rows[mask[rows]]
-        return np.sort(np.concatenate([rows] + [extra] * (OVER_K - 1)))
+        out = np.sort(np.concatenate([rows] + [extra] * (OVER_K - 1)))
+        assert not (self.row_fold[out] == held).any(), (
+            f"oversampled TRAINING index contains rows from held-out fold {held}")
+        return out
     Data.rows_for = patched
 
 
