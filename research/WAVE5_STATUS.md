@@ -256,3 +256,36 @@ itself**, and the clean way to settle it is a within-module ablation
 as a next experiment rather than run here, because it cannot change the
 promotion decision and would spend degrees of freedom that the promotion
 decision needs.
+
+## 8. W5-E9a — TS-AUC-SHAPED PAIR WEIGHTING: **REJECTED**
+
+The hypothesis was clean and, I still think, correct about the arithmetic: the
+official metric pools concordant pairs over `Σ_t n_pos(t)·n_neg(t)`, so every
+within-timestep (positive, negative) pair counts equally, whereas the incumbent
+`pairwise_t` objective draws a fixed `m_neg = 8` negatives per positive row and
+therefore makes every positive ROW count equally instead. D1 showed the
+mis-weighting is not small: timesteps with 7,000 series alive are weighted the
+same as timesteps with 1,200.
+
+**The dispatch is verified byte-identical first.** `RT-702` is the incumbent
+objective routed through the wave-5 hook, and it reproduces `RT-413`'s ledger row
+to five decimals on **all five folds** — 0.63185 / 0.61326 / 0.62455 / 0.60031 /
+0.60408. So the arms differ only in the loss.
+
+| arm | id | TS-AUC | per fold |
+|---|---|---|---|
+| incumbent `pairwise_t` | `RT-702` | **0.61481** | 0.63185 / 0.61326 / 0.62455 / 0.60031 / 0.60408 |
+| `pairwise_w`, pairs weighted by `n_neg(t)` | `RT-700` | 0.61334 | 0.63270 / 0.60824 / 0.62348 / 0.60039 / 0.60191 |
+| delta | | **−0.00147** | +0.00085 / −0.00502 / −0.00107 / +0.00008 / −0.00217 — **2/5** |
+
+**Aligning the training objective with the metric's own pair weighting makes the
+model worse.** The most likely mechanism, stated as a hypothesis and not a
+finding: the weighting concentrates gradient on the timesteps with the most
+alive series, which D1 places at t ≈ 200–700 — but those are also the timesteps
+whose ranking is *easiest* and already best served, while the estimator variance
+of a positive row's gradient rises with its weight. Matching the evaluation
+weighting is not the same as spending training capacity well, and this is a case
+where the two come apart.
+
+The incumbent's flat `m_neg` is, in effect, an implicit importance weighting
+towards sparse late timesteps, and it earns its keep.
