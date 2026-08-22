@@ -52,3 +52,77 @@ scheduled first.
 **Counts toward the §0 stopping rule.**
 
 Evidence: `research/reports/wave6_e1_anchors.json`.
+
+---
+
+## W6-E2 — **VOID. THE EXPERIMENT WAS ILL-POSED AND I SHOULD HAVE CAUGHT IT.**
+
+`RT-900` scored **0.86552** against `RT-300`'s 0.61605 — an aggregate delta of
+**+0.24946**, positive on 5/5 folds, with by-age deltas from +0.40 (age 0–5) to
++0.19 (age 100+). Under §4.3's rule that reads "LOCALISATION is the lever".
+
+**It is not a finding. It is a leak, and the number should never be quoted.**
+
+### The diagnosis
+
+The oracle block is `NaN` for every row with `t < cut`, because there is no
+post-cut segment to compute statistics over. Test the mask on its own:
+
+| | |
+|---|---|
+| TS-AUC of the single indicator `1[t >= cut]`, nothing else | **0.81442** |
+| share of rows where the block is `NaN` | 49.1% |
+| **of those, share that are NEGATIVES** | **100.00%** |
+
+For a break series `cut = tau`, so `1[t >= cut]` **is** the online target
+`y[t] = 1[t >= tau]`. For a no-break series `cut` is a placebo and `y = 0`
+throughout. So `NaN ⟹ y = 0` with certainty, and LightGBM splits on missingness
+natively. A bare indicator beats the champion by **+0.198** without looking at
+the data at all.
+
+### Why patching it does not work
+
+The placebo cut was supposed to be the protection, and it is the right idea — it
+is what the wave-1 taxonomy and the oracle-frontier study both use. It fails
+here for a reason specific to this metric:
+
+* the **series-level** question is "does this series contain a break?", and
+  knowing the boundary does not answer it — which is why the oracle frontier's
+  design is sound;
+* the **real-time row-level** question is "has the break happened *by now*?",
+  and **knowing τ answers it exactly**.
+
+Dropping `or_elapsed` and `or_frac` and back-filling the segment with the full
+prefix removes the `NaN` mask, but the same information returns through
+`or_frac = 1.0` exactly when `t < cut`, and through the segment length that the
+null calibration is matched on. **Under TS-AUC, "give the model τ" is
+degenerate: τ is the label.** There is no non-degenerate patch, so the
+experiment is voided rather than repaired.
+
+### What this cost, and what it did not
+
+15 minutes of training and one feature build. `RT-900` stays in the ledger
+flagged **VOID — LABEL LEAK VIA THE MISSINGNESS MASK**, because deleting a
+result is worse than recording why it was wrong. No production path touched:
+`w6oracle` was never a registered module and cannot reach a manifest.
+
+**The §4.3 branch is NOT decided.** Wave 6 does not get to claim "localisation
+is the lever" on the back of a leak, and the §0 stopping rule has one arm
+resolved (`W6-E1`, inside noise) and one arm **unresolved**.
+
+### The corrected question, for whoever runs it next
+
+The decidable version is the oracle frontier's own, sharpened:
+
+> At the **FULL** horizon, where the frontier measured its only real headroom
+> (+0.0396 over `RT-300`), does **our 500-column causal bank** — given the true
+> boundary, at the frontier's series-level protocol, one row per series — beat
+> the frontier's **generic 150-tree bank** at the same 0.6497?
+
+* if **our features match ~0.6497**, the frontier's oracle was already
+  representation-saturated and the gap to `RT-300` is about τ-knowledge;
+* if **our features beat it materially**, representation is the live lever and
+  the neural track is the best-motivated thing in wave 6.
+
+It is series ROC AUC, not TS-AUC, which is precisely what makes it non-degenerate
+— and it is the metric the frontier already reports, so the comparison is direct.
