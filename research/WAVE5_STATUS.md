@@ -385,3 +385,43 @@ worse. A hinge stops pushing a pair once it is ranked correctly by a margin; for
 a metric that is *entirely* pairwise ranking that sounded right, and the data
 disagrees. Both W5-E9 variants fail, and the incumbent `pairwise_t` stream stands
 unchanged.
+
+### 10a. Which of W5-E4 / E5 / E6 actually carried `m12_rdep`?
+
+The module bundles three pre-registered sub-blocks, so the ledger can separate
+them. Within `RT-750`'s `m12_rdep` gain:
+
+| sub-block | % of module gain | columns | gain per column |
+|---|---|---|---|
+| **W5-E5 residual CUSUM / CUSUMSQ paths** | **72.8%** | 20 | **3.64** |
+| W5-E6 dependence LR (variance profiled out) | 12.9% | 10 | 1.29 |
+| W5-E4b robust two-sample scale | 6.9% | 9 | 0.77 |
+| W5-E4 residual distribution distances | **7.5%** | 18 | 0.42 |
+
+`m12_rdep` as a whole takes 12.17% of `RT-750`'s total gain from 10.23% of its
+columns. Its E5 sub-block's gain-per-column of **3.64** is higher than every
+production module except `m07_bayes` (2.45).
+
+**This answers three of the brief's questions separately, and they do not have
+the same answer:**
+
+* **Does residual CUSUMSQ add new information? Yes — it is the whole result.**
+  `RT-907`, the CUSUM/CUSUMSQ-on-regression-residuals translation, is the one
+  2025 idea that paid.
+* **Does a dependence likelihood ratio add new information?** Modestly. 12.9%
+  from 10 columns; `dl_exp_phi` is the module's 6th-best column.
+* **Do robust distribution distances add new information? Least of the three.**
+  18 columns for 7.5% of the gain — the lowest gain-per-column in the module.
+  `m02_dist` already computes this family on the raw PIT and residualising it
+  buys little, which is the outcome the pre-registration named as its own
+  falsification ("fully redundant with `m02_dist` under leave-one-block-out").
+
+**A cross-cutting finding.** In *both* new modules the columns the booster leans
+on are the **calibrated path geometry** — running peak (`*_pk`), persistence
+(`*_per`), time-since-peak (`*_tsp`) — not the instantaneous statistic. The top
+four `m12_rdep` columns are `rcdn_pk`, `rqup_pk`, `rqdn_pk`, `rcup_pk`; the top
+six `m11_focus` columns are all `*_pk`. Whatever the underlying detector, what
+survives into the model is *how high the evidence has ever been and how long it
+stayed there*. That is a design lesson for the next module, and it is consistent
+with `m01_seq` — the module whose entire thesis is detector-path shape — being
+the second-largest gain contributor in the bank.
