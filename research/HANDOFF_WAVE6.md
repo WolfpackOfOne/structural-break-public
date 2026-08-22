@@ -405,3 +405,332 @@ unlicensed. Require CHAMP before any promotion claim.
   `m07_bayes`, in `bo_p_lt25_z`, `bo_lo_change_z`, `bo_ent`. Almost certainly
   score-irrelevant at that magnitude. **No wave-3 or wave-4 document mentions
   it.** Worth 20 minutes to close before any future rebuild.
+
+---
+
+## PART 6 — FILES YOU MAY NOT CHANGE
+
+This is the list to read before writing code. Violating any of these either
+invalidates historical numbers or stops the shipped artifact from loading.
+
+### 6.1 Frozen competition artifacts — never edit, never regenerate
+
+```
+research/FINAL_ARCHITECTURE_FREEZE.md
+research/FINAL_REPRODUCIBILITY_MANIFEST.json
+<rt600-worktree>/submissions/C_ensemble_deployable.py
+<rt600-worktree>/submissions/C_ensemble_deployable.ipynb
+<rt600-worktree>/submissions/C_ensemble_deployable.build.json
+<rt600-worktree>/models/final10k_ensemble/manifest.json
+<rt600-worktree>/models/final10k_ensemble/model.txt.{0..6}
+```
+where `<rt600-worktree>` = `structural-break-claude-wave3`.
+
+### 6.2 Core library — read it, never edit it
+
+```
+src/sbr/store.py          src/sbr/metric.py        src/sbr/transforms.py
+src/sbr/nullcal.py        src/sbr/pipeline.py
+src/sbr/features/base.py  src/sbr/features/driver.py
+src/sbr/stream/ctx.py
+```
+
+`metric.py` and `pipeline.py` are the worst: editing either silently invalidates
+every number in `RESULTS.csv`, including RT-600's. If you believe one is wrong,
+**say so in your report and do not fix it** — that is the standing rule from
+`research/PROTOCOL.md` §1 and it has held for five waves.
+
+### 6.3 Shipped feature modules — these ARE the frozen manifest
+
+```
+src/sbr/features/m00_core.py   m01_seq.py   m02_dist.py   m03_dyn.py
+                  m04_resid.py   m06_loc.py    m07_bayes.py
+```
+
+Any edit — even a comment that changes a column name — moves
+`feature_manifest_sha256` away from
+`1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced`
+and `ProductionModel.load` **hard-errors rather than predicting**. That gate
+exists because a model and a feature bank that disagree is the failure mode that
+silently costs a competition.
+
+### 6.4 Shipped streaming twins
+
+```
+src/sbr/stream/s_m00_core.py   s_m01_seq.py   s_m02_dist.py   s_m03_dyn.py
+                 s_m04_resid.py   s_m06_loc.py    s_m07_bayes.py
+```
+
+### 6.5 `src/sbr/stream/engine.py` — APPEND-ONLY, and there is a trap
+
+You must edit this to register a new streaming module. Three rules:
+
+1. `MODULE_ORDER` may be **appended to**, never reordered or inserted into.
+2. The `StreamEngine.__init__` default must stay **`PRODUCTION_MODULES`** (the
+   shipped seven). **I broke this in wave 5**: registering `m12_rdep` in
+   `MODULE_ORDER` changed the default engine from 7 modules to 8, and four
+   existing tests caught it immediately. A registered-but-unshipped module must
+   not leak into a default engine.
+3. Re-run `tests/test_stream_engine_parity.py::test_rt600_manifest_sha_is_unchanged`
+   after touching it.
+
+### 6.6 Validation surfaces — never regenerate, never score on
+
+```
+research/folds/folds.parquet              PERMANENT. NEVER regenerate
+research/folds/folds_alt{1,2,3}.parquet   robustness only; select nothing with them
+research/folds/folds_final10k.parquet     NOT a validation set
+research/folds/folds_screen.parquet
+research/RESULTS.csv                      append ONLY via sbr.pipeline.run (file-locked)
+data/X_test.reduced.parquet
+data/y_test.reduced.parquet
+data/y_test_index.reduced.parquet
+```
+
+Also forbidden as selection surfaces even though they are not files you would
+edit: fold `-1` (the spent lockbox) and OOF vectors `RT-500`..`RT-506`.
+
+### 6.7 Protocol definitions — copy them, do not modify them
+
+```
+research/scripts/wave2_lib.py       CHAMP and ABL protocol dicts, alt_folds()
+research/scripts/wave2_streams.py   the seven specialist stream configurations
+```
+
+Wave 4 documented what happens if you ignore this: forcing specialist streams
+onto the ABL protocol overrides `num_leaves`, `min_data_in_leaf` and
+`feature_fraction` — exactly the knobs that make a specialist a specialist — and
+every stream collapses toward the champion. The experiment then measures nothing.
+
+### 6.8 Append-only, never rewrite history
+
+```
+research/RDOF_LEDGER.md          research/FAILED_EXPERIMENTS.md
+research/EXPERIMENT_ID_MAP.md    research/RESULTS.csv
+```
+
+Historical rows keep the IDs they were written with, forever. If a name is
+ambiguous, **map it** in `EXPERIMENT_ID_MAP.md`; do not rename it.
+
+### 6.9 What you are free to create
+
+```
+src/sbr/features/m1x_<name>.py        new batch feature module
+src/sbr/stream/s_m1x_<name>.py        its bitwise twin (required before shipping)
+research/scripts/wave6_*.py           new experiment drivers
+tests/test_*.py                       new tests
+research/reports/*.{md,json,csv}      new reports
+```
+
+Wave 5's rejected modules are kept and are useful scaffolding:
+`m10_persist.py`, `m11_focus.py`, `m12_rdep.py`. **Reuse `m12_rdep`'s
+`_GridNull` / `_WinNull` / `_cum` / `_roll` null machinery by importing it**
+rather than reimplementing — that is what made its streaming twin bitwise.
+
+---
+
+## PART 7 — THE TRAPS, EACH OF WHICH COST REAL TIME
+
+1. **`n_online` leakage through a null length.** The first `m12_rdep` sized its
+   expanding nulls by the online length. `check_prefix_invariance(..., atol=0.0)`
+   failed it on all 7 test series. **Run that gate before taking any number**,
+   on ≥8 series of different lengths including both length-10 series in the
+   dataset, with cuts `(1, 3, 10, 37, 113)`.
+
+2. **The feature-cache readiness check.** `sbr.features.driver` preallocates the
+   output with `np.lib.format.open_memmap(mode="w+")`, so the `.npy` is
+   **full-size and mostly zeros from the first second**. Testing existence or
+   size proves nothing. Wait for the driver's own `total <n>s` line. Two runs of
+   `RT-740` started on a 15%-filled cache; both were killed before reaching the
+   ledger, and **a number computed from that cache would have looked entirely
+   normal**.
+
+3. **Silent `str.replace` no-ops.** A patch that does not match its pattern
+   fails silently and leaves the old code running. This bit twice (the queue
+   script, the `_CLASSES` registration). **Assert the pattern was found, then
+   grep the file to confirm.**
+
+4. **Three trainers saturate the machine.** 16 GB RAM and 10 GB swap; the third
+   concurrent arm pushed swap to 9.9/10 GB with 26M swapouts and slowed
+   everything ~5×. Two maximum. Check `sysctl -n vm.swapusage`.
+
+5. **Floating-point parity traps in streaming twins** (both real, both caught
+   only by the bitwise test):
+   * **The AR-sigma round trip.** Batch computes `e = ctx.ar_online / hp.ar_sigma`
+     where `ar_online` was *already multiplied* by `ar_sigma`. That is not the
+     identity in IEEE arithmetic. Read `ctx.tr["res_mean"]` — which
+     `build_transforms` defines by exactly that expression on exactly that input
+     — instead of recomputing the filter.
+   * **Reduction width.** Batch reduces a `(bins, n)` array along **axis 0**,
+     numpy's strided path. A `(bins, 1)` array is contiguous and takes the
+     **pairwise** path, disagreeing in the last ulp on **97 of 300** random
+     columns. Pad to width ≥ 2. See `_pad2` and
+     `test_reduction_width_invariance`.
+
+6. **Duplicate background jobs.** Chained `until ...; do sleep; done` waiters
+   that then launch work will launch it again if you re-arm them. Check
+   `ps -Ao etime,command | grep "[p]ython -u"` before assuming the machine is
+   idle.
+
+7. **Use the right python.** `/path/to/workspace/structural-break/.venv/bin/python`.
+   The anaconda python fails on `import pandas` with `_ARRAY_API not found`.
+
+---
+
+## PART 8 — WHAT WAVE 5 BUILT THAT YOU CAN USE
+
+### 8.1 Reusable machinery
+
+| file | what it gives you |
+|---|---|
+| `research/scripts/wave5_lib.py` | `Ctx` — folds, scoring, `score_by_age`, cross-fitted SCDF per stream **with an on-disk cache**, equal/weighted blending, paired series bootstrap. The stream cache is the reason a composition costs an array op instead of a ten-minute refit |
+| `research/scripts/wave5_stream_eval.py` | the promotion battery: `(S+C)` vs `(S+N)`, age buckets, rank correlations, bootstrap |
+| `research/scripts/wave5_abl_compare.py` | the wave-3 comparison that rejected `m09_back`, reusable for any block |
+| `research/scripts/wave5_obj.py` | custom objective / per-row weight hook that routes through `pipeline.run`'s existing dispatch, so the fold loop, sampling, seeds and ledger stay byte-identical. `RT-702` proves it: it reproduces `RT-413` to five decimals on all five folds |
+| `research/scripts/wave5_e3_hardneg.py` | nested fold-pure hardness mining + genuine row oversampling via a `rows_for` patch that touches only the 4-fold training call |
+| `research/scripts/wave5_summary.py` | rebuilds the executive table from `RESULTS.csv` and the report JSONs, so the write-up cannot drift from disk |
+| `research/scripts/wave5_partitions.py`, `wave5_alt_blocks.py` | alternate-partition runners |
+| `src/sbr/features/m12_rdep.py` | `_GridNull`, `_WinNull` — length-interpolated and window nulls built from history only. **Import these; do not rewrite them** |
+| `src/sbr/stream/s_m12_rdep.py` | a worked example of a bitwise twin, including the two float traps and the `_ScalarGrid` tabulation that took it 415 → 225 µs/obs |
+
+### 8.2 Tests worth running before you claim anything
+
+```bash
+export SBR_ROOT="$PWD" SBR_STORE="$PWD/cache/store" PYTHONPATH="$PWD/src"
+"$PY" -m pytest tests/test_wave5_modules.py -q            # causality + no n_online, 24 tests
+"$PY" -m pytest tests/test_stream_parity_m12_rdep.py -q   # bitwise twin, 12 tests
+"$PY" -m pytest tests/test_stream_engine_parity.py -q     # RT-600 manifest guard
+"$PY" -m pytest tests/test_no_n_online_leakage.py -q      # the gate that protects the entry
+```
+
+`test_engine_parity_real` fails **on the parent branch too** — see §5.5. Do not
+spend time chasing it thinking you caused it; do consider fixing it.
+
+---
+
+## PART 9 — THE THREE HIGHEST-VALUE NEXT EXPERIMENTS
+
+Ranked by evidence this wave produced, not by appeal.
+
+### W6-A — an expanded residual-PATH module (highest ceiling)
+
+W5-E5's sub-block delivered **72.8% of `m12_rdep`'s gain from 20 of its 57
+columns**, at gain-per-column **3.64** — higher than every production module
+except `m07_bayes` (2.45). And it is barely explored: those 20 columns are
+**one** drift constant (`k = 0.5`), **one** residual representation (the shared
+context's AR(2)), two statistics (CUSUM, CUSUMSQ), two signs.
+
+`m04_resid` already ships **eight** residual representations — `ar1`, `ar2`,
+`ar5`, ridge `arR`, Huber `arH`, EWMA `vol`, winsorised `volM`, GARCH `volG`,
+`cmb` — every one fitted on history only and applied causally forward, and
+**none has a CUSUM path**. `m06_loc`'s forensics separately measured AR(6)
+residuals as ~0.9 AUC points better than AR(2) for scale localisation, and this
+module used AR(2).
+
+Cross {3–4 residual representations} × {2–3 drift constants} × {CUSUM, CUSUMSQ}
+with the identical calibrated path geometry.
+
+**A cross-cutting design lesson to carry into it:** in *both* new wave-5 modules
+the columns the booster leaned on were the **calibrated path geometry** —
+running peak `*_pk`, persistence `*_per`, time-since-peak `*_tsp` — not the
+instantaneous statistic. The top four `m12_rdep` columns are `rcdn_pk`,
+`rqup_pk`, `rqdn_pk`, `rcup_pk`; the top six `m11_focus` columns are all `*_pk`.
+Whatever the detector, what survives into the model is *how high the evidence
+has ever been and how long it stayed there*.
+
+**But read §5.3 first.** The bank already contains `m01_seq`'s CUSUM paths on
+the raw series. W6-A is a bet that doing it on *residual* streams the bank does
+not whiten is different enough. If it comes back at +0.001 over a seed clone,
+that is the third time this framework has said "real and redundant", and the
+right response is to stop adding statistics.
+
+### W6-B — `m11_focus` ablation, then a slim version
+
+The module's gain concentrates in `*_pk`, `*_agefrac` and `*_anc_z` (the τ=0
+**anchored** statistic, which is not maximised at all) — not in the maximised
+`*_z` or the `*_gain` contrast that was the hypothesis. Train two arms: `_z` +
+`_gain` only, and `_pk` + `_age` only. W5-E10 established that **column count is
+a real cost** (175 columns did less than half what 57 did), so a 20-column
+`m11_focus` that keeps the contribution would be strictly better than the
+76-column one — and might survive the union test the full module failed.
+
+### W6-C — calibration anchor placement (cheapest, and never once measured)
+
+`SmoothTimeCDFCal` uses 12 **log-spaced** anchors, 256-point grids,
+`min_n = 400`. The freeze says plainly: *"Anchors, grid size and `min_n` are
+frozen and were never tuned."* Meanwhile W4-E1 measured the calibration family
+as worth **+0.00267** on the specialist arm — one of the largest single effects
+in the project — and W5-D1 measured where the metric's weight actually is:
+**50% between t = 168 and t = 451**, a narrow band that log-spacing deliberately
+under-resolves, because log anchors crowd near t = 1 where **0.2%** of the pair
+weight lives.
+
+**This needs no training at all** — it recomputes from OOF vectors already on
+disk, which is why it should go first in wall-clock order even though W6-A has
+the higher ceiling. Pre-register a tiny structured family (say: log,
+uniform-in-pair-weight, hybrid) and **no continuous search** — this is the
+surface where tuning against OOF would be easiest and most damaging.
+
+---
+
+## PART 10 — WHAT NOT TO DO
+
+* **Do not submit.** Nothing cleared the bar. LB-001 = 0.6268 stands.
+* **Do not evaluate a feature block as an 8th ensemble member.** §5.2.
+* **Do not promote on an ABL result.** §5.4.
+* **Do not treat low rank correlation as evidence.** §3.2.
+* **Do not search the composition lattice** — pairwise unions, block subsets,
+  best-of-k, per-block `feature_fraction`. W4-E6 and W5-E10 both excluded it in
+  advance, and searching it after a negative result is how a null becomes a
+  false positive.
+* **Do not chase young-break detection as a priority.** §5.1.
+* **Do not build a teacher/distillation study.** §5.5 — the strongest available
+  teacher is already matched by the legal model through h = 150, and its only
+  real advantage needs the whole post-break segment.
+* **Do not rebuild the CV framework.** It passed external calibration.
+* **Do not tune anything against these folds** without pre-registering the grid
+  in `research/RDOF_LEDGER.md` first, with a real git SHA and a real seed.
+
+---
+
+## PART 11 — REPRODUCING THE WAVE-5 HEADLINES
+
+```bash
+cd "/path/to/workspace/structural-break-wave5"
+export SBR_ROOT="$PWD"
+PY="/path/to/workspace/structural-break/.venv/bin/python"
+
+"$PY" -u research/scripts/wave5_e1_mixture.py      # baselines A/B/C + the λ grid   (~21 min)
+"$PY" -u research/scripts/wave5_diagnostics.py     # D1 metric geometry, D2 false positives, D3 age
+"$PY" -u research/scripts/wave5_break_family.py    # D4 break family
+"$PY" -u research/scripts/wave5_abl_compare.py RT-730 RT-740 RT-750 RT-760
+"$PY" -u research/scripts/wave5_e11_eval.py        # the architecture verdict
+"$PY"    research/scripts/wave5_summary.py         # the executive table
+```
+
+Every headline number in the wave-5 documents is regenerated by one of these.
+
+---
+
+## PART 12 — GIT AND PROVENANCE
+
+| | |
+|---|---|
+| branch | `research/wave5-alpha` |
+| parent | `research/wave3-integration` @ `17bb5df` |
+| relationship | strictly ahead; **behind by nothing**; never merged into itself |
+| machine | macOS/arm64, 10 cores, 16 GB |
+| feature cache | shared **read-only** from `structural-break-claude-wave3`; the wave-3 worktree still holds exactly its original eight modules and no `RT-7xx`/`RT-8xx`/`wave5_*` file |
+
+**Merge recommendation.** Wave 5 promoted nothing, so there is no model change
+to merge. What is worth keeping is the *record and the machinery*: the
+pre-registration, the ledger entries, the four negative results with mechanisms,
+the diagnostics, the three modules, the streaming twin, and the tests. Merging
+`research/wave5-alpha` into `research/wave3-integration` is safe **because the
+RT-600 manifest is asserted unchanged by a test** — but it is not urgent, and
+leaving it as a research branch is equally defensible.
+
+**The honest one-line summary of wave 5:** it spent its compute discovering that
+this ensemble has almost no headroom left for statistics that overlap what it
+already computes, measured that four independent ways, and corrected three
+premises the project had been carrying — while moving the score not at all.
