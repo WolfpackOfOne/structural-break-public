@@ -677,3 +677,84 @@ explanation, not as the seed of a follow-up.
 **What it does establish.** The incumbent seven-stream composition is not
 merely adequate, it is *better than the obvious enrichment of it*. That is a
 stronger position for the champion than W4-E1 alone gave it.
+
+---
+
+## W5-E1 — SMALL BAGGING COMPONENT IN THE SPECIALIST ENSEMBLE — **REJECTED**
+
+**Pre-registered** in `research/WAVE5_PREREG.md` §6 at commit `5488644`, before
+any wave-5 number existed. Grid fixed at four λ values and **not enlarged after
+it returned a null**.
+
+**Hypothesis.** W4-E6 rejected the 13-booster *union* and diagnosed why: under an
+equal-weight mean the union hands the `RT-100R` configuration 54% of the blend
+weight instead of 14%. A *small* bagging component does not do that — λ=0.90
+gives it 22.9% — so W4-E6 does not answer whether a modest admixture helps.
+
+**Implementation.** No training. `S` and `B` are the two W4-E1 arms, each
+cross-fitted through `SCDF_NSEEN` before mixing, then `λ·S + (1−λ)·B`.
+
+| λ | TS-AUC | Δ vs λ=1 | folds better | `RT-100R` weight |
+|---|---|---|---|---|
+| 1.00 | **0.62581** | — | — | 14.3% |
+| 0.90 | 0.62577 | −0.00004 | 3/5 | 22.9% |
+| 0.80 | 0.62564 | −0.00017 | 3/5 | 31.4% |
+| 0.70 | 0.62541 | −0.00040 | 1/5 | 40.0% |
+
+Paired series bootstrap on the best λ<1, 200 replicates, common random numbers:
+**−0.00003, 95% CI [−0.00026, +0.00018], 36% of replicates positive.**
+
+**Why it failed, and why the failure is informative.** The delta is **monotone
+decreasing in bagging weight** — there is no interior optimum and no threshold
+effect. W4-E6's mechanism (54% is too much weight on one configuration) is
+therefore an incomplete explanation: **any** admixture of exchangeable seed-clone
+mass into a heterogeneous blend is neutral-to-harmful, at every weight tested.
+The two gains W4-E1 separated are not partially additive at small doses either.
+
+The CI is tight around zero, so this is a **clean null, not an underpowered
+test**. Equal weighting over the seven specialists now stands on two independent
+experiments.
+
+**Retry warranted?** No. The grid spans the region where a benefit could
+plausibly hide and the trend through it has one sign. Searching λ ∈ (0.90, 1.00)
+after seeing this is exactly how a null becomes a false positive.
+
+---
+
+## W5-E9a — TS-AUC-SHAPED PAIR WEIGHTING (`pairwise_w`) — **REJECTED**
+
+**Pre-registered** in `research/WAVE5_PREREG.md` §6.
+
+**Hypothesis, and it is still arithmetically correct.** The official metric pools
+concordant pairs over `Σ_t n_pos(t)·n_neg(t)`, so every within-timestep
+(positive, negative) pair counts equally. The incumbent `pairwise_t` objective
+(stream `RT-123R`/`RT-413`) samples a fixed `m_neg = 8` negatives per positive
+row, which makes every positive ROW count equally instead. W5-D1 measured how
+large the mismatch is: timesteps with ~7,000 series alive get the same weight as
+timesteps with ~1,200.
+
+**The dispatch was verified before the arms were compared.** `RT-702` routes the
+*incumbent* objective through the same wave-5 hook and reproduces `RT-413`'s
+ledger row to five decimals on **all five folds**, so the arms differ only in
+the loss and not in the mechanism that delivers it.
+
+| arm | id | TS-AUC | per fold |
+|---|---|---|---|
+| incumbent | `RT-702` | **0.61481** | 0.63185 / 0.61326 / 0.62455 / 0.60031 / 0.60408 |
+| `n_neg(t)`-weighted pairs | `RT-700` | 0.61334 | 0.63270 / 0.60824 / 0.62348 / 0.60039 / 0.60191 |
+| delta | | **−0.00147** | +0.00085 / −0.00502 / −0.00107 / +0.00008 / −0.00217 |
+
+**Positive on 2 of 5 folds. Rejected.**
+
+**Why it failed.** Offered as a hypothesis, not a finding: the weighting pushes
+gradient onto the timesteps with the most alive series, which D1 places at
+t ≈ 200–700 — and those timesteps are also the *easiest* and already the
+best-ranked, while a positive row's gradient variance rises with its weight. The
+incumbent's flat `m_neg` acts as an implicit importance weighting toward the
+sparse late timesteps, and it earns its keep. **Matching the evaluation's
+weighting is not the same as spending training capacity well.**
+
+**Retry warranted?** Not in this form. A version that weights by `n_neg(t)` while
+*capping* the weight, or that spends the extra pairs on late timesteps instead,
+is a different experiment and would need its own pre-registration; nothing here
+licenses tuning `m_neg` or the weight exponent against these folds.
