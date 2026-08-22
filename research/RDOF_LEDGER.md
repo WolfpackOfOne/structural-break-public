@@ -572,3 +572,113 @@ stream must beat a seed-clone control**, and low within-timestep rank correlatio
 is not a diversity credential. A new *model family* is subject to this
 identically — XGBoost or CatBoost being a different library is not, by itself,
 evidence of new information.
+
+---
+
+# WAVE 5 — PRE-REGISTRATION: `RT-500x` ALPHA LANE
+
+**Written 2026-08-22, BEFORE any Wave-5 score exists — indeed before the
+competition data is even present in the environment. Nothing below was written
+with knowledge of a result, because no result is obtainable yet.**
+
+**ID note.** `RT-500`..`RT-506` are ALREADY ALLOCATED to the post-freeze
+cross-fitted all-10k OOF vectors (`FINAL_ARCHITECTURE_FREEZE.md` §"final
+calibration construction"). Wave 5 therefore allocates from **`RT-520`
+upward**, verified unused on every branch before allocation.
+
+## W5-E1 — `m10_perm`: TRANSIENT vs PERMANENT
+
+* **Hypothesis (H1).** TS-AUC by post-break age is 0.513 at age 0–5 against
+  0.646 at 100+ (measured in the `m09_back` post-mortem). At small post-break
+  age a genuine level shift and a short outlier burst produce the same
+  trailing-window mean, because a window mean is invariant to the ARRANGEMENT
+  of the points inside the window. Statistics of that arrangement — crossing
+  counts, run lengths, mass concentration, and a mean-vs-median contrast —
+  carry information no window-mean bank can express at any window length, and
+  adding them raises TS-AUC on the young-break buckets.
+
+* **Null (H0).** `m00_core`'s six trailing windows plus the expanding window
+  already capture everything about the online segment that predicts a break;
+  arrangement is redundant with level once the level is calibrated.
+
+* **Matched control.** `RT-520` = the 7 production modules, ABL protocol
+  (5 canonical folds, 400k training rows, seed 0, battery hyperparameters).
+  `RT-521` = the identical call plus `m10_perm`. Same folds, rows, seed,
+  params, session.
+
+* **Falsification, both fixed in advance, either one rejects.**
+  1. mean ABL delta ≤ 0 over the five folds, **or**
+  2. the delta is positive on ≤ 2 of the 5 folds.
+
+* **THE SEED-CLONE BAR — binding, and it is what killed `m09_back`.**
+  `RT-522` = the 7 production modules at **seed 1**, a stream containing zero
+  new information. If the deployable blend `RT-520`+`RT-521` does not beat the
+  blend `RT-520`+`RT-522` by at least **+0.0010**, the ensemble route to
+  promotion is CLOSED, whatever the ABL delta says. Low within-timestep rank
+  correlation is not admissible as evidence.
+
+* **Secondary, reported either way.** TS-AUC by post-break age bucket
+  (0–5, 5–10, 10–20, 20–50, 50–100, 100+) — this is the hypothesis' own
+  diagnostic and the place H1 must show up if it is true; standalone TS-AUC;
+  rank correlation with the champion; per-family gain share
+  (`xn` / `mx` / `cn` / `md`).
+
+* **Pre-committed reading of a mixed result.** If the aggregate delta is
+  positive but the age 0–5 and 5–10 buckets do **not** improve, H1 is **REJECTED
+  even if the aggregate clears the bar** — that is exactly the pattern that
+  falsified `m09_back` (it made young breaks worse and mature breaks better,
+  the opposite of its stated mechanism), and it will not be re-read as a success
+  here.
+
+* **Search degrees of freedom.** 1 module design, 1 configuration, window grid
+  (8,16,32,64,128,256) taken verbatim from `m00_core` with **no tuning**;
+  `MGRID` (8,16,32,64) fixed by a stated mechanism argument before any score.
+  24 columns. 0 hyperparameter searches.
+
+### Work already completed under W5-E1 (no scores, none obtainable)
+
+* Module built: `src/sbr/features/m10_perm.py`, 24 columns, 40.5 ms/series
+  against the ~80 ms budget.
+* **Bitwise prefix-invariant at `atol=0.0`** across 6 length profiles × 4 break
+  kinds × 7 truncation points. Gate is permanent:
+  `tests/test_m10_perm_causal.py` (27 tests, all passing, no data required).
+* Per-column audit clean: no exploded scale, no constant column.
+* Mechanism diagnostic (NOT selection, no TS-AUC): on a burst and a sustained
+  shift carrying identical cumulative displacement, 14 of 24 columns separate at
+  |Cohen d| > 1.0; concentration `cn256` at d = −11.5, `md64` at −7.27.
+  Crossings collapse for the sustained shift and not for the burst, which is the
+  documented direction.
+
+### A NEGATIVE RESULT ESTABLISHED WITHOUT DATA
+
+The module's first design carried a **mean-vs-robust-mean** contrast. It is
+**identically zero and can never carry information**: `(x−mu)/sd` and
+`(x−med)/mad` are affine images of one another, a window mean of an affine map
+is affine in the window mean, and null-standardising each arm against its own
+null removes any affine map exactly. Measured max difference **1.8e-15** on
+heavy-tailed t(3) input; the median-based contrast measures 4.0 on the same
+input. The dead family was removed before it could be scored, and
+`tests/test_m10_perm_causal.py::test_affine_robust_contrast_would_be_dead`
+prevents its return.
+
+**Any future "robust versus plain" contrast in this project must use a
+non-affine robust statistic or it is a column of zeros.** This cost zero
+compute and no degrees of freedom to establish.
+
+### Candidate REMOVED from the wave-5 lane before any compute was spent
+
+**"Robust distribution distances"** is named as NOT RUN in
+`STATE_OF_RESEARCH_V4.md` §12. On inspection `m02_dist` **already** emits
+1-D Wasserstein, energy distance, Kolmogorov–Smirnov, Cramér–von Mises,
+Jensen–Shannon, Hellinger, total variation and chi-square, each against a
+length-matched historical null, as closed-form functions of the PIT occupancy
+vector. A new module would be a re-statement of an existing channel — the exact
+failure mode that killed `tl_` (−0.00410) and `rk_` (−0.00273), both of which
+were individually strong and redundant with `m00_core`. **Dropped, with the
+reason recorded, rather than run.**
+
+## Degrees of freedom spent in Wave 5 to date
+
+0 training runs · 0 candidates scored · 0 TS-AUC values · 0 hyperparameter
+searches · 1 module built and certified · 1 sub-family removed on a proof ·
+1 named candidate withdrawn on a redundancy audit.
