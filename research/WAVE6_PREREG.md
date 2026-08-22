@@ -336,3 +336,147 @@ CV framework.
 **And the one that will be most tempting:** if `CAL-WT` gains +0.002, do **not**
 try 16 anchors, or 20, or a different grid size, to push it over +0.0030. That
 is the lattice this section exists to close. The bar was set before the number.
+
+---
+
+# AMENDMENT 1 — 2026-08-22: THE MODEL CLASS WAS NEVER THE CONSTRAINT
+
+**§5.2 above contains an error and this amendment supersedes it.**
+
+## 9. THE ERROR
+
+§5.2 restricted the model-family arm to `sklearn` on the grounds that
+"`xgboost`, `catboost`, `torch` and `tabpfn` are **not installed** in the frozen
+environment". That conflated two unrelated things:
+
+* **what is in the local research venv** — a research friction, fixed by
+  `pip install`, and not a statement about anything;
+* **what is deployable** — governed by the CrunchDAO **whitelist** for
+  `structural-break-real-time`, with dependencies declared in `requirements.txt`
+  and installed by the platform before the model runs, plus a
+  *request-whitelisting* route for anything absent.
+
+The local `requirements.txt` is itself proof the two differ: it lists `ruptures`
+and `matplotlib`, neither of which is in the frozen environment.
+
+**The consequence is not cosmetic.** It narrowed a whole research track to one
+`sklearn` estimator on a premise I did not check, and the correct constraint —
+whitelist, runtime, determinism, streaming — is both different and looser.
+
+## 10. W6-E0 — ESTABLISH THE ACTUAL CONSTRAINT (BLOCKING)
+
+Before any model-family or teacher work:
+
+1. Read **Resources → Whitelisted Libraries** on the `structural-break-real-time`
+   competition page and record the list verbatim in
+   `research/reports/wave6_whitelist.md`, with the date and the URL.
+2. Record the declaration mechanism for *this* competition's submission type —
+   `requirements.txt` for scripts; confirm what the notebook/`.py` artifact we
+   ship actually uses, since `submissions/C_ensemble_deployable.py` currently
+   declares nothing beyond the frozen stack.
+3. Note the *request whitelisting* route and its criteria (on PyPI, established
+   ~6 months, documented, reasonably popular, verified PyPI details) for
+   anything worth asking for.
+4. **Do not infer the whitelist from the local venv. Ever again.**
+
+## 11. THE CONSTRAINTS THAT ARE REAL WHATEVER THE WHITELIST SAYS
+
+"Allowed" and "sensible to deploy" are different, and four gates bind
+independently of the library list. Any candidate model family must pass all
+four **before** it is worth research time:
+
+| gate | requirement | why it bites |
+|---|---|---|
+| **determinism** | `crunch test` runs a determinism check at **1e-8**. Two runs must agree | the shipped artifact passed this; a neural model needs fixed seeds, single-threaded or deterministic kernels, `torch.use_deterministic_algorithms(True)`, and no nondeterministic reductions. Achievable on CPU, not free |
+| **streaming contract** | per-series, per-point, single pass, **no `n_online`**, no cross-series state | an RNN/GRU is a natural fit — it *is* a carried state. A TCN needs a bounded receptive-field buffer. A transformer over the full prefix is O(t²) per point unless KV-cached, and must never see beyond `t` |
+| **runtime** | current artifact 1.734 ms/pt → ~2h11m at P=4 on 16 vCPU / 64 GB, against a 15 h budget | roughly **5–7× headroom**. That is real room for a small network, and not room for a large transformer at 999 points × ~2,000 series |
+| **artifact size** | persisted `resources/` capped at **10 GB** | irrelevant for a small net; relevant for TabPFN-style or ensemble-of-nets designs |
+
+## 12. CORRECTION TO A WAVE-5 CONCLUSION — TEACHERS ARE NOT RULED OUT
+
+`research/STATE_OF_RESEARCH_V5.md` §7 and `research/HANDOFF_WAVE6.md` §5.5 and
+Part 10 say **"teacher distillation is NOT justified"**. That was stated too
+broadly and is corrected here.
+
+**What the evidence actually shows.** The oracle-frontier study gave a model the
+**true τ** plus `h` post-break points and found the legal causal `RT-300`
+matches or beats it at every horizon through h = 150. But that oracle was a
+**fixed 150-tree LightGBM over a generic feature bank**. So the finding is:
+
+> Knowing where the break is buys nothing at h ≤ 150 **given generic features**.
+
+That constrains the **τ-knowledge** lever. It says **nothing** about the
+**representation** lever — whether some function of the raw prefix `x_{1:t}`
+carries information that 500 hand-built causal columns do not encode. A
+TCN/GRU/transformer reading the raw series attacks exactly that, and **no
+experiment in this project has ever tested it.**
+
+**This also raises the value of W6-E2**, which now does more than pick a branch:
+
+    tau knowledge worth >= +0.010 at age 100+   ->  the LOCALISATION lever is live
+    tau knowledge worth <  +0.010               ->  localisation is exhausted, and any
+                                                    remaining headroom must live in the
+                                                    REPRESENTATION -> the neural track is
+                                                    the best-motivated thing in wave 6
+
+## 13. REVISED W6-E3 — MODEL FAMILY (supersedes §5.2)
+
+Still **substitution, not addition** — an eighth member is worth **+0.00003**
+(`W5-NULLTEST`) whatever it is. Still exactly one member replaced: **`RT-410`**,
+the weakest specialist at 0.60512, named before any run.
+
+Run in this order, cheapest and least deployment-risk first, and **stop at the
+first one that clears the bar** — this is a ladder, not a search:
+
+| rung | family | why | deployment cost |
+|---|---|---|---|
+| 1 | **XGBoost** | different tree construction, split-finding and regularisation; drop-in on the same 500-column matrix | low — another tree serialisation |
+| 2 | **CatBoost** | ordered boosting, different dynamics again | low–medium |
+| 3 | **PyTorch MLP** on the existing 500 causal features | learns *nonlinear combinations* trees approximate axis-wise; genuinely different inductive bias | medium — determinism + a `step()` path |
+| 4 | **GRU / TCN** on the raw prefix | the **representation** lever of §12; carries explicit sequential state, natural streaming fit | high — the real test of §11's four gates |
+
+Rungs 1–2 need the whitelist confirmed; 3–4 need it confirmed **and** a
+determinism proof before any promotion claim.
+
+**Each rung is judged by the same unmoved bar** (§2): `S` with `RT-410`
+substituted, against `S` unchanged and against the seed-clone framing, ≥ +0.0030
+on ≥4/5 folds, bootstrap supportive, alternate partitions stable.
+
+## 14. W6-E4 — THE OFFLINE TEACHER TRACK (new)
+
+The strategically interesting property: **the teacher never has to ship.**
+Offline compute is unbounded; the deployed system stays a fast streaming
+engine. Four exit routes, in increasing deployment cost:
+
+1. **diagnostic only** — does the teacher's score contain information beyond
+   `S`? Measured the same way every candidate is: does `S + teacher` beat
+   `S + seed clone`?
+2. **feature discovery** — if it does, what are the series and timesteps where
+   it wins, and what mechanism do they share? That is a specification for a
+   causal feature, which is the cheapest possible way to buy the gain.
+3. **distillation** — regress the teacher's output on the existing causal
+   feature bank with a small student. Ships as one more LightGBM stream, zero
+   new deployment risk.
+4. **direct deployment** — only if §11's four gates pass with margin.
+
+**The pre-registered order is 1 → 2 → 3, and 4 only on overwhelming evidence.**
+Route 2 is the one this project is best set up to exploit and the one most
+likely to survive contact with the streaming contract.
+
+**Teacher training may use future data. Its OUTPUT may not reach any production
+path except through route 3, where the student sees only causal features.**
+Label every artifact `TEACHER / DIAGNOSTIC — NOT DEPLOYABLE`, keep it in
+`research/scripts/`, never in `src/sbr/features/`, exactly as the oracle studies
+do.
+
+## 15. WHAT DOES NOT CHANGE
+
+The discipline is unchanged and applies to every rung and route above:
+substitution not addition · the seed-clone control · ≥ +0.0030 on ≥4/5 folds,
+bootstrap, alternate partitions · report **every** framing computed and lead
+with the one closest to the deployed system · no hyperparameter search beyond a
+single named configuration per rung · every run through `sbr.pipeline.run` with
+a real SHA and seed · the §0 stopping rule still governs W6-E1 and W6-E2.
+
+**And the §8 exclusions still hold.** A neural family is not a licence to sweep
+architectures. One named configuration per rung, declared before it runs.

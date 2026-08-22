@@ -684,9 +684,11 @@ surface where tuning against OOF would be easiest and most damaging.
   advance, and searching it after a negative result is how a null becomes a
   false positive.
 * **Do not chase young-break detection as a priority.** §5.1.
-* **Do not build a teacher/distillation study.** §5.5 — the strongest available
-  teacher is already matched by the legal model through h = 150, and its only
-  real advantage needs the whole post-break segment.
+* **Teachers: see the correction.** §5.5 originally said "do not build a
+  teacher study". That was too broad — corrected in `WAVE6_PREREG.md` §12. The
+  oracle result rules out the **τ-knowledge** lever given generic features; it
+  says nothing about the **representation** lever, which no experiment here has
+  ever tested. An offline neural teacher is legitimate and is `W6-E4`.
 * **Do not rebuild the CV framework.** It passed external calibration.
 * **Do not tune anything against these folds** without pre-registering the grid
   in `research/RDOF_LEDGER.md` first, with a real git SHA and a real seed.
