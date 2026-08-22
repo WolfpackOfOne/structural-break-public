@@ -481,3 +481,54 @@ of these; the seed-clone control is.
 alongside the seven existing ones, plus a manifest change and an artifact
 rebuild). That engineering cost is real and is the reason the promotion bar
 matters more here than the runtime one.
+
+## 14. THE NEXT THREE EXPERIMENTS, AND WHY THESE THREE
+
+Ranked by evidence produced in this wave, not by appeal.
+
+### W6-A — an expanded residual-PATH module (highest expected value)
+
+W5-E5's sub-block delivered **72.8% of `m12_rdep`'s gain from 20 of its 57
+columns**, at a gain-per-column of **3.64** — higher than every production module
+except `m07_bayes`. And it is barely explored: those 20 columns are **one** drift
+constant (`k = 0.5`), **one** residual representation (the shared context's
+AR(2)), two statistics (CUSUM, CUSUMSQ) and two signs.
+
+`m04_resid` already ships **eight** residual representations — `ar1`, `ar2`,
+`ar5`, ridge `arR`, Huber `arH`, EWMA `vol`, winsorised `volM`, GARCH `volG`,
+combined `cmb` — every one fitted on history only and applied causally forward,
+and **none of them has a CUSUM path**. `m06_loc`'s forensics also measured AR(6)
+residuals as ~0.9 AUC points better than AR(2) for scale localisation, and this
+module used AR(2).
+
+Cross {3–4 residual representations} × {2–3 drift constants} × {CUSUM, CUSUMSQ}
+with the identical calibrated path geometry. This is a known-productive vein
+being mined at one point.
+
+### W6-B — `m11_focus` ablation, then a slim version
+
+The module's gain concentrates in `*_pk`, `*_agefrac` and `*_anc_z`, not in the
+maximised statistic `*_z` or the `*_gain` contrast that was the hypothesis. Train
+two arms — `_z`+`_gain` columns only, and `_pk`+`_age` columns only — and find
+out which half carries it. W5-E10 established that **column count is a real
+cost** (175 columns did less than half of what 57 did), so a 20-column
+`m11_focus` that keeps the contribution would be strictly better than the
+76-column one, and might survive the union test that the full module failed.
+
+### W6-C — calibration anchor placement (cheapest, and never once measured)
+
+`SmoothTimeCDFCal` uses 12 **log-spaced** anchors, 256-point grids and
+`min_n = 400`. The architecture freeze says plainly: *"Anchors, grid size and
+`min_n` are frozen and were never tuned."* Meanwhile W4-E1 measured the
+calibration family as worth **+0.00267** on the specialist arm — one of the
+largest single effects in the project — and W5-D1 measured where the metric's
+weight actually is: **50% between t = 168 and t = 451**, a narrow band that
+log-spacing deliberately under-resolves, because log anchors crowd near t = 1
+where **0.2%** of the pair weight lives.
+
+This needs **no training at all** — it recomputes from OOF vectors already on
+disk, which is why it belongs first in wall-clock order even though W6-A has the
+higher ceiling. It must be pre-registered with a tiny structured grid (say three
+anchor schemes: log, uniform-in-weight, and hybrid) and no continuous search,
+because this is exactly the surface where tuning against OOF would be easiest and
+most damaging.
