@@ -512,3 +512,63 @@ union costs one number while testing the lattice costs a false positive.
 
 **Degrees of freedom spent.** 0 new training runs, 1 new composition, 1
 threshold fixed in advance, 0 members selected.
+
+---
+
+# WAVE 5 — OPENING ENTRY (`research/wave5-alpha`)
+
+**Written 2026-08-22, before any Wave-5 experiment exists.**
+Branch parent `research/wave3-integration` @ `17bb5df`. Charter:
+`research/WAVE5_CHARTER.md`.
+
+## Degrees of freedom spent so far: none
+
+| | |
+|---|---|
+| training runs | **0** |
+| candidates scored | **0** |
+| TS-AUC numbers produced | **0** |
+| hypotheses tested | **0** |
+| ensemble compositions compared | **0** |
+| hyperparameter studies | **0** |
+| leaderboard submissions consulted for selection | **0** |
+| packages audited | 8 |
+
+Wave 5 opens with an environment and capability audit only
+(`research/PACKAGE_CAPABILITY_MATRIX.md`,
+`research/reports/wave5_package_probe.json`). No model was fitted, so no
+selection occurred and no multiplicity discount is owed.
+
+## New external information admitted this wave
+
+RT-600 scored **0.6268** on the public Crunch leaderboard against a comparable
+internal **0.62581** — a transfer of **+0.0010**.
+
+**This is a fact, and it is not a parameter.** It may be cited as evidence that
+the internal validation framework is directionally useful. It may **not** be used
+to select, tune, weight, or rank anything. `VALIDATION_V2.md` §8 prohibits using
+the leaderboard as the optimiser, and the arrival of a favourable number is
+exactly when that rule earns its keep.
+
+It also **falsifies, in the favourable direction, a pre-registered expectation**:
+`FINAL_ARCHITECTURE_FREEZE.md` §4 put the base case at ~0.615 and the optimistic
+case at ~0.625. The observed value beat the optimistic case. Recorded because a
+pre-registration that turns out wrong is evidence about our calibration, and the
+error was **pessimism about level transfer**, not optimism. One observation does
+not establish a transfer law in either direction.
+
+## Standing constraint on this environment
+
+**No competition data is present in the container** (2026 feature store absent,
+2025 parquet absent). No Wave-5 experiment can execute here until the store is
+mounted or rebuilt, or the work moves to where the data lives. TabPFN
+additionally requires a sideloaded checkpoint: `huggingface.co` is blocked by
+network policy and the 8.4.0 default repo is gated.
+
+## Bars that carry forward unchanged
+
+Every bar in `VALIDATION_V2.md` §7, plus the wave-3 seed-clone rule: **a new
+stream must beat a seed-clone control**, and low within-timestep rank correlation
+is not a diversity credential. A new *model family* is subject to this
+identically — XGBoost or CatBoost being a different library is not, by itself,
+evidence of new information.

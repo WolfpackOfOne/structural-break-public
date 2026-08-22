@@ -1,0 +1,138 @@
+{
+  "generated_utc": "2026-08-22T14:33:04.113701+00:00",
+  "branch": "research/wave5-alpha",
+  "git_sha": "17bb5dfe651738f46766d27a77c14db2c476a5a1",
+  "purpose": "Wave-5 package capability audit. No competition data touched; no TS-AUC measured.",
+  "network_policy_findings": {
+    "download.pytorch.org": "403 at CONNECT (policy denial) - CPU-only torch wheel unobtainable",
+    "huggingface.co": "403 at CONNECT (policy denial) - no TabPFN checkpoint obtainable",
+    "pypi.org / files.pythonhosted.org": "direct (in proxy noProxy list) - all PyPI installs succeeded"
+  },
+  "data_availability": {
+    "sbr_feature_store_/home/claude/sb/cache/store": "ABSENT",
+    "2025_competition_parquet": "ABSENT (audited from a path on the user's Mac)",
+    "repo data/": "3 small synthetic demo files, ~16 KB",
+    "consequence": "No training or scoring experiment can be run in this container."
+  },
+  "capability_probe": {
+    "platform": {
+      "python": "3.12.3",
+      "machine": "x86_64",
+      "system": "Linux",
+      "cpu_count": 4
+    },
+    "packages": {
+      "lightgbm": {
+        "installed": true,
+        "version": "4.7.0",
+        "deterministic_mode": "deterministic=True, num_threads fixed",
+        "bitwise_repeatable": true,
+        "serialization": "Booster.save_model() text / joblib",
+        "gpu_build": false,
+        "probe_seconds": 3.61
+      },
+      "scikit-learn": {
+        "installed": true,
+        "version": "1.9.0",
+        "deterministic_mode": "random_state",
+        "serialization": "joblib/pickle (version-sensitive)",
+        "gpu_build": false,
+        "bitwise_repeatable": true,
+        "probe_seconds": 0.0
+      },
+      "xgboost": {
+        "installed": true,
+        "version": "3.4.1",
+        "deterministic_mode": "tree_method=hist + fixed nthread (exact/hist are deterministic on CPU)",
+        "bitwise_repeatable": true,
+        "serialization": "Booster.save_model() -> .json / .ubj (native, version-stable)",
+        "gpu_build": true,
+        "probe_seconds": 0.18
+      },
+      "catboost": {
+        "installed": true,
+        "version": "1.2.10",
+        "deterministic_mode": "random_seed + thread_count fixed",
+        "bitwise_repeatable": true,
+        "serialization": "model.save_model() -> .cbm native binary",
+        "gpu_build": "task_type='GPU' requires CUDA build",
+        "probe_seconds": 0.7
+      },
+      "polars": {
+        "installed": true,
+        "version": "1.43.2",
+        "smoke_group_by_rows": 100,
+        "threading": "POLARS_MAX_THREADS default=4",
+        "deterministic_mode": "single-threaded / maintain_order for stable row order",
+        "serialization": "n/a (dataframe library, not a model)",
+        "gpu_build": "GPU engine requires cudf (not installed)",
+        "probe_seconds": 0.0
+      },
+      "shap": {
+        "installed": true,
+        "version": "0.52.0",
+        "treeexplainer_ok": true,
+        "shap_values_shape": [
+          200,
+          20
+        ],
+        "deterministic_mode": "TreeExplainer is exact and deterministic",
+        "serialization": "n/a (explainer, research-only)",
+        "gpu_build": false,
+        "probe_seconds": 2.59
+      },
+      "torch": {
+        "installed": true,
+        "version": "2.13.0+cu130",
+        "cuda_available": false,
+        "cuda_compiled": "13.0",
+        "threads": 2,
+        "bitwise_repeatable": true,
+        "deterministic_mode": "torch.use_deterministic_algorithms(True) + manual_seed",
+        "serialization": "state_dict via torch.save (needs torch at load time)",
+        "probe_seconds": 8.87
+      },
+      "tabpfn": {
+        "installed": true,
+        "version": "8.4.0",
+        "note_version_gap": "aParsec 2025 used tabpfn==2.1.3; installed is a different major line",
+        "import_ok": true,
+        "weights_download": "FAILED: TabPFNHuggingFaceGatedRepoError: HuggingFace authentication error downloading from 'Prior-Labs/tabpfn_3'.\nThis model is gated and requires you to accept its terms.\n\nPlease follow these steps:\n1. Visit https://huggingface.co/Prior-Labs/tabpfn_3 in your browser and accept the terms of use.\n2. ",
+        "fit_predict_ok": false,
+        "deterministic_mode": "random_state; inference is a forward pass",
+        "serialization": "joblib of fitted estimator + pretrained checkpoint",
+        "probe_seconds": 1.32
+      }
+    }
+  },
+  "single_row_inference_benchmark": {
+    "config": {
+      "n_features": 500,
+      "n_trees": 600,
+      "n_train": 20000,
+      "reps": 300,
+      "omp_threads": 2
+    },
+    "results": {
+      "lightgbm": {
+        "ms_per_single_row": 0.1255,
+        "train_plus_bench_seconds": 31.4
+      },
+      "xgboost": {
+        "ms_per_single_row": 0.2511,
+        "train_plus_bench_seconds": 27.3
+      },
+      "catboost": {
+        "ms_per_single_row": 0.6179,
+        "train_plus_bench_seconds": 33.9
+      }
+    }
+  },
+  "rt600_reference_budget": {
+    "shared_feature_engine_ms_per_point": 1.069,
+    "marginal_lightgbm_booster_ms_per_point": 0.078,
+    "seven_boosters_ms_per_point": 1.734,
+    "cloud_run_LB004_duration": "2h11m at P=4 on 16 vCPU / 64 GB",
+    "budget_hours": 15
+  }
+}

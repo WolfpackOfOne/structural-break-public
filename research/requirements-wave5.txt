@@ -1,0 +1,74 @@
+# WAVE 5 — OFFLINE RESEARCH ENVIRONMENT
+#
+# THIS FILE IS NOT THE PRODUCTION ENVIRONMENT AND MUST NEVER BE UPLOADED.
+#
+# The root `requirements.txt` defines the cloud runner environment: `crunch push`
+# uploads it and the runner builds from it ("using original file:
+# requirements.txt"). LB-002 died in `infer()` because a library the model needed
+# was declared in a file the runner does not read. The inverse mistake is now
+# available to us in the other direction: putting a research library into the
+# runtime file would ship a 1 GB torch install to a runner that never imports it.
+#
+# RULE (Wave-5 charter §7): production dependencies change only when a model that
+# actually needs them is promoted toward submission, and then only through the
+# measured-import-closure procedure that `tests/test_requirements_cover_runtime.py`
+# enforces. Nothing here is production until that happens.
+#
+# Install into a SEPARATE venv:
+#     uv venv --python 3.12 .venv-wave5
+#     VIRTUAL_ENV=.venv-wave5 uv pip install -r research/requirements-wave5.txt
+#
+# Python 3.12 is deliberate: it is the runner's Python, so anything that resolves
+# here resolves there. Every pin below was installed and imported on
+# Linux/x86_64/cp312 on 2026-08-22; see research/PACKAGE_CAPABILITY_MATRIX.md.
+
+# --- core, pinned IDENTICALLY to production requirements.txt --------------------
+# Not optional. Any offline number that is meant to be comparable to an RT-6xx
+# number must come from the same numeric stack; a version drift here silently
+# turns a research delta into a version delta.
+lightgbm==4.7.0
+numba==0.67.0
+numpy==2.4.6
+scipy==1.17.1
+pandas==3.0.5
+pyarrow==25.0.1
+scikit-learn==1.9.0
+joblib>=1.1
+
+# --- new model families (Wave-5 authorisation) ---------------------------------
+# Both are cp312-wheel clean and CPU-deterministic with a fixed thread count, so
+# either could become a production stream. Cost is the open question, and it is
+# measured: single-row predict at 600 trees / 500 features, OMP_NUM_THREADS=2 —
+# lightgbm 0.115 ms, xgboost 0.278 ms, catboost 0.564 ms.
+xgboost==3.4.1
+catboost==1.2.10
+
+# --- offline feature engineering ----------------------------------------------
+# Required to execute the aParsec 2025 pipeline as written. Research-only: the
+# production streaming engine is numba/numpy and has no dataframe at inference.
+polars==1.43.2
+
+# --- attribution / selection (RESEARCH ONLY — never deployable) ----------------
+# TreeExplainer is exact and deterministic. Needed for the 2025 solution's
+# SHAP-top-200/500 feature selection, which is a TRAINING-time procedure; the
+# selected column list ships, the explainer does not.
+shap==0.52.0
+
+# --- teachers (RESEARCH ONLY) --------------------------------------------------
+# torch pulls ~2.7 GB of NVIDIA CUDA wheels from PyPI even with no GPU present
+# (download.pytorch.org, which serves the CPU-only build, is blocked by this
+# environment's network policy). Harmless offline, disqualifying in production.
+#
+# tabpfn installs and imports, but its pretrained weights CANNOT be fetched here:
+# huggingface.co is blocked by network policy (403 at CONNECT), and tabpfn 8.4.0's
+# default checkpoint (Prior-Labs/tabpfn_3) is additionally a GATED repo requiring
+# accepted terms and an auth token. Weights must be sideloaded before any TabPFN
+# experiment can run. Version note: aParsec 2025 pinned tabpfn==2.1.3, a different
+# major line with a different API and a different (ungated but still unreachable)
+# checkpoint.
+torch==2.13.0
+tabpfn==8.4.0
+
+# --- tooling -------------------------------------------------------------------
+pytest>=7.0
+ruff>=0.1
