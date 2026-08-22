@@ -574,3 +574,51 @@ should be read as a **screen for the absence of an effect, not as evidence for
 one**. Wave 4 already documented the neighbouring version of this trap — forcing
 specialist streams onto ABL collapses them toward the champion — and I did not
 extend the lesson far enough.
+
+## 16. STAGE D VERDICT — A NEW INTERNAL MAXIMUM, AND IT DOES NOT CLEAR THE BAR
+
+CHAMP protocol, seed 0, seven production modules plus the block. Matched control
+`RT-401` = the champion configuration at seed 1, differing from `RT-300` by the
+seed and nothing else.
+
+**Standalone streams:**
+
+| stream | id | TS-AUC | vs `RT-300` | folds |
+|---|---|---|---|---|
+| champion | `RT-300` | 0.61605 | — | — |
+| seed clone | `RT-401` | 0.61661 | +0.00056 | — |
+| **+ `m12_rdep`** | `RT-751` | **0.61726** | **+0.00121** | 3/5 |
+| + `m11_focus` | `RT-731` | 0.61483 | −0.00123 | 2/5 |
+
+**Eight-member compositions:**
+
+| composition | TS-AUC | vs `S` | folds |
+|---|---|---|---|
+| `S` — the RT-600 architecture | 0.62581 | — | — |
+| **`S` + `RT-751`** | **0.62629** | **+0.00048** | 4/5 |
+| `S` + `RT-731` | 0.62596 | +0.00015 | 4/5 |
+| `S` + `RT-401` (seed clone, no information) | 0.62584 | +0.00003 | 4/5 |
+
+**BINDING COMPARISON: `(S + RT-751) − (S + RT-401)` = +0.00046 on 3/5 folds.**
+Against a §4 bar of +0.0030 on ≥4/5. **REJECTED as an eighth member.**
+
+**0.62629 is a new internal maximum for this project** — +0.00048 over the
+architecture that scored 0.6268 externally. It is also, on its own evidence, not
+worth submitting: a fifteenth of the promotion bar, on three folds of five.
+
+Two things this does establish:
+
+* **`m12_rdep` does not reverse with protocol, and `m11_focus` does.** At CHAMP
+  the residual-path block is +0.00121 standalone while the max-over-τ block is
+  −0.00123. Whatever `m11_focus` was buying at 400k rows, the bank already has at
+  1M; `m12_rdep`'s residual CUSUM/CUSUMSQ paths survive the transition.
+* **`RT-751` is genuinely more decorrelated than a seed clone** — within-timestep
+  rank correlation with `S` of **0.8133** against the clone's **0.8509**. This is
+  the first stream in the project to beat a seed clone on that measure. Per wave
+  3's lesson it is **not** a promotion credential, and it is reported here
+  precisely because the blend delta it accompanies is +0.00046.
+
+The eighth-member framing cannot resolve this block either way — an eighth
+exchangeable member is worth +0.00003, so there is almost no room in the
+composition for a new member to demonstrate anything. **W5-E11, now running,
+rebuilds all seven streams with `m12_rdep` and is the test that decides.**
