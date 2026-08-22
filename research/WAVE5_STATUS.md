@@ -713,3 +713,31 @@ framings of "does `m12_rdep` add information beyond seed diversity" give
 −0.00025 (alt1 ABL blend, 2/5). **None of them clears +0.0030, and they do not
 agree on the sign.** The honest summary is that the effect, if it exists, is
 below this framework's resolution.
+
+### 18a. A tempting explanation for the member deltas, and why it is not in the report
+
+The W5-E11 member deltas are mixed, and the obvious story is dilution: adding 57
+columns to a 170-column specialist is a 34% widening against 11% for a
+500-column one, so `feature_fraction = 0.5` should hurt the narrow streams more.
+
+It is wrong. **Correlation between base column count and member delta: −0.000
+over six arms.**
+
+| arm | base cols | % wider | delta |
+|---|---|---|---|
+| `RT-751` | 500 | 11.4% | +0.00121 |
+| `RT-811` | 261 | 21.8% | −0.00132 |
+| `RT-812` | **239** | 23.8% | **+0.00194** |
+| `RT-813` | 500 | 11.4% | +0.00127 |
+| `RT-814` | 500 | 11.4% | **−0.00610** |
+| `RT-815` | 170 | 33.5% | −0.00316 |
+
+The second-narrowest stream gains the most and a full-width one loses the most.
+A second story — that the block overlaps `m01_seq`'s CUSUM paths and
+`m07_bayes`'s sequential evidence, so streams carrying those gain nothing — fits
+the ordering better, but exactly **one** of the seven streams lacks both modules,
+so it rests on n = 1 and is not evidence either.
+
+**Recorded as: the member deltas are not explained by anything measurable here.**
+Both stories are plausible, neither is supported, and writing up the one that
+happens to fit is how a post-hoc narrative becomes a citation three waves later.
