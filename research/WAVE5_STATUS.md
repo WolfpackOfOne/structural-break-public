@@ -217,3 +217,42 @@ Under §28's bands that is noise-to-exploratory, not a candidate. Stage D — th
 CHAMP-protocol eight-member test `(S + RT-731)` against `(S + RT-401)`, which is
 the comparison §4 actually binds on — is what decides, and a two-model ABL blend
 is a weak proxy for it in both directions.
+
+### 7a. `m11_focus` — ensemble contribution, not gain alone (§22)
+
+| module | % of total gain | % of columns | gain per column |
+|---|---|---|---|
+| `m07_bayes` | 23.11 | 8.68 | 2.66 |
+| `m01_seq` | 14.46 | 10.42 | 1.39 |
+| `m03_dyn` | 13.68 | 10.42 | 1.31 |
+| `m00_core` | 13.05 | 26.22 | 0.50 |
+| `m04_resid` | 12.39 | 10.42 | 1.19 |
+| **`m11_focus`** | **11.52** | **13.19** | **0.87** |
+| `m02_dist` | 8.07 | 10.24 | 0.79 |
+| `m06_loc` | 3.71 | 10.42 | 0.36 |
+
+For scale: `m09_back` took **1.25%** of gain from 9.3% of columns. `m11_focus`
+takes nearly ten times the share, ahead of two production modules per column,
+and its best column ranks **8th of 576**. The booster is genuinely using it.
+
+**Within-timestep rank correlation with the control: `m11_focus` 0.7814,
+seed clone 0.7846.** A seed change *still* decorrelates marginally more than 76
+columns of new statistics. Wave 3's lesson holds exactly, and it is why the
+blend-versus-clone comparison and not the correlation is what decided this.
+
+**A mechanistic caveat, stated because the same shape of finding demoted
+`m09_back`.** The columns the booster leans on hardest are `*_pk` — the running
+high-water mark of the calibrated maximised statistic — across all six channels,
+then `*_agefrac` (the inferred change-point age as a fraction of elapsed time),
+then `*_anc_z` (the τ=0 **anchored** statistic, which is not maximised at all).
+The raw `*_z` maximised statistic and the `*_gain` contrast — "what maximisation
+over τ actually bought over not maximising" — appear lower. Gain importance is
+precisely the metric §22 says not to trust alone, `_pk` is a monotone function of
+`_z` so the maximisation is upstream of it either way, and the `_anc_z` and
+`_gain` columns are both used. But the honest reading is that **part of this
+module's contribution is peak-and-age geometry rather than the maximisation
+itself**, and the clean way to settle it is a within-module ablation
+(`_z`/`_gain` columns only, against `_pk`/`_age` columns only) which is listed
+as a next experiment rather than run here, because it cannot change the
+promotion decision and would spend degrees of freedom that the promotion
+decision needs.
