@@ -582,3 +582,84 @@ measured the seed, not the mechanism.
   keep: the first `m12_rdep` sized its expanding nulls by `n_online`, the single
   forbidden input, and the check failed it on every series before any score was
   taken from it.
+
+---
+
+# W5-E11 — PRE-REGISTRATION: IS THE BLOCK AN EIGHTH MEMBER, OR A BETTER ARCHITECTURE?
+
+**Written 2026-08-21, AFTER stage C reported and BEFORE any W5-E11 arm was
+trained. The provenance is stated plainly, as W4-E6's was: stage C is what
+motivates this, so W5-E11 carries the multiplicity of having been chosen with
+knowledge of it, and its bar is fixed here.**
+
+**The observation that forces it.** A null test of the promotion battery —
+`W5-NULLTEST`, candidate `RT-402`, control `RT-401`, both seed clones of the
+champion — measured what an EIGHTH exchangeable member is worth:
+
+| composition | TS-AUC | vs `S` |
+|---|---|---|
+| `S` (seven specialists) | 0.62581 | — |
+| `S` + `RT-401` (8th seed clone) | 0.62584 | **+0.00003** |
+| `S` + `RT-402` (a different 8th seed clone) | 0.62530 | −0.00051 |
+
+**The seven-member equal-weight blend is saturated in members.** This is now the
+third independent test saying so — W4-E6 (13-way union, −0.00095), W5-E1 (λ
+mixture, monotone decreasing), and this. A new feature block evaluated as an 8th
+member is therefore being asked to move a blend that an 8th member cannot move:
+its column weight is 1/8, and the entire seven-member specialisation effect is
++0.0042. §4's +0.0030 bar, read that way, is not a high bar — it is close to an
+impossible one, and passing or failing it would say more about the composition
+than about the block.
+
+**Hypothesis (H1).** The strongest surviving block, `m12_rdep`, improves the
+ARCHITECTURE rather than adding a member: rebuilding all seven specialist streams
+with the block available to each beats the incumbent seven.
+
+**Null (H0).** The block's information is already reachable by the incumbent
+seven-stream bank, and adding 57 columns to each stream changes nothing that
+averaging them has not already done.
+
+**Arms, declared now.** Seven streams, each the EXACT incumbent configuration
+from `research/scripts/wave2_streams.py` — same seed, same rows, same leaves,
+same sampling, same objective — with `m12_rdep` appended to its module list and
+**nothing else changed**:
+
+| new id | rebuilds | modules |
+|---|---|---|
+| `RT-751` | `RT-300` / `RT-100R` | 7 production + `m12_rdep` |
+| `RT-811` | `RT-410` / `RT-120R` | m00, m01, m07 + `m12_rdep` |
+| `RT-812` | `RT-411` / `RT-121R` | m02, m03, m04, m06 + `m12_rdep` |
+| `RT-813` | `RT-412` / `RT-122R` | 7 production + `m12_rdep` |
+| `RT-814` | `RT-413` / `RT-123R` | 7 production + `m12_rdep` |
+| `RT-815` | `RT-414` / `RT-124R` | m07, m06, m01 + `m12_rdep` |
+| `RT-816` | `RT-415` / `RT-125R` | 7 production + `m12_rdep` |
+
+`S'` is the equal-weight cross-fitted SCDF blend of those seven. The control is
+`S`, measured in the same session on the same folds. **No member is selected,
+dropped, reordered or reweighted; the only change is one module appended to every
+stream.**
+
+**Falsification of H1, fixed in advance.** H1 is rejected unless
+
+    S' - S  >  +0.0030   over the five canonical folds
+    AND positive on at least 4 of 5 folds
+    AND the paired series bootstrap's 95% CI excludes zero.
+
+The threshold is §4's, unchanged, because this is the comparison §4 was written
+for — a candidate against the strongest relevant matched control, which here is
+the incumbent architecture itself.
+
+**Why no seed-clone control is named for this arm.** `S'` differs from `S` by 57
+columns per stream and by nothing else — not by member count, not by weight, not
+by seed. There is no bagging channel for the gain to arrive through, which is the
+whole reason this comparison is cleaner than the eighth-member one.
+
+**What is NOT tested, and why.** Adding `m11_focus` or `m10_persist` to the same
+rebuild; any subset of streams; any reweighting. `m10_persist` failed stage C and
+is out. `m11_focus` survived stage C and a combined rebuild is the obvious next
+step — which is exactly why it is NOT run here: testing one block costs one
+number, testing the lattice costs a false positive.
+
+**Degrees of freedom spent.** 6 new training runs (`RT-751` is already declared
+under stage D), 1 composition, 1 threshold fixed in advance, 0 members selected,
+0 hyperparameters touched.
