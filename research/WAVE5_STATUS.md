@@ -425,3 +425,59 @@ survives into the model is *how high the evidence has ever been and how long it
 stayed there*. That is a design lesson for the next module, and it is consistent
 with `m01_seq` — the module whose entire thesis is detector-path shape — being
 the second-largest gain contributor in the bank.
+
+## 12. W5-E10 — THE UNION OF ALL THREE BLOCKS: **REJECTED**
+
+| arm | id | standalone | Δ vs `RT-301` | folds | blend vs **seed clone** | folds |
+|---|---|---|---|---|---|---|
+| `m11_focus` | `RT-730` | 0.61574 | +0.00317 | **5/5** | **+0.00055** | 4/5 |
+| `m10_persist` | `RT-740` | 0.61459 | +0.00202 | 3/5 | −0.00041 ✗ | 2/5 |
+| **`m12_rdep`** | `RT-750` | **0.61736** | **+0.00479** | 4/5 | **+0.00141** | 4/5 |
+| **union of all three** | `RT-760` | 0.61468 | +0.00211 | 2/5 | +0.00093 | 4/5 |
+
+**175 new columns do worse than 57.** The union's standalone delta (+0.00211) is
+**less than half** `m12_rdep`'s alone (+0.00479), and its blend margin over the
+seed clone (+0.00093) is below `m12_rdep`'s (+0.00141). Its age profile is worse
+than every single block at every bucket under 50:
+
+| age | `m11_focus` | `m12_rdep` | **union** |
+|---|---|---|---|
+| 0–5 | +0.00308 | −0.00228 | **−0.00424** |
+| 5–10 | +0.00465 | +0.00042 | **−0.00287** |
+| 10–20 | +0.00255 | −0.00039 | **−0.00572** |
+| 100+ | +0.00443 | +0.00778 | +0.00492 |
+
+**The blocks anti-stack, exactly as W4-E6's ensemble members did**, and the
+mechanism is the same shape: a fixed budget spread over more things. Here it is
+`feature_fraction = 0.5` over 675 columns instead of 557 — every tree sees a
+smaller fraction of the productive block — plus genuine overlap, since
+`m11_focus`'s residual channels and `m12_rdep`'s residual CUSUM paths are both
+reading AR-residual path geometry.
+
+**What this does NOT license.** Pairwise unions, block subsets, per-block
+`feature_fraction`, or any best-of composition. That is the lattice the
+pre-registration excluded, and searching it after a negative result is how a null
+becomes a false positive. The mechanism above is an explanation, not a follow-up.
+
+## 13. DEPLOYMENT COST OF THE NEW MODULES
+
+Measured on 40 random series, splitting the one-off per-series null construction
+from the marginal per-point work.
+
+| module | setup, ms/series | marginal, ms/point | amortised ms/pt | engine total | vs 15 h budget |
+|---|---|---|---|---|---|
+| incumbent 7 boosters | — | — | — | 1.734 | 8.0 h combined |
+| + `m11_focus` | 29.5 | 0.0111 | +0.0696 | 1.804 | +4.0% |
+| + `m10_persist` | 52.8 | 0.0036 | +0.1084 | 1.842 | +6.3% |
+| + `m12_rdep` | 78.1 | −0.0007 | +0.1544 | 1.888 | +8.9% |
+
+**None of them threatens the budget.** The cost is almost entirely the per-series
+historical null, paid once at `fit_historical`, not per point — `m12_rdep`'s
+marginal per-point cost is indistinguishable from zero. At 1.888 ms/pt the
+projection is ~8.7 h against 15 h. Runtime is not the binding constraint on any
+of these; the seed-clone control is.
+
+**But a promoted module also needs a bitwise streaming twin** (`s_m12_rdep.py`
+alongside the seven existing ones, plus a manifest change and an artifact
+rebuild). That engineering cost is real and is the reason the promotion bar
+matters more here than the runtime one.

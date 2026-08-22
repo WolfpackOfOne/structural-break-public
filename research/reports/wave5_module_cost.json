@@ -1,0 +1,17 @@
+{
+  "m11_focus": {
+    "ms_per_series_setup": 29.490302148042247,
+    "ms_per_point": 0.01108572495225136,
+    "ms_per_series_total": 35.2745562850032
+  },
+  "m12_rdep": {
+    "ms_per_series_setup": 78.09201460331678,
+    "ms_per_point": -0.0006546726148049173,
+    "ms_per_series_total": 77.75042279972695
+  },
+  "m10_persist": {
+    "ms_per_series_setup": 52.77955000055954,
+    "ms_per_point": 0.0036399330405493336,
+    "ms_per_series_total": 54.67877606279217
+  }
+}
