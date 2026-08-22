@@ -682,3 +682,71 @@ reason recorded, rather than run.**
 0 training runs · 0 candidates scored · 0 TS-AUC values · 0 hyperparameter
 searches · 1 module built and certified · 1 sub-family removed on a proof ·
 1 named candidate withdrawn on a redundancy audit.
+
+## W5-E2 — `m11_focus`: EXACT CHANGEPOINT SEARCH WITH AN ADAPTIVE BASELINE
+
+* **Hypothesis (H1).** Every detector in the production bank calibrates against
+  the HISTORICAL null, so each carries the series' persistent
+  online-vs-historical offset in every window — an offset wave 1 established is
+  real and large (the series-level DGP fingerprint is worth AUC 0.53–0.54 alone).
+  Estimating the pre-change level from the series' own online prefix, and
+  maximising the two-sample statistic jointly over the changepoint, differences
+  that nuisance out and adds evidence the historical-baseline bank cannot supply.
+
+* **Null (H0).** `m01_seq`'s dyadic max-GLR (`glz_pk`, 3.56% of gain;
+  `gle_pkr`, 3.86%) already extracts this; an exact search and an adaptive
+  baseline are refinements inside the noise.
+
+* **The internal control is part of the module.** `hg` (exact search, historical
+  baseline) and `ag` (exact search, adaptive baseline) differ in ONE thing. If
+  `hg` gains and `ag` does not, the win is exactness, not the baseline, and H1 is
+  **rejected even if the module as a whole gains** — the gain would belong to a
+  cheaper change to `m01_seq`, not to this hypothesis.
+
+* **Matched control.** `RT-523` = 7 production modules, ABL protocol.
+  `RT-524` = the same plus `m11_focus`.
+
+* **Falsification, fixed in advance, either rejects.**
+  1. mean ABL delta ≤ 0 over the five folds, **or**
+  2. positive on ≤ 2 of the 5 folds.
+
+* **Seed-clone bar — binding.** The deployable blend must beat the
+  `RT-523`+seed-clone blend by ≥ **+0.0010**, or the ensemble route is closed.
+  Same rule that killed `m09_back`.
+
+* **Secondary, reported either way.** Per-family gain share (`hg`/`ag`/`dg`/lags),
+  TS-AUC by post-break age, standalone TS-AUC, rank correlation with the champion.
+
+* **Search degrees of freedom.** 1 module design, 1 configuration, 21 columns,
+  3 channels fixed a priori (level, AR innovation, robust scale), 0
+  hyperparameter searches. `LMAX = 256` was set from a **runtime** measurement
+  (85.8 ms/series at 512 against the ~80 ms budget; 62.3 ms at 256) taken when no
+  competition data existed in the environment and therefore no score could have
+  informed it. It equals the longest window already in `m00_core`'s grid.
+
+### Work completed under W5-E2 (no scores, none obtainable)
+
+* `src/sbr/features/m11_focus.py`, 21 columns, **62.3 ms/series**.
+* **Bitwise prefix-invariant at `atol=0.0`**, 6 profiles × 4 break kinds × 7 cuts.
+* **Exactness verified against brute force**: the vectorised lag maximisation
+  reproduces an O(n²) reference to **0.0e+00** on every trial. The loop over lags
+  is an optimisation, not an approximation, and a test enforces it.
+* Per-column audit clean.
+* **Mechanism diagnostic (NOT selection, no TS-AUC).** Arm A: online offset +0.9
+  with no break. Arm B: a real +0.9 break. The historical-baseline arm `hg_lv`
+  fires **harder on the pure offset (14.44) than on the real break (10.10)** —
+  the deficiency this module exists to address, reproduced on demand. The
+  adaptive arm `ag_lv` gives 2.09 vs 7.90, firing on the break only. The contrast
+  `dg_lv` separates the two arms at **Cohen d = 9.28**.
+
+* **Honest limit.** That diagnostic is synthetic and says only that the estimator
+  behaves as designed. Whether the real 2026 generator produces offsets of this
+  kind, and whether the champion already conditions on them through some other
+  channel, is exactly what W5-E2 measures and is not settled by it.
+
+## Degrees of freedom spent in Wave 5 to date
+
+0 training runs · 0 candidates scored · 0 TS-AUC values · 0 hyperparameter
+searches · **2 modules built and certified** · 1 sub-family removed on a proof ·
+1 named candidate withdrawn on a redundancy audit · 1 constant set from a runtime
+measurement with no data present.
