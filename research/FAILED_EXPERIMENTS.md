@@ -677,3 +677,94 @@ explanation, not as the seed of a follow-up.
 **What it does establish.** The incumbent seven-stream composition is not
 merely adequate, it is *better than the obvious enrichment of it*. That is a
 stronger position for the champion than W4-E1 alone gave it.
+
+---
+
+## WAVE 5 / C2 — TWO FAMILIES REJECTED BEFORE ANY TRAINING RUN
+
+Both were named as NOT RUN alpha families in `STATE_OF_RESEARCH_V4.md` §12.
+Neither was built. Both were killed on replicated synthetic mechanism evidence
+plus a redundancy measurement, at a cost of zero training runs and zero TS-AUC
+values. Full audits: `research/reports/wave5_m04_redundancy_audit.md`,
+`research/reports/wave5_m07_redundancy_audit.md`.
+
+### W5-R1 — RESIDUAL CUSUMSQ / cumulative squared-innovation evidence — **REJECTED**
+
+**Hypothesis.** Cumulative squared-residual evidence, in the scale-free
+Brown–Durbin–Evans bridge form `C_k/C_t − (k+1)/(t+1)` maximised over `k`,
+captures persistent variance and conditional-variance breaks *more cleanly* than
+`m04_resid`'s recent-window summaries, and localises where the variance changed.
+
+**What was measured** (causal prototype, 7 synthetic DGP families with per-series
+AR coefficients, series-level statistics, 40 series per arm, 2,000-replicate
+bootstrap):
+
+| | |
+|---|---|
+| redundancy of the bridge magnitude, ridge R² on `m04` alone | **0.9358** |
+| redundancy on `m04` + `m11_focus` | 0.9585 |
+| permanent variance shift vs temporary spike — incumbent `cmb_e_abs` | **|d| = 1.979** |
+| — CUSUMSQ bridge magnitude | 1.142 |
+| — CUSUMSQ change-age | 0.054 |
+| bootstrap, magnitude − incumbent | **−0.870, 95% CI [−1.497, −0.231]** |
+| bootstrap, age − incumbent | **−1.835, 95% CI [−2.369, −1.306]** |
+
+**The incumbent wins on the candidate's own target mechanism**, with confidence
+intervals excluding zero, and 94% of the magnitude channel is already determined
+by `m04_resid` alone.
+
+**Why it failed.** The bridge's scale-freeness was meant to be its virtue and is
+its defect. Normalising `C_k/C_t` discards the overall scale *level* — and the
+level is exactly what separates a permanent 2× variance shift from a 12-point 4×
+spike. Both are inhomogeneous, so both look alike to a bridge. `cmb_e_abs`
+(expanding mean of |residual| after AR + EWMA normalisation, null-calibrated)
+measures sustained scale elevation directly and is roughly twice as good at it.
+
+**Two distinct failures, not one.** The magnitude channel is *redundant*
+(R² = 0.94). The change-age channel is genuinely non-redundant (R² = 0.34) and
+was rejected for a different reason: it carries almost no signal on its own
+contrast (|d| = 0.054, indistinguishable from zero). Non-redundant and
+uninformative are different things and this family managed one of each.
+
+**Retry warranted?** Not in this form. Any future variance-localisation attempt
+must beat `cmb_e_abs` on the permanent-vs-temporary contrast *before* it is
+built, and must not normalise away the scale level.
+
+### W5-R2 — ABSORBING-STATE BOCPD (`m14_absorb`) — **REJECTED, ALREADY EXISTS**
+
+**Hypothesis.** Textbook BOCPD models "change now / run length", while the
+competition asks whether a *persistent* break has already occurred, so an
+absorbing PRE → POST hidden state with no return transition is the right
+formulation — emitting `P(post by t)`, posterior change age, entropy,
+hazard-weighted evidence, posterior persistence, predictive likelihood ratio,
+max posterior tau and tau-posterior concentration.
+
+**What the audit found.** `m07_bayes` is titled *"generative / sequential
+Bayesian evidence for an **ABSORBING** break"* and its first construction bullet
+is the absorbing recursion, exactly:
+
+    L_t(th) = logaddexp(L_{t-1}(th), log h) + llr_t(th) - log(1-h)
+
+with the module's own note that *"there is no dyadic approximation and no
+candidate-changepoint scan: the absorbing structure integrates over every
+changepoint exactly."*
+
+**Nine of nine proposed outputs already exist** — `ab_lpo` (P(post by t) as log
+posterior odds), `bo_mean_rel` and the mode channel (change age), `bo_ent`
+(entropy), the hazard terms inside the recursion, `ab_post_lvr` / `ab_post_rho` /
+`ab_fast_slow` (persistence), `bf0_*` and `ev_*` (predictive likelihood ratios),
+`bo_p_lt10` / `bo_p_lt25` (tau concentration). Integration over tau exists in a
+**stronger** form than the proposed max.
+
+The proposal's premise — that BOCPD's resettable state is wrong for an absorbing
+break — is an argument `m07_bayes` already makes and resolves, by carrying both
+models deliberately: *"unlike the absorbing model it allows repeated resets, so
+the two disagree exactly on transients."* That disagreement is already emitted.
+
+**Cost of this decision: one file read.** Building it would have been the exact
+failure mode that produced `tl_` (−0.00410) and `rk_` (−0.00273) — re-stating an
+existing channel under a new name and paying the split-search variance cost.
+
+**Retry warranted?** No. The only open item in this area is the per-block
+attribution ablation of `m07_bayes` that this file already records as unspent,
+and that is an ablation of an existing module, not a new family.

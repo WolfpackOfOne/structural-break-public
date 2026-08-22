@@ -133,3 +133,54 @@ statement about the wave-2 stream set. See `research/reports/rt131_original_audi
   experiment. It exists in no commit on any branch and its `RT-30x` IDs were
   unallocated; wave 3 reused them for `m09_back`. Anything attributed to
   `m08_chan` is unsourced.
+
+---
+
+## 6. WAVE-5 ALLOCATIONS (`research/wave5-alpha`)
+
+### 6.1 The `RT-5xx` collision that was avoided
+
+**`RT-500`..`RT-506` ARE ALREADY TAKEN.** They are the post-freeze cross-fitted
+all-10k OOF vectors (`FINAL_ARCHITECTURE_FREEZE.md`, "the final calibration
+construction"), produced *after* the architecture freeze for deployment
+calibration. They are **not** a research validation set and nothing may be
+selected on them.
+
+Wave 5 therefore allocates from **`RT-520` upward**, verified unused on every
+branch and in every reachable commit before allocation.
+
+| ID | is | status |
+|---|---|---|
+| `RT-520` | ABL control, 7 production modules, seed 0 | **not run** |
+| `RT-521` | `RT-520` + `m10_perm` | **not run** |
+| `RT-522` | seed-clone control, 7 production modules, seed 1 | **not run** |
+| `RT-523` | ABL control for W5-E2 | **not run** |
+| `RT-524` | `RT-523` + `m11_focus` | **not run** |
+| `RT-525` | ABL control for W5-E3 | **not run** |
+| `RT-526` | `RT-525` + `m12_deplr` | **not run** |
+| `RT-540` | hard-negative UNIFORM control (`LAMBDA = 0`) | **not run** |
+| `RT-541` | hard-negative weighting arm | **not run** |
+| `RT-542` | hard-negative oversampling arm | **not run** |
+
+**Every row above is unscored.** No `RT-5xx` in the 520+ range has a number
+attached to it, and none may acquire one before the C3 pre-registration is
+honoured.
+
+### 6.2 Feature-module namespace
+
+| module | wave | status |
+|---|---|---|
+| `m00_core` … `m07_bayes` | 1 | production, frozen in RT-600 |
+| `m05_ctx` | 1 | built, **rejected** as a feature block |
+| `m09_back` | 3 | built, **rejected** (failed its seed-clone control) |
+| **`m10_perm`** | **5** | **built, certified, UNSCORED** |
+| **`m11_focus`** | **5** | **built, certified, UNSCORED** |
+| **`m12_deplr`** | **5** | **built, certified, UNSCORED** |
+| `m13_rcsq` | 5 | **never built** — residual CUSUMSQ rejected on audit (W5-R1) |
+| `m14_absorb` | 5 | **never built** — absorbing BOCPD already in `m07_bayes` (W5-R2) |
+
+`m13_*` and `m14_*` are recorded here as **deliberately unallocated**, with the
+reason, so that a later agent does not read the gap as an opportunity. The
+strings `m12`/`m13`/`m14` appear inside the base64 payload of
+`submissions/C_ensemble_deployable.ipynb` and inside a stale vendored
+`pip` RECORD file; those are **not** module references.

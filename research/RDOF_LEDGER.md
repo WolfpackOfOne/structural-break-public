@@ -750,3 +750,94 @@ searches · 1 module built and certified · 1 sub-family removed on a proof ·
 searches · **2 modules built and certified** · 1 sub-family removed on a proof ·
 1 named candidate withdrawn on a redundancy audit · 1 constant set from a runtime
 measurement with no data present.
+
+## W5-E3 — `m12_deplr`: DEPENDENCE-COEFFICIENT CHANGE UNDER MAX-OVER-TAU
+
+**Pre-registered 2026-08-22 at git SHA `d39f2b2`, before the module was scored
+and while no competition data exists in the environment.** Promoted to this
+lane by the C2-A audit (`research/reports/wave5_m04_redundancy_audit.md`), not
+because it was on a roadmap.
+
+* **Hypothesis (H1).** `m04_resid` monitors dependence only through the level of
+  the lag-1 product (`e_acf1`) and its ARCH analogue, on AR coefficients that are
+  fitted on history and then **frozen** — it never asks whether the *coefficient*
+  has moved. An autocovariance `E[e_t e_{t-1}]` changes when either the
+  dependence coefficient or the innovation variance changes; the regression
+  ratio `sum(e_t e_{t-1}) / sum(e_{t-1}^2)` changes only when the coefficient
+  does. Maximising that ratio's change over a candidate changepoint adds
+  dependence evidence `m04` cannot express.
+
+* **Null (H0).** `e_acf1` across ten residual representations already captures
+  the dependence signal; the coefficient normalisation and the changepoint scan
+  are refinements inside the noise.
+
+* **Matched control.** `RT-525` = 7 production modules, ABL protocol (5 canonical
+  folds, 400k rows, seed 0, battery hyperparameters). `RT-526` = identical plus
+  `m12_deplr`.
+
+* **Falsification, fixed in advance, either rejects.**
+  1. mean ABL delta ≤ 0 over the five folds, **or**
+  2. positive on ≤ 2 of the 5 folds.
+
+* **Seed-clone bar — binding.** The deployable blend must beat the
+  `RT-525`+`RT-522` (seed clone) blend by ≥ **+0.0010**, or the ensemble route
+  closes. The rule that killed `m09_back`.
+
+* **INTERNAL CONTROL — built into the module, and it decides the hypothesis.**
+  `dlr` (AR-coefficient change, max over τ) is the hypothesis arm; `plr` (lag-
+  product MEAN change) uses the **identical** changepoint search, channel and
+  calibration and differs only in having no dependence model. Report the gain
+  share of each family separately. **If `plr` carries the gain and `dlr` does
+  not, H1 is REJECTED even if the module gains overall** — the win would belong
+  to generic max-over-τ, and the cheaper lesson would be to add a lag-product
+  channel to `m11_focus` rather than promote this module. Not to be reinterpreted
+  after seeing the score.
+
+* **Secondary, reported either way.** Per-family gain share
+  (`dlr`/`plr`/`dg`/`d2`/age/null-z), TS-AUC by post-break age bucket, standalone
+  TS-AUC, within-timestep rank correlation with the champion.
+
+* **Search degrees of freedom.** 1 module design, 1 configuration, 14 columns,
+  2 channels fixed a priori (standardised series, AR residual), lags 1 and 2
+  fixed a priori, 0 hyperparameter searches. `LMAX = 256` and `MIN_PRE = 16`
+  chosen on runtime and estimator-stability grounds with no data present.
+
+### Work completed under W5-E3 (no scores, none obtainable)
+
+* `src/sbr/features/m12_deplr.py`, 14 columns, **55.1 ms/series**.
+* **Bitwise prefix-invariant at `atol=0.0`**, 6 profiles × 4 break kinds × 7 cuts.
+* **Exactness verified against brute force**: the vectorised changepoint scan
+  reproduces an O(n²) reference at **0.0e+00** on every trial, both arms.
+* Per-column audit clean. 30 tests, all passing, no data required.
+* **Novelty, measured before building**: ridge R² on the full existing bank
+  (m04 60 cols + m11 21 cols) = **0.7325**; on `m04` alone 0.6886. 27% unexplained.
+* **Mechanism, measured**: on permanent dependence change vs a dependence BURST
+  (series-level, 40 series/arm) the candidate separates at **|d| = 2.728** against
+  the incumbent `ar1_e_acf1`'s **1.048**; paired bootstrap of the difference
+  **+1.680, 95% CI [+1.151, +2.324], 100% of replicates positive**.
+* **Internal control, measured**: on a **pure variance change with a constant AR
+  coefficient**, `dlr` is unmoved (**|d| = 0.21 / 0.23 / 0.15** across three seeds
+  at n=120) while `plr` is strongly fooled (**3.34 / 3.22 / 3.37**). Selectivity
+  ratio dlr(dependence)/dlr(variance) = **13.6× / 14.3× / 20.2×**. This is the
+  designed behaviour: the variance cancels in the ratio and does not in the
+  autocovariance.
+
+### A methodological correction, recorded because it changed answers
+
+The first mechanism comparisons **pooled rows** and gave unstable readings — the
+dependence candidate measured 1.08 against the incumbent's 1.32 on one draw and
+1.16 against 0.84 on the next. Pooling rows conflates within-series and
+between-series variance, and TS-AUC is a **series-ranking** metric. Every
+comparison in C2 was recomputed on a **series-level statistic with 40 series per
+arm and a 2,000-replicate bootstrap**. That correction turned two unstable
+readings into decided ones and is the same lesson `FAILED_EXPERIMENTS` already
+records about promoting from a single draw.
+
+## Degrees of freedom spent in Wave 5 to date
+
+0 training runs · 0 candidates scored · 0 TS-AUC values · 0 hyperparameter
+searches · **3 modules built and certified** (`m10_perm`, `m11_focus`,
+`m12_deplr`) · 1 training-protocol pre-registered and gated (hard negatives) ·
+1 sub-family removed on a proof · **3 named candidates withdrawn on audit**
+(generic robust distribution distances, residual CUSUMSQ, absorbing-state BOCPD) ·
+2 constants set from runtime measurements with no data present.

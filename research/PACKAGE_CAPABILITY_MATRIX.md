@@ -214,3 +214,57 @@ the deployability column irrelevant for this use and changes the ranking:
   memory system. Ratios between families will hold better than absolute values.
 * **No GPU claim is tested.** There is no GPU here. Every GPU cell is read off
   build metadata, not exercised.
+
+---
+
+## 7. C2 UPDATE — 2026-08-22
+
+Re-verified in `.venv-wave5`: polars 1.43.2, lightgbm 4.7.0, shap 0.52.0,
+xgboost 3.4.1, catboost 1.2.10, torch 2.13.0, tabpfn 8.4.0, on the
+production-matching core (numpy 2.4.6 / pandas 3.0.5 / scikit-learn 1.9.0).
+Environment unchanged from §1; production `requirements.txt` still untouched.
+
+### 7.1 The 2025 reproduction dependency gate now PASSES — with one caveat
+
+`research/scripts/reproduce_aparsec_2025.py` was lifted read-only from
+`codex/reproduce-2025-public-solution` and its **own** gate
+(`missing_required_reproduction_deps`) executed against `.venv-wave5`:
+
+| | |
+|---|---|
+| codex branch reported missing | `[polars, lightgbm, shap, tabpfn]` |
+| missing now | **`[]` — none** |
+| ladder status reported by the script | all six rungs `pending run / deps available` |
+
+**The caveat, and it matters.** That gate checks whether the *package* imports,
+not whether TabPFN has usable *weights*. TabPFN 8.4.0 is installed and importable,
+so the gate is satisfied — but `huggingface.co` is refused by network policy and
+8.4.0's default checkpoint `Prior-Labs/tabpfn_3` is a gated repo. **R25-040 and
+R25-050 would pass this gate and then fail at runtime on the weight download.**
+
+Honest ladder status:
+
+| rung | stage | dependency gate | actually runnable |
+|---|---|---|---|
+| R25-010 | transform/stat bank, single LGBM | pass | **yes, once 2025 data is present** |
+| R25-020 | + SHAP / gain feature selection | pass | **yes, once 2025 data is present** |
+| R25-030 | + four-LightGBM ensemble | pass | **yes, once 2025 data is present** |
+| R25-040 | + TabPFN OOF meta-feature | pass | **no — weights unobtainable** |
+| R25-050 | closest faithful full pipeline | pass | **no — depends on R25-040** |
+
+A second mismatch for exactness: aParsec pins `tabpfn==2.1.3`; the installed line
+is 8.4.0, a different major version with a different API and a different (also
+unreachable) checkpoint. Faithful reproduction of R25-040 needs both a reachable
+HuggingFace **and** the 2.x line.
+
+The 2025 reproduction remains **EXECUTION BLOCKED, not scientifically failed** —
+now blocked on 2025 *data* (absent from this container) for three rungs and on
+TabPFN *weights* for the other two, rather than on four missing packages.
+
+### 7.2 Model-family work is deliberately NOT started
+
+XGBoost and CatBoost remain LIKELY DEPLOYABLE and unused. No model-family
+experiment has been designed or run, because C2's purpose is to finish the
+feature-mechanism bank before any score is consumed, and letting a model-family
+comparison in now would contaminate feature-mechanism selection with a second
+moving part. They are staged for C3 and later.
