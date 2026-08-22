@@ -363,9 +363,28 @@ and `matplotlib`, neither of which is in the frozen environment.
 `sklearn` estimator on a premise I did not check, and the correct constraint —
 whitelist, runtime, determinism, streaming — is both different and looser.
 
-## 10. W6-E0 — ESTABLISH THE ACTUAL CONSTRAINT (BLOCKING)
+## 10. W6-E0 — ESTABLISH THE ACTUAL CONSTRAINT (DE-RISKING, NOT BLOCKING)
 
-Before any model-family or teacher work:
+**Corrected 2026-08-22.** An earlier draft called this "blocking". That was
+overstated in two ways:
+
+* **The research question does not need the whitelist.** "Does an XGBoost member
+  beat a seed clone?" is answerable today by installing it in the research venv.
+  That result is valid whether or not the library can ship. What needs the
+  whitelist is *committing to a deployment path*, which only matters once
+  something clears the bar — and on wave-5 base rates, serialising on it would
+  cost more than it saves.
+* **The risk is concentrated at the exotic end.** XGBoost and CatBoost are
+  mainstream, and Crunch staff have confirmed a top-level `import torch` is
+  detected and installed. Rungs 1–3 carry low risk of wasted work. The genuine
+  uncertainty is TabPFN-class and specialised time-series libraries, where the
+  answer may be "request whitelisting" with lead time.
+
+**So: W6-E0 is required before PROMOTING anything, and does not gate STARTING
+rungs 1–3.** Run it in parallel. It matters most for rung 4 and the teacher
+track, where the library choice is open and the build cost is highest.
+
+Steps:
 
 1. Read **Resources → Whitelisted Libraries** on the `structural-break-real-time`
    competition page and record the list verbatim in
