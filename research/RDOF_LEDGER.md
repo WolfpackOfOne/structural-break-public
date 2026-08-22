@@ -841,3 +841,78 @@ searches · **3 modules built and certified** (`m10_perm`, `m11_focus`,
 1 sub-family removed on a proof · **3 named candidates withdrawn on audit**
 (generic robust distribution distances, residual CUSUMSQ, absorbing-state BOCPD) ·
 2 constants set from runtime measurements with no data present.
+
+---
+
+## AMENDMENT — PRE-C3 METRIC-ALIGNMENT CORRECTION
+
+**Dated 2026-08-22. Made BEFORE any Wave-5 TS-AUC was observed: at the time of
+this amendment TRAINING RUNS = 0, NEW WAVE-5 TS-AUC VALUES = 0, WAVE-5
+LEADERBOARD SUBMISSIONS = 0. Nothing below was informed by a result, because no
+result existed.** The original text above is left in place; this amends it.
+
+### What was wrong
+
+The original protocol ranked negatives by their OOF score **globally, across all
+timesteps at once**. That is not the quantity the competition penalises. TS-AUC
+only ever compares a positive against a negative **at the same online index**, so:
+
+* a negative scoring 0.91 at a timestep where every positive scores 0.95+ causes
+  **no inversions at all** — yet global ranking calls it very hard;
+* a negative scoring 0.20 at a timestep where the positives score 0.10–0.15
+  causes an inversion against **every** positive there — yet global ranking calls
+  it easy.
+
+Global ranking gets that pair exactly backwards. A regression test
+(`test_time_conditional_disagrees_with_global_ranking`) constructs precisely this
+panel and asserts the two definitions disagree, so the correction cannot quietly
+regress.
+
+### The corrected definition
+
+For a negative row `i` at online index `t`:
+
+    hardness(i) = ( #{positives at t with score < score_i}
+                    + 0.5 * #{positives at t with score == score_i} )
+                  / #{positives at t}
+
+i.e. `P(score_positive,t < score_negative,i)` — the negative's own contribution
+to the pairwise inversions TS-AUC is built from.
+
+**Ties count as one half.** That is not a detail: `sbr.metric` computes TS-AUC
+with mid-ranks, so a tie is worth exactly half a pairwise inversion there.
+Counting ties any other way would make hardness disagree with the quantity it
+estimates.
+
+### Support rules, declared a priori
+
+| condition | behaviour |
+|---|---|
+| timestep has ≥ `MIN_POS_AT_T = 5` eligible positives | exact same-`t` estimate (preferred) |
+| fewer than that | dyadic online-index bucket `floor(log2(t+1))` |
+| that bucket also has no eligible positives | hardness `0.0` |
+
+The last row is a **consequence of the definition, not a fallback choice**: with
+no positive to be inverted against, the negative causes no inversions and is by
+definition not hard. `MIN_POS_AT_T = 5` and the dyadic bucketing were fixed for
+estimator stability with no data present and no score in existence.
+
+### Fold purity is unchanged and strengthened
+
+The same-`t` positive reference is built from **inner positives only**, so fold
+`k` cannot influence a weight through the reference set either. The corruption
+test now also **permutes fold-k row order** in addition to replacing its scores
+and flipping every label, and still requires bitwise-identical inner weights.
+
+### What did NOT change
+
+`LAMBDA = 1.0`, `TOP_Q = 0.20`, weights bounded `[1, 2]`, positives always
+weight `1.0`, and the three arms `RT-540` (uniform control) / `RT-541`
+(weighting) / `RT-542` (oversampling). The falsification conditions, the
+seed-clone bar and the young-bucket rejection rule are all unchanged.
+
+`mine_fold_pure` now **requires** `t_index` and raises without it, rather than
+silently falling back to the superseded global ranking — a silent fallback would
+produce plausible weights that measure the wrong thing.
+
+**Test count for this protocol: 17, all passing, no data required.**

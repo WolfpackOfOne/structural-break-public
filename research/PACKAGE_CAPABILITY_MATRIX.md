@@ -13,26 +13,44 @@ runner's Python, so a package that resolves to a cp312 wheel here resolves there
 
 ## 0. THE RULE THAT DECIDES THE "PRODUCTION" COLUMN
 
-There is **no published Crunch package whitelist** in evidence anywhere in this
-repository. What the record actually establishes (LB-002 → LB-003,
-`research/reports/rt600_baseline_submission.md` §15) is stronger and more useful:
+**AMENDED 2026-08-22 (PRE-C3), before any Wave-5 TS-AUC was observed.** The
+original wording of this section overstated its conclusion. It is corrected here
+rather than rewritten silently.
+
+No published Crunch package whitelist was **found** in this repository. That is
+an absence of evidence, **not evidence of absence**: the competition may well
+operate an allow-list, a size cap, a build timeout or a network policy on the
+runner that nothing in our record would reveal. What the record does establish
+(LB-002 → LB-003, `research/reports/rt600_baseline_submission.md` §15) is
+narrower than "requirements.txt alone determines deployability":
 
 > `crunch push` uploads `requirements.txt` and **the runner builds its environment
 > from it** — `using original file: requirements.txt` appears in the push log of
 > every submission made.
 
-So deployability is not a permission question, it is an engineering question with
-four gates:
+So the runner builds from a file we control. That makes deployability **at least**
+an engineering question, with four gates we can test:
 
 1. **cp312 wheel resolves** (`--only-binary=:all:`, Python 3.12) — tested per row below;
 2. **install footprint** the runner will tolerate;
 3. **single-row inference cost** inside the 15 h budget;
 4. **determinism**, because the competition re-runs and compares at 1e-08.
 
-A package failing gate 1 or 3 is not deployable no matter what a whitelist says.
-**None of this is verified against the actual runner** — the only way to verify is
-a submission, and a submission costs a leaderboard slot. Rows below say
-LIKELY DEPLOYABLE, never VERIFIED, for anything RT-600 has not already shipped.
+A package failing gate 1 or 3 is not deployable whatever any policy says. But
+passing all four does **not** establish the converse. Only a submission proves a
+package runs on the runner, and a submission costs a leaderboard slot.
+
+**Category language, corrected.** For anything RT-600 has not already shipped,
+rows read **ENGINEERING-COMPATIBLE / CRUNCH WHITELIST STATUS UNVERIFIED**, never
+"likely deployable". The earlier phrasing implied a permission finding we have
+not made.
+
+| category | means |
+|---|---|
+| **VERIFIED DEPLOYABLE** | has actually run on the Crunch runner and produced a score |
+| **ENGINEERING-COMPATIBLE / WHITELIST UNVERIFIED** | passes all four local gates; acceptance by the runner is **unknown** |
+| **RESEARCH ONLY** | valuable offline, never uploaded |
+| **NOT SUITABLE / BLOCKED** | cannot run even offline here |
 
 ## 0.1 The runtime budget the cost column is read against
 
@@ -52,8 +70,8 @@ catch a family that would eat all of it, not to shave milliseconds.
 |---|---|---|---|---|---|---|---|---|---|---|
 | **LightGBM** | 4.7.0 | yes | yes | 10 MB | yes | no (CPU build) | **yes, bitwise** — `deterministic=True`, `num_threads` fixed | `Booster.save_model()` text | **0.115 ms** | **VERIFIED DEPLOYABLE** |
 | **scikit-learn** | 1.9.0 | yes | yes | 39 MB | yes | no | yes via `random_state` | joblib/pickle, version-sensitive | n/a (not a booster here) | **VERIFIED DEPLOYABLE** |
-| **XGBoost** | 3.4.1 | yes | yes | 84 MB | yes | CUDA in wheel, unusable (no GPU) | **yes, bitwise** — `tree_method=hist`, `nthread` fixed | `save_model()` → `.json`/`.ubj`, version-stable | **0.278 ms** (2.4× LGB) | **LIKELY DEPLOYABLE** |
-| **CatBoost** | 1.2.10 | yes | yes | 268 MB | yes | needs CUDA build | **yes, bitwise** — `random_seed` + `thread_count` | `save_model()` → `.cbm` binary | **0.564 ms** (4.9× LGB) | **LIKELY DEPLOYABLE** — cost and size are real |
+| **XGBoost** | 3.4.1 | yes | yes | 84 MB | yes | CUDA in wheel, unusable (no GPU) | **yes, bitwise** — `tree_method=hist`, `nthread` fixed | `save_model()` → `.json`/`.ubj`, version-stable | **0.278 ms** (2.4× LGB) | **ENGINEERING-COMPATIBLE / WHITELIST UNVERIFIED** |
+| **CatBoost** | 1.2.10 | yes | yes | 268 MB | yes | needs CUDA build | **yes, bitwise** — `random_seed` + `thread_count` | `save_model()` → `.cbm` binary | **0.564 ms** (4.9× LGB) | **ENGINEERING-COMPATIBLE / WHITELIST UNVERIFIED** — cost and size are real |
 | **Polars** | 1.43.2 | yes | yes | 10 MB | yes | needs `cudf` (absent) | order-stable only with `maintain_order` / 1 thread | n/a (dataframe lib) | n/a — offline only | **RESEARCH ONLY** (by role, not by capability) |
 | **SHAP** | 0.52.0 | yes | yes | 4 MB | yes | no | **yes** — `TreeExplainer` is exact | n/a (explainer) | n/a — training-time | **RESEARCH ONLY** |
 | **PyTorch** | 2.13.0+cu130 | yes | yes | **1.1 GB + 2.7 GB CUDA + 0.7 GB triton** | yes | **compiled cu130, no GPU present** | yes — `use_deterministic_algorithms(True)` + `manual_seed` | `state_dict` via `torch.save` | not benchmarked (no model) | **RESEARCH ONLY / teacher** |
@@ -68,7 +86,7 @@ The only family with an external result: RT-600 = **0.6268** Crunch TS-AUC. Bitw
 repeatable across two fits in-process. Everything else in this table is a candidate
 measured in a container; this one has shipped and scored.
 
-### XGBoost 3.4.1 — the strongest new production candidate
+### XGBoost 3.4.1 — the strongest new production CANDIDATE (acceptance unverified)
 Cheapest of the two new boosters and the easiest to trust. Bitwise repeatable with
 `tree_method="hist"` and a fixed `nthread`; native JSON/UBJ serialisation is
 explicitly version-stable, which matters because the artifact must load under a
@@ -181,8 +199,8 @@ needs a TabPFN checkpoint on top of that.
 | category | packages | meaning |
 |---|---|---|
 | **VERIFIED DEPLOYABLE** | LightGBM 4.7.0, scikit-learn 1.9.0 | already ran on the Crunch runner and produced 0.6268 |
-| **LIKELY DEPLOYABLE** | XGBoost 3.4.1, CatBoost 1.2.10 | cp312-clean, CPU-deterministic, serialisable, affordable — *unverified on the actual runner* |
-| **WHITELIST STATUS UNKNOWN** | — (the category does not apply) | no whitelist is in evidence; the runner builds from our `requirements.txt` |
+| **ENGINEERING-COMPATIBLE / WHITELIST UNVERIFIED** | XGBoost 3.4.1, CatBoost 1.2.10 | cp312-clean, CPU-deterministic, serialisable, affordable — **acceptance by the Crunch runner is unknown and untested** |
+| **WHITELIST STATUS UNKNOWN** | XGBoost, CatBoost, PyTorch, TabPFN — i.e. everything RT-600 has not shipped | no whitelist was found in our record, which is not the same as none existing |
 | **RESEARCH ONLY** | Polars, SHAP, PyTorch | valuable offline; never uploaded. Polars and SHAP by role, PyTorch by footprint |
 | **NOT SUITABLE / BLOCKED** | TabPFN | cannot obtain weights here; not a production candidate under any reading |
 
@@ -206,7 +224,7 @@ the deployability column irrelevant for this use and changes the ranking:
 * **Nothing here is a TS-AUC number.** No package in this table has been shown to
   add a single point of alpha. This is a capability audit; the alpha question is
   untouched and stays untouched until data is present.
-* **No runner verification.** Every LIKELY DEPLOYABLE is an inference from wheel
+* **No runner verification.** Every ENGINEERING-COMPATIBLE row is an inference from wheel
   tags and local timings. LB-001 and LB-002 both passed locally and died in the
   cloud — this project has already been taught that lesson twice.
 * **Latency is a proxy.** 600 trees / 500 features / `OMP_NUM_THREADS=2` on 4 vCPU
@@ -263,7 +281,7 @@ TabPFN *weights* for the other two, rather than on four missing packages.
 
 ### 7.2 Model-family work is deliberately NOT started
 
-XGBoost and CatBoost remain LIKELY DEPLOYABLE and unused. No model-family
+XGBoost and CatBoost remain ENGINEERING-COMPATIBLE (whitelist unverified) and unused. No model-family
 experiment has been designed or run, because C2's purpose is to finish the
 feature-mechanism bank before any score is consumed, and letting a model-family
 comparison in now would contaminate feature-mechanism selection with a second

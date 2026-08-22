@@ -93,3 +93,31 @@ unobtainable here — `huggingface.co` is blocked and the 8.4.0 checkpoint is ga
 
 **C3 cannot begin until the store arrives.** `research/scripts/wave5_ingest_store.py`
 verifies it byte-exact against the recorded manifest before any experiment runs.
+
+---
+
+## 7. AMENDMENT — PRE-C3 METRIC-ALIGNMENT CORRECTION (2026-08-22)
+
+Made **before any Wave-5 TS-AUC was observed** (training runs = 0 at the time).
+The freeze on the three feature modules is **unaffected**: `m10_perm`,
+`m11_focus` and `m12_deplr` are byte-identical to their C2 hashes above, and
+`LMAX`, window grids, thresholds, column counts and internal-control definitions
+are untouched.
+
+Two things changed, both outside the feature bank:
+
+1. **Hard-negative hardness is now time-conditional**, matching the metric: a
+   negative's hardness is the fraction of positives **at its own online index**
+   that it outranks, with mid-rank tie handling to match `sbr.metric`. The
+   previous global ranking could rank negatives exactly backwards. Constants,
+   arms and falsification conditions unchanged. Full amendment in
+   `research/reports/wave5_hard_negative_protocol.md`.
+
+2. **Package-matrix wording corrected.** The matrix previously implied that
+   `requirements.txt` alone settles deployability and that no whitelist exists.
+   Absence of a whitelist in *our record* is not evidence one does not exist, so
+   everything RT-600 has not shipped is now
+   **ENGINEERING-COMPATIBLE / CRUNCH WHITELIST STATUS UNVERIFIED** rather than
+   "likely deployable". No research conclusion depends on this.
+
+Neither correction touches a scored quantity, because none exists.
