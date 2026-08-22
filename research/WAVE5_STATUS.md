@@ -333,3 +333,55 @@ its +0.0278 should not be read as anything but small-sample noise.
 Specialisation beats bagging on **every** family, +0.0034 to +0.0044 on the three
 populated ones — the same margin as the aggregate, so the specialist advantage is
 not concentrated in one break type.
+
+## 10. W5-E4/E5/E6 — `m12_rdep`: STAGE C **SURVIVES**, AND IT IS THE STRONGEST BLOCK
+
+Same ABL arms as everything else.
+
+| arm | id | TS-AUC | per fold |
+|---|---|---|---|
+| control | `RT-301` | 0.61257 | 0.62567 / 0.60719 / 0.62018 / 0.60506 / 0.60475 |
+| **+ `m12_rdep`** | `RT-750` | **0.61736** | 0.62882 / 0.61509 / 0.62561 / 0.61390 / 0.60337 |
+| delta | | **+0.00479** | +0.00315 / +0.00790 / +0.00543 / +0.00884 / −0.00138 — **4/5** |
+
+| blend | TS-AUC | vs control | **vs seed clone** |
+|---|---|---|---|
+| `RT-301` + `RT-303` (seed clone) | 0.61753 | +0.00496 | — |
+| `RT-301` + `RT-730` (`m11_focus`) | 0.61808 | +0.00551 | **+0.00055**, 4/5 |
+| `RT-301` + `RT-740` (`m10_persist`) | 0.61713 | +0.00456 | **−0.00041**, 2/5 ✗ |
+| **`RT-301` + `RT-750` (`m12_rdep`)** | **0.61894** | **+0.00637** | **+0.00141**, 4/5 |
+
+**`m12_rdep` is the largest genuinely-new-information result this project has
+produced** — 2.5× `m11_focus`'s margin over the seed clone, and against a
+standard that has already rejected three candidates.
+
+**The two survivors are complementary in age, which is the interesting part:**
+
+| age | Δ `m11_focus` | Δ `m12_rdep` |
+|---|---|---|
+| 0–5 | **+0.00308** | −0.00228 |
+| 5–10 | **+0.00465** | +0.00042 |
+| 10–20 | **+0.00255** | −0.00039 |
+| 20–50 | −0.00139 | −0.00054 |
+| 50–100 | +0.00288 | +0.00304 |
+| 100+ | +0.00443 | **+0.00778** |
+
+`m11_focus` is a young-break module — maximising over τ recovers evidence that a
+fixed window dilutes, exactly as designed. `m12_rdep` is a mature-break module,
+and D1 says 57% of the metric's pair weight lives at age 100+, which is why it
+scores higher despite doing nothing for early detection. **This is what makes
+W5-E10, the union, worth its run rather than a formality.**
+
+## 11. W5-E9b — WEIGHTED SQUARED HINGE: **REJECTED**
+
+| arm | id | TS-AUC | delta |
+|---|---|---|---|
+| incumbent `pairwise_t` | `RT-702` | 0.61481 | — |
+| `pairwise_h` weighted squared hinge | `RT-701` | 0.61005 | **−0.00476** |
+
+Rejected. The gradient scale was matched to the logistic at `d = 0` precisely so
+this would measure the loss shape and not the step size, and the loss shape is
+worse. A hinge stops pushing a pair once it is ranked correctly by a margin; for
+a metric that is *entirely* pairwise ranking that sounded right, and the data
+disagrees. Both W5-E9 variants fail, and the incumbent `pairwise_t` stream stands
+unchanged.
