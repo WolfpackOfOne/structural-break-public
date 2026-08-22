@@ -173,3 +173,47 @@ is full-size and mostly zeros from the first second. Two runs of RT-740 were
 started on a 15%-filled cache and killed; neither reached the ledger or wrote an
 OOF vector. **A number computed from that cache would have looked entirely
 normal.**
+
+## 7. W5-E7 — `m11_focus`, EXACT MAXIMISATION OVER τ: STAGE C **SURVIVES**
+
+ABL protocol, 400k rows, 5 canonical folds, seed 0 — the identical arms wave 3
+used for `m09_back`, so the two families are directly comparable.
+
+| arm | id | TS-AUC | per fold |
+|---|---|---|---|
+| control, 7 modules | `RT-301` | 0.61257 | 0.62567 / 0.60719 / 0.62018 / 0.60506 / 0.60475 |
+| **+ `m11_focus`** | `RT-730` | **0.61574** | 0.62806 / 0.61394 / 0.62226 / 0.60762 / 0.60684 |
+| delta | | **+0.00317** | +0.00239 / +0.00675 / +0.00208 / +0.00256 / +0.00209 — **5/5** |
+
+And the comparison that killed `m09_back`, the two-model deployable blend
+against the same blend built from a seed clone carrying no information:
+
+| blend | TS-AUC | vs control |
+|---|---|---|
+| `RT-301` + `RT-303` (seed clone) — **the bar** | 0.61753 | +0.00496 |
+| `RT-301` + `RT-730` (`m11_focus`) | **0.61808** | +0.00551 |
+| **candidate − seed clone** | | **+0.00055**, 4/5 folds |
+
+**`m11_focus` clears the gate `m09_back` failed** — it is the first new feature
+family in this project to blend better than its own seed clone. Side by side:
+
+| | `m09_back` (wave 3) | `m11_focus` (wave 5) |
+|---|---|---|
+| standalone delta | +0.00156 | **+0.00317** |
+| folds positive | 4/5 | **5/5** |
+| blend vs seed clone | **−0.00126** | **+0.00055** |
+| age 0–5 | −0.00092 | **+0.00308** |
+| age 5–10 | −0.00035 | **+0.00465** |
+| age 100+ | +0.00349 | +0.00443 |
+
+**The mechanism did what it was built to do.** `m09_back` was built for late
+breaks and helped only mature ones; `m11_focus` was built on the argument that
+fixed windows dilute early evidence, and its largest relative gains are at ages
+0–5 and 5–10 — the buckets `m09_back` damaged. There is a real dip at 20–50
+(−0.00139) which is recorded, not smoothed over.
+
+**But +0.00055 over the seed clone is a fifth of the +0.0030 promotion bar.**
+Under §28's bands that is noise-to-exploratory, not a candidate. Stage D — the
+CHAMP-protocol eight-member test `(S + RT-731)` against `(S + RT-401)`, which is
+the comparison §4 actually binds on — is what decides, and a two-model ABL blend
+is a weak proxy for it in both directions.
