@@ -289,3 +289,47 @@ where the two come apart.
 
 The incumbent's flat `m_neg` is, in effect, an implicit importance weighting
 towards sparse late timesteps, and it earns its keep.
+
+## 9. W5-D4 — PERFORMANCE BY BREAK FAMILY (**heuristic taxonomy, labelled as such**)
+
+The wave-1 taxonomy built a proper artifact with a placebo-null threshold, but
+`research/artifacts/break_taxonomy.parquet` did not survive the container that
+produced it — its own report says so. This is a lighter reconstruction of its
+`lead_family` column: an argmax over standardised family effect sizes, no
+threshold, POST vs PRE where ≥60 pre-break online points exist and POST vs HIST
+otherwise. No-break series get a placebo cut from the break series' relative-τ
+distribution, so the shares have a matched null. **It uses τ and the post-break
+segment and is a diagnostic only.**
+
+| family | break % | placebo % | **excess** |
+|---|---|---|---|
+| location | 16.5 | 20.0 | −3.5 |
+| **scale** | 32.6 | 25.4 | **+7.1** |
+| tails | 0.1 | 0.1 | −0.0 |
+| dependence | 0.3 | 0.1 | +0.1 |
+| trend | 0.2 | 0.1 | +0.0 |
+| spectral | 50.4 | 54.2 | −3.8 |
+
+**Scale is the only family with a positive excess over the placebo null**, which
+reproduces the wave-1 taxonomy's finding #3 independently. Read the *excess*
+column, not the share: the argmax is dominated by "spectral" because my
+high-frequency-energy statistic is the noisiest of the six, and a bucket with a
+**negative** excess is one the classifier is filling with noise. That is a real
+limitation of this reconstruction and it is why nothing is concluded from the
+shares alone.
+
+| lead family | n_pos | A single | B seed clones | S specialists | S−B | S−A |
+|---|---|---|---|---|---|---|
+| location | 154,551 | 0.55642 | 0.55996 | 0.56431 | +0.00435 | +0.00789 |
+| **scale** | 373,783 | 0.68608 | 0.69360 | **0.69702** | +0.00342 | +0.01095 |
+| dependence | 1,206 | 0.61099 | 0.60639 | 0.63417 | +0.02778 | +0.02317 |
+| spectral | 490,741 | 0.58313 | 0.58811 | 0.59236 | +0.00424 | +0.00922 |
+
+**The champion is a scale detector.** On scale-led breaks it reaches 0.697; on
+location-led breaks 0.564, barely above the 0.4998 that the wave-1 forensics
+measured for raw mean-shift separability. The dependence row is 1,206 rows and
+its +0.0278 should not be read as anything but small-sample noise.
+
+Specialisation beats bagging on **every** family, +0.0034 to +0.0044 on the three
+populated ones — the same margin as the aggregate, so the specialist advantage is
+not concentrated in one break type.
