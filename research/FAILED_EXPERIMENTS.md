@@ -825,3 +825,61 @@ break" but "for these series the historical null and the online segment are draw
 from distributions that genuinely overlap". A different attack — for example
 conditioning the null on the series' own tail index rather than sharpening the
 online statistic — would be a new hypothesis and needs its own pre-registration.
+
+---
+
+## W5-E9b — WEIGHTED SQUARED HINGE (`pairwise_h`) — **REJECTED**
+
+Same pairs and same `n_neg(t)` weighting as W5-E9a; only the loss shape changes.
+`HINGE_LR_MATCH = 0.25` scales the gradient so that at margin `d = 0` the squared
+hinge matches the logistic's per-pair gradient — without it the arm would have run
+at 4× the effective learning rate and the comparison would have measured step
+size, not loss shape.
+
+| arm | id | TS-AUC |
+|---|---|---|
+| incumbent `pairwise_t` | `RT-702` | 0.61481 |
+| `pairwise_h` | `RT-701` | 0.61005 |
+| delta | | **−0.00476** |
+
+The argument for it was that a hinge stops pushing a pair once it is ranked
+correctly by a margin, so gradient goes to pairs still inverted rather than to
+widening already-correct margins — which for a purely pairwise-ranking metric
+sounds right. It is worse by three times the margin W5-E9a lost by. Both W5-E9
+variants fail and the incumbent `pairwise_t` stream stands unchanged.
+
+---
+
+## W5-E10 — UNION OF ALL THREE NEW FEATURE BLOCKS — **REJECTED**
+
+**Pre-registered** in `research/WAVE5_PREREG.md` §6.
+
+**Hypothesis.** The three blocks target different mechanisms and, as stage C
+showed, different break ages — `m11_focus` is a young-break module, `m12_rdep` a
+mature-break one. If their contributions are even partly additive the union
+should beat the best single block.
+
+| arm | standalone | Δ vs `RT-301` | folds | blend vs seed clone |
+|---|---|---|---|---|
+| `RT-750` `m12_rdep` alone, 57 cols | 0.61736 | **+0.00479** | 4/5 | **+0.00141** |
+| `RT-760` all three, 175 cols | 0.61468 | +0.00211 | 2/5 | +0.00093 |
+
+**175 new columns do less than half of what 57 do.** And the union is worse than
+every single block at every age bucket below 50 — −0.00424 at age 0–5 where
+`m11_focus` alone is +0.00308.
+
+**Mechanism, same shape as W4-E6's.** A fixed budget spread over more things.
+`feature_fraction = 0.5` now samples 675 columns instead of 557, so each tree
+sees a smaller fraction of the block that actually works; and the blocks overlap
+more than their titles suggest, since `m11_focus`'s residual channels and
+`m12_rdep`'s residual CUSUM/CUSUMSQ paths are both reading AR-residual path
+geometry. Wave 4 found gains anti-stacking across ensemble MEMBERS; this is the
+same phenomenon across FEATURE BLOCKS.
+
+**What this does NOT license.** Pairwise unions, block subsets, per-block feature
+sampling, or any best-of composition — the lattice the pre-registration excluded.
+
+**Retry warranted?** Only as part of a different design: if `m12_rdep` is
+promoted, the question "does `m11_focus` add to it" should be asked once, with
+`feature_fraction` held at a value that keeps the effective per-tree column count
+constant, and pre-registered as its own experiment.
