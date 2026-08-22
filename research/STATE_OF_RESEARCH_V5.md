@@ -212,8 +212,18 @@ artifact has a known tiny streaming drift that no wave-3 or wave-4 document
 mentions. Very unlikely to move a score at that magnitude; recorded because it
 is real.
 
----
+## 9. FINAL HARD-NEGATIVE RESULT
 
-*(Section 9 onward — the experiment table, the W5-E11 verdict and the LB-002
-decision — follow below. `research/WAVE5_STATUS.md` carries the full working
-record and every number as it landed.)*
+W5-E3 landed after the main state draft and did not change the Wave-5 verdict.
+The nested, fold-pure miner was correct; the training intervention was not.
+
+| arm | TS-AUC | vs control | folds |
+|---|---|---|---|
+| `RT-710` uniform `wbinary` control | **0.61472** | — | — |
+| `RT-711` hard-negative reweighting | 0.60770 | **−0.00701** | 1/5 |
+| `RT-712` hard-negative oversampling | 0.60132 | **−0.01339** | 0/5 |
+
+Age 0–20 also moved down: −0.00142 for reweighting and −0.01019 for
+oversampling. The curriculum path is therefore rejected, not carried forward to
+Wave 6. Full working detail remains in `research/WAVE5_STATUS.md` §21 and
+`research/reports/wave5_e3_hardneg.json`.

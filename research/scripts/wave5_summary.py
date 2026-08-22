@@ -24,9 +24,14 @@ LABEL = {
     "RT-710": "W5-E3   CONTROL wbinary, uniform weights",
     "RT-711": "W5-E3   hard-negative reweighting",
     "RT-712": "W5-E3   hard-negative oversampling",
-    "RT-731": "W5-E7   CHAMP protocol + m11_focus (8th stream candidate)",
+    "RT-731": "W5-E7   CHAMP protocol + m11_focus",
+    "RT-751": "W5-E4/5/6  CHAMP protocol + m12_rdep",
 }
-#: each candidate's matched control, and what kind of comparison it is
+#: each candidate's matched control, and what kind of comparison it is.
+#: NOTE the "CHAMP standalone stream" rows compare STREAM to STREAM.  That is
+#: NOT the binding ensemble comparison -- (S + C) - (S + N) -- which lives in
+#: research/reports/wave5_staged_binding.log and is a much smaller number,
+#: because an eighth member carries 1/8 of the blend weight.
 CONTROL = {
     "RT-730": ("RT-301", "ABL feature block"),
     "RT-740": ("RT-301", "ABL feature block"),
@@ -36,7 +41,8 @@ CONTROL = {
     "RT-701": ("RT-702", "objective"),
     "RT-711": ("RT-710", "curriculum"),
     "RT-712": ("RT-710", "curriculum"),
-    "RT-731": ("RT-401", "CHAMP 8th stream"),
+    "RT-731": ("RT-401", "CHAMP standalone stream"),
+    "RT-751": ("RT-401", "CHAMP standalone stream"),
 }
 
 

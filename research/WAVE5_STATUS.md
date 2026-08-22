@@ -768,8 +768,18 @@ there is no bagging channel for a gain to arrive through. This is the comparison
 
 **`S' − S` = −0.00268, positive on 1/5 folds. H0 ACCEPTED.**
 
-Adding the block to every stream makes the ensemble **worse** than leaving it
-out, by five times the margin the eighth-member framing suggested it was worth.
+Paired series bootstrap, 200 replicates, common random numbers:
+**−0.00275, 95% CI [−0.00611, +0.00079], 9% of replicates positive.**
+
+**State this precisely.** The CI's upper edge is +0.00079, so the rebuild is
+*not proven worse* than the incumbent at 95%. What it is proven to be is **not
+better by +0.0030** — the pre-registered bar sits far outside the interval, and
+91% of replicates are negative. The rejection rests on the bar, not on a claim
+of harm.
+
+With that caveat, the point estimate is unambiguous: adding the block to every
+stream costs about five times the margin the eighth-member framing suggested it
+was worth.
 Four of seven members get worse individually; the ensemble loses more than the
 member average (−0.00103) because the members that degrade most are the ones
 whose errors were least correlated with the rest.
@@ -834,3 +844,35 @@ as the comparison gets closer to the deployed system:
 failed"; it is a quantitative statement of how much headroom a mature ensemble
 leaves for a new statistic that overlaps it — and the answer, four ways, is
 approximately none.
+
+## 21. W5-E3 — HARD-NEGATIVE CURRICULUM: **REJECTED**
+
+This was the last pre-registered Wave-5 arm to land. It is a training-data
+experiment, not a feature experiment: nested, fold-pure hardness scores identify
+no-break rows that a cheap miner ranks high, then two treatments emphasize those
+rows during CHAMP-protocol training.
+
+`RT-710` is the binding control because all three arms use the same custom
+`wbinary` objective hook. Comparing the treated arms to `RT-300` would mix the
+curriculum question with a different objective initialization.
+
+| arm | TS-AUC | per fold | vs `RT-710` | folds |
+|---|---|---|---|---|
+| `RT-710` uniform control | **0.61472** | 0.62834 / 0.61442 / 0.62257 / 0.60569 / 0.60256 | — | — |
+| `RT-711` smooth reweighting | 0.60770 | 0.62011 / 0.60868 / 0.61845 / 0.58720 / 0.60409 | **−0.00701** | 1/5 |
+| `RT-712` hard-negative oversampling | 0.60132 | 0.61540 / 0.59766 / 0.60714 / 0.58815 / 0.59826 | **−0.01339** | 0/5 |
+
+The pre-registered detection-delay guardrail also does not save it. Combined
+age-0-to-20 TS-AUC is `RT-710` 0.53149, `RT-711` 0.53007 (−0.00142), and
+`RT-712` 0.52130 (−0.01019). Oversampling damages young breaks by far more than
+the allowed 0.003 line, and neither treatment has an aggregate gain to trade
+against that cost.
+
+Verdict: **hard-negative emphasis as implemented here is rejected.** The nested
+miner was worth building because it closed the leakage route cleanly, but the
+training intervention appears to teach the model to suppress high-evidence
+episodes in general rather than only false transient negatives.
+
+Evidence on disk:
+`research/reports/wave5_e3_hardneg.json` and
+`research/reports/wave5_executive.csv`.
