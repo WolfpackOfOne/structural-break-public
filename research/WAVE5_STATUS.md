@@ -532,3 +532,45 @@ higher ceiling. It must be pre-registered with a tiny structured grid (say three
 anchor schemes: log, uniform-in-weight, and hybrid) and no continuous search,
 because this is exactly the surface where tuning against OOF would be easiest and
 most damaging.
+
+## 15. STAGE D — AND A PROTOCOL REVERSAL THAT CHANGES HOW STAGE C SHOULD BE READ
+
+`RT-731` is the champion configuration — CHAMP protocol, 1,000,000 rows, seed 0 —
+with `m11_focus` added and nothing else changed. Its ABL twin `RT-730` was
+**+0.00317 on 5/5 folds**.
+
+| arm | id | protocol | TS-AUC | vs its own control |
+|---|---|---|---|---|
+| control | `RT-301` | ABL, 400k | 0.61257 | — |
+| + `m11_focus` | `RT-730` | ABL, 400k | 0.61574 | **+0.00317, 5/5** |
+| control | `RT-300` | CHAMP, 1M | 0.61605 | — |
+| + `m11_focus` | `RT-731` | CHAMP, 1M | 0.61483 | **−0.00123, 2/5** |
+
+per fold: −0.00212 / +0.00376 / −0.00262 / **−0.01087** / +0.00571
+
+**The sign flips with the protocol.** A block that is +0.00317 on 5/5 folds at
+400k training rows is −0.00123 on 2/5 at 1,000,000 rows, same folds, same seed,
+same columns.
+
+**This is the most methodologically important result in wave 5, and it indicts
+the stage-C design — mine and wave 3's.** Two plausible mechanisms, both
+consistent with what else is known:
+
+1. **Capacity substitution.** At 400k rows the incumbent 500-column bank is not
+   yet saturated, so 76 columns of a genuinely different statistic buy real
+   accuracy. At 1M rows the bank has already extracted what those columns carry,
+   and they add nothing to substitute for.
+2. **Column dilution.** `feature_fraction = 0.5` samples 288 of 576 columns per
+   tree instead of 250 of 500, so every tree sees a smaller share of the columns
+   that were already working. This is the same mechanism that sank W5-E10's
+   union, at a smaller dose.
+
+**What follows for the record.** `m09_back` was rejected on ABL evidence and
+`m11_focus` was promoted to stage D on ABL evidence; this says an ABL stage-C
+result is a statement about the 400k-row regime and not about the deployed one.
+The stage gates in `research/WAVE5_PREREG.md` §5 should have required the
+protocol the champion actually uses before any promotion claim, and the ABL rung
+should be read as a **screen for the absence of an effect, not as evidence for
+one**. Wave 4 already documented the neighbouring version of this trap — forcing
+specialist streams onto ABL collapses them toward the champion — and I did not
+extend the lesson far enough.
