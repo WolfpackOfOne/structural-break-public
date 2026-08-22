@@ -126,3 +126,90 @@ The decidable version is the oracle frontier's own, sharpened:
 
 It is series ROC AUC, not TS-AUC, which is precisely what makes it non-degenerate
 — and it is the metric the frontier already reports, so the comparison is direct.
+
+---
+
+## W6-E2R — **CASE C. REPRESENTATION IS STILL A LIVE LEVER.**
+
+Pre-registered in `research/WAVE6_PREREG.md` §18 at `768204e`, **before this run
+reported**. Full report: `research/reports/wave6_corrected_oracle.md`.
+
+### The reproduction gate passed first, which is what makes the rest readable
+
+| | series ROC AUC |
+|---|---:|
+| prior oracle-frontier study, `lgbm_rich`, FULL | 0.6496854 |
+| this run, same protocol, unfiltered 8,000 | **0.6496899** |
+| delta | **+0.0000045** (gate was ±0.010) |
+
+All four input hashes match the prior manifest byte for byte. Every sentinel is
+clean: boundary-metadata 0.51374 (the frontier's own was 0.5379), missingness
+0.51348 / 0.51650, support-length 0.52624, permuted labels **0.50152**.
+
+### The result
+
+| arm | mean series AUC | |
+|---|---:|---|
+| `A_rich` frontier generic bank + true boundary | 0.65037 | the prior study's arm |
+| **`B_causal` our 500 causal columns + the same boundary** | **0.67391** | **Δ = +0.02354** |
+| `C_nobound` our 500 columns, **no boundary** | 0.64529 | |
+| `AB` union | 0.67848 | |
+| `RT-300` shipped row-level stream at the final row | 0.61939 | reference |
+
+**5 of 5 pseudo-τ seeds positive. 25 of 25 folds positive. Every bootstrap CI
+excludes zero**, worst lower bound +0.00567. The pre-registered Case C threshold
+was +0.010.
+
+Two controls that matter more than the headline:
+
+* **Matched column width.** Arm B has 498 columns to arm A's 280. Cut at random
+  to exactly 280, three draws: Δ becomes **+0.0308** (seed 0) and **+0.0205**
+  (seed 2026). *Larger*, not smaller. And `C_nobound` — 498 of our columns with
+  no boundary — scores *below* 280 of theirs with one. Width does not buy it.
+* **Placebo boundary.** With a random cut for both classes, arm A falls to
+  0.59470 and arm B to 0.62312: the gap is **+0.0284**, slightly wider than with
+  the true boundary. Arm B is not exploiting the boundary harder; it is a better
+  representation either way.
+
+### What the boundary is worth, and the part of the frontier's headroom that was never real
+
+| | series AUC | step |
+|---|---:|---:|
+| `RT-300` row-level stream, final row | 0.61939 | — |
+| our same 500 columns refit for the **series** question, no boundary | 0.64529 | **+0.02589** |
+| … plus the true boundary | 0.67391 | **+0.02863** |
+| … plus the frontier's bank on top | 0.67848 | +0.00457 |
+
+**+0.0259 of the prior study's +0.0396 "model-extraction gap" is a
+question-mismatch artefact**, not headroom: it is the difference between reading
+a row-level model's last prediction and fitting a series-level classifier on the
+same columns. It is **not available to the real-time task**. τ-knowledge is
+worth about +0.029 on top of that, and the two banks retain +0.005 of mutual
+complementarity.
+
+### The §4.3 branch, finally decided — and decided the other way
+
+The voided RT-900 would have said "localisation is the lever". The corrected
+experiment says **both levers are real and comparable in size at FULL** — τ is
+worth +0.029, representation +0.024 — but only one of them is legal. We cannot
+be given τ. We *can* build a better representation, and the measurement says the
+generic bank that Wave 6 was about to reason from was **underpowered, not
+saturated**.
+
+### Consequences
+
+* `WAVE6_STOPPING_RULE_AMENDMENT.md` §3(e): Case C ⇒ neural-track priority
+  **HIGH**, and `RT-980` (GRU) becomes reachable.
+* Nothing about the real-time score changes. **+0.0235 series AUC is not
+  +0.0235 TS-AUC** and §H of the report forbids that arithmetic.
+* No submission. `RT-600` = 0.6268 remains LB-001.
+
+### What is next
+
+`W6-N1` (`RT-960`/`RT-961`) — MLP on the existing 500 columns, testing **learner**
+capacity — then `W6-N2` (`RT-970`/`RT-971`) — causal dilated TCN on ten legal
+channels, testing **representation** learning. Pre-registered in full at
+`research/WAVE6_NEURAL_PREREG.md` (`17d01b8`). `torch` is absent from the local
+venv and must be installed; W6-E0, the competition whitelist, is still
+outstanding and gates *deployment*, not the experiment — §8 of that document is
+why.
