@@ -29,7 +29,7 @@ from wave6_neural_lib import (FoldStandardiser, PROD_MODULES, build_mlp,
                               sha_state_dict)
 
 from sbr.metric import ts_auc_flat
-from sbr.pipeline import Data, _stack, append_result, git_sha, load_features
+from sbr.pipeline import Data, FEAT, _stack, append_result, git_sha, load_features
 
 FOLDS = (0, 1, 2, 3, 4)
 MAX_TRAIN_ROWS = 1_000_000          # the CHAMP protocol's, unchanged
@@ -166,9 +166,7 @@ def main():
 
     d = Data()
     mats, names = load_features(PROD_MODULES)
-    sizes = [json.load(open(f"{os.environ.get('SBR_FEATURES')}/{m}.cols.json"))["cols"]
-             for m in PROD_MODULES]
-    sizes = [len(c) for c in sizes]
+    sizes = [len(json.load(open(f"{FEAT}/{m}.cols.json"))["cols"]) for m in PROD_MODULES]
     assert sum(sizes) == len(names) == 500, (sizes, len(names))
     folds_rows = champ_fold_rows(d, FOLDS, MAX_TRAIN_ROWS, seed=a.seed)
     log(f"rows: " + ", ".join(f"f{f} {len(folds_rows[f][0])}tr/{len(folds_rows[f][1])}va"
