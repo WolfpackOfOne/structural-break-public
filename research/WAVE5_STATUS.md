@@ -677,3 +677,39 @@ RT-600 artifact therefore has a known, tiny streaming drift in three
 `m07_bayes` columns. At ≤2 cells per series it is very unlikely to move a
 score, and it was not introduced or worsened here — but it is a real defect in
 the deployed system and nothing in the wave-3 or wave-4 documents mentions it.
+
+## 18. ALTERNATE PARTITION — THE §4 CONDITION THAT DECIDES IT
+
+Section 4 requires alternate partitions to be positive or at minimum
+directionally stable. The wave-3/wave-5 ABL control arms existed only on the
+canonical partition, so all three arms were re-run on alt1 at the identical
+protocol. Only the DELTA is compared across partitions, never the level — W4-E2
+measured levels moving ~0.009 across partitions while deltas move ~0.003.
+
+| | canonical | **alt1** |
+|---|---|---|
+| `RT-301` control | 0.61257 | 0.60572 |
+| `RT-750` + `m12_rdep` | 0.61736 | 0.60916 |
+| **standalone delta** | **+0.00479** (4/5) | **+0.00344** (4/5) |
+| blend + seed clone — *the bar* | 0.61753 (+0.00496) | 0.61107 (+0.00534) |
+| blend + `m12_rdep` | 0.61894 (+0.00637) | 0.61082 (+0.00510) |
+| **candidate − seed clone** | **+0.00141** (4/5) | **−0.00025** (2/5) |
+
+**The block's standalone accuracy is stable and real: +0.00479 canonical,
++0.00344 alt1, positive on 4/5 folds in both. Its advantage over ordinary seed
+diversity is not: it flips sign.**
+
+This is the W4-E2 lesson landing on a new quantity. Wave 4 established that
+*levels* are a property of the fold draw while *deltas* are a property of the
+method — and it is true here for the standalone delta. But the quantity §4
+actually binds on is a **difference of two deltas** (candidate blend minus
+seed-clone blend), and that second-order quantity carries the variance of both.
+At ±0.0015 it is simply not resolved by one partition, which is precisely why
+§4 asks for more than one.
+
+**Read together with everything else, this settles it.** The three independent
+framings of "does `m12_rdep` add information beyond seed diversity" give
++0.00141 (canonical ABL blend), +0.00046 (canonical eight-member, 3/5), and
+−0.00025 (alt1 ABL blend, 2/5). **None of them clears +0.0030, and they do not
+agree on the sign.** The honest summary is that the effect, if it exists, is
+below this framework's resolution.

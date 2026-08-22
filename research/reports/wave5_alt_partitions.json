@@ -1,0 +1,12 @@
+{
+  "alt1": {
+    "control": 0.605724096911791,
+    "candidate": 0.6091606959075806,
+    "standalone_delta": 0.0034365989957896304,
+    "n_folds_standalone": 4,
+    "seed_blend": 0.6110678282560138,
+    "cand_blend": 0.6108206649651899,
+    "delta_vs_seed_clone": -0.0002471632908238597,
+    "n_folds_blend": 2
+  }
+}
