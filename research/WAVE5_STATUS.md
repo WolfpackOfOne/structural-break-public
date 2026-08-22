@@ -622,3 +622,58 @@ The eighth-member framing cannot resolve this block either way — an eighth
 exchangeable member is worth +0.00003, so there is almost no room in the
 composition for a new member to demonstrate anything. **W5-E11, now running,
 rebuilds all seven streams with `m12_rdep` and is the test that decides.**
+
+## 17. THE DEPLOYMENT PATH FOR `m12_rdep` IS BUILT AND PROVEN
+
+A promoted feature module cannot ship without a **bitwise streaming twin** — the
+Crunch runner is series-sequential and single-pass, and `ProductionModel` hard-
+errors if the engine's columns do not hash to what the model was trained on.
+The seven existing twins are 320–1,076 lines each; this was the real blocker on
+any Wave-5 submission, so it was built while the architecture rebuild ran.
+
+`src/sbr/stream/s_m12_rdep.py` + `tests/test_stream_parity_m12_rdep.py`:
+
+| | |
+|---|---|
+| parity vs the batch module | **0 mismatches over 423,111 values**, 14 real series, `atol = 0` |
+| edge cases covered | `n_online = 1`, both length-10 series, short histories, outlier / scale / dependence / heavy-tail |
+| throughput | **225 µs/observation** (415 before tabulating the nulls) |
+| engine projection | 1.734 → **1.959 ms/pt**, ~**9.0 h** of a 15 h budget |
+| tests | 36 passing, every fast path pinned by a differential fuzz test |
+
+**Two parity traps, both real, both caught by the test rather than by reasoning:**
+
+1. **The AR-sigma round trip.** Batch computes `e = ctx.ar_online / hp.ar_sigma`
+   where `ar_online` was already multiplied by `ar_sigma`. That is not the
+   identity in floating point, so recomputing the AR filter in the twin differs
+   in the last ulp. Reading `ctx.tr["res_mean"]` — which `build_transforms`
+   defines by exactly that expression on exactly that input — is what makes it
+   exact. `StreamCtx`'s own docstring flags the same trap.
+
+2. **Reduction width.** Batch reduces a `(bins, n)` occupancy array along
+   **axis 0** — numpy's strided path. A `(bins, 1)` array is contiguous and
+   takes the **pairwise** path instead, and the two disagree in the last ulp on
+   **97 of 300** random columns. Widths ≥ 2 all agree, so one padding column
+   restores it. The first parity run failed on exactly this, at 4×10⁻¹⁶, in one
+   cell of one column. It is now asserted in
+   `test_reduction_width_invariance` rather than described in a comment.
+
+**RT-600 is provably unaffected.** `MODULE_ORDER` is appended to, never
+reordered, and `StreamEngine`'s default is now an explicit `PRODUCTION_MODULES`
+tuple — the shipped seven — so a registered-but-unshipped module cannot leak
+into a default engine. Verified three ways: the seven-module manifest still
+hashes to `1646c3b9…cced` from the freeze; the first 500 columns of the
+eight-module manifest are byte-identical to it; and **the actual shipped
+`models/final10k_ensemble` loads through its hard manifest gate and streams
+finite scores in [0, 1]**. `test_rt600_manifest_sha_is_unchanged` pins it.
+
+### A pre-existing defect found on the way, and it is not mine
+
+`tests/test_stream_engine_parity.py::test_engine_parity_real` **fails on
+`research/wave3-integration` itself**, identically, before any wave-5 change:
+1–2 cells per series out of ~200,000 differ between the batch and streaming
+`m07_bayes`, in `bo_p_lt25_z`, `bo_lo_change_z` and `bo_ent`. The shipped
+RT-600 artifact therefore has a known, tiny streaming drift in three
+`m07_bayes` columns. At ≤2 cells per series it is very unlikely to move a
+score, and it was not introduced or worsened here — but it is a real defect in
+the deployed system and nothing in the wave-3 or wave-4 documents mentions it.

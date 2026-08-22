@@ -31,22 +31,38 @@ from sbr.stream.s_m03_dyn import StreamM03Dyn
 from sbr.stream.s_m04_resid import StreamM04Resid
 from sbr.stream.s_m06_loc import StreamM06Loc
 from sbr.stream.s_m07_bayes import StreamM07Bayes
+from sbr.stream.s_m12_rdep import StreamM12Rdep
 
-#: IMMUTABLE. Never reorder. This is the order the batch pipeline hstacks in.
+#: IMMUTABLE. Never reorder; APPEND ONLY. This is the order the batch pipeline
+#: hstacks in.  `m12_rdep` is appended, not inserted: a model's manifest lists
+#: the modules it was trained on and `StreamEngine` filters MODULE_ORDER by that
+#: list, so appending cannot move a column of any existing model.  The RT-600
+#: seven-module manifest SHA is asserted unchanged by
+#: tests/test_stream_engine_parity.py::test_rt600_manifest_sha_is_unchanged.
 MODULE_ORDER = ("m00_core", "m01_seq", "m02_dist", "m03_dyn", "m04_resid",
-                "m06_loc", "m07_bayes")
+                "m06_loc", "m07_bayes", "m12_rdep")
+
+#: The DEFAULT engine, and the shipped RT-600 architecture.  `MODULE_ORDER` is
+#: the column ORDERING for everything the registry knows how to stream;
+#: PRODUCTION_MODULES is what you get when you do not ask for anything specific.
+#: A module is registered above so it can be requested by name and ordered
+#: correctly, and it joins the default only when an artifact is actually built
+#: on it -- otherwise `StreamEngine()` would silently start emitting columns no
+#: shipped model was trained on.
+PRODUCTION_MODULES = ("m00_core", "m01_seq", "m02_dist", "m03_dyn", "m04_resid",
+                      "m06_loc", "m07_bayes")
 
 _CLASSES = {
     "m00_core": StreamM00Core, "m01_seq": StreamM01Seq, "m02_dist": StreamM02Dist,
     "m03_dyn": StreamM03Dyn, "m04_resid": StreamM04Resid, "m06_loc": StreamM06Loc,
-    "m07_bayes": StreamM07Bayes,
+    "m07_bayes": StreamM07Bayes, "m12_rdep": StreamM12Rdep,
 }
 
 
 class StreamEngine:
     """Shared incremental engine over any subset of the production modules."""
 
-    def __init__(self, modules=MODULE_ORDER, ar_order: int = 2):
+    def __init__(self, modules=PRODUCTION_MODULES, ar_order: int = 2):
         bad = [m for m in modules if m not in _CLASSES]
         if bad:
             raise ValueError(f"unknown modules {bad}")

@@ -12,7 +12,7 @@ import pytest
 
 from sbr.features.base import REGISTRY, load_all, make_ctx
 from sbr.store import load_store
-from sbr.stream.engine import MODULE_ORDER, StreamEngine
+from sbr.stream.engine import MODULE_ORDER, PRODUCTION_MODULES, StreamEngine
 
 load_all()
 
@@ -20,7 +20,9 @@ load_all()
 def _batch_row_block(hist, online):
     names, mats = [], []
     ctx = make_ctx(hist, online)
-    for m in MODULE_ORDER:
+    # the DEFAULT engine is the shipped seven; MODULE_ORDER is the ordering
+    # registry for everything streamable, which is a larger set since wave 5
+    for m in PRODUCTION_MODULES:
         c, A = REGISTRY[m].fn(ctx)
         names += [f"{m}::{x}" for x in c]
         mats.append(np.asarray(A))
@@ -92,3 +94,36 @@ def test_future_poison_cannot_change_an_emitted_row():
     rows2 = [eng2.step(x) for x in o2[:120]]
     for t, (a, b) in enumerate(zip(rows, rows2)):
         assert np.array_equal(a, b, equal_nan=True), f"row {t} changed under future poisoning"
+
+
+# --------------------------------------------------------------------------
+# Appended in wave 5, when `m12_rdep` was registered in MODULE_ORDER.
+FROZEN_SEVEN_SHA = "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced"
+SEVEN = ("m00_core", "m01_seq", "m02_dist", "m03_dyn", "m04_resid",
+         "m06_loc", "m07_bayes")
+
+
+def test_rt600_manifest_sha_is_unchanged():
+    """Appending a module to MODULE_ORDER must not move a single RT-600 column.
+
+    `ProductionModel._check_manifest` is a hard error: a model whose engine
+    produces different columns refuses to run rather than predicting silently
+    wrong values.  That gate protects the competition, so the invariant it
+    depends on is asserted here directly -- the seven-module manifest must hash
+    to the value recorded in research/FINAL_ARCHITECTURE_FREEZE.md, whatever
+    else has been added to the registry since.
+    """
+    import numpy as np
+    from sbr.stream.engine import StreamEngine, MODULE_ORDER
+
+    h = np.arange(1200, dtype=np.float64) % 7 - 3.0
+    m7 = StreamEngine(SEVEN).fit_historical(h).manifest()
+    assert m7["feature_manifest_sha256"] == FROZEN_SEVEN_SHA, (
+        "the RT-600 feature manifest moved; the shipped artifact would refuse to load")
+    assert len(m7["columns"]) == 500
+
+    # and every added module must be APPENDED, never inserted
+    m_all = StreamEngine(MODULE_ORDER).fit_historical(h).manifest()
+    assert m_all["columns"][:500] == m7["columns"], (
+        "MODULE_ORDER was reordered, not appended to")
+    assert MODULE_ORDER[:7] == SEVEN
