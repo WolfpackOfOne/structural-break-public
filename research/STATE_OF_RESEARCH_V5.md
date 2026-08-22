@@ -86,6 +86,134 @@ positive** — W4-E1's three digits, reproduced independently.
 
 ---
 
-*(Sections 4 onward — experiments, diagnostics, verdict — are consolidated from
-`research/WAVE5_STATUS.md`, which carries the full working record and every
-number as it landed.)*
+## 4. WHAT THE METRIC ACTUALLY REWARDS (W5-D1)
+
+The official weight is `n_pos(t)·n_neg(t)` per timestep. It is **not** early.
+
+| online index t | share of pair weight | | post-break age | share of pair weight |
+|---|---|---|---|---|
+| 0–10 | **0.2%** | | 0–5 | **2.9%** |
+| 10–50 | 3.7% | | 5–20 | 8.1% |
+| 50–200 | 27.4% | | 20–100 | 32.3% |
+| 200–700 | **64.3%** | | 100+ | **56.7%** |
+| 700–1000 | 4.3% | | | |
+
+25% of the weight sits at t ≤ 168, 50% at t ≤ 293, 90% at t ≤ 600.
+
+**This corrects a premise the wave-5 brief states twice.** "We care enormously
+about early evidence because real-time TS-AUC weights every timestep" is true
+about timesteps and false about *weight*: ages 0–20 carry **11%** and age 100+
+carries **57%**. Young-break detection is worth about a fifth of mature-break
+ranking here. It also retrospectively explains `m09_back`, whose aggregate gain
+was entirely mature-break — that is what this weighting rewards, and it was
+still correctly rejected, on its seed-clone control rather than its age profile.
+
+## 5. WHAT FOOLS THE CHAMPION (W5-D2), AND WHAT IT IS GOOD AT (W5-D4)
+
+Severity = each no-break series' mean within-timestep percentile rank under the
+specialist ensemble. Top 1% hardest negatives (n = 40, mean rank **0.9221**
+against 0.0515 for the easiest 1%), descriptor gap in IQR units:
+`tail_rate_online` **+1.89**, `shock_max_absz` **+1.50**, `burst_ratio`
+**+1.38**, `level_shift_end` +0.54. Heuristic mechanism mix: heavy-tail/outlier
+**40.0% vs a 25.9% base rate**; every other mechanism at or below base.
+
+**The champion's false positives are no-break series whose online segment
+carries more extreme values than their own history predicts.** Not trend, not
+dependence, not spectrum.
+
+And by break family (heuristic taxonomy, labelled as such — the wave-1 artifact
+did not survive its container):
+
+| lead family | n_pos | A single | B seed clones | S specialists |
+|---|---|---|---|---|
+| location | 154,551 | 0.55642 | 0.55996 | 0.56431 |
+| **scale** | 373,783 | 0.68608 | 0.69360 | **0.69702** |
+| spectral | 490,741 | 0.58313 | 0.58811 | 0.59236 |
+
+**The champion is a scale detector** — 0.697 on scale-led breaks against 0.564
+on location-led ones. Scale is also the only family with a positive excess over
+a matched placebo null (+7.1pp), reproducing the wave-1 taxonomy independently.
+Specialisation beats bagging on every family, +0.0034 to +0.0044.
+
+## 6. CAUSALITY, AND THE GATE EARNING ITS KEEP
+
+Every new module passes `check_prefix_invariance` at `atol = 0.0`, bitwise, on
+7 series spanning `n_online` 10 → 914 including **both** length-10 series in the
+dataset, at prefix cuts (1, 3, 10, 37, 113).
+
+The gate caught three things that no score would have revealed:
+
+1. **The first `m12_rdep` sized its expanding nulls by `n_online`** — the single
+   forbidden input in this competition — and the check failed it on all 7 series
+   before any number was taken from it.
+2. **The first `m11_focus` was an exact O(t) scan at 526 ms/series.** The convex
+   -hull functional pruning that replaced it is **bit-identical on the maximum,
+   its inferred age and the anchored statistic** — verified against a brute-force
+   reference on 30 random cases — and 16× faster.
+3. **The stage-C queue's readiness check tested the feature cache's file size**,
+   and the driver preallocates it with `open_memmap(mode="w+")`, so the file is
+   full-size and mostly zeros from the first second. Two runs of `RT-740` were
+   started on a 15%-filled cache and killed; neither reached the ledger. **A
+   number computed from that cache would have looked entirely normal.**
+
+## 7. IMPLICATIONS OF THE CODEX 2025 REPRODUCTION
+
+Full review in `research/reports/wave5_codex2025_implications.md`. In short:
+
+**The reproduction failed its own calibration gate.** `polars`, `lightgbm`,
+`shap` and `tabpfn` were never installed, every rung R25-010…R25-050 is
+`blocked`, and the public repository reports no AUC of its own. There is no
+verified strong 2025 teacher anywhere in this project.
+
+**The consequential measurement is on the sibling branch.**
+`codex/oracle-information-frontier-2026` gave a model the true break boundary
+and `h` post-break points and compared it to `RT-300`:
+
+| h | boundary-aware oracle | legal `RT-300` | headroom |
+|---|---|---|---|
+| 20 | 0.5552 | 0.5610 | **−0.0058** |
+| 100 | 0.6161 | 0.6180 | **−0.0019** |
+| 150 | 0.6373 | 0.6397 | **−0.0025** |
+| FULL | 0.6497 | 0.6100 | +0.0396 |
+
+**At every horizon through h = 150 the legal causal model already matches or
+beats a model that is told where the break is.** Two honest qualifications: the
+oracle used a fixed 150-tree LGBM over a generic bank while `RT-300` is 600 trees
+over 500 purpose-built columns, and it is series ROC AUC rather than TS-AUC. But
+it reframes wave 5 entirely — the easy known-boundary information at the horizons
+carrying the decision mass is already extracted.
+
+**Teacher distillation is therefore NOT justified**, and not for lack of time:
+the only regime with real teacher advantage is `FULL`, which requires the entire
+post-break segment — exactly the future information that cannot be distilled
+into a causal prefix feature.
+
+**What the review did produce:** three of the wave-5 blocks exist because of it.
+`RT-906` (residualised distances), `RT-907` (residual CUSUM/CUSUMSQ) and
+`RT-908` (AR breakpoint LR) were the genuine gaps; every other 2025 idea was
+checked against the production modules and found already present, redundant, or
+impossible online. `RT-907` is the one that paid.
+
+## 8. DEPLOYMENT PATH
+
+`m12_rdep` has a bitwise streaming twin: **0 mismatches over 423,111 values** on
+14 real series at `atol = 0`, **225 µs/observation**, projecting **1.959 ms/pt**
+and ~9.0 h of a 15 h budget. RT-600 is provably unaffected — the seven-module
+manifest still hashes to `1646c3b9…cced`, the first 500 columns of the
+eight-module manifest are byte-identical, and the shipped
+`models/final10k_ensemble` loads through its hard manifest gate and streams.
+Detail and the two floating-point parity traps: `research/WAVE5_STATUS.md` §17.
+
+**A pre-existing defect found on the way.** `test_engine_parity_real` fails on
+`research/wave3-integration` itself, identically, before any wave-5 change: 1–2
+cells per series out of ~200,000 differ between the batch and streaming
+`m07_bayes`, in `bo_p_lt25_z`, `bo_lo_change_z` and `bo_ent`. The shipped RT-600
+artifact has a known tiny streaming drift that no wave-3 or wave-4 document
+mentions. Very unlikely to move a score at that magnitude; recorded because it
+is real.
+
+---
+
+*(Section 9 onward — the experiment table, the W5-E11 verdict and the LB-002
+decision — follow below. `research/WAVE5_STATUS.md` carries the full working
+record and every number as it landed.)*
