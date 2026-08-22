@@ -741,3 +741,56 @@ so it rests on n = 1 and is not evidence either.
 **Recorded as: the member deltas are not explained by anything measurable here.**
 Both stories are plausible, neither is supported, and writing up the one that
 happens to fit is how a post-hoc narrative becomes a citation three waves later.
+
+## 19. W5-E11 — DOES `m12_rdep` IMPROVE THE ARCHITECTURE? **NO**
+
+Every specialist stream rebuilt with `m12_rdep` appended and **nothing else
+changed** — same seed, same rows, same leaves, same sampling, same objective.
+`S'` and `S` share member count, weights, seeds, protocol and calibration, so
+there is no bagging channel for a gain to arrive through. This is the comparison
+§4 was written for.
+
+| incumbent | score | rebuilt | score | delta |
+|---|---|---|---|---|
+| `RT-300` | 0.61605 | `RT-751` | 0.61726 | **+0.00121** |
+| `RT-410` | 0.60512 | `RT-811` | 0.60380 | −0.00132 |
+| `RT-411` | 0.60781 | `RT-812` | 0.60975 | **+0.00194** |
+| `RT-412` | 0.61394 | `RT-813` | 0.61521 | **+0.00127** |
+| `RT-413` | 0.61481 | `RT-814` | 0.60871 | **−0.00610** |
+| `RT-414` | 0.61104 | `RT-815` | 0.60789 | −0.00316 |
+| `RT-415` | 0.61708 | `RT-816` | 0.61576 | −0.00133 |
+
+| composition | TS-AUC | per fold |
+|---|---|---|
+| **`S` — the RT-600 architecture** | **0.62581** | 0.63828 / 0.62040 / 0.63393 / 0.61751 / 0.61894 |
+| `S'` — rebuilt with `m12_rdep` | 0.62313 | 0.63761 / 0.61797 / 0.62948 / 0.62074 / 0.60987 |
+| `B` — seven seed clones | 0.62164 | 0.63817 / 0.61667 / 0.63020 / 0.61437 / 0.60879 |
+
+**`S' − S` = −0.00268, positive on 1/5 folds. H0 ACCEPTED.**
+
+Adding the block to every stream makes the ensemble **worse** than leaving it
+out, by five times the margin the eighth-member framing suggested it was worth.
+Four of seven members get worse individually; the ensemble loses more than the
+member average (−0.00103) because the members that degrade most are the ones
+whose errors were least correlated with the rest.
+
+`S'` still beats `B` by +0.00149, so **the specialisation effect survives the
+rebuild** — this is not a broken experiment, it is a block that costs more than
+it pays inside a bank that already covers its mechanism.
+
+### The three framings do not agree, and that is the finding
+
+| framing | `m12_rdep` vs its matched control | folds |
+|---|---|---|
+| canonical ABL two-model blend | **+0.00141** | 4/5 |
+| canonical eight-member ensemble | **+0.00046** | 3/5 |
+| **alt1 ABL two-model blend** | **−0.00025** | 2/5 |
+| **canonical architecture rebuild** | **−0.00268** | 1/5 |
+
+The block's **standalone** accuracy is stable and real — +0.00479 canonical,
++0.00344 alt1, 4/5 folds in both. Its **advantage over ordinary seed diversity**
+is not: across four legitimate framings it ranges from +0.00141 to −0.00268 and
+changes sign twice. **The effect is below this framework's resolution, and the
+strongest single framing was the most favourable one.** That is exactly the
+failure mode the pre-registration's four conditions exist to catch, and all four
+were needed — the canonical ABL blend alone would have promoted it.
