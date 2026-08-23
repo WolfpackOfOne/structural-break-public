@@ -283,18 +283,51 @@ Arm A reuses `RT-300` (no new ID). Pre-registration:
 
 ### `RT-992` / `RT-993` — W7 teacher/distillation, one-fold pilot (T1, T2)
 
+> **OUTER-FOLD CONTAMINATED. MECHANISM-POSITIVE SCREEN, NOT PROMOTION
+> EVIDENCE.** `Q` (global `RT-991` OOF) is cross-fitted per-row/series but
+> not per-*outer-validation-fold*: this pilot's outer fold-0 student training
+> used fold-1 rows labeled by a teacher that itself trained on fold 0. See
+> the nested-clean correction below (`RT-994`/`RT-995`) and
+> `research/WAVE7_TEACHER_NESTED_PREREG.md`. **The IDs and numbers are kept,
+> not deleted or overwritten** — they remain a real mechanism-direction
+> signal, just not a clean generalization estimate.
+
 | ID | is |
 |---|---|
-| `RT-992` | W7 teacher pilot T1 — `RT-990`'s unmodified 500 legal causal columns/rows/capacity, fold 0 only, label = `Q` (`RT-991` OOF, reused as teacher, clipped to (1e-6, 1-1e-6)), objective `xentropy`. **CAUSAL AT INFERENCE** — only privileged input is the training label, never a feature. Trained artifact would be legal to deploy if promoted; **not yet promoted, one-fold screen only.** |
-| `RT-993` | W7 teacher pilot T2 — identical to `RT-992` except label = `0.5*y + 0.5*Q`, fixed blend, no grid. Same causal-at-inference note as `RT-992`. |
+| `RT-992` | W7 teacher pilot T1 — `RT-990`'s unmodified 500 legal causal columns/rows/capacity, fold 0 only, label = `Q` (`RT-991` OOF, reused as teacher, clipped to (1e-6, 1-1e-6)), objective `xentropy`. **CAUSAL AT INFERENCE** — only privileged input is the training label, never a feature. **Outer-fold contaminated, see above — not promotable as-is.** |
+| `RT-993` | W7 teacher pilot T2 — identical to `RT-992` except label = `0.5*y + 0.5*Q`, fixed blend, no grid. Same causal-at-inference note and same contamination caveat as `RT-992`. |
 
 `T0` (the matched hard-label control) reuses `RT-990`'s existing fold-0 OOF
-slice — same rows, columns and capacity, so no new ID was needed. Both
-`RT-992` and `RT-993` cleared the pre-registered one-fold continuation gate
-by a wide margin (translated aggregate Δ +0.00903 / +0.01039); neither has
-cleared the full 5-fold promotion battery. A full run, if funded, uses the
-next unallocated IDs (`RT-994` onward) — `RT-992`/`RT-993` are not reused for
-it. Pre-registration: `research/WAVE7_TEACHER_PREREG.md`. Result:
+slice — same rows, columns and capacity, so no new ID was needed; `RT-990`
+itself has no nested-CV exposure (ordinary single-level 5-fold CV on hard
+labels) and remains a valid control throughout. Pre-registration:
+`research/WAVE7_TEACHER_PREREG.md`. Result:
 `research/reports/wave7_teacher_pilot.{md,json}`,
 `research/reports/wave7_teacher_diagnostics.{md,json}`,
 `research/reports/wave7_teacher_parity_check.json`.
+
+### `RT-994` / `RT-995` — W7 teacher/distillation, NESTED outer-fold-pure, 5-fold (T1, T2)
+
+**Corrected design.** Fixes the `RT-992`/`RT-993` contamination: for every
+outer validation fold `f`, `Q` for each outer-training row now comes from an
+*inner* teacher trained only on folds excluding `{f, g}` (`g` = that row's
+own fold), never on `f`. 20 inner teacher fits (no separate IDs — internal
+machinery, not standalone experiments, never scored or saved to
+`RESULTS.csv`), then `T1`/`T2` trained per outer fold on the nested `Q` and
+evaluated on the untouched outer fold. Same student inputs/capacity/rows as
+`RT-992`/`RT-993` — only the teacher's cross-fitting structure changed.
+
+**These IDs were briefly allocated, then aborted, under the *old*
+(contaminated) full-5-fold design before the contamination was found** — that
+run was killed before any fold completed, so it never produced a
+`RESULTS.csv` row or a saved OOF array; nothing under those IDs was ever
+scored. They are reused here for the corrected nested design rather than
+retired, since no contaminated artifact exists under them.
+
+| ID | is |
+|---|---|
+| `RT-994` | W7 teacher NESTED T1 — pure distillation, nested outer-fold-pure `Q`, 5 outer folds. |
+| `RT-995` | W7 teacher NESTED T2 — hard+teacher 0.5/0.5 blend, nested outer-fold-pure `Q`, 5 outer folds. |
+
+Pre-registration: `research/WAVE7_TEACHER_NESTED_PREREG.md`. Result:
+`research/reports/wave7_teacher_nested.{md,json}`.

@@ -49,5 +49,7 @@
   "gate_A": true,
   "gate_B": true,
   "gate_C": true,
-  "verdict": "CONTINUE"
+  "verdict": "CONTINUE",
+  "STATUS": "MECHANISM-POSITIVE SCREEN. OUTER-FOLD CONTAMINATED. NOT PROMOTION EVIDENCE.",
+  "contamination_note": "Q (global RT-991 OOF) is row/series cross-fitted but NOT outer-fold cross-fitted: fold-1 student-training rows in this fold-0-outer pilot received Q from a teacher trained on folds {0,2,3,4}, which includes outer fold 0. See research/WAVE7_TEACHER_NESTED_PREREG.md and research/reports/wave7_teacher_nested.md."
 }

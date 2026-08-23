@@ -1,5 +1,26 @@
 # WAVE 7 — TEACHER PILOT RESULTS (fold 0 only)
 
+> **STATUS: MECHANISM-POSITIVE SCREEN. OUTER-FOLD CONTAMINATED. NOT PROMOTION
+> EVIDENCE.** Post-hoc review found that `Q` (the global `RT-991` OOF, reused
+> as-is) is cross-fitted only with respect to the row/series it predicts, not
+> with respect to the *outer student validation fold*. Concretely: this
+> pilot's outer fold is 0; fold-1 student-training rows received `Q` from
+> `RT-991`'s fold-1 teacher, which itself trained on folds `{0,2,3,4}` —
+> i.e. on fold 0, the outer validation fold. Fold 0 therefore had an
+> indirect path into student training via the teacher's learned weights,
+> before the student was ever scored on fold 0. This is a nested-CV
+> meta-feature leakage pattern (the same failure mode a stacked ensemble has
+> when base-model OOF isn't re-cross-fitted against the outer split), not a
+> deployment-causality failure — the trained student's *inference* path
+> remains strictly causal (500 unmodified columns, no privileged input). The
+> numbers below are **not deleted** (they are a real, reproducible mechanism
+> signal — the direction and rough size of "does teacher supervision help"
+> is still informative) but must not be read as a clean generalization
+> estimate or cited as promotion evidence. See
+> `research/WAVE7_TEACHER_NESTED_PREREG.md` for the corrected design and
+> `research/reports/wave7_teacher_nested.md` for the outer-fold-pure result
+> and the contaminated-vs-clean comparison.
+
 Pre-registered: `research/WAVE7_TEACHER_PREREG.md`. Teacher = `RT-991` (W7-D3R Arm C, reused). Fold 0 only -- not a full 5-fold result.
 
 D3R fold-0 reference: Arm B cell AUC 0.66381, Arm C cell AUC 0.71658, future gap +0.05277.

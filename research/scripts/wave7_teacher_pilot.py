@@ -258,6 +258,105 @@ def train_student(kind):
 
 
 # ---------------------------------------------------------------------------
+# DEPRECATED -- DO NOT USE. train_student_full()/analyze_full() reuse the
+# global RT-991 OOF as Q, which is outer-fold contaminated (see
+# research/WAVE7_TEACHER_NESTED_PREREG.md §0): the teacher for any given
+# target fold was trained on every OTHER fold, including whatever fold a
+# student run later treats as its held-out outer fold. Started once under
+# the old scheme (--train-full t1/t2) and killed before any fold completed
+# once this was found -- no RT-994/RT-995 artifact from this path exists.
+# The corrected, outer-fold-pure replacement is
+# research/scripts/wave7_teacher_nested.py. Left here, unused, only so the
+# contaminated construction is legible in the historical record.
+def train_student_full(kind):
+    """Full 5-fold promotion-track run of T1/T2, per WAVE7_TEACHER_PREREG.md §6
+    ("Continue to a full 5-fold run (new IDs, not RT-992/RT-993 re-used)").
+
+    Row sampling mirrors sbr.pipeline.run()/wave7_d3r.train_arm_c(): ONE rng
+    created before the fold loop, advancing per fold in order (0,1,2,3,4) --
+    this reproduces RT-990's exact per-fold training-row sample bit-for-bit,
+    since RT-990 was trained the same way (same MAX_TRAIN_ROWS, same seed).
+    """
+    assert kind in ("t1", "t2")
+    exp_id = "RT-994" if kind == "t1" else "RT-995"
+    d = PL.Data()
+    mats, names = PL.load_features(FULL)
+    keep_idx = np.arange(len(names))
+    Q = load_Q()
+    y_hard = d.y.astype(np.float64)
+
+    rng = np.random.default_rng(0)
+    oof = np.full(len(d.y), np.nan, dtype=np.float32)
+    per_fold = []
+    t_start = time.time()
+
+    import lightgbm as lgb
+    for f in FOLDS:
+        tr_folds = [x for x in (0, 1, 2, 3, 4) if x != f]
+        tr_rows = d.rows_for(tr_folds)
+        va_rows = d.rows_for([f])
+        if len(tr_rows) > MAX_TRAIN_ROWS:
+            tr_rows = np.sort(rng.choice(tr_rows, MAX_TRAIN_ROWS, replace=False))
+
+        if kind == "t1":
+            ytr = Q[tr_rows]
+        else:
+            ytr = 0.5 * y_hard[tr_rows] + 0.5 * Q[tr_rows]
+
+        Xtr = PL._stack(mats, names, tr_rows, keep_idx)
+        assert Xtr.shape[1] == 500, f"expected 500 causal columns, got {Xtr.shape[1]}"
+        p = dict(ARM_B_PARAMS)
+        p["objective"] = "xentropy"
+        n_round = p.pop("n_estimators")
+        ds = lgb.Dataset(Xtr, label=ytr, params=dict(p),
+                         feature_name=[f"f{i}" for i in range(Xtr.shape[1])])
+        booster = lgb.train(p, ds, num_boost_round=n_round)
+        del Xtr, ds
+
+        Xva = PL._stack(mats, names, va_rows, keep_idx)
+        assert Xva.shape[1] == 500
+        pred = booster.predict(Xva).astype(np.float32)
+        del Xva
+        oof[va_rows] = pred
+        s = float(ts_auc_flat(pred, d.y[va_rows], d.t[va_rows]))
+        per_fold.append(s)
+        print(f"  [{kind.upper()}-full] fold {f}: TS-AUC {s:.5f}  "
+              f"({len(tr_rows)} train rows, {len(va_rows)} valid rows)", flush=True)
+
+    dev_rows = d.rows_for(list(FOLDS))
+    overall = float(ts_auc_flat(oof[dev_rows], d.y[dev_rows], d.t[dev_rows]))
+    np.save(f"{OOFDIR}/{exp_id}.npy", oof)
+
+    hyp = ("W7 teacher FULL T1: pure distillation, label = Q (RT-991 OOF, reused)"
+           if kind == "t1" else
+           "W7 teacher FULL T2: hard+teacher fixed 0.5/0.5 blend, label = 0.5*y + 0.5*Q")
+    res = dict(
+        experiment_id=exp_id, date=time.strftime("%Y-%m-%d %H:%M"), git_sha=PL.git_sha(),
+        agent="agent0", hypothesis=hyp,
+        falsification_condition="see research/WAVE7_TEACHER_PREREG.md §6, promotion bar "
+                                "research/HANDOFF_WAVE6.md §3.3",
+        feature_set=",".join(FULL), n_features=500, model="lgbm", objective="xentropy",
+        folds=",".join(map(str, FOLDS)), random_seed=0,
+        train_series=int((~np.isin(d.series_fold, [-1])).sum()), train_rows=MAX_TRAIN_ROWS,
+        mean_oof_ts_auc=float(np.mean(per_fold)), pooled_oof_ts_auc=overall,
+        per_fold_ts_auc=";".join(f"{x:.5f}" for x in per_fold), fold_std=float(np.std(per_fold)),
+        persistence="none", sample_mode="uniform",
+        training_runtime_s=round(time.time() - t_start, 1),
+        causal_verified="student inputs = unmodified 500-col causal bank; teacher (Q) used "
+                        "only as training label, never as a feature",
+        test_reduced_touched="no", lockbox_touched="no", status="recorded",
+        notes="W7 teacher FULL 5-fold run, promoted from one-fold pilot RT-992/RT-993 "
+              "per research/WAVE7_TEACHER_PREREG.md §6 continuation gate (both cleared).",
+        protocol="full",
+    )
+    PL.append_result(res)
+    print(json.dumps({k: res[k] for k in
+                      ("experiment_id", "mean_oof_ts_auc", "pooled_oof_ts_auc",
+                       "per_fold_ts_auc", "fold_std")}, indent=2))
+    return res
+
+
+# ---------------------------------------------------------------------------
 def analyze():
     c = Ctx()
     va_rows0 = c.rows[VAL_FOLD]
@@ -368,12 +467,140 @@ def analyze():
     return out
 
 
+PROMOTION_BAR_MEAN = 0.0030
+PROMOTION_BAR_FOLDS = 4  # of 5
+
+
+def analyze_full():
+    """Full 5-fold promotion-track analysis: aggregate TS-AUC vs the matched
+    control (RT-990: same rows/columns/capacity, hard label), per-fold count,
+    and paired series-level bootstrap (research/HANDOFF_WAVE6.md §3.3 legs
+    1-3). Leg 4 (alternate-partition stability) is NOT run here -- it needs
+    separate retraining on research/folds/folds_alt{1,2,3}.parquet and is
+    reported as outstanding, not silently skipped.
+    """
+    c = Ctx()
+    arms = {"T0_RT990": "RT-990", "RT300_champion_single": "RT-300",
+            "T1_RT994": "RT-994", "T2_RT995": "RT-995"}
+    vecs, results = {}, {}
+    for label, exp_id in arms.items():
+        v = np.load(f"{OOFDIR}/{exp_id}.npy")
+        vecs[label] = v
+        mean_auc, per = c.score(v)
+        pooled = c.pooled(v)
+        cell_by_fold = {}
+        for k in FOLDS:
+            r = c.rows[k]
+            y, t, age = c.d.y[r], c.d.t[r], c.age[r]
+            cm = cell_mask(y, t, age)
+            cell_by_fold[k] = score_on(v[r], cm, y, t)
+        results[label] = {
+            "experiment_id": exp_id, "mean_ts_auc": mean_auc, "pooled_ts_auc": pooled,
+            "per_fold_ts_auc": per, "cell_ts_auc_by_fold": cell_by_fold,
+        }
+        print(f"  {label} ({exp_id}): mean {mean_auc:.5f}  pooled {pooled:.5f}  "
+              f"per-fold {['%.5f' % x for x in per]}")
+
+    t0 = results["T0_RT990"]
+    deltas = {}
+    for label in ("T1_RT994", "T2_RT995"):
+        r = results[label]
+        per_fold_delta = [r["per_fold_ts_auc"][k] - t0["per_fold_ts_auc"][k] for k in range(5)]
+        n_pos = sum(1 for x in per_fold_delta if x > 0)
+        mean_delta = r["mean_ts_auc"] - t0["mean_ts_auc"]
+        pooled_delta = r["pooled_ts_auc"] - t0["pooled_ts_auc"]
+        deltas[label] = {
+            "mean_delta_vs_RT990": mean_delta, "pooled_delta_vs_RT990": pooled_delta,
+            "per_fold_delta": per_fold_delta, "folds_positive": n_pos,
+            "clears_magnitude_bar": mean_delta >= PROMOTION_BAR_MEAN,
+            "clears_fold_bar": n_pos >= PROMOTION_BAR_FOLDS,
+        }
+        print(f"  {label} - T0: mean Δ {mean_delta:+.5f}  pooled Δ {pooled_delta:+.5f}  "
+              f"folds positive {n_pos}/5")
+
+    print("\n  running paired series-level bootstrap (200 reps)...")
+    contrasts = {"T1-T0": ("T1_RT994", "T0_RT990"), "T2-T0": ("T2_RT995", "T0_RT990"),
+                 "T1-RT300": ("T1_RT994", "RT300_champion_single"),
+                 "T2-RT300": ("T2_RT995", "RT300_champion_single")}
+    boot = c.bootstrap(vecs, contrasts, n=200, seed=0)
+    for k, v in boot.items():
+        print(f"    {k}: mean {v['mean']:+.5f}  CI95 [{v['ci95'][0]:+.5f}, {v['ci95'][1]:+.5f}]  "
+              f"frac>0 {v['fraction_positive']:.2f}")
+
+    verdicts = {}
+    for label in ("T1_RT994", "T2_RT995"):
+        dd = deltas[label]
+        boot_key = "T1-T0" if label == "T1_RT994" else "T2-T0"
+        bootstrap_supportive = boot[boot_key]["ci95"][0] > 0
+        legs = {
+            "1_magnitude_ge_0.0030": dd["clears_magnitude_bar"],
+            "2_folds_ge_4of5": dd["clears_fold_bar"],
+            "3_bootstrap_ci_above_zero": bootstrap_supportive,
+            "4_alternate_partitions": "NOT RUN -- outstanding, see notes",
+        }
+        legs_1_3_clear = legs["1_magnitude_ge_0.0030"] and legs["2_folds_ge_4of5"] and legs["3_bootstrap_ci_above_zero"]
+        verdicts[label] = {
+            "legs": legs,
+            "verdict": ("LEGS 1-3 CLEAR, LEG 4 (alternate partitions) OUTSTANDING -- "
+                       "not yet a full promotion, no submission") if legs_1_3_clear else
+                       "DOES NOT CLEAR THE PROMOTION BAR",
+        }
+        print(f"\n  {label}: {verdicts[label]['verdict']}")
+
+    out = {
+        "experiment": "W7 teacher FULL 5-fold", "prereg": "research/WAVE7_TEACHER_PREREG.md",
+        "promotion_bar_source": "research/HANDOFF_WAVE6.md §3.3 / research/WAVE5_PREREG.md §4",
+        "results": results, "deltas": deltas, "bootstrap": boot, "verdicts": verdicts,
+    }
+    with open(f"{REPORTS}/wave7_teacher_full.json", "w") as f:
+        json.dump(out, f, indent=2)
+
+    md = ["# WAVE 7 — TEACHER FULL 5-FOLD RESULTS\n",
+          "Pre-registered: `research/WAVE7_TEACHER_PREREG.md` §6 (continuation "
+          "of the one-fold pilot, which cleared its gate). Promotion bar: "
+          "`research/HANDOFF_WAVE6.md` §3.3.\n",
+          "## Aggregate TS-AUC (whole dev, all 5 folds)\n",
+          "| arm | exp id | mean | pooled | fold0 | fold1 | fold2 | fold3 | fold4 |",
+          "|---|---|---:|---:|---:|---:|---:|---:|---:|"]
+    for label, exp_id in arms.items():
+        r = results[label]
+        pf = r["per_fold_ts_auc"]
+        md.append(f"| {label} | `{exp_id}` | {r['mean_ts_auc']:.5f} | {r['pooled_ts_auc']:.5f} | "
+                  + " | ".join(f"{x:.5f}" for x in pf) + " |")
+    md += ["\n## Deltas vs T0 (`RT-990`, matched control)\n",
+           "| arm | mean Δ | pooled Δ | folds positive | magnitude bar (≥+0.0030) | fold bar (≥4/5) |",
+           "|---|---:|---:|---:|---|---|"]
+    for label, dd in deltas.items():
+        md.append(f"| {label} | {dd['mean_delta_vs_RT990']:+.5f} | {dd['pooled_delta_vs_RT990']:+.5f} | "
+                  f"{dd['folds_positive']}/5 | {dd['clears_magnitude_bar']} | {dd['clears_fold_bar']} |")
+    md += ["\n## Paired series bootstrap (200 reps)\n",
+           "| contrast | mean | CI95 | fraction > 0 |", "|---|---:|---|---:|"]
+    for k, v in boot.items():
+        md.append(f"| {k} | {v['mean']:+.5f} | [{v['ci95'][0]:+.5f}, {v['ci95'][1]:+.5f}] | {v['fraction_positive']:.2f} |")
+    md += ["\n## Promotion-bar verdicts\n"]
+    for label, vv in verdicts.items():
+        md.append(f"**{label}**: {vv['verdict']}\n")
+        for k, val in vv["legs"].items():
+            md.append(f"* {k}: {val}")
+        md.append("")
+    md += ["**Leg 4 (alternate-partition stability) has not been run** -- it "
+           "requires retraining on `research/folds/folds_alt{1,2,3}.parquet` "
+           "and is a separate, further compute commitment, not skipped "
+           "silently. No submission until it is checked.\n"]
+    with open(f"{REPORTS}/wave7_teacher_full.md", "w") as f:
+        f.write("\n".join(md))
+    print(f"\nwrote {REPORTS}/wave7_teacher_full.{{json,md}}")
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--diagnostics", action="store_true")
     ap.add_argument("--parity-check", action="store_true")
     ap.add_argument("--train", choices=["t1", "t2"])
+    ap.add_argument("--train-full", choices=["t1", "t2"])
     ap.add_argument("--analyze", action="store_true")
+    ap.add_argument("--analyze-full", action="store_true")
     args = ap.parse_args()
     if args.diagnostics:
         diagnostics()
@@ -381,10 +608,15 @@ def main():
         parity_check()
     elif args.train:
         train_student(args.train)
+    elif args.train_full:
+        train_student_full(args.train_full)
     elif args.analyze:
         analyze()
+    elif args.analyze_full:
+        analyze_full()
     else:
-        raise SystemExit("pass --diagnostics, --parity-check, --train t1|t2, or --analyze")
+        raise SystemExit("pass --diagnostics, --parity-check, --train t1|t2, "
+                         "--train-full t1|t2, --analyze, or --analyze-full")
 
 
 if __name__ == "__main__":
