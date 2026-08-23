@@ -260,3 +260,13 @@ Pre-registration: `research/WAVE6_NEURAL_PREREG.md` and `WAVE6_PREREG.md` §20.
 2025-reproduction *ideas* throughout `research/WAVE5_PREREG.md` and
 `research/STATE_OF_RESEARCH_V5.md`; re-using them as experiment IDs would
 collide in text even though it would not collide in the ledger.
+
+## 7. WAVE 7
+
+### `W7-D0` — no new ID allocated
+
+The exact pairwise-inversion loss cube re-scores `RT-420` (`research/oof/wave5_S_specialist.npy`,
+the existing RT-600 development architecture OOF) in different row slices. It
+trains nothing and produces no new prediction vector, so it does not receive
+an `RT-*` ID. See `research/RDOF_LEDGER.md` "WAVE 7" and
+`research/WAVE7_RT600_EXACT_ALPHA_BUDGET.md`.

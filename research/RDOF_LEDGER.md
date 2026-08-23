@@ -724,3 +724,42 @@ GRU), ≤ 2 architecture sizes and ≤ 2 regularisation settings per family, 1 l
 search, no loss sweep, no seed fishing. Each family costs its runs whether or not
 it works, and each is charged against multiplicity at declaration time, not at
 publication time.
+
+---
+
+## WAVE 7
+
+### W7-D0 — exact RT-600 pairwise-inversion loss cube
+
+**Diagnostic only. No training, no candidate, nothing selected.** Pure
+recombination and exact re-scoring of `research/oof/wave5_S_specialist.npy`
+(RT-600's development architecture, `RT-420`) using the official metric's own
+rank/pair machinery (`sbr.metric.ts_auc_flat`, `return_per_step=True`),
+decomposed by current-t bucket × positive-age bucket × negative type
+(never-break / pre-break).
+
+| | count |
+|---|---:|
+| runs spent | 0 (recombination of existing OOF, one scoring pass) |
+| results contributed | 1 (the exact loss cube) |
+| selection events | **0** |
+| hyperparameters touched | **0** |
+| Crunch submissions | **0** |
+
+**Reproduction check, before any cube number was trusted.** Re-scored the
+exact champion OOF vector against the committed `RT-420` numbers (0.62581
+mean, folds 0.63828/0.62040/0.63392/0.61750/0.61894): delta +0.000001 mean,
+max per-fold delta +0.000009. PASS.
+
+**Result.** Dominant cell (t≥200, age≥100): 50.50% of pair weight, **45.29%**
+of exact inversion loss (prior inferred estimate was 45.7% — approximately
+confirmed), cell AUC 0.66428. Inside that cell, never-break negatives carry
+74.0% of the loss, pre-break only 26.0% — the open problem is separating
+mature persistent weak breaks from truly stable series, not baseline
+heterogeneity. Full writeup: `research/WAVE7_RT600_EXACT_ALPHA_BUDGET.md`.
+Evidence: `research/reports/wave7_rt600_exact_alpha_budget.json`.
+
+**Not yet run: W7-D3R** (same-prefix vs. full-sequence three-arm diagnostic on
+this exact cell). Requires its own pre-registration before any score is
+generated, per the commit-boundary rule this project has followed since
+wave 5.

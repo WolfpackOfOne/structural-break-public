@@ -1,0 +1,929 @@
+{
+  "experiment": "W7-D0",
+  "purpose": "exact RT-600 pairwise inversion loss cube",
+  "source_oof": "research/oof/wave5_S_specialist.npy",
+  "reproduction": {
+    "expected_mean": 0.62581,
+    "observed_mean": 0.6258112639463216,
+    "delta": 1.2639463216057578e-06,
+    "expected_per_fold": [
+      0.63828,
+      0.6204,
+      0.63392,
+      0.6175,
+      0.61894
+    ],
+    "observed_per_fold": [
+      0.6382763032336511,
+      0.6204018503410609,
+      0.6339302291124634,
+      0.6175075054046519,
+      0.6189404316397805
+    ],
+    "delta_per_fold": [
+      -3.696766348815217e-06,
+      1.8503410609271853e-06,
+      1.0229112463400192e-05,
+      7.505404651886316e-06,
+      4.316397804737804e-07
+    ],
+    "tolerance": 0.0001,
+    "pass": true
+  },
+  "pooled": {
+    "ts_auc": 0.6256269256734708,
+    "total_pair_weight": 3381921039.0,
+    "total_inversion_loss": 1266100176.5,
+    "loss_fraction": 0.3743730743265292
+  },
+  "t_buckets": [
+    "0-20",
+    "20-50",
+    "50-100",
+    "100-200",
+    "200-400",
+    "400+"
+  ],
+  "age_buckets": [
+    "0-5",
+    "5-10",
+    "10-20",
+    "20-50",
+    "50-100",
+    "100+"
+  ],
+  "neg_types": [
+    "never_break",
+    "pre_break"
+  ],
+  "cube": {
+    "never_break": {
+      "0-5": {
+        "num": [
+          3376875.5,
+          4223005.0,
+          4886151.5,
+          7156338.5,
+          7293497.0,
+          3826314.5
+        ],
+        "den": [
+          6466238.0,
+          8557216.0,
+          9770842.0,
+          13249802.0,
+          14172849.0,
+          7387776.0
+        ]
+      },
+      "5-10": {
+        "num": [
+          2264911.0,
+          4559676.5,
+          5236142.0,
+          7353470.5,
+          7558520.5,
+          3885038.0
+        ],
+        "den": [
+          4237849.0,
+          8656522.0,
+          9995020.0,
+          13279405.0,
+          14186671.0,
+          7364753.0
+        ]
+      },
+      "10-20": {
+        "num": [
+          1956555.5,
+          9049988.0,
+          10816935.0,
+          15264280.5,
+          15400427.5,
+          7891221.0
+        ],
+        "den": [
+          3599217.0,
+          16296012.0,
+          20057836.0,
+          26840140.0,
+          28449623.0,
+          14716132.0
+        ]
+      },
+      "20-50": {
+        "num": [
+          0.0,
+          13839206.5,
+          35668031.0,
+          48758174.0,
+          47974927.5,
+          24817272.5
+        ],
+        "den": [
+          0.0,
+          23299981.0,
+          62248540.0,
+          81445962.0,
+          84659664.0,
+          44567945.0
+        ]
+      },
+      "50-100": {
+        "num": [
+          0.0,
+          0.0,
+          29413252.0,
+          84246051.0,
+          88241248.0,
+          43437182.5
+        ],
+        "den": [
+          0.0,
+          0.0,
+          49047553.0,
+          136727412.0,
+          144163694.0,
+          74806843.0
+        ]
+      },
+      "100+": {
+        "num": [
+          0.0,
+          0.0,
+          0.0,
+          82874453.5,
+          365193808.5,
+          478666322.0
+        ],
+        "den": [
+          0.0,
+          0.0,
+          0.0,
+          128816505.0,
+          557583698.0,
+          710557313.0
+        ]
+      }
+    },
+    "pre_break": {
+      "0-5": {
+        "num": [
+          3216835.5,
+          3687837.5,
+          3761599.0,
+          4634707.0,
+          3480403.5,
+          1066839.5
+        ],
+        "den": [
+          6076535.0,
+          7407468.0,
+          7596130.0,
+          8708554.0,
+          6836680.0,
+          2010131.0
+        ]
+      },
+      "5-10": {
+        "num": [
+          2148123.5,
+          3988834.5,
+          4038107.5,
+          4762988.0,
+          3605366.5,
+          1078110.5
+        ],
+        "den": [
+          3951081.0,
+          7507168.0,
+          7775687.0,
+          8728320.0,
+          6833669.0,
+          2000951.0
+        ]
+      },
+      "10-20": {
+        "num": [
+          1834378.5,
+          7887947.0,
+          8357298.5,
+          9897521.0,
+          7341378.5,
+          2183399.0
+        ],
+        "den": [
+          3311858.0,
+          14102567.0,
+          15633117.0,
+          17667765.0,
+          13684033.0,
+          3998281.0
+        ]
+      },
+      "20-50": {
+        "num": [
+          0.0,
+          11780622.5,
+          27550671.0,
+          31569620.0,
+          22871542.5,
+          6880637.0
+        ],
+        "den": [
+          0.0,
+          19847733.0,
+          48488884.0,
+          53549245.0,
+          40640081.0,
+          12139524.0
+        ]
+      },
+      "50-100": {
+        "num": [
+          0.0,
+          0.0,
+          22099690.0,
+          54683657.5,
+          42160397.5,
+          12036354.5
+        ],
+        "den": [
+          0.0,
+          0.0,
+          37345891.0,
+          90074678.0,
+          69249480.0,
+          20438046.0
+        ]
+      },
+      "100+": {
+        "num": [
+          0.0,
+          0.0,
+          0.0,
+          51342914.0,
+          167076894.0,
+          123666910.0
+        ],
+        "den": [
+          0.0,
+          0.0,
+          0.0,
+          81221296.0,
+          256737917.0,
+          183149256.0
+        ]
+      }
+    }
+  },
+  "cube_check": {
+    "grand_pair_weight": 3381921039.0,
+    "grand_loss": 1266100176.5,
+    "matches_pooled_weight": true,
+    "matches_pooled_loss": true
+  },
+  "dominant_cell_t200_age100": {
+    "fraction_of_pair_weight": 0.5050467365450515,
+    "fraction_of_inversion_loss": 0.4529059075603091,
+    "cell_auc": 0.6642770565078685,
+    "perfect_repair_ceiling_ts_auc": 0.7951827026674705,
+    "never_break": {
+      "pair_weight": 1268141011.0,
+      "loss": 424280880.5,
+      "loss_share": 0.7399074609592352,
+      "weight_share": 0.7424590664717041
+    },
+    "pre_break": {
+      "pair_weight": 439887173.0,
+      "loss": 149143369.0,
+      "loss_share": 0.2600925390407648,
+      "weight_share": 0.25754093352829593
+    }
+  },
+  "claim_45_7_pct": {
+    "prior_inferred_value": 0.457,
+    "exact_measured_value": 0.4529059075603091,
+    "verdict": "CONFIRMED"
+  },
+  "capture_requirements": {
+    "external_anchor": 0.6268,
+    "targets": {
+      "0.630": {
+        "needed_gain": 0.0031999999999999806,
+        "needed_dev_ts_auc": 0.6288269256734708,
+        "needed_repair_pairunits": 10822147.324800014,
+        "fraction_of_dominant_cell_inversions": 0.01887284560120441,
+        "feasible_within_dominant_cell": true
+      },
+      "0.635": {
+        "needed_gain": 0.008199999999999985,
+        "needed_dev_ts_auc": 0.6338269256734708,
+        "needed_repair_pairunits": 27731752.519799948,
+        "fraction_of_dominant_cell_inversions": 0.04836166685308614,
+        "feasible_within_dominant_cell": true
+      },
+      "0.640": {
+        "needed_gain": 0.01319999999999999,
+        "needed_dev_ts_auc": 0.6388269256734708,
+        "needed_repair_pairunits": 44641357.71479988,
+        "fraction_of_dominant_cell_inversions": 0.07785048810496788,
+        "feasible_within_dominant_cell": true
+      },
+      "0.645": {
+        "needed_gain": 0.018199999999999994,
+        "needed_dev_ts_auc": 0.6438269256734708,
+        "needed_repair_pairunits": 61550962.90980005,
+        "fraction_of_dominant_cell_inversions": 0.10733930935685003,
+        "feasible_within_dominant_cell": true
+      },
+      "0.650": {
+        "needed_gain": 0.0232,
+        "needed_dev_ts_auc": 0.6488269256734708,
+        "needed_repair_pairunits": 78460568.10480022,
+        "fraction_of_dominant_cell_inversions": 0.13682813060873217,
+        "feasible_within_dominant_cell": true
+      }
+    }
+  },
+  "cell_rows": [
+    {
+      "neg_type": "never_break",
+      "age_bucket": "0-5",
+      "t_bucket": "0-20",
+      "pair_weight": 6466238.0,
+      "inversion_loss": 3089362.5,
+      "cell_auc": 0.5222318603181634
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "0-5",
+      "t_bucket": "20-50",
+      "pair_weight": 8557216.0,
+      "inversion_loss": 4334211.0,
+      "cell_auc": 0.4935022091296983
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "0-5",
+      "t_bucket": "50-100",
+      "pair_weight": 9770842.0,
+      "inversion_loss": 4884690.5,
+      "cell_auc": 0.5000747632599115
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "0-5",
+      "t_bucket": "100-200",
+      "pair_weight": 13249802.0,
+      "inversion_loss": 6093463.5,
+      "cell_auc": 0.5401090899320609
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "0-5",
+      "t_bucket": "200-400",
+      "pair_weight": 14172849.0,
+      "inversion_loss": 6879352.0,
+      "cell_auc": 0.5146105063279797
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "0-5",
+      "t_bucket": "400+",
+      "pair_weight": 7387776.0,
+      "inversion_loss": 3561461.5,
+      "cell_auc": 0.5179250832726926
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "5-10",
+      "t_bucket": "0-20",
+      "pair_weight": 4237849.0,
+      "inversion_loss": 1972938.0,
+      "cell_auc": 0.534448254291269
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "5-10",
+      "t_bucket": "20-50",
+      "pair_weight": 8656522.0,
+      "inversion_loss": 4096845.5,
+      "cell_auc": 0.5267330805605299
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "5-10",
+      "t_bucket": "50-100",
+      "pair_weight": 9995020.0,
+      "inversion_loss": 4758878.0,
+      "cell_auc": 0.5238750897947178
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "5-10",
+      "t_bucket": "100-200",
+      "pair_weight": 13279405.0,
+      "inversion_loss": 5925934.5,
+      "cell_auc": 0.5537499985880392
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "5-10",
+      "t_bucket": "200-400",
+      "pair_weight": 14186671.0,
+      "inversion_loss": 6628150.5,
+      "cell_auc": 0.5327902860368017
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "5-10",
+      "t_bucket": "400+",
+      "pair_weight": 7364753.0,
+      "inversion_loss": 3479715.0,
+      "cell_auc": 0.5275177592513964
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "10-20",
+      "t_bucket": "0-20",
+      "pair_weight": 3599217.0,
+      "inversion_loss": 1642661.5,
+      "cell_auc": 0.5436058731663026
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "10-20",
+      "t_bucket": "20-50",
+      "pair_weight": 16296012.0,
+      "inversion_loss": 7246024.0,
+      "cell_auc": 0.5553498610580306
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "10-20",
+      "t_bucket": "50-100",
+      "pair_weight": 20057836.0,
+      "inversion_loss": 9240901.0,
+      "cell_auc": 0.5392872391617919
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "10-20",
+      "t_bucket": "100-200",
+      "pair_weight": 26840140.0,
+      "inversion_loss": 11575859.5,
+      "cell_auc": 0.5687109120891322
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "10-20",
+      "t_bucket": "200-400",
+      "pair_weight": 28449623.0,
+      "inversion_loss": 13049195.5,
+      "cell_auc": 0.5413227268424612
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "10-20",
+      "t_bucket": "400+",
+      "pair_weight": 14716132.0,
+      "inversion_loss": 6824911.0,
+      "cell_auc": 0.5362292890550315
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "20-50",
+      "t_bucket": "0-20",
+      "pair_weight": 0.0,
+      "inversion_loss": 0.0,
+      "cell_auc": null
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "20-50",
+      "t_bucket": "20-50",
+      "pair_weight": 23299981.0,
+      "inversion_loss": 9460774.5,
+      "cell_auc": 0.5939578448583285
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "20-50",
+      "t_bucket": "50-100",
+      "pair_weight": 62248540.0,
+      "inversion_loss": 26580509.0,
+      "cell_auc": 0.5729938565627403
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "20-50",
+      "t_bucket": "100-200",
+      "pair_weight": 81445962.0,
+      "inversion_loss": 32687788.0,
+      "cell_auc": 0.5986567388079964
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "20-50",
+      "t_bucket": "200-400",
+      "pair_weight": 84659664.0,
+      "inversion_loss": 36684736.5,
+      "cell_auc": 0.5666798713021115
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "20-50",
+      "t_bucket": "400+",
+      "pair_weight": 44567945.0,
+      "inversion_loss": 19750672.5,
+      "cell_auc": 0.556841301522877
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "50-100",
+      "t_bucket": "0-20",
+      "pair_weight": 0.0,
+      "inversion_loss": 0.0,
+      "cell_auc": null
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "50-100",
+      "t_bucket": "20-50",
+      "pair_weight": 0.0,
+      "inversion_loss": 0.0,
+      "cell_auc": null
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "50-100",
+      "t_bucket": "50-100",
+      "pair_weight": 49047553.0,
+      "inversion_loss": 19634301.0,
+      "cell_auc": 0.59968846967758
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "50-100",
+      "t_bucket": "100-200",
+      "pair_weight": 136727412.0,
+      "inversion_loss": 52481361.0,
+      "cell_auc": 0.6161606496289127
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "50-100",
+      "t_bucket": "200-400",
+      "pair_weight": 144163694.0,
+      "inversion_loss": 55922446.0,
+      "cell_auc": 0.6120906419059989
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "50-100",
+      "t_bucket": "400+",
+      "pair_weight": 74806843.0,
+      "inversion_loss": 31369660.5,
+      "cell_auc": 0.5806578751090993
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "100+",
+      "t_bucket": "0-20",
+      "pair_weight": 0.0,
+      "inversion_loss": 0.0,
+      "cell_auc": null
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "100+",
+      "t_bucket": "20-50",
+      "pair_weight": 0.0,
+      "inversion_loss": 0.0,
+      "cell_auc": null
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "100+",
+      "t_bucket": "50-100",
+      "pair_weight": 0.0,
+      "inversion_loss": 0.0,
+      "cell_auc": null
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "100+",
+      "t_bucket": "100-200",
+      "pair_weight": 128816505.0,
+      "inversion_loss": 45942051.5,
+      "cell_auc": 0.6433527559220769
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "100+",
+      "t_bucket": "200-400",
+      "pair_weight": 557583698.0,
+      "inversion_loss": 192389889.5,
+      "cell_auc": 0.654957829308704
+    },
+    {
+      "neg_type": "never_break",
+      "age_bucket": "100+",
+      "t_bucket": "400+",
+      "pair_weight": 710557313.0,
+      "inversion_loss": 231890991.0,
+      "cell_auc": 0.6736491388415279
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "0-5",
+      "t_bucket": "0-20",
+      "pair_weight": 6076535.0,
+      "inversion_loss": 2859699.5,
+      "cell_auc": 0.529386484238139
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "0-5",
+      "t_bucket": "20-50",
+      "pair_weight": 7407468.0,
+      "inversion_loss": 3719630.5,
+      "cell_auc": 0.4978539900543614
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "0-5",
+      "t_bucket": "50-100",
+      "pair_weight": 7596130.0,
+      "inversion_loss": 3834531.0,
+      "cell_auc": 0.4951993975879823
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "0-5",
+      "t_bucket": "100-200",
+      "pair_weight": 8708554.0,
+      "inversion_loss": 4073847.0,
+      "cell_auc": 0.5322016720571521
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "0-5",
+      "t_bucket": "200-400",
+      "pair_weight": 6836680.0,
+      "inversion_loss": 3356276.5,
+      "cell_auc": 0.5090780174002586
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "0-5",
+      "t_bucket": "400+",
+      "pair_weight": 2010131.0,
+      "inversion_loss": 943291.5,
+      "cell_auc": 0.5307313304456277
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "5-10",
+      "t_bucket": "0-20",
+      "pair_weight": 3951081.0,
+      "inversion_loss": 1802957.5,
+      "cell_auc": 0.5436799448049787
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "5-10",
+      "t_bucket": "20-50",
+      "pair_weight": 7507168.0,
+      "inversion_loss": 3518333.5,
+      "cell_auc": 0.5313367837245683
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "5-10",
+      "t_bucket": "50-100",
+      "pair_weight": 7775687.0,
+      "inversion_loss": 3737579.5,
+      "cell_auc": 0.5193248519391277
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "5-10",
+      "t_bucket": "100-200",
+      "pair_weight": 8728320.0,
+      "inversion_loss": 3965332.0,
+      "cell_auc": 0.545693558439654
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "5-10",
+      "t_bucket": "200-400",
+      "pair_weight": 6833669.0,
+      "inversion_loss": 3228302.5,
+      "cell_auc": 0.527588693570028
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "5-10",
+      "t_bucket": "400+",
+      "pair_weight": 2000951.0,
+      "inversion_loss": 922840.5,
+      "cell_auc": 0.5387990510512252
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "10-20",
+      "t_bucket": "0-20",
+      "pair_weight": 3311858.0,
+      "inversion_loss": 1477479.5,
+      "cell_auc": 0.5538819901094794
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "10-20",
+      "t_bucket": "20-50",
+      "pair_weight": 14102567.0,
+      "inversion_loss": 6214620.0,
+      "cell_auc": 0.559327035992809
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "10-20",
+      "t_bucket": "50-100",
+      "pair_weight": 15633117.0,
+      "inversion_loss": 7275818.5,
+      "cell_auc": 0.5345893912263306
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "10-20",
+      "t_bucket": "100-200",
+      "pair_weight": 17667765.0,
+      "inversion_loss": 7770244.0,
+      "cell_auc": 0.5602022100701475
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "10-20",
+      "t_bucket": "200-400",
+      "pair_weight": 13684033.0,
+      "inversion_loss": 6342654.5,
+      "cell_auc": 0.5364923118791076
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "10-20",
+      "t_bucket": "400+",
+      "pair_weight": 3998281.0,
+      "inversion_loss": 1814882.0,
+      "cell_auc": 0.5460844297836995
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "20-50",
+      "t_bucket": "0-20",
+      "pair_weight": 0.0,
+      "inversion_loss": 0.0,
+      "cell_auc": null
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "20-50",
+      "t_bucket": "20-50",
+      "pair_weight": 19847733.0,
+      "inversion_loss": 8067110.5,
+      "cell_auc": 0.5935500291141562
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "20-50",
+      "t_bucket": "50-100",
+      "pair_weight": 48488884.0,
+      "inversion_loss": 20938213.0,
+      "cell_auc": 0.5681852978921932
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "20-50",
+      "t_bucket": "100-200",
+      "pair_weight": 53549245.0,
+      "inversion_loss": 21979625.0,
+      "cell_auc": 0.5895436994489839
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "20-50",
+      "t_bucket": "200-400",
+      "pair_weight": 40640081.0,
+      "inversion_loss": 17768538.5,
+      "cell_auc": 0.5627828965203096
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "20-50",
+      "t_bucket": "400+",
+      "pair_weight": 12139524.0,
+      "inversion_loss": 5258887.0,
+      "cell_auc": 0.5667962763614125
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "50-100",
+      "t_bucket": "0-20",
+      "pair_weight": 0.0,
+      "inversion_loss": 0.0,
+      "cell_auc": null
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "50-100",
+      "t_bucket": "20-50",
+      "pair_weight": 0.0,
+      "inversion_loss": 0.0,
+      "cell_auc": null
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "50-100",
+      "t_bucket": "50-100",
+      "pair_weight": 37345891.0,
+      "inversion_loss": 15246201.0,
+      "cell_auc": 0.5917569351873275
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "50-100",
+      "t_bucket": "100-200",
+      "pair_weight": 90074678.0,
+      "inversion_loss": 35391020.5,
+      "cell_auc": 0.6070924561062544
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "50-100",
+      "t_bucket": "200-400",
+      "pair_weight": 69249480.0,
+      "inversion_loss": 27089082.5,
+      "cell_auc": 0.6088189759692059
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "50-100",
+      "t_bucket": "400+",
+      "pair_weight": 20438046.0,
+      "inversion_loss": 8401691.5,
+      "cell_auc": 0.5889190434349741
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "100+",
+      "t_bucket": "0-20",
+      "pair_weight": 0.0,
+      "inversion_loss": 0.0,
+      "cell_auc": null
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "100+",
+      "t_bucket": "20-50",
+      "pair_weight": 0.0,
+      "inversion_loss": 0.0,
+      "cell_auc": null
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "100+",
+      "t_bucket": "50-100",
+      "pair_weight": 0.0,
+      "inversion_loss": 0.0,
+      "cell_auc": null
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "100+",
+      "t_bucket": "100-200",
+      "pair_weight": 81221296.0,
+      "inversion_loss": 29878382.0,
+      "cell_auc": 0.6321361087368023
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "100+",
+      "t_bucket": "200-400",
+      "pair_weight": 256737917.0,
+      "inversion_loss": 89661023.0,
+      "cell_auc": 0.650768285231511
+    },
+    {
+      "neg_type": "pre_break",
+      "age_bucket": "100+",
+      "t_bucket": "400+",
+      "pair_weight": 183149256.0,
+      "inversion_loss": 59482346.0,
+      "cell_auc": 0.675224746749722
+    }
+  ],
+  "runtime_s": 10.050746202468872
+}
