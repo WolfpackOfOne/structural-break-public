@@ -68,17 +68,19 @@ def main() -> int:
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--clone-seed", type=int, default=8,
                     help="the same-strength LightGBM seed clone -- the real control")
+    ap.add_argument("--screen", action="store_true",
+                    help="reduced protocol / synthetic smoke store -- NEVER a research number")
     a = ap.parse_args()
 
-    W.require_store()
+    W.require_store(a.screen)
     import lightgbm as lgb
     import xgboost as xgb
     from sbr.metric import ts_auc_flat
     from sbr.pipeline import Data, _stack, load_features
 
     folds = [int(x) for x in a.folds.split(",")]
-    d = Data()
-    mats, names = load_features(W.PROD_MODULES)
+    d = Data(screen=a.screen)
+    mats, names = load_features(W.PROD_MODULES, screen=a.screen)
     W.assert_no_teacher_in_features(names)
     keep_idx = np.arange(len(names))
 
@@ -125,7 +127,7 @@ def main() -> int:
         r = sum(rankdata(oof[k][dev]) for k in keys) / len(keys)
         return float(ts_auc_flat(r.astype(np.float32), y, t))
 
-    out = {"schema": "wave7_c_xgb/1", "folds": folds, "xgb_params": XGB_PARAMS,
+    out = {"schema": "wave7_c_xgb/1", "protocol": "screen" if a.screen else "full", "folds": folds, "xgb_params": XGB_PARAMS,
            "n_round": N_ROUND, "seed": a.seed, "clone_seed": a.clone_seed,
            "standalone": {k: sc(oof[k]) for k in oof},
            "per_fold": {k: per_fold[k] for k in oof},
@@ -141,7 +143,7 @@ def main() -> int:
     for k, v in out.items():
         if k not in ("xgb_params", "per_fold"):
             print(f"{k}: {v}")
-    print("written:", W.write_report("wave7_c_xgb", out))
+    print("written:", W.write_report("wave7_c_xgb_screen" if a.screen else "wave7_c_xgb", out))
     return 0
 
 

@@ -38,9 +38,11 @@ def main() -> int:
     ap.add_argument("--regime", default="H4", choices=W.HORIZON_NAMES)
     ap.add_argument("--max-train-rows", type=int, default=1_000_000)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--screen", action="store_true",
+                    help="reduced protocol / synthetic smoke store -- NEVER a research number")
     a = ap.parse_args()
 
-    W.require_store()
+    W.require_store(a.screen)
     import lightgbm as lgb
     from sbr.metric import ts_auc_flat
     from sbr.pipeline import Data, _stack, load_features
@@ -48,8 +50,8 @@ def main() -> int:
     ri = W.HORIZON_NAMES.index(a.regime)
     lo, hi = W.HORIZON_EDGES[ri], W.HORIZON_EDGES[ri + 1]
 
-    d = Data()
-    mats, names = load_features(W.PROD_MODULES)
+    d = Data(screen=a.screen)
+    mats, names = load_features(W.PROD_MODULES, screen=a.screen)
     W.assert_no_teacher_in_features(names)
     keep_idx = np.arange(len(names))
 
@@ -75,7 +77,7 @@ def main() -> int:
     Xva_reg = _stack(mats, names, va_reg, keep_idx)
     y_reg, t_reg = d.y[va_reg], d.t[va_reg]
 
-    out = {"schema": "wave7_b_horizon/1", "fold": a.fold, "regime": a.regime,
+    out = {"schema": "wave7_b_horizon/1", "protocol": "screen" if a.screen else "full", "fold": a.fold, "regime": a.regime,
            "t_lo": lo, "t_hi": hi, "n_train_specialist": int(len(tr_spec)),
            "n_train_global": int(len(tr_glob)), "n_valid_region": int(len(va_reg)),
            "params": W.CHAMP_PARAMS, "arms": {}}
@@ -98,7 +100,7 @@ def main() -> int:
     out["bar"] = 0.005
     out["verdict"] = "BUILD THE BANK" if dl >= 0.005 else "KILL"
     print(f"  delta {dl:+.5f}  bar +0.00500  -> {out['verdict']}")
-    print("written:", W.write_report(f"wave7_b_horizon_{a.regime}_fold{a.fold}", out))
+    print("written:", W.write_report(f"wave7_b_horizon_{a.regime}_fold{a.fold}{'_screen' if a.screen else ''}", out))
     return 0
 
 

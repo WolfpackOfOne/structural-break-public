@@ -80,6 +80,29 @@ def assert_causal_names(names) -> None:
         raise TeacherLeak(f"suspicious student column names: {sorted(set(bad))[:5]}")
 
 
+#: LightGBM objectives that silently BINARISE their label.  `binary` maps any
+#: label above zero to a positive, so a soft target in [0, 1] is thrown away
+#: without a warning and the arm quietly becomes its own control.  Caught by the
+#: wave-7 synthetic smoke run before it cost a fold of real compute; `cross_entropy`
+#: is bit-identical to `binary` on a hard 0/1 label and honours a soft one.
+BINARISING_OBJECTIVES = ("binary", "binary:logistic")
+SOFT_LABEL_OBJECTIVE = "cross_entropy"
+
+
+class SoftLabelMisuse(AssertionError):
+    """Raised when a soft target is handed to an objective that would binarise it."""
+
+
+def assert_objective_matches_label(objective: str, label) -> None:
+    lab = np.asarray(label)
+    hard = np.isin(lab, (0.0, 1.0)).all()
+    if not hard and str(objective) in BINARISING_OBJECTIVES:
+        raise SoftLabelMisuse(
+            f"objective {objective!r} binarises its label, but the target is soft "
+            f"(min {lab.min():.4f}, max {lab.max():.4f}). Use {SOFT_LABEL_OBJECTIVE!r}, "
+            "which is bit-identical to 'binary' on a hard label.")
+
+
 def sha_array(a: np.ndarray) -> str:
     return hashlib.sha256(np.ascontiguousarray(a).tobytes()).hexdigest()
 
@@ -307,10 +330,16 @@ def write_report(name: str, payload: dict) -> str:
     return path
 
 
-def require_store():
-    """Fail loudly and early, with the remedy, rather than deep inside a fold."""
-    from sbr.store import DEFAULT_STORE, load_store
-    p = os.environ.get("SBR_STORE", DEFAULT_STORE)
+def require_store(screen: bool = False):
+    """Fail loudly and early, with the remedy, rather than deep inside a fold.
+
+    `screen=True` selects the project's existing reduced protocol, which is also
+    what the synthetic execution smoke test runs against.  A screen store is a
+    development convenience: no research number may be reported from one.
+    """
+    from sbr.pipeline import STORE, STORE_SCREEN
+    from sbr.store import load_store
+    p = os.environ.get("SBR_STORE") or (STORE_SCREEN if screen else STORE)
     if not os.path.exists(os.path.join(p, "meta.parquet")):
         raise SystemExit(
             f"HARD STOP: the 2026 store is absent at {p}.\n"

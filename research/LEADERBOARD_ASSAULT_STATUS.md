@@ -173,14 +173,69 @@ python research/scripts/wave7_a_distill.py  --fold 0 --arms A0,A1,A2 --prove-del
 python research/scripts/wave7_c_xgb.py      --folds 0,1,2,3,4
 ```
 
-Gates that already pass here, with no data present: `tests/test_wave7_lanes.py`,
-**15 passed** — teacher-leak refusal (including the gate's own self-test), the
-deliberate non-prefix-invariance of teacher labels, prefix-identical horizon
-routing, deterministic analytic blend weights, and a proof that the bucket report
-used to gate every candidate is the exact decomposition of the official metric
-rather than an approximation of it.
+**This is verified, not asserted.** `research/scripts/wave7_smoke_store.py` builds
+a synthetic store in the exact production layout — 250 series, realistic history
+lengths, three break kinds — and all three runners were executed against it
+end to end, through the real feature driver (500 columns, seven production
+modules), the real `Data`/`_stack` row machinery and the real
+`sbr.metric.ts_auc_flat`:
 
-Repository-wide: **607 passed, 19 failed, 15 skipped.** Every failure is a
-`FileNotFoundError` against the absent store or one of the two synthetic
-`m07_bayes` parity cases already pinned in `research/known_failures.json`. No
-failure is in a file this wave touched.
+```
+python research/scripts/wave7_smoke_store.py $SCRATCH
+SBR_ROOT=$SCRATCH SBR_FEATURES=$SCRATCH/cache/features_screen \
+  python research/scripts/wave7_b_horizon.py --screen --fold 0 --regime H4
+```
+
+**No number produced this way is a research number**, and every report the screen
+protocol writes is tagged `"protocol": "screen"` and filed under a `_screen`
+name so it cannot be confused with one. What the run establishes is that the path
+executes.
+
+### What the smoke run caught
+
+**All three lane-A arms scored identically.** LightGBM's `binary` objective
+treats any label above zero as a positive, and the teacher's evidence path is
+exactly 0 on every negative row and positive on every positive row — so the soft
+target binarised straight back to `y` and each arm silently became its own
+control. On the real store that is a wasted fold and a confident null that would
+have killed the highest-priority lane for the wrong reason.
+
+Fixed by training every arm with `cross_entropy`, which is **bit-identical to
+`binary` on a hard 0/1 label** — so A0 is still exactly the champion's control —
+and honours a soft one. The runner now asserts that parity at run time
+(`objective_parity`, observed gap 0.00e+00) and `wave7_lib.assert_objective_matches_label`
+refuses the misuse outright. Three regression tests pin all of it, including one
+that documents the binarisation itself so the guard can be relaxed if LightGBM
+ever changes.
+
+Post-fix, on synthetic data: the arms separate, `objective_parity` passes at
+0.00e+00, and the teacher-deletion test passes — the student's predictions are
+bit-identical after every teacher artifact is deleted.
+
+## K. TEST STATE
+
+| suite | result |
+|---|---|
+| `tests/test_wave7_lanes.py` | **18 passed**, no data required |
+| repository-wide | 607 passed, 19 failed, 15 skipped |
+
+Every repository failure is a `FileNotFoundError` against the absent store, or one
+of the two synthetic `m07_bayes` parity cases already pinned in
+`research/known_failures.json`. None is in a file this wave touched. The pinned
+baseline was recorded on a machine that had the store, so the count here is larger
+by exactly the store-dependent set.
+
+The wave-7 gates that pass with no data present: teacher-leak refusal including
+the gate's own self-test, the deliberate non-prefix-invariance of teacher labels
+(if that ever passes, lane A has no mechanism left), prefix-identical horizon
+routing, deterministic analytic blend weights, the soft-label objective guard, and
+a proof that the bucket report gating every candidate is the exact decomposition
+of the official metric rather than an approximation of it.
+
+## L. DEPENDENCIES
+
+`xgboost==3.4.1` added to `requirements-research.txt` for lane C. **`requirements.txt`
+is deliberately untouched** — it is the file the Crunch runner builds from, RT-600's
+inference closure does not contain xgboost, and LB-002 died precisely because that
+file drifted from what inference actually needs. `tests/test_requirements_cover_runtime.py`
+continues to guard it.

@@ -7,3 +7,7 @@ scipy>=1.7
 scikit-learn>=1.0
 lightgbm>=4.0
 numba>=0.57
+
+# Wave-7 lane C only.  Research-side; requirements.txt (the file the Crunch
+# runner builds from) is deliberately untouched -- RT-600 does not depend on it.
+xgboost==3.4.1

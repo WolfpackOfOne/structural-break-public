@@ -33,6 +33,12 @@ import wave7_lib as W  # noqa: E402
 sys.path.insert(0, f"{W.ROOT}/src")
 sys.path.insert(0, f"{W.ROOT}/research/scripts")
 
+#: EVERY arm trains with `cross_entropy`, not `binary`.  On a hard 0/1 label the
+#: two are bit-identical, so A0 is still exactly the champion's objective; on a
+#: soft label `binary` throws the target away.  Holding one objective across all
+#: arms is also what makes the deltas attributable to the TARGET alone.
+OBJECTIVE = W.SOFT_LABEL_OBJECTIVE
+
 ARMS = {
     "A0": {"target": "binary", "hypothesis": "control"},
     "A1": {"target": "evidence", "hypothesis": "the graded oracle-evidence path is a "
@@ -59,14 +65,16 @@ def main() -> int:
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--arms", default="A0,A1,A2")
     ap.add_argument("--prove-deletion", action="store_true")
+    ap.add_argument("--screen", action="store_true",
+                    help="reduced protocol / synthetic smoke store -- NEVER a research number")
     a = ap.parse_args()
 
-    store = W.require_store()            # hard-stops here when the store is absent
+    store = W.require_store(a.screen)            # hard-stops here when the store is absent
     import lightgbm as lgb
     from sbr.pipeline import Data, _stack, load_features
 
-    d = Data()
-    mats, names = load_features(W.PROD_MODULES)
+    d = Data(screen=a.screen)
+    mats, names = load_features(W.PROD_MODULES, screen=a.screen)
     W.assert_no_teacher_in_features(names)
     W.assert_causal_names(names)
     keep_idx = np.arange(len(names))
@@ -108,7 +116,8 @@ def main() -> int:
     tau = store.meta.tau_index.to_numpy()[d.sidx[va_rows]]
     age = np.where(yva == 1, tva - tau, -1)
 
-    res = {"schema": "wave7_a_distill/1", "fold": a.fold, "seed": a.seed,
+    res = {"schema": "wave7_a_distill/2", "objective": OBJECTIVE,
+           "protocol": "screen" if a.screen else "full", "fold": a.fold, "seed": a.seed,
            "n_train_rows": int(len(tr_rows)), "n_valid_rows": int(len(va_rows)),
            "n_features": len(names), "params": W.CHAMP_PARAMS, "arms": {}}
 
@@ -118,10 +127,9 @@ def main() -> int:
         p = dict(W.CHAMP_PARAMS)
         n_round = int(p.pop("n_estimators"))
         lab = _targets(d.y[tr_rows], tea, spec["target"])
-        # A binary objective on a target in [0,1] is the standard soft-label
-        # cross-entropy; LightGBM accepts it directly and it keeps the LEARNER
-        # identical across arms, which is the point of the control.
-        ds = lgb.Dataset(Xtr, label=lab, params=dict(p, objective="binary"),
+        p["objective"] = OBJECTIVE
+        W.assert_objective_matches_label(OBJECTIVE, lab)
+        ds = lgb.Dataset(Xtr, label=lab, params=p,
                          feature_name=[f"f{i}" for i in range(len(names))])
         b = lgb.train(p, ds, num_boost_round=n_round)
         pr = b.predict(Xva).astype(np.float32)
@@ -133,6 +141,24 @@ def main() -> int:
         print(f"{arm}: TS-AUC {rep['aggregate']:.5f}   {spec['target']}", flush=True)
 
     if "A0" in preds:
+        # Parity gate.  If `cross_entropy` ever stops reproducing `binary` on the
+        # hard label, A0 has stopped being the champion's control and every delta
+        # below is measuring an objective change instead of a target change.
+        pb = dict(W.CHAMP_PARAMS)
+        nb = int(pb.pop("n_estimators"))
+        pb["objective"] = "binary"
+        hard = d.y[tr_rows].astype(np.float32)
+        bb = lgb.train(pb, lgb.Dataset(Xtr, label=hard, params=pb,
+                                       feature_name=[f"f{i}" for i in range(len(names))]),
+                       num_boost_round=nb)
+        pbin = bb.predict(Xva).astype(np.float32)
+        gap = float(abs(W.bucket_report(pbin, yva, tva, age)["aggregate"]
+                        - res["arms"]["A0"]["aggregate"]))
+        res["objective_parity"] = {"binary_vs_cross_entropy_abs_gap": gap,
+                                   "tol": 1e-4, "pass": gap <= 1e-4}
+        print(f"objective parity binary vs {OBJECTIVE}: {gap:.2e} "
+              f"{'PASS' if gap <= 1e-4 else 'FAIL'}")
+
         base = res["arms"]["A0"]["aggregate"]
         for arm in res["arms"]:
             res["arms"][arm]["delta_vs_A0"] = res["arms"][arm]["aggregate"] - base
@@ -153,7 +179,7 @@ def main() -> int:
                                         "identical": h_before == h_after}
         print(f"teacher-deletion test: {'PASS' if h_before == h_after else 'FAIL'}")
 
-    print("written:", W.write_report(f"wave7_a_distill_fold{a.fold}", res))
+    print("written:", W.write_report(f"wave7_a_distill_fold{a.fold}{'_screen' if a.screen else ''}", res))
     return 0
 
 

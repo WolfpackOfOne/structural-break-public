@@ -221,3 +221,54 @@ def test_lane_arms_hold_the_champion_learner_fixed():
         if k == "n_estimators":
             continue
         assert found.get(k) == v, f"{k}: wave 7 has {v!r}, the pipeline default is {found.get(k)!r}"
+
+
+# ------------------------------------------------- the soft-label objective trap
+#
+# Found by the wave-7 synthetic execution smoke run, not by reading the code:
+# all three lane-A arms scored IDENTICALLY because LightGBM's `binary` objective
+# treats any label above zero as a positive.  The teacher's evidence path is
+# exactly 0 on every negative row and positive on every positive row, so it
+# binarised back to `y` and each arm silently became its own control.  On the
+# real store that defect costs a fold of compute and produces a confident null.
+def test_lightgbm_binary_really_does_destroy_a_soft_label():
+    """Documents the trap.  If this ever stops holding, the guard can be relaxed."""
+    lgb = pytest.importorskip("lightgbm")
+    rng = np.random.default_rng(0)
+    X = rng.normal(size=(2000, 5))
+    base = X[:, 0] + 0.5 * X[:, 1]
+    soft = np.clip(0.5 + 0.5 * np.tanh(base), 0, 1)
+
+    def fit(lab, obj):
+        p = dict(objective=obj, learning_rate=0.1, num_leaves=15, verbose=-1,
+                 min_data_in_leaf=20, seed=0)
+        return lgb.train(p, lgb.Dataset(X, label=lab, params=p),
+                         num_boost_round=25).predict(X[:200])
+
+    assert np.allclose(fit(soft, "binary"), 1.0), "binary no longer collapses a soft label"
+    assert not np.allclose(fit(soft, W.SOFT_LABEL_OBJECTIVE), 1.0)
+
+
+def test_cross_entropy_is_bit_identical_to_binary_on_a_hard_label():
+    """Why every lane-A arm may use cross_entropy and A0 still be the champion's control."""
+    lgb = pytest.importorskip("lightgbm")
+    rng = np.random.default_rng(1)
+    X = rng.normal(size=(2000, 5))
+    y = (X[:, 0] + 0.5 * X[:, 1] > 0).astype(float)
+
+    def fit(obj):
+        p = dict(objective=obj, learning_rate=0.1, num_leaves=15, verbose=-1,
+                 min_data_in_leaf=20, seed=0)
+        return lgb.train(p, lgb.Dataset(X, label=y, params=p),
+                         num_boost_round=25).predict(X[:200])
+
+    assert np.array_equal(fit("binary"), fit(W.SOFT_LABEL_OBJECTIVE))
+
+
+def test_the_soft_label_guard_fires_on_the_exact_shape_of_the_defect():
+    soft = np.array([0.0, 0.0, 0.31, 0.72, 0.99])
+    with pytest.raises(W.SoftLabelMisuse):
+        W.assert_objective_matches_label("binary", soft)
+    # and stays out of the way of the legitimate case
+    W.assert_objective_matches_label("binary", np.array([0.0, 1.0, 1.0, 0.0]))
+    W.assert_objective_matches_label(W.SOFT_LABEL_OBJECTIVE, soft)
