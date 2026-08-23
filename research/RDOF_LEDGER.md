@@ -786,3 +786,50 @@ the bottleneck in this cell; the online prefix is information-limited.
 Arm B already tested "more capacity, same information" on this exact cell
 and it did not help. Full writeup: `research/reports/wave7_d3r.md`.
 Evidence: `research/reports/wave7_d3r.json`.
+
+### W7 teacher/distillation — one-fold pilot
+
+Pre-registered `research/WAVE7_TEACHER_PREREG.md` (committed before any
+teacher-target diagnostic or student score existed). Teacher target `Q` =
+`research/oof/RT-991.npy` (W7-D3R Arm C), **reused, not retrained** — already
+series-level cross-fitted, so no inner cross-fitting was needed. Fold 0 only,
+500-column causal bank unmodified, same rows/capacity as `RT-990` (reused as
+the hard-label control `T0`, no retraining needed). 2 new trainings
+(`RT-992` T1 pure distillation, `RT-993` T2 hard+teacher 0.5/0.5 blend).
+
+| | count |
+|---|---:|
+| arms declared in advance | 3 (T0 reused, T1 and T2 trained) |
+| arms selected | **0** — one-fold screen, continuation gate only, no promotion |
+| hyperparameters swept | **0** — capacity fixed identical to `RT-990`; blend weight fixed 0.5/0.5, no grid |
+| Crunch submissions | **0** |
+
+**Pre-flight checks, both passed before any student trained.** Teacher-target
+diagnostics (`research/reports/wave7_teacher_diagnostics.md`): same-t AUC of
+`Q` alone reproduces Arm C exactly (0.71989 pooled, 0.71859 cell — bit-for-bit
+cross-check that `Q` loaded correctly); `corr(Q,y)=0.408`, cell-positive
+`std=0.346` — nowhere near the pre-registered stop-and-redesign trigger
+(`|corr|>0.98` and `std<0.02`). `xentropy`/`binary` hard-label parity check
+(`research/reports/wave7_teacher_parity_check.json`): correlation
+`0.9999999999999999`, AUC identical to machine precision — `xentropy` trusted
+as the soft-label-safe objective (LightGBM's built-in, not a new
+implementation; none existed in this repo before this pilot).
+
+**Result, fold 0 only, dominant cell (t≥200, age≥100) vs `T0`:**
+
+| arm | cell TS-AUC | Δ cell | whole-fold0 Δ | translated aggregate Δ | distillation efficiency |
+|---|---:|---:|---:|---:|---:|
+| T0 (`RT-990`) | 0.66381 | — | — | — | — |
+| T1 (`RT-992`) | 0.68169 | +0.01788 | +0.01621 | +0.00903 | 33.9% |
+| T2 (`RT-993`) | 0.68439 | +0.02058 | +0.01671 | +0.01039 | 39.0% |
+
+(Distillation efficiency = student cell gain ÷ D3R's own fold-0 Arm C−Arm B
+gap, +0.05277 — the smallest of the five D3R fold-level gaps, so this is a
+conservative denominator, not a favorable one.) **Both arms clear all three
+pre-registered continuation gates** (cell Δ≥+0.010 with no whole-fold
+damage; whole-fold0 Δ≥+0.003; translated aggregate Δ≥+0.004) by a wide
+margin. **VERDICT: CONTINUE.** This is a single-fold screen only — it has
+**not** cleared the full promotion battery (≥4/5 folds, bootstrap CI,
+alternate partitions) and licenses no submission. Full writeup:
+`research/reports/wave7_teacher_pilot.md`. Evidence:
+`research/reports/wave7_teacher_pilot.json`.

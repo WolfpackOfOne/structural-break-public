@@ -1,6 +1,8 @@
 # LEADERBOARD ASSAULT STATUS
 
-**Written 2026-08-23 on `research/wave6-alpha`, end of the W7-D0/D3R session.**
+**Written 2026-08-23 on `research/wave6-alpha`, end of the W7-D0/D3R session.
+Updated 2026-08-23 on `research/wave7-teacher-distillation` after the W7
+teacher/distillation one-fold pilot.**
 Read this before starting any further Wave-7 work.
 
 ---
@@ -25,6 +27,14 @@ Read this before starting any further Wave-7 work.
   own final-row features) beat Arm B on 5/5 folds**, mean **+0.07110** cell
   AUC, every fold ≥+0.053. **VERDICT: CASE 2 — future-information limit.**
   Detail: `research/reports/wave7_d3r.md`.
+* **W7 teacher/distillation, one-fold pilot (fold 0):** teacher `Q` = `RT-991`
+  reused (no retraining). `T1` (pure distillation) +0.01788 cell AUC / +0.01621
+  whole-fold0 / +0.00903 translated aggregate (33.9% of D3R's fold-0
+  future-information gap captured). `T2` (0.5 hard + 0.5 teacher) +0.02058
+  cell / +0.01671 whole-fold0 / +0.01039 translated aggregate (39.0%
+  captured). **Both clear all three pre-registered continuation gates by a
+  wide margin. VERDICT: CONTINUE — one fold only, full 5-fold promotion
+  battery not yet run.** Detail: `research/reports/wave7_teacher_pilot.md`.
 
 ## WHAT THIS MEANS
 
@@ -37,35 +47,35 @@ weakly separated from noise.
 
 ## NEXT LANE
 
-**Priority 1 — teacher / distillation**, targeting a continuous
-`full_sequence_break_confidence` target built from each series' complete
-training sequence (never true `tau`, never explicit boundary, never true
-age — see `research/WAVE7_D3R_PREREG.md` §2 Arm C for the exact legal
-boundary already exercised). `RT-991`'s OOF is a ready-made starting
-representation for that teacher.
-
-**Priority 2 — targeted simulation / probabilistic evidence accumulation**
-for the same slow-evidence-buildup mechanism.
+**The one-fold teacher pilot cleared its continuation gate.** Recommended
+next step: fund a full 5-fold run of `T1` and/or `T2` under new IDs
+(`RT-994` onward — `RT-992`/`RT-993` are the pilot IDs and are not reused),
+then run the full promotion battery
+(`research/HANDOFF_WAVE6.md` §3.3 / `research/WAVE5_PREREG.md` §4: ≥+0.0030
+mean TS-AUC over the strongest matched control, ≥4/5 folds positive, paired
+series bootstrap CI supportive, alternate partitions stable) before this is
+anywhere near a submission decision. **A single strong fold is evidence, not
+proof** — fold 0 was, if anything, the *smallest* of D3R's five per-fold
+future-information gaps, so it is not a cherry-picked favorable fold, but
+5-fold confirmation is still required before any promotion claim.
 
 **Deprioritised — horizon specialist / more capacity on existing features.**
 Arm B already answered this question for this exact cell: no.
 
-**Before any teacher score counts for anything**, it must clear the
-project's own pilot bar (one fold, ≥+0.003 fold TS-AUC, per
-`research/WAVE7_PROPOSAL_metric_aligned_transition.md` and brief §24) before
-earning a full 5-fold run, and any eventual candidate needs the full
-promotion battery in `research/FINAL_ARCHITECTURE_FREEZE.md` §1 (≥+0.0030
-mean, ≥4/5 folds, bootstrap CI clear of zero, alternate-partition support)
-before it is anywhere near a Crunch submission.
+**Deprioritised — XGBoost/CatBoost.** Same reasoning as above; a different
+tree library on the same 500 causal columns is unlikely to reverse a
+capacity-doesn't-help finding, and the teacher lane is now the funded
+priority.
 
 ## WHAT HAS NOT BEEN DONE
 
-* No teacher target has been built or trained.
-* No XGBoost/CatBoost run (deprioritised by the Arm B result — a different
-  tree library on the same 500 columns is unlikely to reverse a
-  capacity-doesn't-help finding).
-* No submission. `RT-990` and `RT-991` are diagnostics; `RT-991` is
-  explicitly non-causal and can never be one.
+* **No full 5-fold teacher run.** `RT-992`/`RT-993` are a fold-0-only screen.
+* No promotion battery (bootstrap, alternate partitions, ≥4/5 folds) run on
+  any teacher arm.
+* No XGBoost/CatBoost run (deprioritised — see above).
+* No submission. `RT-990`/`RT-991` remain diagnostics (`RT-991` explicitly
+  non-causal, never deployable); `RT-992`/`RT-993` are causal-at-inference but
+  have cleared only a one-fold screen, not a promotion decision.
 
 ## FILES THIS SESSION ADDED
 
@@ -79,5 +89,17 @@ research/reports/wave7_d3r.md
 research/reports/wave7_d3r.json
 research/oof/RT-990.npy, RT-990.importance.csv
 research/oof/RT-991.npy
+```
+
+**Added in the teacher-pilot follow-up session (`research/wave7-teacher-distillation`):**
+
+```
+research/WAVE7_TEACHER_PREREG.md
+research/scripts/wave7_teacher_pilot.py
+research/reports/wave7_teacher_diagnostics.{md,json}
+research/reports/wave7_teacher_parity_check.json
+research/reports/wave7_teacher_pilot.{md,json}
+research/oof/RT-992.npy
+research/oof/RT-993.npy
 ```
 Ledger and ID map updated: `research/RDOF_LEDGER.md`, `research/EXPERIMENT_ID_MAP.md`.

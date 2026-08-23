@@ -280,3 +280,21 @@ an `RT-*` ID. See `research/RDOF_LEDGER.md` "WAVE 7" and
 
 Arm A reuses `RT-300` (no new ID). Pre-registration:
 `research/WAVE7_D3R_PREREG.md`. Result: `research/reports/wave7_d3r.{md,json}`.
+
+### `RT-992` / `RT-993` — W7 teacher/distillation, one-fold pilot (T1, T2)
+
+| ID | is |
+|---|---|
+| `RT-992` | W7 teacher pilot T1 — `RT-990`'s unmodified 500 legal causal columns/rows/capacity, fold 0 only, label = `Q` (`RT-991` OOF, reused as teacher, clipped to (1e-6, 1-1e-6)), objective `xentropy`. **CAUSAL AT INFERENCE** — only privileged input is the training label, never a feature. Trained artifact would be legal to deploy if promoted; **not yet promoted, one-fold screen only.** |
+| `RT-993` | W7 teacher pilot T2 — identical to `RT-992` except label = `0.5*y + 0.5*Q`, fixed blend, no grid. Same causal-at-inference note as `RT-992`. |
+
+`T0` (the matched hard-label control) reuses `RT-990`'s existing fold-0 OOF
+slice — same rows, columns and capacity, so no new ID was needed. Both
+`RT-992` and `RT-993` cleared the pre-registered one-fold continuation gate
+by a wide margin (translated aggregate Δ +0.00903 / +0.01039); neither has
+cleared the full 5-fold promotion battery. A full run, if funded, uses the
+next unallocated IDs (`RT-994` onward) — `RT-992`/`RT-993` are not reused for
+it. Pre-registration: `research/WAVE7_TEACHER_PREREG.md`. Result:
+`research/reports/wave7_teacher_pilot.{md,json}`,
+`research/reports/wave7_teacher_diagnostics.{md,json}`,
+`research/reports/wave7_teacher_parity_check.json`.
