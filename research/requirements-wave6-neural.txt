@@ -1,0 +1,29 @@
+# WAVE-6 NEURAL RESEARCH ENVIRONMENT -- OFFLINE ONLY.
+#
+# This file is NOT the production dependency set.  `requirements.txt` at the
+# repository root is what RT-600 ships with and it is untouched by the neural
+# track.  Nothing here is declared to CrunchDAO, and nothing here is required to
+# reproduce RT-600.
+#
+# Frozen 2026-08-22, BEFORE the first neural forward pass, and committed in the
+# PRE-NEURAL EXECUTION SHA.  research/WAVE6_NEURAL_PREREG.md pinned the
+# architectures but not the torch version; freezing it here rather than after a
+# score is the point of the file.
+#
+# Determinism contract (research/WAVE6_NEURAL_PREREG.md section 4.1, gate 5):
+#   device            CPU ONLY.  MPS is available on this machine and is NOT
+#                     used: torch.use_deterministic_algorithms does not cover
+#                     the MPS backend, and gate 5 requires <= 1e-8 run-to-run.
+#   torch threads     FIXED at 6 (see wave6_neural_lib.set_determinism)
+#   flags             use_deterministic_algorithms(True), manual_seed,
+#                     cudnn/mkldnn benchmark off, PYTHONHASHSEED=0
+torch==2.13.0
+
+# already present in the research venv, pinned here so the neural results are
+# reproducible against one recorded stack
+numpy==2.4.6
+scipy==1.17.1
+pandas==3.0.5
+scikit-learn==1.9.0
+lightgbm==4.7.0
+ruptures==1.1.10        # legacy structural_break detector tests only

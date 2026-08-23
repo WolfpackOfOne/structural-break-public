@@ -1,0 +1,128 @@
+{
+ "schema": "sbr.known_failures/1",
+ "generated_at": "2026-08-22 19:43:40",
+ "generated_on_sha": "16d6d50b5eb42cbab41b1f7343aa2ff97fb25d1e",
+ "baseline_sha": "9aaa9b0",
+ "baseline_branch": "claude/rt600-baseline-submission",
+ "baseline_note": "the RT-600 submission baseline, PRE-WAVE-5. Running the same four parity files there reproduces the identical 15 node ids.",
+ "required_env": {
+  "SBR_STORE": "(path)",
+  "SBR_FEATURES": "(path)",
+  "SBR_MODEL_DIR": "(path)"
+ },
+ "execution": {
+  "two_processes": true,
+  "reason": "torch and LightGBM each ship libomp.dylib and loading both into one process segfaults on macOS/arm64 -- reproduced inside lightgbm/basic.py. Process 1 runs the suite excluding tests/test_neural_causality.py; process 2 runs only that file. Results are unioned.",
+  "do_not": "do NOT set KMP_DUPLICATE_LIB_OK to run them together -- that trades a loud crash for silent numerical corruption"
+ },
+ "counts": {
+  "failed": 15,
+  "passed": 650,
+  "skipped": 1,
+  "processes": {
+   "non_torch": {
+    "failed": 15,
+    "passed": 632,
+    "skipped": 1
+   },
+   "torch_only": {
+    "failed": 0,
+    "passed": 18,
+    "skipped": 0
+   }
+  }
+ },
+ "classes": {
+  "m07_bayes_stream_parity": {
+   "modules": [
+    "m07_bayes"
+   ],
+   "reason": "batch-vs-streaming float difference in the Bayesian online changepoint block: bo_p_lt25_z, bo_lo_change_z, bo_ent. The engine-level test reports 2 differing cells out of 185,000 on series 5111.",
+   "why_not_fixed": "repairing the twin would change the values the STREAMING engine emits, i.e. frozen production semantics and therefore RT-600's live predictions. RT-600 scored 0.6268 on the leaderboard through this exact streaming path."
+  },
+  "m06_loc_stream_parity": {
+   "modules": [
+    "m06_loc"
+   ],
+   "reason": "same class: batch-vs-streaming float difference in the localisation block.",
+   "why_not_fixed": "same: it would change frozen production streaming semantics."
+  },
+  "m01_seq_stream_parity": {
+   "modules": [
+    "m01_seq"
+   ],
+   "reason": "same class, one synthetic case.",
+   "why_not_fixed": "same: it would change frozen production streaming semantics."
+  },
+  "engine_parity_real": {
+   "modules": [
+    "m07_bayes"
+   ],
+   "reason": "the whole-engine parity test, which fails BECAUSE of the m07_bayes cells above -- it is the same defect observed through the assembled engine, not an independent one.",
+   "why_not_fixed": "same root cause; same reason."
+  }
+ },
+ "known_failures": [
+  {
+   "node_id": "tests/test_stream_engine_parity.py::test_engine_parity_real[0]",
+   "class": "engine_parity_real"
+  },
+  {
+   "node_id": "tests/test_stream_engine_parity.py::test_engine_parity_real[137]",
+   "class": "engine_parity_real"
+  },
+  {
+   "node_id": "tests/test_stream_engine_parity.py::test_engine_parity_real[4242]",
+   "class": "engine_parity_real"
+  },
+  {
+   "node_id": "tests/test_stream_engine_parity.py::test_engine_parity_real[7777]",
+   "class": "engine_parity_real"
+  },
+  {
+   "node_id": "tests/test_stream_parity_m01_seq.py::test_bitwise_parity_synthetic[39]",
+   "class": "m01_seq_stream_parity"
+  },
+  {
+   "node_id": "tests/test_stream_parity_m06_loc.py::test_real_store_bitwise",
+   "class": "m06_loc_stream_parity"
+  },
+  {
+   "node_id": "tests/test_stream_parity_m06_loc.py::test_synthetic_bitwise[22]",
+   "class": "m06_loc_stream_parity"
+  },
+  {
+   "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[2546]",
+   "class": "m07_bayes_stream_parity"
+  },
+  {
+   "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[2649]",
+   "class": "m07_bayes_stream_parity"
+  },
+  {
+   "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[319]",
+   "class": "m07_bayes_stream_parity"
+  },
+  {
+   "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[4313]",
+   "class": "m07_bayes_stream_parity"
+  },
+  {
+   "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[4330]",
+   "class": "m07_bayes_stream_parity"
+  },
+  {
+   "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[7885]",
+   "class": "m07_bayes_stream_parity"
+  },
+  {
+   "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_synthetic_bitwise[t3_2]",
+   "class": "m07_bayes_stream_parity"
+  },
+  {
+   "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_synthetic_bitwise[var_shrink]",
+   "class": "m07_bayes_stream_parity"
+  }
+ ],
+ "policy": "DO NOT modify production feature or streaming semantics to make these green. Any NEW failure, any DISAPPEARANCE, and any RENAME is a gate failure requiring a human decision."
+}

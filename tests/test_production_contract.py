@@ -15,7 +15,7 @@ import os
 import numpy as np
 import pytest
 
-from sbr.stream.engine import MODULE_ORDER, StreamEngine
+from sbr.stream.engine import MODULE_ORDER, PRODUCTION_MODULES, StreamEngine
 
 _REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL_DIR = os.environ.get("SBR_MODEL_DIR", os.path.join(_REPO, "models", "rt150_ensemble"))
@@ -90,9 +90,45 @@ def test_engine_handles_online_longer_than_the_buffer():
     assert not np.isinf(np.vstack(rows[-50:])).any()
 
 
+#: the shipped RT-600 feature bank, and the sha256 over its 500 column names.
+#: Both are frozen: `src/sbr/production/model.py::_check_manifest` refuses to
+#: load a model whose engine does not reproduce this sha.
+RT600_MODULES = ("m00_core", "m01_seq", "m02_dist", "m03_dyn",
+                 "m04_resid", "m06_loc", "m07_bayes")
+RT600_MANIFEST_SHA = "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced"
+
+
 def test_feature_order_is_immutable():
-    assert MODULE_ORDER == ("m00_core", "m01_seq", "m02_dist", "m03_dyn",
-                            "m04_resid", "m06_loc", "m07_bayes")
+    """The PRODUCTION feature order, which is what the model manifest binds to.
+
+    This test used to assert `MODULE_ORDER == the seven`, and it went red in
+    wave 5 for a reason that was not a regression: wave 5 split one concept into
+    two.  `MODULE_ORDER` is now the append-only column ORDERING over everything
+    the streaming registry can build, and `PRODUCTION_MODULES` is the shipped
+    default that `StreamEngine()` gives you when you ask for nothing.
+    Registering `m12_rdep` appended to the former and deliberately left the
+    latter alone, so no production column moved -- but the old assertion could
+    not express that and failed on a true statement.
+
+    The invariant is restated here in the three parts that actually matter.
+    """
+    # 1. the shipped default is, and stays, the seven RT-600 modules
+    assert PRODUCTION_MODULES == RT600_MODULES
+
+    # 2. MODULE_ORDER is APPEND-ONLY: research modules may be added after the
+    #    production block but can never reorder or displace it
+    assert MODULE_ORDER[:len(RT600_MODULES)] == RT600_MODULES
+    assert len(set(MODULE_ORDER)) == len(MODULE_ORDER), "MODULE_ORDER has duplicates"
+
+    # 3. registration is deterministic: every ordered module is buildable, and
+    #    every buildable module is ordered -- otherwise `StreamEngine(modules)`
+    #    would silently drop or reorder a block depending on set iteration
+    from sbr.stream.engine import _CLASSES
+    assert set(MODULE_ORDER) == set(_CLASSES), (
+        f"MODULE_ORDER and _CLASSES disagree: "
+        f"ordered-not-buildable {sorted(set(MODULE_ORDER) - set(_CLASSES))}, "
+        f"buildable-not-ordered {sorted(set(_CLASSES) - set(MODULE_ORDER))}")
+
     rng = np.random.default_rng(0)
     eng = StreamEngine().fit_historical(_hist(rng))
     cols = eng.cols
@@ -101,10 +137,29 @@ def test_feature_order_is_immutable():
     # own fixed order and only the BLOCKS are ordered.  An earlier version of
     # this test asserted `... or True`, which cannot fail; the real invariant is
     # below and it is the one the model manifest depends on.
-    # the module blocks must be contiguous and in MODULE_ORDER
+    # the module blocks must be contiguous and in PRODUCTION_MODULES order
     seen = [c.split("::")[0] for c in cols]
     blocks = [k for i, k in enumerate(seen) if i == 0 or seen[i - 1] != k]
-    assert tuple(blocks) == MODULE_ORDER
+    assert tuple(blocks) == PRODUCTION_MODULES
+
+    # 4. and the manifest the shipped model checks against is byte-identical
+    import hashlib
+    assert hashlib.sha256("\n".join(cols).encode()).hexdigest() == RT600_MANIFEST_SHA
+    assert eng.manifest()["feature_manifest_sha256"] == RT600_MANIFEST_SHA
+
+
+def test_appending_a_research_module_cannot_move_a_production_column():
+    """The append-only claim, exercised rather than asserted.
+
+    Build the engine on EVERY module MODULE_ORDER knows about and confirm the
+    first 500 columns are exactly, and in the same order as, the RT-600 bank.
+    """
+    rng = np.random.default_rng(11)
+    h = _hist(rng)
+    seven = StreamEngine(RT600_MODULES).fit_historical(h).cols
+    every = StreamEngine(MODULE_ORDER).fit_historical(h).cols
+    assert every[:len(seven)] == seven
+    assert len(every) >= len(seven)
 
 
 def test_n_online_is_never_a_feature():

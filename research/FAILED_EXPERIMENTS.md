@@ -677,3 +677,267 @@ explanation, not as the seed of a follow-up.
 **What it does establish.** The incumbent seven-stream composition is not
 merely adequate, it is *better than the obvious enrichment of it*. That is a
 stronger position for the champion than W4-E1 alone gave it.
+
+---
+
+## W5-E1 — SMALL BAGGING COMPONENT IN THE SPECIALIST ENSEMBLE — **REJECTED**
+
+**Pre-registered** in `research/WAVE5_PREREG.md` §6 at commit `5488644`, before
+any wave-5 number existed. Grid fixed at four λ values and **not enlarged after
+it returned a null**.
+
+**Hypothesis.** W4-E6 rejected the 13-booster *union* and diagnosed why: under an
+equal-weight mean the union hands the `RT-100R` configuration 54% of the blend
+weight instead of 14%. A *small* bagging component does not do that — λ=0.90
+gives it 22.9% — so W4-E6 does not answer whether a modest admixture helps.
+
+**Implementation.** No training. `S` and `B` are the two W4-E1 arms, each
+cross-fitted through `SCDF_NSEEN` before mixing, then `λ·S + (1−λ)·B`.
+
+| λ | TS-AUC | Δ vs λ=1 | folds better | `RT-100R` weight |
+|---|---|---|---|---|
+| 1.00 | **0.62581** | — | — | 14.3% |
+| 0.90 | 0.62577 | −0.00004 | 3/5 | 22.9% |
+| 0.80 | 0.62564 | −0.00017 | 3/5 | 31.4% |
+| 0.70 | 0.62541 | −0.00040 | 1/5 | 40.0% |
+
+Paired series bootstrap on the best λ<1, 200 replicates, common random numbers:
+**−0.00003, 95% CI [−0.00026, +0.00018], 36% of replicates positive.**
+
+**Why it failed, and why the failure is informative.** The delta is **monotone
+decreasing in bagging weight** — there is no interior optimum and no threshold
+effect. W4-E6's mechanism (54% is too much weight on one configuration) is
+therefore an incomplete explanation: **any** admixture of exchangeable seed-clone
+mass into a heterogeneous blend is neutral-to-harmful, at every weight tested.
+The two gains W4-E1 separated are not partially additive at small doses either.
+
+The CI is tight around zero, so this is a **clean null, not an underpowered
+test**. Equal weighting over the seven specialists now stands on two independent
+experiments.
+
+**Retry warranted?** No. The grid spans the region where a benefit could
+plausibly hide and the trend through it has one sign. Searching λ ∈ (0.90, 1.00)
+after seeing this is exactly how a null becomes a false positive.
+
+---
+
+## W5-E9a — TS-AUC-SHAPED PAIR WEIGHTING (`pairwise_w`) — **REJECTED**
+
+**Pre-registered** in `research/WAVE5_PREREG.md` §6.
+
+**Hypothesis, and it is still arithmetically correct.** The official metric pools
+concordant pairs over `Σ_t n_pos(t)·n_neg(t)`, so every within-timestep
+(positive, negative) pair counts equally. The incumbent `pairwise_t` objective
+(stream `RT-123R`/`RT-413`) samples a fixed `m_neg = 8` negatives per positive
+row, which makes every positive ROW count equally instead. W5-D1 measured how
+large the mismatch is: timesteps with ~7,000 series alive get the same weight as
+timesteps with ~1,200.
+
+**The dispatch was verified before the arms were compared.** `RT-702` routes the
+*incumbent* objective through the same wave-5 hook and reproduces `RT-413`'s
+ledger row to five decimals on **all five folds**, so the arms differ only in
+the loss and not in the mechanism that delivers it.
+
+| arm | id | TS-AUC | per fold |
+|---|---|---|---|
+| incumbent | `RT-702` | **0.61481** | 0.63185 / 0.61326 / 0.62455 / 0.60031 / 0.60408 |
+| `n_neg(t)`-weighted pairs | `RT-700` | 0.61334 | 0.63270 / 0.60824 / 0.62348 / 0.60039 / 0.60191 |
+| delta | | **−0.00147** | +0.00085 / −0.00502 / −0.00107 / +0.00008 / −0.00217 |
+
+**Positive on 2 of 5 folds. Rejected.**
+
+**Why it failed.** Offered as a hypothesis, not a finding: the weighting pushes
+gradient onto the timesteps with the most alive series, which D1 places at
+t ≈ 200–700 — and those timesteps are also the *easiest* and already the
+best-ranked, while a positive row's gradient variance rises with its weight. The
+incumbent's flat `m_neg` acts as an implicit importance weighting toward the
+sparse late timesteps, and it earns its keep. **Matching the evaluation's
+weighting is not the same as spending training capacity well.**
+
+**Retry warranted?** Not in this form. A version that weights by `n_neg(t)` while
+*capping* the weight, or that spends the extra pairs on late timesteps instead,
+is a different experiment and would need its own pre-registration; nothing here
+licenses tuning `m_neg` or the weight exponent against these folds.
+
+---
+
+## W5-E2 — `m10_persist`, OUTLIER-DRIVEN vs BULK SCALE CHANGE — **REJECTED**
+
+**Pre-registered** in `research/WAVE5_PREREG.md` §6. Its *design* was chosen
+after the W5-D2 forensics reported, which is stated in the ledger — the bar was
+not moved for it.
+
+**Hypothesis, and it was well aimed.** W5-D2 found the champion's highest-ranked
+no-break series are dominated by heavy-tail/outlier and variance-burst mechanisms
+(`tail_rate_online` +1.89 IQR in the top 1%; heavy-tail 40% of that group against
+a 25.9% base rate). Nothing in the incumbent bank computes a trimmed statistic,
+an energy-concentration statistic or an exceedance run length, so a scale
+excursion driven by two points and one driven by the bulk arrive at the booster
+looking alike. The load-bearing column was the contrast `*_gap` = calibrated
+untrimmed scale − calibrated trimmed scale.
+
+| arm | id | TS-AUC | per fold |
+|---|---|---|---|
+| control | `RT-301` | 0.61257 | 0.62567 / 0.60719 / 0.62018 / 0.60506 / 0.60475 |
+| + `m10_persist` | `RT-740` | 0.61459 | 0.62401 / 0.61363 / 0.62767 / 0.60776 / 0.59986 |
+| delta | | +0.00202 | −0.00166 / +0.00644 / +0.00749 / +0.00270 / −0.00489 — **3/5** |
+
+**And the comparison that decides:**
+
+| blend | TS-AUC | vs control |
+|---|---|---|
+| `RT-301` + `RT-303` (seed clone, no information) | 0.61753 | +0.00496 |
+| `RT-301` + `RT-740` | 0.61713 | +0.00456 |
+| **candidate − seed clone** | | **−0.00041**, 2/5 folds |
+
+**It loses to a seed clone.** The whole blend gain, and more, is ordinary
+variance reduction.
+
+**Why it failed — and the answer was already in the repository.** The wave-1
+taxonomy measured exactly the right thing and I did not weight it heavily enough
+when designing this: **17.0% of no-break series contain a break-lookalike
+transient in their online segment, and 15.6% of equally long break-free
+HISTORICAL windows contain one too.** Transients are a property of the DGP, not
+of the online period. So a per-series historical null — which every column in
+this project is already calibrated against — has *already* priced the series'
+own propensity to throw outliers. Measuring the outlier-vs-bulk split more
+sharply does not help, because the champion was never confused about which
+series are outlier-prone; it is confused about the same series the null is.
+
+The age profile confirms the mechanism did not fire where it was aimed:
+
+| age | Δ vs control |
+|---|---|
+| 0–5 | **−0.00094** |
+| 5–10 | **−0.00075** |
+| 10–20 | **−0.00398** |
+| 20–50 | −0.00373 |
+| 50–100 | +0.00270 |
+| 100+ | +0.00427 |
+
+All of the aggregate gain is at 50+ and it makes ages 0–50 worse — the same
+shape as `m09_back`, which is what a module that is adding smoothing rather than
+discrimination looks like under this metric's weighting.
+
+**Retry warranted?** Not against no-break tails. The evidence says the residual
+false-positive problem is not "the model cannot tell an outlier from a scale
+break" but "for these series the historical null and the online segment are drawn
+from distributions that genuinely overlap". A different attack — for example
+conditioning the null on the series' own tail index rather than sharpening the
+online statistic — would be a new hypothesis and needs its own pre-registration.
+
+---
+
+## W5-E9b — WEIGHTED SQUARED HINGE (`pairwise_h`) — **REJECTED**
+
+Same pairs and same `n_neg(t)` weighting as W5-E9a; only the loss shape changes.
+`HINGE_LR_MATCH = 0.25` scales the gradient so that at margin `d = 0` the squared
+hinge matches the logistic's per-pair gradient — without it the arm would have run
+at 4× the effective learning rate and the comparison would have measured step
+size, not loss shape.
+
+| arm | id | TS-AUC |
+|---|---|---|
+| incumbent `pairwise_t` | `RT-702` | 0.61481 |
+| `pairwise_h` | `RT-701` | 0.61005 |
+| delta | | **−0.00476** |
+
+The argument for it was that a hinge stops pushing a pair once it is ranked
+correctly by a margin, so gradient goes to pairs still inverted rather than to
+widening already-correct margins — which for a purely pairwise-ranking metric
+sounds right. It is worse by three times the margin W5-E9a lost by. Both W5-E9
+variants fail and the incumbent `pairwise_t` stream stands unchanged.
+
+---
+
+## W5-E10 — UNION OF ALL THREE NEW FEATURE BLOCKS — **REJECTED**
+
+**Pre-registered** in `research/WAVE5_PREREG.md` §6.
+
+**Hypothesis.** The three blocks target different mechanisms and, as stage C
+showed, different break ages — `m11_focus` is a young-break module, `m12_rdep` a
+mature-break one. If their contributions are even partly additive the union
+should beat the best single block.
+
+| arm | standalone | Δ vs `RT-301` | folds | blend vs seed clone |
+|---|---|---|---|---|
+| `RT-750` `m12_rdep` alone, 57 cols | 0.61736 | **+0.00479** | 4/5 | **+0.00141** |
+| `RT-760` all three, 175 cols | 0.61468 | +0.00211 | 2/5 | +0.00093 |
+
+**175 new columns do less than half of what 57 do.** And the union is worse than
+every single block at every age bucket below 50 — −0.00424 at age 0–5 where
+`m11_focus` alone is +0.00308.
+
+**Mechanism, same shape as W4-E6's.** A fixed budget spread over more things.
+`feature_fraction = 0.5` now samples 675 columns instead of 557, so each tree
+sees a smaller fraction of the block that actually works; and the blocks overlap
+more than their titles suggest, since `m11_focus`'s residual channels and
+`m12_rdep`'s residual CUSUM/CUSUMSQ paths are both reading AR-residual path
+geometry. Wave 4 found gains anti-stacking across ensemble MEMBERS; this is the
+same phenomenon across FEATURE BLOCKS.
+
+**What this does NOT license.** Pairwise unions, block subsets, per-block feature
+sampling, or any best-of composition — the lattice the pre-registration excluded.
+
+**Retry warranted?** Only as part of a different design: if `m12_rdep` is
+promoted, the question "does `m11_focus` add to it" should be asked once, with
+`feature_fraction` held at a value that keeps the effective per-tree column count
+constant, and pre-registered as its own experiment.
+
+---
+
+## W6-E2 / `RT-900` — VOID: LABEL LEAK VIA THE TRUE-τ MISSINGNESS MASK
+
+*2026-08-22. This is not a rejected hypothesis. It is an **invalid measurement**,
+and it is kept here so nobody re-derives it.*
+
+**What it claimed.** 0.86552 TS-AUC against the champion's 0.61605 — **+0.24947,
+5/5 folds**, by-age deltas from +0.40 at age 0–5 down to +0.19 at 100+. Under
+the pre-registered §4.3 rule that reads "localisation is the lever."
+
+**What it actually was.** The oracle block is `NaN` for every row with
+`t < cut`, because there is no post-cut segment to compute over. For a break
+series `cut = tau`, so the block's **missingness mask is the row-level target**.
+LightGBM splits on missingness natively.
+
+| diagnostic | value |
+|---|---:|
+| TS-AUC of the bare indicator `1[t >= cut]`, nothing else | **0.81442** |
+| share of dev rows where the oracle block is `NaN` | 49.1% |
+| **share of those `NaN` rows that are negatives** | **100.00%** |
+
+An indicator that never looks at the data beats the champion by +0.198.
+
+**Why the placebo cut did not save it.** Giving no-break series a placebo cut
+drawn from the positives' relative-τ distribution is the wave-1 taxonomy's
+construction and the oracle-frontier study's, and it is correct **at the series
+level**: "does this series contain a break?" is not answered by knowing where
+the boundary is. It cannot work **at the row level**, because "has the break
+happened by now?" is answered by the boundary *exactly*. Same cut, different
+question.
+
+**Why no patch is authorised.** Not imputation, not dropping `or_elapsed` or
+`or_frac`, not a missing indicator, not zero/null fill, not column masking, not
+changing LightGBM's missing handling. Removing the explicit timing columns kills
+the `NaN` mask, but the same information returns through `or_frac = 1.0` exactly
+when `t < cut` and through the segment length the null calibration matches on.
+Under TS-AUC, "give the model τ" is degenerate: **τ is the label.** The failure
+is in the experimental design, not in the code.
+
+**Blast radius: none.** `w6oracle` was never registered with
+`sbr.features.base.load_all()`, never in a production manifest, never in a
+`crunch test`, never in an ensemble, never in a submission. `RT-900` carries
+`status=VOID` in `research/RESULTS.csv` and appears in no comparison table as
+valid alpha.
+
+**What replaced it.** `W6-E2R` (`research/WAVE6_PREREG.md` §18) — the same
+question at **one row per series**, scored with **series ROC AUC**, against the
+prior oracle-information-frontier control it must first reproduce. Standing rule
+in `research/PROTOCOL.md` §1; regression test in `tests/test_no_tau_leakage.py`.
+
+**The general lesson, stated so it is reusable.** A control that is valid at one
+unit of analysis is not thereby valid at another. Before trusting any oracle
+study, ask what the *unit* is and whether the oracle quantity determines the
+*target at that unit*. And treat an implausibly large effect as a bug signal
+first and a discovery second — +0.249 on a saturated ensemble was never going to
+be real.

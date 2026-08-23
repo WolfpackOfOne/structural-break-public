@@ -512,3 +512,215 @@ union costs one number while testing the lattice costs a false positive.
 
 **Degrees of freedom spent.** 0 new training runs, 1 new composition, 1
 threshold fixed in advance, 0 members selected.
+
+---
+
+# WAVE 5 — PRE-REGISTRATION AND DEGREES-OF-FREEDOM RECORD
+
+**Branch `research/wave5-alpha`, forked from `research/wave3-integration` @
+`17bb5df`. Written 2026-08-21. The full design is `research/WAVE5_PREREG.md`,
+committed at `5488644` BEFORE the first wave-5 number existed.**
+
+**The external anchor.** LB-001 = **0.6268** on the Crunch public board, from the
+RT-600 artifact whose development architecture scores 0.62581 on the canonical
+partition. Internal → external transfer was flat to slightly positive, so wave 5
+is an alpha-discovery project, not a validation-repair project.
+
+**The binding standard, for every candidate.** Not "beats the champion blend".
+`(S + candidate) − (S + seed clone)` ≥ +0.0030, on ≥4/5 canonical folds, with a
+supportive paired bootstrap and directionally stable alternate partitions. Wave 3
+(`m09_back`) and wave 4 (W4-E6) each produced a candidate that beat `S` and lost
+to a same-strength stream carrying no information at all.
+
+**Validation surface.** Canonical 8,000-series development folds and the three
+alternate partitions. `RT-500`..`RT-506` (the all-10k OOF vectors),
+`folds_final10k`, fold −1, `X_test.reduced` and the leaderboard are **not**
+selection surfaces and are not reachable from `research/scripts/wave5_lib.py`.
+
+## Experiments declared before any was scored
+
+| id | question | new training runs | thresholds fixed in advance |
+|---|---|---|---|
+| W5-E1 | does a SMALL bagging component help, where the 13-way union did not? | **0** | λ grid {1.00, 0.90, 0.80, 0.70}, fixed at four values; screening bar +0.0010 on ≥4/5 |
+| W5-E2 | `m10_persist` — outlier-driven vs bulk scale change | 1 | §4 bar |
+| W5-E3 | hard-negative curriculum | 3 + 20 mining models | §4 bar; must not degrade ages 0–20 |
+| W5-E4/5/6 | `m12_rdep` — residual distances, residual CUSUM/CUSUMSQ, dependence LR | 1 | §4 bar |
+| W5-E7 | `m11_focus` — exact maximisation over candidate τ | 1 (+1 if it survives) | §4 bar |
+| W5-E8 | absorbing-state BOCPD | **0 — already implemented** | see below |
+| W5-E9 | TS-AUC-shaped pair weighting | 3 | §4 bar |
+| W5-E10 | union of the surviving blocks | 1 | §4 bar |
+
+**W5-E8 is declared NOT RUN, with a reason rather than an excuse.**
+`src/sbr/features/m07_bayes.py` already implements the absorbing-state posterior
+the brief asks for — its docstring reads "the latent state NOT-BROKEN → BROKEN is
+ABSORBING, so the exact filtering recursion for P(broken at t | x_1:t) collapses
+to one log-space accumulator per alternative parameter value", and it ships 50
+columns of it inside the RT-600 artifact. Building a second one would have
+measured the seed, not the mechanism.
+
+## Degrees of freedom spent in wave 5
+
+* **Seed lists**: none chosen. Every control reuses the seed list fixed in wave 4
+  before its first run.
+* **Hyperparameter searches**: 0. Every arm runs the ABL or CHAMP protocol
+  verbatim from `research/scripts/wave2_lib.py`.
+* **Calibration tuning**: 0. `SCDF_NSEEN`, 12 anchors, 256-point grids,
+  `min_n=400`, frozen.
+* **Ensemble weight optimisation**: 0. Only the four-point λ grid of W5-E1,
+  declared in advance and not enlarged after it returned a null.
+* **Curriculum constants** (`ALPHA=3.0`, `POWER=2.0`, `HARD_FRAC=0.10`,
+  `OVER_K=4`): fixed in `research/scripts/wave5_e3_hardneg.py` before the first
+  arm ran, one value each, no sweep.
+* **A design chosen after seeing a result, stated plainly**: `m10_persist` was
+  specified *after* the W5-D2 false-positive forensics reported, and targets the
+  mechanism those forensics found rather than the generic family the brief
+  listed. That is legitimate — a diagnostic suggesting the next experiment is how
+  research works — but it means W5-E2 carries the multiplicity of having been
+  chosen with knowledge of D2, and it is judged against the same unmoved §4 bar.
+* **Causality**: every new module passes `check_prefix_invariance` at `atol=0.0`
+  on 7 series including both length-10 series in the dataset. The gate earned its
+  keep: the first `m12_rdep` sized its expanding nulls by `n_online`, the single
+  forbidden input, and the check failed it on every series before any score was
+  taken from it.
+
+---
+
+# W5-E11 — PRE-REGISTRATION: IS THE BLOCK AN EIGHTH MEMBER, OR A BETTER ARCHITECTURE?
+
+**Written 2026-08-21, AFTER stage C reported and BEFORE any W5-E11 arm was
+trained. The provenance is stated plainly, as W4-E6's was: stage C is what
+motivates this, so W5-E11 carries the multiplicity of having been chosen with
+knowledge of it, and its bar is fixed here.**
+
+**The observation that forces it.** A null test of the promotion battery —
+`W5-NULLTEST`, candidate `RT-402`, control `RT-401`, both seed clones of the
+champion — measured what an EIGHTH exchangeable member is worth:
+
+| composition | TS-AUC | vs `S` |
+|---|---|---|
+| `S` (seven specialists) | 0.62581 | — |
+| `S` + `RT-401` (8th seed clone) | 0.62584 | **+0.00003** |
+| `S` + `RT-402` (a different 8th seed clone) | 0.62530 | −0.00051 |
+
+**The seven-member equal-weight blend is saturated in members.** This is now the
+third independent test saying so — W4-E6 (13-way union, −0.00095), W5-E1 (λ
+mixture, monotone decreasing), and this. A new feature block evaluated as an 8th
+member is therefore being asked to move a blend that an 8th member cannot move:
+its column weight is 1/8, and the entire seven-member specialisation effect is
++0.0042. §4's +0.0030 bar, read that way, is not a high bar — it is close to an
+impossible one, and passing or failing it would say more about the composition
+than about the block.
+
+**Hypothesis (H1).** The strongest surviving block, `m12_rdep`, improves the
+ARCHITECTURE rather than adding a member: rebuilding all seven specialist streams
+with the block available to each beats the incumbent seven.
+
+**Null (H0).** The block's information is already reachable by the incumbent
+seven-stream bank, and adding 57 columns to each stream changes nothing that
+averaging them has not already done.
+
+**Arms, declared now.** Seven streams, each the EXACT incumbent configuration
+from `research/scripts/wave2_streams.py` — same seed, same rows, same leaves,
+same sampling, same objective — with `m12_rdep` appended to its module list and
+**nothing else changed**:
+
+| new id | rebuilds | modules |
+|---|---|---|
+| `RT-751` | `RT-300` / `RT-100R` | 7 production + `m12_rdep` |
+| `RT-811` | `RT-410` / `RT-120R` | m00, m01, m07 + `m12_rdep` |
+| `RT-812` | `RT-411` / `RT-121R` | m02, m03, m04, m06 + `m12_rdep` |
+| `RT-813` | `RT-412` / `RT-122R` | 7 production + `m12_rdep` |
+| `RT-814` | `RT-413` / `RT-123R` | 7 production + `m12_rdep` |
+| `RT-815` | `RT-414` / `RT-124R` | m07, m06, m01 + `m12_rdep` |
+| `RT-816` | `RT-415` / `RT-125R` | 7 production + `m12_rdep` |
+
+`S'` is the equal-weight cross-fitted SCDF blend of those seven. The control is
+`S`, measured in the same session on the same folds. **No member is selected,
+dropped, reordered or reweighted; the only change is one module appended to every
+stream.**
+
+**Falsification of H1, fixed in advance.** H1 is rejected unless
+
+    S' - S  >  +0.0030   over the five canonical folds
+    AND positive on at least 4 of 5 folds
+    AND the paired series bootstrap's 95% CI excludes zero.
+
+The threshold is §4's, unchanged, because this is the comparison §4 was written
+for — a candidate against the strongest relevant matched control, which here is
+the incumbent architecture itself.
+
+**Why no seed-clone control is named for this arm.** `S'` differs from `S` by 57
+columns per stream and by nothing else — not by member count, not by weight, not
+by seed. There is no bagging channel for the gain to arrive through, which is the
+whole reason this comparison is cleaner than the eighth-member one.
+
+**What is NOT tested, and why.** Adding `m11_focus` or `m10_persist` to the same
+rebuild; any subset of streams; any reweighting. `m10_persist` failed stage C and
+is out. `m11_focus` survived stage C and a combined rebuild is the obvious next
+step — which is exactly why it is NOT run here: testing one block costs one
+number, testing the lattice costs a false positive.
+
+**Degrees of freedom spent.** 6 new training runs (`RT-751` is already declared
+under stage D), 1 composition, 1 threshold fixed in advance, 0 members selected,
+0 hyperparameters touched.
+
+---
+
+## WAVE 6
+
+### W6-E1 — calibration anchor placement · **RESOLVED, FALSIFIED**
+
+3 declared schemes + 1 random-anchor null, 0 selected, 1 threshold fixed in
+advance (+0.0010), 0 hyperparameters touched, 0 submissions. Total spread across
+every scheme including random placement: **0.00006**. Closed; may not be
+reopened by a re-parameterisation of the same idea
+(`research/WAVE6_STOPPING_RULE_AMENDMENT.md` §3(a)).
+
+### W6-E2 / `RT-900` — **ATTEMPTED BUT VOID**
+
+**This row counts as a spent degree of freedom, not as evidence.** One training
+run (1,000,000 rows, CHAMP protocol, 906 s) was executed and produced an invalid
+number. Recording it as "nothing happened" would understate the search; recording
+its 0.86552 as a result would be fraud. It is therefore filed as **attempted but
+void**: it consumed budget, it selected nothing, and it may not appear on either
+side of any comparison.
+
+| | |
+|---|---|
+| runs spent | 1 |
+| results contributed | **0** |
+| selection events | **0** |
+| multiplicity charged | 1 attempt |
+
+### W6-E2R — the corrected series-level oracle diagnostic
+
+| | count |
+|---|---|
+| arms declared in advance | 6 (`A_rich`, `A_basic`, `B_causal`, `B_causal_withpos`, `C_nobound`, `AB`) |
+| arms selected | **0** — this is a diagnostic and can promote nothing |
+| leakage sentinels declared in advance | 7 |
+| pseudo-τ seeds | 5, the prior study's, unchanged |
+| thresholds fixed in advance | 3 (±0.010 reproduction, 0.005 case B, 0.010 case C) |
+| hyperparameters it may select | **0** — explicitly forbidden from touching any neural hyperparameter (`WAVE6_PREREG.md` §18.8) |
+| Crunch submissions | **0** |
+
+**Falsification, fixed in advance.** The instrument is declared uncalibrated —
+and nothing is inferred — if `A_rich` on the unfiltered population misses the
+prior study's 0.6497 by more than ±0.010, or if any sentinel exceeds its
+frontier counterpart materially (metadata 0.5379, permuted 0.5075,
+random-boundary 0.5821).
+
+**Why the learner is held fixed across arms.** Same 150-tree LGBM, same
+hyperparameters, same cross-fit, same `pseudo_seed + 17` learner seed. Only the
+representation changes, so a difference is attributable to representation or to
+nothing. Changing the learner and the representation together would have made
+the result uninterpretable in exactly the way `WAVE6_PREREG.md` §7 forbids.
+
+### W6-N — the neural track
+
+Declared in advance: 2 families now (`N1` MLP, `N2` TCN), 1 conditional (`N3`
+GRU), ≤ 2 architecture sizes and ≤ 2 regularisation settings per family, 1 loss
+(BCE) plus at most 1 pre-registered metric-aligned alternative. No architecture
+search, no loss sweep, no seed fishing. Each family costs its runs whether or not
+it works, and each is charged against multiplicity at declaration time, not at
+publication time.

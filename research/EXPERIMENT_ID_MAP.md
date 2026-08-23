@@ -133,3 +133,130 @@ statement about the wave-2 stream set. See `research/reports/rt131_original_audi
   experiment. It exists in no commit on any branch and its `RT-30x` IDs were
   unallocated; wave 3 reused them for `m09_back`. Anything attributed to
   `m08_chan` is unsourced.
+
+---
+
+## 6. WAVE-5 ALLOCATIONS (`research/wave5-alpha`, macOS/arm64, 2026-08-21)
+
+`RT-7xx` and `RT-8xx` were verified unused on every branch and in every
+reachable commit before allocation. `RT-6xx` is **reserved for the shipped
+artifact** — RT-600 is the Crunch-tested submission (LB-001 = 0.6268) and
+nothing in wave 5 may take an `RT-6xx` id.
+
+### Objective arms — W5-E9 (protocol: CHAMP modules, 700k rows, seed 0)
+
+| ID | objective | note |
+|---|---|---|
+| `RT-702` | `pairwise_t` | **CONTROL.** The incumbent objective routed through the wave-5 hook. Reproduces `RT-413`'s ledger row to five decimals on all five folds, which is what licenses the comparison |
+| `RT-700` | `pairwise_w` | pairs weighted by `n_neg(t)` — REJECTED, −0.00147 |
+| `RT-701` | `pairwise_h` | weighted squared hinge — REJECTED, −0.00476 |
+
+### Curriculum arms — W5-E3 (protocol: CHAMP)
+
+| ID | weighting | note |
+|---|---|---|
+| `RT-710` | uniform | **CONTROL.** A `wbinary` custom objective starts from raw score 0, not the label prior, so the control must be a `wbinary` run and **not** `RT-300` |
+| `RT-711` | smooth reweighting | `w_neg = 1 + 3 r²` on nested fold-pure hardness |
+| `RT-712` | oversampling | hardest 10% of negatives entered 4× in the training pool |
+
+### Feature-block arms — W5-E2 / E4 / E5 / E6 / E7 / E10 (protocol: ABL 400k, arms identical to the wave-3 `m09_back` test)
+
+| ID | block | verdict |
+|---|---|---|
+| `RT-730` | `+ m11_focus` | survives stage C, **+0.00055** vs the seed clone |
+| `RT-740` | `+ m10_persist` | REJECTED, −0.00041 vs the seed clone |
+| `RT-750` | `+ m12_rdep` | survives stage C, **+0.00141** vs the seed clone — the strongest |
+| `RT-760` | `+ all three` | REJECTED, +0.00093 — worse than `m12_rdep` alone |
+
+Controls reused from wave 3, not re-run: `RT-301` (ABL control) and `RT-303`
+(its seed clone).
+
+### Stage-D ensemble-stream arms (protocol: CHAMP, matched control `RT-401`)
+
+| ID | is | verdict |
+|---|---|---|
+| `RT-731` | champion config + `m11_focus` | −0.00123 standalone; **sign flips** vs its ABL twin `RT-730` |
+| `RT-751` | champion config + `m12_rdep` | +0.00121 standalone; member 1 of `S'` |
+
+### W5-E11 architecture rebuild — every specialist stream + `m12_rdep`
+
+Each is the incumbent configuration **verbatim** from
+`research/scripts/wave2_streams.py` with one module appended and nothing else
+changed.
+
+| ID | rebuilds | which wave-2 stream |
+|---|---|---|
+| `RT-751` | `RT-300` | `RT-100R` (also the stage-D arm; member 1 of `S'`) |
+| `RT-811` | `RT-410` | `RT-120R` |
+| `RT-812` | `RT-411` | `RT-121R` |
+| `RT-813` | `RT-412` | `RT-122R` |
+| `RT-814` | `RT-413` | `RT-123R` |
+| `RT-815` | `RT-414` | `RT-124R` |
+| `RT-816` | `RT-415` | `RT-125R` |
+
+`S'` is the equal-weight cross-fitted SCDF blend of those seven; `S` is the
+incumbent seven (`RT-420`).
+
+### Partition suffixes
+
+`RT-301.alt1`, `RT-303.alt1`, `RT-750.alt1` (and `.alt2`) are the ABL arms
+re-run on an alternate fold partition. **Robustness diagnostic only** — the
+partitions select nothing, and only the DELTA is compared across them, never
+the level (W4-E2: levels move ~0.009 across partitions, deltas ~0.003).
+
+### Names that are NOT experiments
+
+* **`W5-NULLTEST`** is a null test of the promotion battery itself — candidate
+  `RT-402` against control `RT-401`, both seed clones. Its purpose was to
+  measure what an eighth exchangeable member is worth (**+0.00003**), which is
+  what motivated W5-E11. It is not a candidate and has no ledger row.
+* **`W5-D1`..`W5-D4`** are diagnostics, not experiments: metric geometry,
+  false-positive forensics, age profile, break-family mix. D2 and D4 use `tau`
+  and post-break data and are **never** readable by production code.
+
+---
+
+## Wave 6
+
+### `RT-900` — **VOID**, and not reusable
+
+| ID | is | verdict |
+|---|---|---|
+| `RT-900` | champion config + the `w6oracle` true-τ block | **VOID — LABEL LEAK VIA THE MISSINGNESS MASK.** 0.86552 TS-AUC is not alpha; the block is `NaN` exactly when `t < cut`, and for a break series `cut = tau`, so the mask *is* `y[t]`. The bare indicator `1[t>=cut]` scores 0.81442 alone. Never in a comparison table, an ensemble, a promotion decision, feature selection, production or a submission. See `research/FAILED_EXPERIMENTS.md`. |
+
+**The ID is retired.** It is not reused, reassigned or recycled. `w6oracle` was
+never a registered module and never reachable from `load_all()`.
+
+### `RT-940`–`RT-944` — W6-E2R, the corrected **series-level** oracle diagnostic
+
+| ID | arm | representation |
+|---|---|---|
+| `RT-940` | `A_rich` | the oracle-frontier study's generic known-boundary bank — **the reproduction control**, target 0.6497 |
+| `RT-941` | `A_basic` | the same study's basic bank, target 0.6418 |
+| `RT-942` | `B_causal` | **our 500 production columns at the boundary split** — the candidate representation |
+| `RT-943` | `C_nobound` | our 500 columns at the end of the series, no boundary — the matched representation control |
+| `RT-944` | `AB` | `A_rich ++ B_causal`, complementarity |
+
+**These have NO `research/RESULTS.csv` row, deliberately.** `RESULTS.csv` is the
+row-level TS-AUC ledger; a series-ROC-AUC number sitting in it is exactly how a
+diagnostic gets mistaken for alpha six weeks later. They live in
+`research/reports/wave6_corrected_oracle.{md,json,csv}`.
+Runner: `research/scripts/wave6_e2r.py`. Pre-registration:
+`research/WAVE6_PREREG.md` §18.
+
+### `RT-960` / `RT-970` / `RT-980` — the neural track
+
+| ID | is |
+|---|---|
+| `RT-960` | W6-N1 — compact MLP on the existing 500 causal features (**learner** capacity) |
+| `RT-970` | W6-N2 — compact causal dilated TCN on compact legal channels (**representation** learning) |
+| `RT-980` | W6-N3 — GRU, **only** if N1/N2 justify escalation |
+
+Pre-registration: `research/WAVE6_NEURAL_PREREG.md` and `WAVE6_PREREG.md` §20.
+
+### IDs deliberately NOT allocated
+
+`RT-901`–`RT-908`. `RT-903`, `RT-906`, `RT-907` and `RT-908` already name
+2025-reproduction *ideas* throughout `research/WAVE5_PREREG.md` and
+`research/STATE_OF_RESEARCH_V5.md`; re-using them as experiment IDs would
+collide in text even though it would not collide in the ledger.
