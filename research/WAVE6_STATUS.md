@@ -213,3 +213,71 @@ channels, testing **representation** learning. Pre-registered in full at
 venv and must be installed; W6-E0, the competition whitelist, is still
 outstanding and gates *deployment*, not the experiment — §8 of that document is
 why.
+
+---
+
+## W6-N1 / W6-N2 — **NEURAL TRACK FAILED CONTROLLED SCREEN. WAVE 6 IS CLOSED.**
+
+Full report: `research/reports/wave6_neural_results.md`.
+Pre-registration `17d01b8`; engineering frozen at **`78f6933`** (PRE-NEURAL
+EXECUTION SHA); the pre-registration was never edited.
+
+| id | learner / input | TS-AUC | Δ vs `RT-300` | Δ vs the 8th **seed clone** | folds+ |
+|---|---|---:|---:|---:|---:|
+| `RT-401` seed clone | LightGBM 500 | 0.61661 | +0.00056 | **+0.00003** (the bar) | — |
+| `RT-960` | MLP d0.1 | 0.57059 | −0.04546 | −0.00060 | 1/5 |
+| `RT-961` | MLP d0.3 | 0.58061 | −0.03545 | +0.00013 | 3/5 |
+| `RT-970` | TCN h32 | 0.54152 | −0.07453 | +0.00010 | 3/5 |
+| `RT-971` | TCN h64 | 0.54319 | −0.07287 | +0.00019 | 3/5 |
+
+Every bootstrap CI on the seed-clone contrast includes zero. The bar was +0.0030
+on ≥ 4/5 folds. **Nothing promoted; `RT-980` (GRU) never opens.**
+
+`WAVE6_STOPPING_RULE_AMENDMENT.md` §3(f) — both input tracks run once each,
+neither clears — **is met exactly as written. Wave 6 terminates and `RT-600` =
+0.6268 remains champion.**
+
+### The two findings worth carrying forward
+
+**Diversity is not the currency.** The TCN's within-time rank correlation with
+`RT-300` is **0.21**, the most decorrelated model this project has produced, and
+it is worth +0.0001. A model must improve the **same-`t` ordering**, not merely
+disagree.
+
+**Objective mismatch, not "neural networks don't work".** The MLP drove training
+BCE to **0.077** while scoring 0.045 *below* a tree ensemble on identical rows
+and identical features. Those are only compatible if it is optimising something
+the metric discards: `y[t] = 1[t ≥ τ]` is monotone in `t`, elapsed time is a huge
+*row-level* signal, and TS-AUC deletes all of it by comparing within a timestep.
+Trees, capped by depth and `min_data_in_leaf = 300`, never got far enough into
+that structure to be hurt by it.
+
+The pre-registration fixed BCE as the only loss, so this wave **cannot
+distinguish** "the family is wrong" from "the objective was wrong". That
+ambiguity is a cost of the design and it was the right cost.
+
+### Young breaks — hypothesis-generating only, not exploited
+
+`RT-960` and `RT-970` both help at ages 0–5 and 5–10 and both hurt at 100+. It is
+weak evidence: read out of failed experiments, absent in `RT-961`, and the two
+arms that show it share rows, objective and ensemble. **No age-gated blend is
+built.** Gating on true age needs τ at inference, which is `RT-900`.
+
+### Housekeeping closed with the wave
+
+* `test_feature_order_is_immutable` **fixed** (`9cd5e60`) — it was failing on a
+  true statement after Wave 5 split `MODULE_ORDER` from `PRODUCTION_MODULES`.
+* 15 remaining failures **pinned** in `research/known_failures.json` against
+  baseline `9aaa9b0`, with a gate that fires on a new failure, a rename **or a
+  disappearance**.
+* torch + LightGBM **segfault** in one process (duplicate `libomp`); the gate
+  runs two processes and refuses to read a crash as an empty failure set.
+* The four artifact-level causality tests **run and pass**, 0 skipped, against
+  `final10k_ensemble`; RT-600's manifest is byte-identical three ways.
+* W5-E3 conformance: both reported defects **not present**; the fold-exclusion
+  convention is now an asserted invariant with 4 regression tests.
+
+### Next
+
+`research/WAVE7_PROPOSAL_metric_aligned_transition.md` — **proposal only, not
+authorised, not executed.**
