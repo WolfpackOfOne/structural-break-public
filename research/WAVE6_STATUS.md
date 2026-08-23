@@ -258,10 +258,13 @@ ambiguity is a cost of the design and it was the right cost.
 
 ### Young breaks — hypothesis-generating only, not exploited
 
-`RT-960` and `RT-970` both help at ages 0–5 and 5–10 and both hurt at 100+. It is
-weak evidence: read out of failed experiments, absent in `RT-961`, and the two
-arms that show it share rows, objective and ensemble. **No age-gated blend is
-built.** Gating on true age needs τ at inference, which is `RT-900`.
+`RT-960`, `RT-970` and `RT-971` help at ages 0–5 and 5–10 and hurt at 100+;
+`RT-961` does not. Three of four arms — but `RT-970`/`RT-971` are one
+architecture at two widths, so it is really two families, and the arm that
+breaks the pattern is the better of the two MLPs. It was read out of failed
+experiments, the arms share rows, objective and ensemble, and the effect is one
+to two thousandths against a bar of thirty. **No age-gated blend is built.**
+Gating on true age needs τ at inference, which is `RT-900`.
 
 ### Housekeeping closed with the wave
 

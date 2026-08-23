@@ -195,7 +195,7 @@ rule (12–21 min per fold), which the runner enforces in code.
 |---|---:|---:|---:|---:|---|
 | `S` + 8th **seed clone** | 0.62584 | +0.00003 | — | — | — |
 | `S` + `RT-970` | 0.62594 | +0.00013 | **+0.00010** | 3/5 | [−0.00128, +0.00126], 44.8% positive |
-| `S` + `RT-971` | 0.62603 | +0.00022 | **+0.00019** | 3/5 | @@RT971_CI@@ |
+| `S` + `RT-971` | 0.62603 | +0.00022 | **+0.00019** | 3/5 | [-0.00126, +0.00131], 52.2% positive |
 
 Two-model blends: `RT-300 + RT-970` = 0.60651 and `RT-300 + RT-971` = 0.60673,
 against `RT-300 + RT-401` = 0.61978 — **−0.01327** and **−0.01305**.
@@ -235,7 +235,7 @@ buckets share a comparison set. Pair weight is heavily concentrated at the top:
 | `RT-960` | **+0.00641** | −0.00230 | −0.00726 | −0.02757 | −0.04259 | −0.05869 |
 | `RT-961` | −0.00336 | −0.00753 | −0.00694 | −0.01899 | −0.03287 | −0.04608 |
 | `RT-970` | **+0.00585** | −0.00463 | −0.01756 | −0.04437 | −0.06177 | −0.10218 |
-| `RT-971` | @@RT971_AGE_STANDALONE@@ |
+| `RT-971` | +0.00624 | -0.00456 | -0.01648 | -0.04288 | -0.06009 | -0.10073 |
 
 ### In the ensemble, `S + N` minus `S + seed clone`
 
@@ -244,26 +244,28 @@ buckets share a comparison set. Pair weight is heavily concentrated at the top:
 | `RT-960` | **+0.00200** | **+0.00148** | +0.00157 | +0.00051 | −0.00059 | −0.00124 |
 | `RT-961` | −0.00000 | −0.00024 | +0.00053 | +0.00061 | −0.00004 | +0.00010 |
 | `RT-970` | **+0.00142** | **+0.00137** | +0.00066 | −0.00030 | −0.00006 | −0.00014 |
-| `RT-971` | @@RT971_AGE_ENS@@ |
+| `RT-971` | +0.00167 | +0.00142 | +0.00085 | -0.00024 | +0.00002 | -0.00005 |
 
 ### THE YOUNG-BREAK OBSERVATION — **HYPOTHESIS-GENERATING ONLY**
 
-`RT-960` and `RT-970` — an MLP on handcrafted columns and a TCN on raw channels,
-sharing no input representation — both help in the 0–5 and 5–10 buckets and both
-hurt at 100+. Ages 0–20 are the project's measured weak spot, and this is the
-first thing in six waves that moved them at all.
+**Three of the four arms** — `RT-960` (MLP on handcrafted columns), `RT-970` and
+`RT-971` (TCNs on raw channels, sharing no input representation with the MLP) —
+help in the 0–5 and 5–10 buckets and hurt at 100+. Ages 0–20 are the project's
+measured weak spot, and this is the first thing in six waves that moved them at
+all.
 
 **It must not be exploited in this wave, and I am not going to.** The reasons it
 is weak evidence, stated up front rather than buried:
 
 1. **It was read out of failed experiments.** Reading a subgroup out of a null
    result and promoting it is precisely how the multiplicity ledger gets lied to.
-2. **`RT-961` does not show it** — −0.00000 at 0–5 and −0.00024 at 5–10. The
-   pattern appears in two of the four arms, not four of four, and the one that
-   breaks it is the *better* of the two MLPs.
-3. **The two arms that do show it are not independent.** Same rows, same
-   objective, same ensemble, same fold structure. Two families is not two
-   experiments.
+2. **`RT-961` does not show it** — −0.00000 at 0–5 and −0.00024 at 5–10. Three
+   of four arms, not four of four, and the one that breaks the pattern is the
+   *better* of the two MLPs — the arm whose regularisation actually helped.
+3. **The three arms that do show it are not independent.** `RT-970` and `RT-971`
+   are the same architecture at two widths, so there are really two families
+   here, not three. Same rows, same objective, same ensemble, same fold
+   structure. Two families is not two experiments.
 4. **The effect is one to two thousandths** against a bar of thirty.
 5. **The obvious exploitation is illegal.** Gating a blend on post-break age
    requires τ at inference, and τ at inference is `RT-900`: 0.86552 of pure leak.
@@ -394,7 +396,7 @@ against binary 0.62631 on the identical matrix, `RT-700` −0.00147, `RT-701`
 | `RT-960` | MLP d0.1 wd1e-2, 500 cols | 0.57059 | −0.04546 | 0/5 | +0.00200 | −0.00060 | **no** | rejected |
 | `RT-961` | MLP d0.3 wd1e-1, 500 cols | 0.58061 | −0.03545 | 0/5 | −0.00000 | +0.00013 | **no** | rejected |
 | `RT-970` | causal TCN h32, 10 channels | 0.54152 | −0.07453 | 0/5 | +0.00142 | +0.00010 | **no** | rejected |
-| `RT-971` | causal TCN h64, 10 channels | 0.54319 | −0.07287 | 0/5 | @@RT971_AGE05@@ | +0.00019 | **no** | rejected |
+| `RT-971` | causal TCN h64, 10 channels | 0.54319 | −0.07287 | 0/5 | +0.00167 | +0.00019 | **no** | rejected |
 | `RT-980` | GRU | — | — | — | — | — | — | **not opened** (§6.1 unmet) |
 
 "Δ vs control" is against `RT-300`; "ensemble Δ" is against the **eighth seed
