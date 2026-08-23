@@ -154,6 +154,57 @@ def train_nested_student(kind, outer_f, d, mats_causal, names_causal, keep_idx_c
 
 
 # ---------------------------------------------------------------------------
+# Granular, disk-checkpointed entry points -- each is a SHORT-LIVED, standalone
+# process that trains exactly one model, saves to disk, and exits (freeing all
+# memory back to the OS before the next call starts). Introduced after two
+# whole-outer-fold attempts (4 teachers + 2 students in one long-lived process,
+# ~40-50 min) were killed partway through the second inner teacher -- once
+# running concurrently (2 processes), once alone. Splitting into one call per
+# model removes both plausible causes at once: each call is short (matches the
+# successful pilot precedent, ~5-10 min) and starts with a clean process, so
+# no cross-call memory fragmentation or accumulated feature-memmap page-cache
+# pressure from four back-to-back 1000-column trainings in one process.
+def cmd_inner_teacher(outer_f, inner_g):
+    d = PL.Data()
+    mats, names = PL.load_features(FULL)
+    keep_idx = np.arange(len(names))
+    last_row_by_series = last_row_lookup(d)
+    final_of_row = last_row_by_series[d.sidx]
+    t0 = time.time()
+    va_rows, pred = train_inner_teacher(outer_f, inner_g, d, mats, names, keep_idx, final_of_row)
+    Q = np.full(len(d.y), np.nan, dtype=np.float64)
+    Q[va_rows] = pred
+    path = f"{OOFDIR}/nested_Q_outer{outer_f}_inner{inner_g}.npy"
+    np.save(path, Q)
+    print(f"  inner teacher outer={outer_f} target_fold={inner_g}: {len(va_rows)} rows, "
+          f"Q mean {pred.mean():.4f}, runtime {time.time()-t0:.1f}s -> {path}")
+
+
+def cmd_train_nested_student(outer_f, kind):
+    d = PL.Data()
+    mats_causal, names_causal = PL.load_features(FULL)
+    keep_idx_causal = np.arange(len(names_causal))
+    outer_train = [g for g in FOLDS if g != outer_f]
+    Q = np.full(len(d.y), np.nan, dtype=np.float64)
+    for g in outer_train:
+        path = f"{OOFDIR}/nested_Q_outer{outer_f}_inner{g}.npy"
+        Qg = np.load(path)
+        va_rows_g = d.rows_for([g])
+        assert not np.isnan(Qg[va_rows_g]).any(), f"missing inner-teacher checkpoint {path}"
+        Q[va_rows_g] = Qg[va_rows_g]
+    t0 = time.time()
+    va_rows, pred, s = train_nested_student(kind, outer_f, d, mats_causal, names_causal, keep_idx_causal, Q)
+    exp_id = "RT-994" if kind == "t1" else "RT-995"
+    oof = np.full(len(d.y), np.nan, dtype=np.float32)
+    oof[va_rows] = pred
+    np.save(f"{OOFDIR}/{exp_id}_outer{outer_f}.npy", oof)
+    summary = {"outer_fold": outer_f, "kind": kind, "ts_auc": s, "runtime_s": round(time.time() - t0, 1)}
+    with open(f"{REPORTS}/wave7_teacher_nested_outer{outer_f}_{kind}.json", "w") as fh:
+        json.dump(summary, fh, indent=2)
+    print(json.dumps(summary, indent=2))
+
+
+# ---------------------------------------------------------------------------
 def run_outer_fold(f):
     t_start = time.time()
     d = PL.Data()
@@ -385,11 +436,19 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--fold-purity-test", action="store_true")
     ap.add_argument("--outer-fold", type=int, choices=[0, 1, 2, 3, 4])
+    ap.add_argument("--inner-teacher", type=int, nargs=2, metavar=("OUTER", "INNER"))
+    ap.add_argument("--train-nested-student", type=int, metavar="OUTER")
+    ap.add_argument("--kind", choices=["t1", "t2"])
     ap.add_argument("--merge", action="store_true")
     ap.add_argument("--analyze-nested", action="store_true")
     args = ap.parse_args()
     if args.fold_purity_test:
         fold_purity_test()
+    elif args.inner_teacher is not None:
+        cmd_inner_teacher(*args.inner_teacher)
+    elif args.train_nested_student is not None:
+        assert args.kind, "--train-nested-student requires --kind t1|t2"
+        cmd_train_nested_student(args.train_nested_student, args.kind)
     elif args.outer_fold is not None:
         run_outer_fold(args.outer_fold)
     elif args.merge:
