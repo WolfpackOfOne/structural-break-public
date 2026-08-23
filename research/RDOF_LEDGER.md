@@ -759,7 +759,30 @@ mature persistent weak breaks from truly stable series, not baseline
 heterogeneity. Full writeup: `research/WAVE7_RT600_EXACT_ALPHA_BUDGET.md`.
 Evidence: `research/reports/wave7_rt600_exact_alpha_budget.json`.
 
-**Not yet run: W7-D3R** (same-prefix vs. full-sequence three-arm diagnostic on
-this exact cell). Requires its own pre-registration before any score is
-generated, per the commit-boundary rule this project has followed since
-wave 5.
+### W7-D3R — same-prefix vs. full-sequence three-arm diagnostic
+
+Pre-registered `research/WAVE7_D3R_PREREG.md` (committed before any arm was
+trained). Population fixed by W7-D0 (t≥200, age≥100, all negatives). 2 new
+trainings (`RT-990` Arm B, `RT-991` Arm C); Arm A reuses `RT-300`.
+
+| | count |
+|---|---:|
+| arms declared in advance | 3 (A reused, B and C trained) |
+| arms selected | **0** — diagnostic, promotes nothing |
+| hyperparameters swept | **0** — B's and C's configs are fixed in the prereg, not tuned |
+| Crunch submissions | **0** |
+
+**Result, cell TS-AUC (t≥200, age≥100):** A 0.65341, B 0.64749, C 0.71859.
+**B beats A on 1/5 folds** (mean Δ −0.00592 — stronger tree capacity on the
+identical 500 legal columns/rows does not help, consistent with the same
+sign on the whole-dev-set comparison, B 0.61177 vs A 0.61605). **C beats B on
+5/5 folds** (mean Δ +0.07110, every fold ≥+0.053) — each series' own final
+online-row feature vector (full training-sequence info, no true tau) recovers
+enormous discrimination the causal prefix cannot see.
+
+**VERDICT: CASE 2 — future-information limit.** Extraction capacity is not
+the bottleneck in this cell; the online prefix is information-limited.
+**Next lane: teacher/distillation (Priority 1)**, not a horizon specialist —
+Arm B already tested "more capacity, same information" on this exact cell
+and it did not help. Full writeup: `research/reports/wave7_d3r.md`.
+Evidence: `research/reports/wave7_d3r.json`.

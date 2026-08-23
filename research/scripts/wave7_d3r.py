@@ -56,6 +56,8 @@ def last_row_lookup(d):
 
 
 def augmented_stack(mats, names, keep_idx, rows, final_of_row):
+    """final_of_row: length-n_rows array, final_of_row[r] = row index of r's
+    series' last online observation."""
     own = PL._stack(mats, names, rows, keep_idx)
     frows = final_of_row[rows]
     uniq, inv = np.unique(frows, return_inverse=True)
@@ -68,7 +70,8 @@ def train_arm_c(exp_id="RT-991"):
     d = PL.Data()
     mats, names = PL.load_features(FULL)
     keep_idx = np.arange(len(names))
-    last_row = last_row_lookup(d)
+    last_row_by_series = last_row_lookup(d)
+    final_of_row = last_row_by_series[d.sidx]
 
     rng = np.random.default_rng(0)
     p = dict(ARM_B_PARAMS)
@@ -85,21 +88,22 @@ def train_arm_c(exp_id="RT-991"):
         if len(tr_rows) > MAX_TRAIN_ROWS:
             tr_rows = np.sort(rng.choice(tr_rows, MAX_TRAIN_ROWS, replace=False))
 
-        Xtr = augmented_stack(mats, names, keep_idx, tr_rows, last_row)
+        Xtr = augmented_stack(mats, names, keep_idx, tr_rows, final_of_row)
         ytr = d.y[tr_rows]
         ds = lgb.Dataset(Xtr, label=ytr, params=dict(p, objective="binary"),
                          feature_name=[f"f{i}" for i in range(Xtr.shape[1])])
         booster = lgb.train(dict(p), ds, num_boost_round=n_round)
         del Xtr, ds
 
-        Xva = augmented_stack(mats, names, keep_idx, va_rows, last_row)
+        Xva = augmented_stack(mats, names, keep_idx, va_rows, final_of_row)
+        n_cols = Xva.shape[1]
         pred = booster.predict(Xva).astype(np.float32)
         del Xva
         oof[va_rows] = pred
         s = ts_auc_flat(pred, d.y[va_rows], d.t[va_rows])
         per_fold.append(float(s))
         print(f"  [C] fold {f}: TS-AUC {s:.5f}  ({len(tr_rows)} train rows, "
-              f"{len(va_rows)} valid rows, {Xva.shape[1]} cols)", flush=True)
+              f"{len(va_rows)} valid rows, {n_cols} cols)", flush=True)
 
     dev_rows = d.rows_for(list(FOLDS))
     overall = ts_auc_flat(oof[dev_rows], d.y[dev_rows], d.t[dev_rows])
@@ -211,22 +215,28 @@ def analyze():
     translated_CB = frac_weight * delta_CB
     size_BA, size_CB = bucket(delta_BA), bucket(delta_CB)
 
-    def beats(sz):
-        return sz in ("meaningful", "large")
+    # Sign-aware: the brief's ">>"/"~=" reading is directional, not just a
+    # magnitude bucket -- a NEGATIVE delta (stronger lever, same or worse
+    # result) is "no headroom found", i.e. flat, regardless of |delta|. Only
+    # a delta clearing +0.010 (meaningful/large) on the POSITIVE side counts
+    # as "beats". A positive delta in [+0.003, +0.010) is the genuinely
+    # ambiguous small/moderate zone the brief's own scale leaves open.
+    def beats(delta):
+        return delta >= 0.010
 
-    def flat(sz):
-        return sz == "negligible"
+    def flat(delta):
+        return delta < 0.003
 
-    if beats(size_BA) and flat(size_CB):
+    if beats(delta_BA) and flat(delta_CB):
         case = "CASE 1 -- representation/extraction limit"
-    elif flat(size_BA) and beats(size_CB):
+    elif flat(delta_BA) and beats(delta_CB):
         case = "CASE 2 -- future-information limit"
-    elif beats(size_BA) and beats(size_CB):
+    elif beats(delta_BA) and beats(delta_CB):
         case = "CASE 3 -- both"
-    elif flat(size_BA) and flat(size_CB):
+    elif flat(delta_BA) and flat(delta_CB):
         case = "CASE 4 -- near-noise / irreducible"
     else:
-        case = f"AMBIGUOUS -- B-A is {size_BA}, C-B is {size_CB} (small/moderate band); no forced case"
+        case = f"AMBIGUOUS -- B-A is {delta_BA:+.5f} ({size_BA}), C-B is {delta_CB:+.5f} ({size_CB}); no forced case"
 
     print(f"\n  cell pair-weight fraction of dev: {frac_weight:.4f}")
     print(f"  B - A: {delta_BA:+.5f} cell AUC ({size_BA})  -> translated pooled Δ {translated_BA:+.5f}")

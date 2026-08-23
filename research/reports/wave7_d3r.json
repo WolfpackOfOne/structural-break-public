@@ -1,0 +1,57 @@
+{
+  "experiment": "W7-D3R",
+  "prereg": "research/WAVE7_D3R_PREREG.md",
+  "cell_pair_weight_fraction": 0.5050467365450515,
+  "results": {
+    "A_RT300": {
+      "experiment_id": "RT-300",
+      "pooled_cell_ts_auc": 0.6534065801457525,
+      "per_fold_cell_ts_auc": {
+        "0": 0.6675320216210067,
+        "1": 0.6459987634892167,
+        "2": 0.6772131571275646,
+        "3": 0.6469474692522083,
+        "4": 0.6286221395712174
+      },
+      "pooled_cell_ts_auc_never_break_only": 0.6541323573676303,
+      "pooled_cell_ts_auc_pre_break_only": 0.6513142530300605
+    },
+    "B_RT990": {
+      "experiment_id": "RT-990",
+      "pooled_cell_ts_auc": 0.6474914699065645,
+      "per_fold_cell_ts_auc": {
+        "0": 0.6638108917990431,
+        "1": 0.6417581971640154,
+        "2": 0.6611862762245441,
+        "3": 0.6347778679496264,
+        "4": 0.6353582989309843
+      },
+      "pooled_cell_ts_auc_never_break_only": 0.6491193139088536,
+      "pooled_cell_ts_auc_pre_break_only": 0.6427985944022969
+    },
+    "C_RT991": {
+      "experiment_id": "RT-991",
+      "pooled_cell_ts_auc": 0.7185884164543739,
+      "per_fold_cell_ts_auc": {
+        "0": 0.7165782044731226,
+        "1": 0.7222174389917636,
+        "2": 0.7270706660294787,
+        "3": 0.7108146672635784,
+        "4": 0.7171597386263122
+      },
+      "pooled_cell_ts_auc_never_break_only": 0.7143883871286614,
+      "pooled_cell_ts_auc_pre_break_only": 0.7306965881908086
+    }
+  },
+  "delta_B_minus_A": {
+    "cell_auc": -0.005915110239188004,
+    "bucket": "small/moderate",
+    "translated_pooled": -0.0029874071226061202
+  },
+  "delta_C_minus_B": {
+    "cell_auc": 0.0710969465478094,
+    "bucket": "large",
+    "translated_pooled": 0.035907280832289105
+  },
+  "verdict": "CASE 2 -- future-information limit"
+}

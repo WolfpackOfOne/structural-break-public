@@ -270,3 +270,13 @@ the existing RT-600 development architecture OOF) in different row slices. It
 trains nothing and produces no new prediction vector, so it does not receive
 an `RT-*` ID. See `research/RDOF_LEDGER.md` "WAVE 7" and
 `research/WAVE7_RT600_EXACT_ALPHA_BUDGET.md`.
+
+### `RT-990` / `RT-991` — W7-D3R, Arms B and C
+
+| ID | is |
+|---|---|
+| `RT-990` | W7-D3R Arm B — `RT-300`'s 500 legal causal columns/rows, stronger LightGBM capacity only (127 leaves, ff 1.0, 900 trees). CAUSAL, but never promoted — diagnostic only. |
+| `RT-991` | W7-D3R Arm C — Arm B's capacity plus 500 columns holding each row's own series' feature vector at that series' FINAL online row. **NOT CAUSAL. OFFLINE DIAGNOSTIC ONLY. NEVER a production candidate.** |
+
+Arm A reuses `RT-300` (no new ID). Pre-registration:
+`research/WAVE7_D3R_PREREG.md`. Result: `research/reports/wave7_d3r.{md,json}`.
