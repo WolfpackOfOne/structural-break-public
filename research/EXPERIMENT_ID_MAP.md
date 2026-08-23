@@ -260,3 +260,45 @@ Pre-registration: `research/WAVE6_NEURAL_PREREG.md` and `WAVE6_PREREG.md` §20.
 2025-reproduction *ideas* throughout `research/WAVE5_PREREG.md` and
 `research/STATE_OF_RESEARCH_V5.md`; re-using them as experiment IDs would
 collide in text even though it would not collide in the ledger.
+
+---
+
+## WAVE 7 — the leaderboard-assault namespace
+
+Two families. `W7-D*` are **diagnostics** and carry no `RESULTS.csv` row, for the
+same reason `RT-940`–`RT-944` do not: they are not row-level TS-AUC and a
+diagnostic sitting in the TS-AUC ledger is how it gets mistaken for alpha later.
+`RT-99x` are model experiments and take a ledger row when they are scored.
+
+### `W7-D*` — diagnostics
+
+| ID | is | state |
+|---|---|---|
+| `W7-D1` | weighted pairwise error budget — exact pair weights from `research/folds/folds.parquet` crossed with committed bucket AUCs | **COMPLETE.** `research/scripts/wave7_alpha_budget.py` → `research/reports/wave7_alpha_budget.json`, narrative in `research/WAVE7_ALPHA_BUDGET.md` |
+| `W7-D2` | teacher-privilege budget — how much unseen future a full-sequence teacher holds, per metric-weight cell | **COMPLETE.** `research/scripts/wave7_teacher_privilege.py` → `research/reports/wave7_teacher_privilege.json` |
+| `W7-D3` | dominant-cell diagnostic — W6-E2R's protocol restricted to `t ≥ 200`, age ≥ 100, boundary removed, asked row-wise | **NOT RUN, NOT WRITTEN.** Named the wave's highest-value next experiment by `W7-D1` |
+
+### `RT-990`–`RT-996` — the wave-7 lanes
+
+| ID | lane | arm | state |
+|---|---|---|---|
+| `RT-990` | A | `A0` — binary control, champion params, 500 causal columns | **NOT RUN — store absent** |
+| `RT-991` | A | `A1` — target is the teacher `evidence` path | **NOT RUN — store absent** |
+| `RT-992` | A | `A2` — target is `0.5·y + 0.5·evidence` | **NOT RUN — store absent** |
+| `RT-993` | B | global control at regime H4 | **NOT RUN — store absent** |
+| `RT-994` | B | `t`-specialist at regime H4, `t ∈ [101, 251)` | **NOT RUN — store absent** |
+| `RT-995` | C | XGBoost on the identical causal state | **NOT RUN — store absent** |
+| `RT-996` | C′ | CatBoost — opens only after the `RT-995` screen | **NOT WRITTEN** |
+
+Runners: `wave7_a_distill.py`, `wave7_b_horizon.py`, `wave7_c_xgb.py`.
+Pre-registration: `research/WAVE7_PREREG.md`.
+
+**No wave-7 ID has a score.** Training runs = 0, TS-AUC values observed = 0.
+Anything the `--screen` switch produces is tagged `"protocol": "screen"`, filed
+under a `_screen` name, and is an execution check against a synthetic store — it
+is not a result and must never be quoted as one.
+
+### IDs deliberately NOT allocated
+
+`RT-980` stays reserved for the GRU that wave 6's terminating rule closed. It is
+not recycled for a wave-7 lane.

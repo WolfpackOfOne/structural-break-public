@@ -1,0 +1,18 @@
+# WAVE-7 LEADERBOARD-ASSAULT RESEARCH ENVIRONMENT -- OFFLINE ONLY.
+#
+# This file is NOT the production dependency set.  `requirements.txt` at the
+# repository root is what RT-600 ships with and it is untouched by wave 7.
+# Nothing here is declared to CrunchDAO and nothing here is needed to reproduce
+# RT-600.  Same convention as research/requirements-wave5.txt and
+# research/requirements-wave6-neural.txt.
+#
+# It is deliberately NOT in requirements-research.txt.  That file is guarded by
+# tests/test_requirements_cover_runtime.py, which asserts that everything
+# declared for research is also declared for the runner -- the rule that exists
+# because LB-002 died with lightgbm missing from requirements.txt.  A research-
+# only learner belongs outside that guarantee, not inside it with an exception.
+#
+# Frozen before the first wave-7 score, of which there are none.
+
+# Lane C only.  W7-C1 / RT-995: XGBoost on the identical 500 causal columns.
+xgboost==3.4.1

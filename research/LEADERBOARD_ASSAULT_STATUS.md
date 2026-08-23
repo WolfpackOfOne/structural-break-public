@@ -217,13 +217,24 @@ bit-identical after every teacher artifact is deleted.
 | suite | result |
 |---|---|
 | `tests/test_wave7_lanes.py` | **18 passed**, no data required |
-| repository-wide | 607 passed, 19 failed, 15 skipped |
+| repository-wide | **609 passed, 19 failed, 15 skipped** |
 
 Every repository failure is a `FileNotFoundError` against the absent store, or one
 of the two synthetic `m07_bayes` parity cases already pinned in
 `research/known_failures.json`. None is in a file this wave touched. The pinned
 baseline was recorded on a machine that had the store, so the count here is larger
 by exactly the store-dependent set.
+
+**A twentieth failure appeared briefly and was mine.** Declaring `xgboost` in
+`requirements-research.txt` tripped
+`test_runtime_requirements_are_not_weaker_than_research_requirements`, the guard
+that asserts everything declared for research is also declared for the runner —
+the rule that exists because LB-002 shipped with lightgbm missing from
+`requirements.txt`. The guard was right and the placement was wrong: a
+research-only learner belongs outside that guarantee, not inside it with an
+exception. Lane C's dependency now lives in `research/requirements-wave7.txt`,
+the same convention as `requirements-wave5.txt` and `requirements-wave6-neural.txt`
+(which is where `torch` lives). Suite back to 19.
 
 The wave-7 gates that pass with no data present: teacher-leak refusal including
 the gate's own self-test, the deliberate non-prefix-invariance of teacher labels
@@ -234,8 +245,12 @@ of the official metric rather than an approximation of it.
 
 ## L. DEPENDENCIES
 
-`xgboost==3.4.1` added to `requirements-research.txt` for lane C. **`requirements.txt`
-is deliberately untouched** — it is the file the Crunch runner builds from, RT-600's
-inference closure does not contain xgboost, and LB-002 died precisely because that
-file drifted from what inference actually needs. `tests/test_requirements_cover_runtime.py`
-continues to guard it.
+`xgboost==3.4.1` is declared in **`research/requirements-wave7.txt`**, a wave-local
+offline file, following the convention `research/requirements-wave5.txt` and
+`research/requirements-wave6-neural.txt` already set.
+
+**`requirements.txt` and `requirements-research.txt` are both untouched.**
+`requirements.txt` is what the Crunch runner builds from, RT-600's inference
+closure does not contain xgboost, and LB-002 died precisely because that file
+drifted from what inference actually needs.
+`tests/test_requirements_cover_runtime.py` continues to guard both.
