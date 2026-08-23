@@ -833,3 +833,74 @@ margin. **VERDICT: CONTINUE.** This is a single-fold screen only — it has
 alternate partitions) and licenses no submission. Full writeup:
 `research/reports/wave7_teacher_pilot.md`. Evidence:
 `research/reports/wave7_teacher_pilot.json`.
+
+### W7 teacher/distillation — NESTED outer-fold-pure correction, 5-fold
+
+**The pilot above was found to be outer-fold contaminated** (post-hoc
+review): `Q` (global `RT-991` OOF) is cross-fitted per-row/series but not
+per-*outer-student-validation-fold* — a fold-1 training row's `Q` came from
+a teacher trained on fold 0, the pilot's own outer validation fold. Standard
+nested-CV meta-feature leakage, not a deployment-causality failure (the
+student's inference path stays strictly causal). Pre-registered the fix
+(`research/WAVE7_TEACHER_NESTED_PREREG.md`, committed before any nested
+score existed): for outer fold `f`, every inner teacher trains on folds
+excluding `{f, g}` (`g` = its target fold), never `f`. A mechanical
+fold-purity sentinel (pure set arithmetic, no training) confirmed 0/20
+violations on the new scheme and — proving it actually catches the known
+defect — 20/20 contaminated checks on the old scheme, run and committed
+before any inner teacher trained.
+
+20 inner teacher fits (no IDs, internal machinery) + `T1`/`T2` trained per
+outer fold on nested `Q`, evaluated on the untouched outer fold, merged into
+full 5-fold OOF vectors `RT-994`/`RT-995`.
+
+| | count |
+|---|---:|
+| arms declared in advance | 2 (`T1`, `T2`; `T0`=`RT-990` unaffected, reused) |
+| arms selected | **0** — measurement only, promotion legs checked but not acted on |
+| hyperparameters swept | **0** — identical capacity/rows/features to the pilot |
+| Crunch submissions | **0** |
+
+**Result, whole-dev TS-AUC vs `T0` (`RT-990`), all 5 outer folds:**
+
+| outer fold | T0 | T1 (`RT-994`) | T2 (`RT-995`) | T1−T0 | T2−T0 |
+|---:|---:|---:|---:|---:|---:|
+| 0 | 0.62656 | 0.61931 | 0.63103 | −0.00725 | +0.00447 |
+| 1 | 0.60617 | 0.61792 | 0.62008 | +0.01175 | +0.01391 |
+| 2 | 0.61753 | 0.61242 | 0.62658 | −0.00512 | +0.00904 |
+| 3 | 0.60318 | 0.62065 | 0.61679 | +0.01747 | +0.01361 |
+| 4 | 0.60581 | 0.60642 | 0.61190 | +0.00061 | +0.00609 |
+| **mean** | | | | **+0.00349** | **+0.00943** |
+
+**Paired series bootstrap (200 reps):** `T1−T0` mean +0.00308, CI95
+`[−0.00468, +0.01089]` (crosses zero, 78% of reps positive). `T2−T0` mean
++0.00922, CI95 `[+0.00425, +0.01373]` (**entirely above zero**, 100% of reps
+positive).
+
+**`T1` (pure distillation): 3/5 folds positive, mean +0.0035, bootstrap CI
+crosses zero → FAILS promotion legs 2 and 3. Does not clear promotion.**
+Once outer-fold-pure, pure distillation on the teacher's raw score is not a
+reliable signal — the contaminated pilot's apparent +0.0090 translated gain
+for this arm was mostly an artifact.
+
+**`T2` (hard+teacher 0.5/0.5 blend): 5/5 folds positive, mean +0.0094,
+bootstrap CI entirely above zero → CLEARS all three measured promotion
+legs** (magnitude ≥+0.0030, ≥4/5 folds, bootstrap CI>0). Reading: **major
+breakthrough** by the pre-registered scale. Improvement is broad-based, not
+narrowly concentrated in the dominant cell — positive across every age
+bucket and every current-`t` bucket measured
+(`research/reports/wave7_teacher_nested.json` §age_buckets/§t_buckets).
+
+**Contamination comparison, fold 0 only (the pilot's only evaluated fold):**
+`T1` was overstated by **+0.0235** (contaminated +0.0162 vs. true clean
+**−0.0072**, i.e. the sign flips); `T2` was overstated by **+0.0122**
+(contaminated +0.0167 vs. clean +0.0045). The contamination was large and
+directionally misleading for `T1`, but a smaller, real, robust effect
+survived the correction for `T2`.
+
+**Leg 4 (alternate-partition stability) is authorized but has not run.** No
+promotion decision, no ensemble-integration test against `RT-600`'s existing
+seven specialists, and no submission until it does. Full writeup:
+`research/reports/wave7_teacher_nested.md`. Evidence:
+`research/reports/wave7_teacher_nested.json`,
+`research/reports/wave7_teacher_nested_fold_purity_test.json`.

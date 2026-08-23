@@ -329,5 +329,19 @@ retired, since no contaminated artifact exists under them.
 | `RT-994` | W7 teacher NESTED T1 — pure distillation, nested outer-fold-pure `Q`, 5 outer folds. |
 | `RT-995` | W7 teacher NESTED T2 — hard+teacher 0.5/0.5 blend, nested outer-fold-pure `Q`, 5 outer folds. |
 
+**RESULT (complete, all 5 outer folds, 2026-08-23).** Mean Δ vs `RT-990`:
+`RT-994` (T1) **+0.00349**, 3/5 folds positive, bootstrap CI `[-0.0047,
++0.0109]` (crosses zero) — reading "serious candidate" by magnitude alone,
+but **fails promotion legs 2 and 3** (fold-consistency, bootstrap), so **does
+not clear promotion**. `RT-995` (T2) **+0.00943**, 5/5 folds positive,
+bootstrap CI `[+0.0043, +0.0137]` (entirely above zero) — **clears all three
+measured promotion legs** (magnitude ≥+0.0030, ≥4/5 folds, bootstrap CI>0),
+reading **"major breakthrough"**. Alternate-partition confirmation (leg 4)
+is now authorized but not yet run — **no promotion or submission decision
+until it is**. Contamination comparison (fold 0 only): the original
+contaminated pilot overstated `T1` by **+0.0235** (true clean effect on that
+fold was *negative*) and `T2` by **+0.0122** — the contamination was large,
+but a smaller, real, robust effect survived for `T2`.
+
 Pre-registration: `research/WAVE7_TEACHER_NESTED_PREREG.md`. Result:
 `research/reports/wave7_teacher_nested.{md,json}`.
