@@ -379,3 +379,12 @@ produced on this branch. Pre-registration:
 
 Pilot 1, specialist-competence and failure-manifold diagnostics, is
 diagnostic-only and consumes no RT ID.
+
+Reserved prospectively on 2026-08-24 before any Pilot 5 score was produced.
+Pre-registration:
+`research/reports/new_avenues_2026/PILOT05_PREREG.md`.
+
+| ID | is |
+|---|---|
+| `RT-1204` | Pilot 5 scale-survival cross-scale summary features on dyadic AR(2) residual-square coarse-graining, fold-0 screen candidate. |
+| `RT-1205` | Pilot 5 six individual per-scale surprise features on the same dyadic residual-square coarse-graining, fold-0 binding control. |
