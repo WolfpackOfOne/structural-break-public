@@ -1326,3 +1326,68 @@ path. RT600 sentinel reproduced exactly in the expected tolerance
 `0.638276`, E1 `0.638586`). Final status is **FINAL SCREEN RESULT**.
 
 Report: `research/reports/new_avenues_2026/pilot10_joint_rarity.{md,json}`.
+
+---
+
+## RT-1212 / RT-1213 -- Pilot 9(i) scalar historical difficulty gate -- KILL (2026-08-24)
+
+**Mechanism.** One series-constant scalar from the 23 history-only fingerprints,
+trained nested/fold-pure to predict RT-600 dominant-cell pair loss rate.
+`RT-1212` uses the real nested scalar. `RT-1213` uses the binding within-fold
+deranged scalar control, preserving each fold's scalar marginal distribution
+while breaking the series-specific fingerprint match.
+
+**Variant.** Preregistered Mode-A fold-0 ABL feature-addition screen from
+`research/reports/new_avenues_2026/PILOT09_PREREG.md`. Both arms use the same
+LightGBM architecture, fold, row budget, seed, and base legal bank; only the
+single scalar column differs.
+
+**Result.** Fold 0 integration:
+
+| arm | TS-AUC |
+|---|---:|
+| RT600 | 0.638276 |
+| RT600 + RT-401 seed clone | 0.638586 |
+| RT600 + RT-1212 | 0.638750 |
+| RT600 + RT-1213 | 0.638855 |
+
+`RT-1212` binding marginal vs clone: **+0.000164**. Gain vs RT600 alone:
+**+0.000474**. Standalone whole-fold TS-AUC was 0.629133; dominant-cell AUC
+was 0.666635 versus RT-600 at 0.664277; within-t correlation with RT-600 was
++0.8629; sampled dominant-cell pair-flow net was -71.
+
+`RT-1213` deranged-control marginal vs clone was **+0.000269**. Control
+standalone whole-fold TS-AUC was 0.630245; dominant-cell AUC was 0.666912;
+within-t correlation with RT-600 was +0.8712; sampled dominant-cell pair-flow
+net was -226.
+
+Candidate minus deranged-control marginal was **-0.000105**. The scalar target
+itself was learnable on fold 0 as a diagnostic (`Spearman=+0.137`, `p=8.8e-7`),
+but the learned scalar was not load-bearing in ensemble integration.
+
+**Binding gate.** KILL because the deranged scalar control exceeded the real
+scalar. The primary marginal gate also failed: `RT-1212 marginal_vs_clone`
+was below `+0.0010`.
+
+**What this falsifies.** The nested one-scalar J1 construction failed to add
+load-bearing marginal ensemble alpha beyond a within-fold derangement control
+under the fixed 23 fingerprint columns, RT-600 dominant-cell loss-rate target,
+fold-pure scalar training, and Mode-A fold-0 ABL screen.
+
+**What this does not falsify.** It does not falsify all historical-DGP
+conditioning, tail-conditioned nulls, observer-conditioned representations, or
+future reweighting schemes. It specifically falsifies this single scalar as an
+eighth feature-stream conditioner because the fold-wise marginal/deranged
+control explained the observed gain.
+
+**Causality and status.** Fingerprint names matched the preregistered 23-column
+history-only bank. Nested fold-purity audit passed; no scalar model used an
+outer validation fold target for the scalar used on that fold. The derangement
+had no fixed points inside folds and preserved each fold's scalar multiset.
+The scalar was constant within checked series and filled zero lockbox rows.
+Pilot 9(i) does not recompute the known `m07_bayes::bo_p_lt25_z` stream-parity
+path. RT600 sentinel reproduced exactly in the expected tolerance
+(`mean=0.625811`, `pooled=0.625627`, dominant `0.664277`, fold-0 E0
+`0.638276`, E1 `0.638586`). Final status is **FINAL SCREEN RESULT**.
+
+Report: `research/reports/new_avenues_2026/pilot09_difficulty_gate.{md,json}`.

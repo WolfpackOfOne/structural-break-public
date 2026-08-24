@@ -20,3 +20,5 @@ This table is a compact research checkpoint, not a replacement for
 | 7 | RT-1209 | permutation-entropy-only control | n/a | 0.626836 | 0.663077 | 0.663400 | 0.8850 | 863 | 1139 | -276 | 0.638276 | 0.638586 | 0.638079 | -0.000508 | n/a | 1627.8s | negative control | none |
 | 10 | RT-1210 | joint size-duration rarity | RT-1211 | 0.626121 | 0.663758 | 0.659593 | 0.8779 | 902 | 1139 | -237 | 0.638276 | 0.638586 | 0.638065 | -0.000522 | -0.000285 | 1580.6s | KILL | none |
 | 10 | RT-1211 | dwell-only rarity control | n/a | 0.627141 | 0.664654 | 0.662531 | 0.8704 | 941 | 1146 | -205 | 0.638276 | 0.638586 | 0.638350 | -0.000237 | n/a | 1580.6s | control exceeded candidate | none |
+| 9(i) | RT-1212 | nested scalar difficulty conditioner | RT-1213 | 0.629133 | 0.666635 | 0.663818 | 0.8629 | 983 | 1054 | -71 | 0.638276 | 0.638586 | 0.638750 | +0.000164 | -0.000105 | 1176.1s | KILL | none |
+| 9(i) | RT-1213 | within-fold deranged scalar control | n/a | 0.630245 | 0.666912 | 0.664874 | 0.8712 | 902 | 1128 | -226 | 0.638276 | 0.638586 | 0.638855 | +0.000269 | n/a | 1176.1s | control exceeded candidate | none |

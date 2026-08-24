@@ -450,3 +450,10 @@ Pre-registration:
 |---|---|
 | `RT-1212` | Pilot 9(i) nested scalar historical-difficulty conditioner predicting RT-600 dominant-cell loss propensity, fold-0 screen candidate. |
 | `RT-1213` | Pilot 9(i) within-fold deranged scalar control preserving fold-wise scalar marginals, fold-0 binding control. |
+
+Result filed 2026-08-24:
+`research/reports/new_avenues_2026/pilot09_difficulty_gate.{md,json}`.
+`RT-1212` KILL: marginal_vs_clone `+0.000164`; `RT-1213` deranged-control
+marginal_vs_clone `+0.000269`; candidate-control gap `-0.000105`. The
+deranged control exceeded the real scalar, and the real scalar also failed the
+primary `+0.0010` marginal gate.

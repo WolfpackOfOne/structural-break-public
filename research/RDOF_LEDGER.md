@@ -144,6 +144,13 @@ Pilot 9(i) preregistered 2026-08-24 before scoring:
 |---|---|---:|---|---|
 | Scalar historical-difficulty gate | `RT-1212`, `RT-1213` | 1 nested scalar candidate + 1 within-fold deranged control | fold 0 | Fixed 23 history-only fingerprints; target is RT-600 dominant-cell pair loss rate only; nested fold-pure scalar construction; derangement-control gap gate +0.0005. |
 
+Pilot 9(i) result filed 2026-08-24:
+`RT-1212` nested scalar marginal_vs_clone `+0.000164`; `RT-1213`
+deranged-control marginal_vs_clone `+0.000269`; candidate-control gap
+`-0.000105`. Consumed the two preregistered fold-0 variants and stopped with
+no 5-fold continuation because the deranged control exceeded the real scalar
+and the real scalar missed the primary `+0.0010` marginal gate.
+
 ---
 
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)
