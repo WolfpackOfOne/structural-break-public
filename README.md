@@ -15,7 +15,11 @@ between variables** — exactly the moments risk and quant teams most need to ca
 This repository contains a machine-learning baseline plus a set of classical and
 modern change-point detectors (CUSUM, rolling z-score, PELT), all behind a small,
 tested Python package. It was built around the ADIA Lab Structural Break Challenge
-hosted by CrunchDAO.
+hosted by CrunchDAO, and the active competition target is now the
+**[Real-Time Edition](https://hub.crunchdao.com/competitions/structural-break-real-time)**
+of that challenge: break location is unknown and can occur anywhere in a streamed
+online segment, inference is **causal** (one score per online time step, no
+look-ahead), and the metric is Time-Stratified AUC rather than plain ROC AUC.
 
 ![PELT change-point detection on a synthetic multi-regime series](docs/images/example_break_detection.png)
 
@@ -37,17 +41,41 @@ a competition baseline to a maintainable research workflow.
 - [Methodology](docs/methodology.md) — what a structural break is and how each detector works.
 - [Data note](docs/data.md) — challenge context, schema, and what is / isn't included.
 - [Contributing](CONTRIBUTING.md) — setup, checks, and conventions.
+- [AGENTS.md](AGENTS.md) — rules for Claude/Codex agents working in this repo.
+
+## Project structure across branches
+
+This repository's Real-Time research effort spans more than one branch —
+`main` is deliberately kept as a clean, stable package (the classical
+baseline below) rather than absorbing the full research history:
+
+| Branch | What it is |
+| --- | --- |
+| `main` | This package: the reproducible baseline + classical/ML detectors described below. |
+| [`production/rt600`](https://github.com/WolfpackOfOne/structural-break/tree/production/rt600) | The frozen, Crunch-tested **RT-600** deployment: environment build, leaderboard-verification runs, and the current submission. External Crunch leaderboard score: **0.6268**. |
+| [`research/current`](https://github.com/WolfpackOfOne/structural-break/tree/research/current) | The active Real-Time Edition research line — experiment ledger, protocol, failed experiments, and per-wave reports. **Start at [`research/STATUS.md`](https://github.com/WolfpackOfOne/structural-break/blob/research/current/research/STATUS.md)** for current state. |
+
+Historical research waves are preserved as annotated tags (`git tag -l`) and,
+where they represent genuinely separate lines of experimentation, as their
+own branches — see `docs/repository_cleanup_audit.md` and
+`docs/REPOSITORY_CLEANUP_REPORT.md` for the full inventory and rationale.
+Experiment history, including negative results, is never deleted.
 
 ## Current status
 
-This is an active research project. Implemented today:
+This is an active research project. Implemented on `main` today:
 
 - A supervised baseline: engineered time-series features + a Random Forest classifier.
 - Statistical / change-point detectors on a shared interface: **CUSUM**, **rolling z-score**, and **PELT** (via `ruptures`).
 - Synthetic data generators with known break points, a method-comparison workflow, and a plotting helper.
 - An importable package under `src/structural_break/`, a pytest suite, and GitHub Actions CI.
 
-Planned upgrades (see [Roadmap](#roadmap)):
+The Real-Time Edition production baseline and active research live on
+`production/rt600` and `research/current` respectively (see above) — that
+is where the competition score and current research conclusions actually
+live, not on `main`.
+
+Planned upgrades to the `main` baseline (see [Roadmap](#roadmap)):
 
 - HMM regime detection and Bai-Perron-style multiple-break tests.
 - Experiment tracking and richer visual diagnostics.

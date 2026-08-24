@@ -49,3 +49,11 @@ models/
 # Local environment
 .env
 .env.*
+.crunchdao/
+
+# Agent-session transfer artifacts (git bundles, tarballs) -- these should
+# never need to exist once work is pushed to a branch; see
+# docs/repository_cleanup_audit.md section D for why several were found
+# sitting untracked in a working tree.
+*.bundle
+*.tar.gz
