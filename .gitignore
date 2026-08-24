@@ -59,6 +59,8 @@ cache/
 logs/
 research/oof/
 *.npy
+# diagnostic arrays from research/scripts/novel_streams/ (rebuildable)
+*.npz
 research/RESULTS.csv.lock
 
 # built submission notebooks are artifacts: rebuild with research/scripts/build_submission.py

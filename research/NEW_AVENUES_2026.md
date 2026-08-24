@@ -31,11 +31,15 @@ correct as far as it goes, and incomplete:
 
 Two things the brief did not say and a new agent must know:
 
-1. **Wave 8 is not on `research/current`.** Its report, its five pilots, and — importantly —
-   its reusable harness (`wave8_common.py`: `ensemble_marginal`, `pair_repair_stats`,
-   `nested_oof_regressor`) are only on the sibling branch. `research/wave7-t2-promotion`
-   cherry-picked the harness. Any new wave should start by pulling that file forward, not
-   by reinventing it.
+1. **Wave 8 is not on `research/current`, but its reusable harness already is.** The Wave-8
+   *report* and its five killed mechanisms live only on the sibling branch and stay there.
+   The *shared evaluation helpers* were carried forward long ago and sit at
+   **`research/scripts/wave8_common.py`** on this branch — `ensemble_marginal`,
+   `pair_repair_stats`, `nested_oof_regressor` and the forbidden-column guard, function-only,
+   with no future-aware mechanism code (commits `4b04983` and `22e479d`, both ancestors of
+   this branch). **Import them; do not copy them from a historical branch, and do not
+   reimplement them.** Nothing about using them makes Wave 8's failed mechanisms part of the
+   active research programme.
 2. **The full research machine exists locally and runs.** The 10,000-series float32 store
    and all seven 500-column feature caches sit in
    `structural-break-claude-wave3/cache/`, and every worktree symlinks to them. The
@@ -993,20 +997,37 @@ as a batch/stream parity failure at deployment time, which
 fix and the reason are documented in the probe's own docstring.
 
 **Setup for a new agent (2 minutes, no data copying):**
+**Importing needs no setup.** `harness.py` resolves its own checkout from `__file__`, so
+`import harness` works in a fresh `research/current` clone with no environment variables,
+no `PYTHONPATH` and no caches. That is covered by `tests/test_novel_streams_harness.py`,
+which runs the import in a scrubbed subprocess.
+
+**Running a mechanism needs the data caches**, which are not redistributed. Point `SBR_ROOT`
+at a tree that carries them; the code still loads from the checkout `harness.py` lives in:
+
 ```bash
 cd "<repo>/structural-break-research-current"
 mkdir -p cache && ln -s .../structural-break-claude-wave3/cache/store cache/store
                   ln -s .../structural-break-claude-wave3/cache/features cache/features
 mkdir -p research/oof && ln -s .../structural-break-wave7-promotion/research/oof/*.npy research/oof/
-export SBR_ROOT="$PWD"; export PYTHONPATH="$PWD/research/scripts"
+export SBR_ROOT="$PWD"
 ```
-(`cache/` and `research/oof/` are already gitignored.)
+(`cache/` and `research/oof/` are already gitignored, as are `*.npy` and `*.npz`; cached
+streams and diagnostic arrays land in `cache/novel_streams/`, never in the source tree.)
 
 **Do not duplicate scoring code.** `sbr.metric.ts_auc_flat`, `wave5_lib.Ctx`,
 `wave8_common.ensemble_marginal` and `wave8_common.pair_repair_stats` are the only
-implementations that may be used. `wave8_common.py` must be cherry-picked forward from
-`research/wave8-future-aware-distillation@fca489a` (it is already present on
-`research/wave7-t2-promotion`).
+implementations that may be used, and all four are **already on this branch** —
+`wave8_common.py` is at `research/scripts/wave8_common.py`. Nothing needs cherry-picking,
+and no sibling worktree is required; `tests/test_novel_streams_harness.py` asserts that
+every one of those dependencies resolves inside this checkout.
+
+*Future refactor, deliberately not done now:* `wave8_common.py` is a permanent piece of
+research infrastructure carrying a wave-specific name. A neutral name (`research_eval.py`,
+`ensemble_eval.py`) would read better, but renaming touches imports in `wave7_d3r.py`,
+`wave7_teacher_nested.py`, `tests/test_wave8_causality.py` and every Wave-8 script on the
+sibling branch, and would break the historical reports that cite it by name. Stability
+before the pilots wins; revisit only alongside a wider `research/scripts` tidy-up.
 
 ---
 

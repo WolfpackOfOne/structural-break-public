@@ -49,12 +49,19 @@ short and gets updated whenever that changes materially.
   [`NEW_AVENUES_2026.md`](NEW_AVENUES_2026.md) — broad-exploration survey
   written 2026-08-24 after the Wave-7/8 dead end: nine functional classes
   absent from the 500-column bank, 79 source-backed mechanisms in 15
-  families ([`new_avenues_2026.csv`](new_avenues_2026.csv)), four new
-  descriptive diagnostics
+  families ([`new_avenues_2026.csv`](new_avenues_2026.csv)), six descriptive
+  diagnostics `D1`–`D6`
   ([`reports/new_avenues_2026_diagnostics.json`](reports/new_avenues_2026_diagnostics.json)),
   and an 11-experiment queue. Reusable plugin harness in
-  [`scripts/novel_streams/`](scripts/novel_streams/). **Design only — no
-  experiment ID consumed, no promotion, no change to the anchor.**
+  [`scripts/novel_streams/`](scripts/novel_streams/) — imports with no
+  environment set up; the shared ensemble/pair-flow helpers it reuses are
+  already on this branch at `scripts/wave8_common.py`, so no sibling branch
+  or worktree is needed. Regression-tested by
+  `tests/test_novel_streams_harness.py`.
+  **DESIGN COMPLETE, NOTHING EXECUTED** — no experiment ID consumed, no
+  pilot run, no new score, no promotion, `RESULTS.csv` untouched, RT-600
+  still the production anchor. **The next phase is execution of the
+  selected pilots**, which is a separate agent's task.
 - **Final Wave reports:** [`reports/wave4/`](reports/wave4/),
   [`reports/wave5/`](reports/wave5/), [`reports/wave6/`](reports/wave6/),
   [`reports/wave7/`](reports/wave7/); Wave 8's report is on the
@@ -63,7 +70,7 @@ short and gets updated whenever that changes materially.
   [`FINAL_ARCHITECTURE_FREEZE.md`](FINAL_ARCHITECTURE_FREEZE.md),
   [`FINAL_REPRODUCIBILITY_MANIFEST.json`](FINAL_REPRODUCIBILITY_MANIFEST.json).
 
-_Last updated: 2026-08-24, during the repository cleanup pass and the
-new-avenues research-direction pass. Update this
+_Last updated: 2026-08-24, during the repository cleanup pass, the new-avenues
+research-direction pass, and the novel-stream harness cleanup pass. Update this
 file whenever the production anchor, external score, or active research
 conclusion changes — see `AGENTS.md` at the repo root for the update rule._
