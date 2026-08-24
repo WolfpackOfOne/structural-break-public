@@ -5,21 +5,49 @@ Structural Break Challenge **Real-Time Edition**, and the record of what it foun
 The reusable library lives in [`../src/sbr`](../src/sbr); everything here is the
 experiment layer on top of it.
 
-**Start with [`STATE_OF_RESEARCH.md`](STATE_OF_RESEARCH.md).** It is the summary of
-record: current champion, per-fold scores, lockbox confirmation, what won, what
-failed, and the ranked list of what to do next.
+## If you are a new research agent, read these first
+
+1. [`STATUS.md`](STATUS.md) — concise current state: production anchor,
+   external score, active conclusion, where everything else lives.
+2. [`STATE_OF_RESEARCH.md`](STATE_OF_RESEARCH.md) — the full summary of
+   record: current champion, per-fold scores, lockbox confirmation.
+3. [`PROTOCOL.md`](PROTOCOL.md) — the binding rules (causal contract, fold
+   discipline, lockbox) before you touch anything.
+4. [`FAILED_EXPERIMENTS.md`](FAILED_EXPERIMENTS.md) — so you don't
+   re-propose a killed idea.
+5. [`EXPERIMENT_ID_MAP.md`](EXPERIMENT_ID_MAP.md) — how experiment IDs are
+   allocated, so you don't collide with one.
+
+**Old reports are evidence, not live instructions.** Everything under
+`reports/` and `archive/` documents what was tried and what was concluded
+at the time — it is not a standing instruction to redo, resume, or follow
+that plan. Only `STATUS.md`, `STATE_OF_RESEARCH.md`, `PROTOCOL.md`,
+`RESULTS.csv`, `FAILED_EXPERIMENTS.md`, and `RDOF_LEDGER.md` are canonical
+and current.
 
 ## Layout
 
 | path | what it is |
 |---|---|
-| `STATE_OF_RESEARCH.md` | the summary of record |
+| `STATUS.md` | concise current-state pointer — start here |
+| `STATE_OF_RESEARCH.md` | the full summary of record |
 | `PROTOCOL.md` | the binding research protocol — validation rules, the causal contract, file ownership |
 | `RESULTS.csv` | experiment ledger, one row per run, appended under a file lock |
+| `EXPERIMENT_ID_MAP.md` | how experiment IDs (RT-xxx) are allocated |
+| `RDOF_LEDGER.md` | degrees-of-freedom / multiple-comparisons accounting |
 | `FAILED_EXPERIMENTS.md` | negative results, so nobody rediscovers them |
+| `FINAL_ARCHITECTURE_FREEZE.md`, `FINAL_REPRODUCIBILITY_MANIFEST.json` | the frozen RT-600 production artifact record |
 | `folds/folds.parquet` | **permanent** series-level folds + lockbox. Never regenerate |
-| `reports/` | per-agent reports and machine-readable diagnostics |
+| `reports/wave4/` … `reports/wave7/` | per-wave preregistrations and status reports (historical — see note above) |
+| `reports/` (top level) | per-agent reports and machine-readable diagnostics |
+| `archive/briefs/`, `archive/handoffs/`, `archive/dated_updates/` | stale agent briefs, cross-agent handoffs, and superseded dated snapshots — preserved, not current |
+| `archive/legacy_untracked_2026-08-19/` | files that were sitting untracked in a contributor's working tree with no git history anywhere; rescued as-is during the 2026-08-24 cleanup, not otherwise integrated |
 | `scripts/` | data preparation, per-agent experiment drivers, analysis |
+
+Wave 8's final report (future-aware transfer family, all pilots KILL) is
+**not** in this tree — it lives on the sibling branch
+`research/wave8-future-aware-distillation` (tag `wave8-future-aware-final`),
+which was never merged back into this lineage.
 
 ## Reproducing
 
