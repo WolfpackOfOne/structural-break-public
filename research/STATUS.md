@@ -55,6 +55,13 @@ short and gets updated whenever that changes materially.
   and an 11-experiment queue. Reusable plugin harness in
   [`scripts/novel_streams/`](scripts/novel_streams/). **Design only — no
   experiment ID consumed, no promotion, no change to the anchor.**
+- **First New Avenues execution branch:**
+  `research/new-avenues-pilots-2026` ran the first three queued pilots. Pilot 1
+  specialist/failure-manifold diagnostics are **WEAK**; `RT-1200` relay
+  score-state is **KILL** (`marginal_vs_clone=-0.000207`); `RT-1201` IM2+dwell
+  scalar is **KILL** (`marginal_vs_clone=+0.000301`). No 5-fold confirmation is
+  warranted; next action is Pilot 4. Cleanup from the parallel harness work had
+  not landed on `origin/research/current` when these were recorded.
 - **Final Wave reports:** [`reports/wave4/`](reports/wave4/),
   [`reports/wave5/`](reports/wave5/), [`reports/wave6/`](reports/wave6/),
   [`reports/wave7/`](reports/wave7/); Wave 8's report is on the
