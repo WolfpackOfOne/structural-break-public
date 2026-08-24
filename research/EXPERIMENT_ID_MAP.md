@@ -433,3 +433,11 @@ Pre-registration:
 |---|---|
 | `RT-1210` | Pilot 10 joint size-duration rarity features on AR(2) residual-square excursions, fold-0 screen candidate. |
 | `RT-1211` | Pilot 10 matched dwell-only rarity features on the same excursion states, fold-0 binding control. |
+
+Result filed 2026-08-24:
+`research/reports/new_avenues_2026/pilot10_joint_rarity.{md,json}`.
+`RT-1210` KILL: marginal_vs_clone `-0.000522`; `RT-1211` dwell-only
+control marginal_vs_clone `-0.000237`; candidate-control gap `-0.000285`.
+The primary marginal gate failed, the dwell-only control exceeded the joint
+candidate, and the candidate lost the dominant-cell control comparison by
+`-0.000896` AUC.

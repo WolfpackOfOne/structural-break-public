@@ -1264,3 +1264,65 @@ in the expected tolerance (`mean=0.625811`, `pooled=0.625627`, dominant
 
 Report:
 `research/reports/new_avenues_2026/pilot07_ordinal_irreversibility.{md,json}`.
+
+---
+
+## RT-1210 / RT-1211 -- Pilot 10 joint size-duration rarity -- KILL (2026-08-24)
+
+**Mechanism.** AR(2) residual-square rolling means over windows 32, 64, and
+128 with the Pilot-3 q90 excursion band. `RT-1210` emits live and running-max
+one-sided joint rarity of excursion peak excess and live duration under a
+history-only endpoint table. `RT-1211` is the binding matched control with the
+same endpoint table and duration-only dwell rarity.
+
+**Variant.** Preregistered Mode-A fold-0 ABL feature-addition screen from
+`research/reports/new_avenues_2026/PILOT10_PREREG.md`. Both arms use the same
+LightGBM architecture, fold, row budget, seed, and base legal bank; only the
+Pilot-10 feature block differs.
+
+**Result.** Fold 0 integration:
+
+| arm | TS-AUC |
+|---|---:|
+| RT600 | 0.638276 |
+| RT600 + RT-401 seed clone | 0.638586 |
+| RT600 + RT-1210 | 0.638065 |
+| RT600 + RT-1211 | 0.638350 |
+
+`RT-1210` binding marginal vs clone: **-0.000522**. Gain vs RT600 alone:
+**-0.000211**. Standalone whole-fold TS-AUC was 0.626121; dominant-cell AUC
+was 0.663758 versus RT-600 at 0.664277; within-t correlation with RT-600 was
++0.8779; sampled dominant-cell pair-flow net was -237.
+
+`RT-1211` dwell-only control marginal vs clone was **-0.000237**. Control
+standalone whole-fold TS-AUC was 0.627141; dominant-cell AUC was 0.664654;
+within-t correlation with RT-600 was +0.8704; sampled dominant-cell pair-flow
+net was -205.
+
+Candidate minus dwell-control marginal was **-0.000285**. Candidate minus
+dwell-control dominant-cell AUC was **-0.000896**.
+
+**Binding gate.** KILL because `RT-1210 marginal_vs_clone < +0.0010`. The
+mechanism-specific control gates also failed: the dwell-only control exceeded
+the joint-rarity candidate on marginal ensemble value and on dominant-cell AUC.
+
+**What this falsifies.** Joint size-duration rarity failed to add marginal
+ensemble alpha beyond matched dwell-only rarity under the fixed AR(2)
+residual-square channel, windows 32/64/128, q90 excursion band, historical
+endpoint joint null, `1/(2*n_endpoints)` floor, and Mode-A fold-0 ABL screen.
+
+**What this does not falsify.** It does not falsify all large-deviation,
+scan-statistic, first-passage, or observer-residual approaches. It specifically
+falsifies this I1 endpoint-null construction and its matched dwell-control
+comparison.
+
+**Causality and status.** `harness.verify()` passed for both candidate and
+dwell-control mechanisms. Registered feature modules passed prefix invariance
+at `atol=0.0`; first-valid/NaN semantics, future-mutation prefix stability,
+deterministic replay, and the joint-surprise >= dwell-surprise invariant passed.
+Pilot 10 does not recompute the known `m07_bayes::bo_p_lt25_z` stream-parity
+path. RT600 sentinel reproduced exactly in the expected tolerance
+(`mean=0.625811`, `pooled=0.625627`, dominant `0.664277`, fold-0 E0
+`0.638276`, E1 `0.638586`). Final status is **FINAL SCREEN RESULT**.
+
+Report: `research/reports/new_avenues_2026/pilot10_joint_rarity.{md,json}`.

@@ -130,6 +130,14 @@ Pilot 10 preregistered 2026-08-24 before scoring:
 |---|---|---:|---|---|
 | Joint size-duration rarity | `RT-1210`, `RT-1211` | 1 joint rarity candidate + 1 dwell-only rarity control | fold 0 | Fixed AR(2) residual-square channel, windows `{32,64,128}`, q90 band, historical endpoint joint null with `1/(2*n_endpoints)` floor, candidate-control gap gate +0.0005 and dominant-cell control gate. |
 
+Pilot 10 result filed 2026-08-24:
+`RT-1210` joint-rarity marginal_vs_clone `-0.000522`; `RT-1211`
+dwell-control marginal_vs_clone `-0.000237`; candidate-control gap
+`-0.000285`, and candidate-control dominant-cell AUC gap `-0.000896`.
+Consumed the two preregistered fold-0 variants and stopped with no 5-fold
+continuation because the primary `+0.0010` marginal gate failed and the
+dwell-only control exceeded the joint-rarity arm.
+
 ---
 
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)

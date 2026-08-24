@@ -18,3 +18,5 @@ This table is a compact research checkpoint, not a replacement for
 | 6 | RT-1207 | plain spectral-energy control | n/a | 0.631084 | 0.674571 | 0.673311 | 0.8851 | 942 | 962 | -20 | 0.638276 | 0.638586 | 0.638775 | +0.000189 | n/a | 1586.9s | control exceeded candidate | none |
 | 7 | RT-1208 | ordinal transition KL + irreversibility | RT-1209 | 0.629141 | 0.668268 | 0.664570 | 0.8780 | 925 | 1000 | -75 | 0.638276 | 0.638586 | 0.638551 | -0.000036 | +0.000472 | 1627.8s | KILL | none |
 | 7 | RT-1209 | permutation-entropy-only control | n/a | 0.626836 | 0.663077 | 0.663400 | 0.8850 | 863 | 1139 | -276 | 0.638276 | 0.638586 | 0.638079 | -0.000508 | n/a | 1627.8s | negative control | none |
+| 10 | RT-1210 | joint size-duration rarity | RT-1211 | 0.626121 | 0.663758 | 0.659593 | 0.8779 | 902 | 1139 | -237 | 0.638276 | 0.638586 | 0.638065 | -0.000522 | -0.000285 | 1580.6s | KILL | none |
+| 10 | RT-1211 | dwell-only rarity control | n/a | 0.627141 | 0.664654 | 0.662531 | 0.8704 | 941 | 1146 | -205 | 0.638276 | 0.638586 | 0.638350 | -0.000237 | n/a | 1580.6s | control exceeded candidate | none |
