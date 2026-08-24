@@ -403,3 +403,9 @@ Pre-registration:
 |---|---|
 | `RT-1206` | Pilot 6 spectral impulsiveness contrast features: band energy with low spectral-kurtosis / low robust-negentropy impulse evidence, fold-0 screen candidate. |
 | `RT-1207` | Pilot 6 matched plain band-energy features on the same four frequency bands, fold-0 binding control. |
+
+Result filed 2026-08-24:
+`research/reports/new_avenues_2026/pilot06_spectral_impulse.{md,json}`.
+`RT-1206` KILL: marginal_vs_clone `-0.000353`; `RT-1207` plain-energy
+control marginal_vs_clone `+0.000189`; contrast-control gap `-0.000542`.
+Primary marginal gate failed, and the control exceeded the contrast.

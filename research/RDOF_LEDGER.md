@@ -104,6 +104,13 @@ Pilot 6 preregistered 2026-08-24 before scoring:
 |---|---|---:|---|---|
 | Spectral impulsiveness contrast | `RT-1206`, `RT-1207` | 1 contrast + 1 plain-energy control | fold 0 | Fixed m03 dyadic Goertzel frequencies collapsed into four bands; segment length 32; adaptive half-prefix window; historical-null grid `{16,64,256}`; contrast-control gap gate +0.0005. |
 
+Pilot 6 result filed 2026-08-24:
+`RT-1206` contrast marginal_vs_clone `-0.000353`; `RT-1207` plain-energy
+control marginal_vs_clone `+0.000189`; contrast-control gap `-0.000542`.
+Consumed the two preregistered fold-0 variants and stopped with no 5-fold
+continuation because the primary `+0.0010` marginal gate failed and the
+plain-energy control exceeded the contrast arm.
+
 ---
 
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)

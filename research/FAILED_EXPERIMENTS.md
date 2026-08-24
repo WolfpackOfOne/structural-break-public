@@ -1140,3 +1140,64 @@ expected tolerance (`mean=0.625811`, `pooled=0.625627`, dominant
 **FINAL SCREEN RESULT**.
 
 Report: `research/reports/new_avenues_2026/pilot05_scale_survival.{md,json}`.
+
+---
+
+## RT-1206 / RT-1207 -- Pilot 6 spectral impulsiveness contrast -- KILL (2026-08-24)
+
+**Mechanism.** Four Goertzel bands from the existing `m03_dyn` dyadic frequency
+bank, with length-32 trailing segment envelopes and an adaptive trailing
+half-prefix online window. `RT-1206` emits eight product-contrast columns:
+band `energy_z` times negative spectral-kurtosis z and negative robust-negentropy
+z. `RT-1207` is the binding control with the four matched plain `energy_z`
+columns only.
+
+**Variant.** Preregistered Mode-A fold-0 ABL feature-addition screen from
+`research/reports/new_avenues_2026/PILOT06_PREREG.md`. Both arms use the same
+LightGBM architecture, fold, row budget, seed, and base legal bank; only the
+Pilot-6 feature block differs.
+
+**Result.** Fold 0 integration:
+
+| arm | TS-AUC |
+|---|---:|
+| RT600 | 0.638276 |
+| RT600 + RT-401 seed clone | 0.638586 |
+| RT600 + RT-1206 | 0.638233 |
+| RT600 + RT-1207 | 0.638775 |
+
+`RT-1206` binding marginal vs clone: **-0.000353**. Gain vs RT600 alone:
+**-0.000043**. Standalone whole-fold TS-AUC was 0.627636; dominant-cell AUC was
+0.667578 versus RT-600 at 0.664277; within-t correlation with RT-600 was
++0.8809; sampled dominant-cell pair-flow net was -249.
+
+`RT-1207` plain-energy control marginal vs clone was **+0.000189**. Control
+standalone whole-fold TS-AUC was 0.631084; dominant-cell AUC was 0.674571;
+sampled dominant-cell pair-flow net was -20.
+
+Contrast minus plain-energy control marginal was **-0.000542**.
+
+**Binding gate.** KILL because `RT-1206 marginal_vs_clone < +0.0010`. The
+second scientific gate also failed: the plain-energy control exceeded the
+contrast arm.
+
+**What this falsifies.** The F1/F6 spectral impulsiveness product contrast, as
+implemented with fixed dyadic Goertzel bands, SEG=32 envelopes, robust
+historical-null calibration, and the Mode-A fold-0 ABL screen, does not add
+competition-useful marginal ensemble alpha. The result also argues that the
+plain band-energy component accounts for any useful signal in this construction.
+
+**What this does not falsify.** It does not falsify all spectral
+representations, learned frequency-domain features, or other envelope statistics.
+It specifically falsifies this low-impulsiveness product contrast under the
+preregistered fixed bands and control.
+
+**Causality and status.** `harness.verify()` passed for both contrast and
+energy mechanisms. Registered feature modules passed prefix invariance at
+`atol=0.0`; first-valid/NaN semantics, future-mutation prefix stability, and
+deterministic replay checks passed. RT600 sentinel reproduced exactly in the
+expected tolerance (`mean=0.625811`, `pooled=0.625627`, dominant
+`0.664277`, fold-0 E0 `0.638276`, E1 `0.638586`). Final status is
+**FINAL SCREEN RESULT**.
+
+Report: `research/reports/new_avenues_2026/pilot06_spectral_impulse.{md,json}`.
