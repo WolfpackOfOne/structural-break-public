@@ -331,3 +331,22 @@ retired, since no contaminated artifact exists under them.
 
 Pre-registration: `research/WAVE7_TEACHER_NESTED_PREREG.md`. Result:
 `research/reports/wave7_teacher_nested.{md,json}`.
+
+**Note (2026-08-23, `research/wave8-future-aware-distillation`):** `RT-994`/
+`RT-995` above are cited from `research/wave7-teacher-distillation` @
+`5093e0a`, a branch this worktree did not fork from at that commit. Their
+`RESULTS.csv` rows are **not** duplicated here (would misattribute a
+different commit's `git_sha`); `RT-995`'s OOF array was copied read-only into
+this branch's `research/oof/` for T2-integration analysis only. See
+`research/WAVE8_FUTURE_AWARE_PREREG.md` §1.
+
+## 8. WAVE 8 (`research/wave8-future-aware-distillation`, macOS/arm64, 2026-08-23)
+
+### `RT-1000`–`RT-1099` — future-aware distillation (SST/ORR/PCFB/CFEP/TGMC)
+
+Reserved block, verified unused on every branch's `RESULTS.csv` below
+`RT-2410` (the next allocation after `RT-995`). Full ID-to-arm mapping,
+frozen before any Wave-8 score exists: `research/WAVE8_FUTURE_AWARE_PREREG.md`
+§4. Controls (`RT-990` fold-0 slice, `RT-600` 7-specialist ensemble,
+`RT-600`+`RT-401` matched seed clone) are reused, not retrained. This section
+will be updated with per-ID results as each pilot completes.
