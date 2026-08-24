@@ -117,6 +117,13 @@ Pilot 7 preregistered 2026-08-24 before scoring:
 |---|---|---:|---|---|
 | Ordinal transition divergence + time irreversibility | `RT-1208`, `RT-1209` | 1 transition/asymmetry candidate + 1 entropy-only control | fold 0 | Fixed order-3 ordinal codes with `m03_dyn` tie convention; 6x6 transition KL; Ramsey-Rothman increment asymmetry; matched-count null grid `{16,64,256}`; entropy-control gap gate +0.0005. |
 
+Pilot 7 result filed 2026-08-24:
+`RT-1208` transition/asymmetry marginal_vs_clone `-0.000036`; `RT-1209`
+entropy-control marginal_vs_clone `-0.000508`; candidate-control gap
+`+0.000472`. Consumed the two preregistered fold-0 variants and stopped with
+no 5-fold continuation because the primary `+0.0010` marginal gate failed and
+the entropy-control gap missed the `+0.0005` distinguishability floor.
+
 ---
 
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)

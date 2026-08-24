@@ -418,3 +418,9 @@ Pre-registration:
 |---|---|
 | `RT-1208` | Pilot 7 ordinal transition divergence plus time-irreversibility features, fold-0 screen candidate. |
 | `RT-1209` | Pilot 7 matched permutation-entropy-only ordinal control, fold-0 binding control. |
+
+Result filed 2026-08-24:
+`research/reports/new_avenues_2026/pilot07_ordinal_irreversibility.{md,json}`.
+`RT-1208` KILL: marginal_vs_clone `-0.000036`; `RT-1209` entropy-only
+control marginal_vs_clone `-0.000508`; candidate-control gap `+0.000472`,
+below the preregistered `+0.0005` distinguishability floor.

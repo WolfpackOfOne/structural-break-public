@@ -1201,3 +1201,66 @@ expected tolerance (`mean=0.625811`, `pooled=0.625627`, dominant
 **FINAL SCREEN RESULT**.
 
 Report: `research/reports/new_avenues_2026/pilot06_spectral_impulse.{md,json}`.
+
+---
+
+## RT-1208 / RT-1209 -- Pilot 7 ordinal transition divergence and time irreversibility -- KILL (2026-08-24)
+
+**Mechanism.** Order-3 ordinal patterns with the same tie convention as
+`m03_dyn`. `RT-1208` emits expanding and trailing-half-prefix 6x6 transition
+KL divergence plus signed Ramsey-Rothman increment-asymmetry features, each
+with matched-count historical-null calibration. `RT-1209` is the binding
+control with the matching permutation-entropy-only features.
+
+**Variant.** Preregistered Mode-A fold-0 ABL feature-addition screen from
+`research/reports/new_avenues_2026/PILOT07_PREREG.md`. Both arms use the same
+LightGBM architecture, fold, row budget, seed, and base legal bank; only the
+Pilot-7 feature block differs.
+
+**Result.** Fold 0 integration:
+
+| arm | TS-AUC |
+|---|---:|
+| RT600 | 0.638276 |
+| RT600 + RT-401 seed clone | 0.638586 |
+| RT600 + RT-1208 | 0.638551 |
+| RT600 + RT-1209 | 0.638079 |
+
+`RT-1208` binding marginal vs clone: **-0.000036**. Gain vs RT600 alone:
+**+0.000274**. Standalone whole-fold TS-AUC was 0.629141; dominant-cell AUC
+was 0.668268 versus RT-600 at 0.664277; within-t correlation with RT-600 was
++0.8780; sampled dominant-cell pair-flow net was -75.
+
+`RT-1209` entropy-only control marginal vs clone was **-0.000508**. Control
+standalone whole-fold TS-AUC was 0.626836; dominant-cell AUC was 0.663077;
+sampled dominant-cell pair-flow net was -276.
+
+Candidate minus entropy-control marginal was **+0.000472**, just below the
+preregistered +0.0005 distinguishability floor.
+
+**Binding gate.** KILL because `RT-1208 marginal_vs_clone < +0.0010`. The
+second scientific gate also failed: the transition/asymmetry arm did not beat
+the entropy-only control by the preregistered +0.0005 floor.
+
+**What this falsifies.** Order-3 ordinal transition divergence and the
+preregistered time-irreversibility block failed to add marginal ensemble alpha
+beyond the entropy-only control under the fixed tie convention, transition KL,
+Ramsey-Rothman asymmetry, matched-count null grid, and Mode-A fold-0 ABL
+screen.
+
+**What this does not falsify.** It does not falsify all ordinal methods, all
+time-asymmetry statistics, visibility-graph statistics, or nonlinear dynamics
+representations. It specifically falsifies this L3/L4 construction and control
+comparison.
+
+**Causality and status.** `harness.verify()` passed for both candidate and
+entropy-control mechanisms. Registered feature modules passed prefix invariance
+at `atol=0.0`; first-valid/NaN semantics, future-mutation prefix stability, and
+deterministic replay checks passed. Pilot 7 does not recompute the known
+`m07_bayes::bo_p_lt25_z` stream-parity path. RT600 sentinel reproduced exactly
+in the expected tolerance (`mean=0.625811`, `pooled=0.625627`, dominant
+`0.664277`, fold-0 E0 `0.638276`, E1 `0.638586`). Final status is
+**FINAL SCREEN RESULT**.
+
+Report:
+`research/reports/new_avenues_2026/pilot07_ordinal_irreversibility.{md,json}`.
