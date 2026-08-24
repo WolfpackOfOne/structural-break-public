@@ -983,3 +983,49 @@ novel-stream cleanup commit had not landed on `origin/research/current` at run
 time.
 
 Report: `research/reports/new_avenues_2026/pilot02_relay_logic.{md,json}`.
+
+---
+
+## RT-1201 -- Pilot 3 IM2 matched-length run null + dwell bank -- KILL (2026-08-24)
+
+**Mechanism.** Path-functional null calibration for contiguous AR(2)-residual
+scale excursions: matched-length maximum-run percentile, excursion-mass
+percentile, and growth proxy over windows 32, 64, and 128.
+
+**Variant.** Single preregistered fold-0 scalar candidate from
+`research/reports/new_avenues_2026/PILOTS_01_03_PREREG.md`.
+
+**Result.** Fold 0 integration:
+
+| arm | TS-AUC |
+|---|---:|
+| RT600 | 0.638276 |
+| RT600 + RT-401 seed clone | 0.638586 |
+| RT600 + RT-1201 | 0.638888 |
+
+Binding marginal vs clone: **+0.000301**. Gain vs RT600 alone: **+0.000612**.
+Standalone whole-fold candidate TS-AUC was 0.583578. Dominant-cell candidate
+AUC was 0.610158 versus RT-600 at 0.677711; mature-vs-never was 0.613459;
+within-t correlation with RT-600 was +0.3817; sampled dominant-cell pair-flow
+net was -1151.
+
+**Binding gate.** KILL because `marginal_vs_clone < +0.0010`.
+
+**What this falsifies.** This direct-score IM2/dwell scalar does not add enough
+competition-useful marginal ensemble alpha to justify 5-fold confirmation. Low
+correlation and visible standalone dwell separation are not sufficient when the
+score is much weaker than RT-600 in the same same-t ranking geometry.
+
+**What this does not falsify.** It does not fully falsify dwell information as
+a future feature-block input to a trained specialist, nor joint size-duration
+rarity. It does falsify this preregistered cheap direct scalar as a promotion
+candidate.
+
+**Causality and status.** Prefix verification passed on 8 series / 29 prefixes.
+The run-length null uses exact interval-union counting of matched-length
+historical segments. The mass companion uses a history-only episode-length
+empirical null. The result is marked PRE-CLEANUP / PROVISIONAL because the
+expected novel-stream cleanup commit had not landed on `origin/research/current`
+at run time.
+
+Report: `research/reports/new_avenues_2026/pilot03_im2_dwell.{md,json}`.

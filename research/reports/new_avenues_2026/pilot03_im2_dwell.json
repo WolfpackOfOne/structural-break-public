@@ -1,0 +1,175 @@
+{
+  "branch": "research/new-avenues-pilots-2026",
+  "candidate": "IM2 matched-length run null plus excursion dwell bank",
+  "cleanup_incorporated": 0,
+  "constants": {
+    "feature_center": [
+      0.6371257305145264,
+      0.7407407164573669,
+      0.44884786009788513,
+      0.688085675239563,
+      0.6363636255264282,
+      0.4073243737220764,
+      0.7495826482772827,
+      0.3333333432674408,
+      0.2507120370864868
+    ],
+    "feature_scale": [
+      0.35524359345436096,
+      0.3709089756011963,
+      0.2530324161052704,
+      0.29889094829559326,
+      0.5391272902488708,
+      0.4598197638988495,
+      0.23515719175338745,
+      0.4941999912261963,
+      0.37170565128326416
+    ],
+    "history_channel": "AR(2) residual-square rolling mean",
+    "threshold_quantile": 0.9,
+    "windows": [
+      32,
+      64,
+      128
+    ]
+  },
+  "diagnostic_pack": {
+    "age_buckets": {
+      "0-5": {
+        "candidate": 0.5078704518626144,
+        "rt600": 0.5152445330859063
+      },
+      "100-1000000000": {
+        "candidate": 0.6106574474159163,
+        "rt600": 0.675917278353309
+      },
+      "20-50": {
+        "candidate": 0.5467756225139017,
+        "rt600": 0.5894557799021534
+      },
+      "5-20": {
+        "candidate": 0.5173199383511554,
+        "rt600": 0.5520505250854593
+      },
+      "50-100": {
+        "candidate": 0.5693297701173752,
+        "rt600": 0.6169058332601237
+      }
+    },
+    "dominant_cell": {
+      "candidate": 0.6101579099132464,
+      "rt600": 0.6777110899011463
+    },
+    "fold": 0,
+    "label": "RT-1201",
+    "mature_vs_neverbreak": {
+      "candidate": 0.613459422882462,
+      "rt600": 0.676800868805288
+    },
+    "mature_vs_prebreak": {
+      "candidate": 0.6009454268185858,
+      "rt600": 0.6802509546650244
+    },
+    "t_buckets": {
+      "0-20": {
+        "candidate": 0.5,
+        "rt600": 0.5300204619017298
+      },
+      "100-200": {
+        "candidate": 0.5990471734278754,
+        "rt600": 0.6390075342102901
+      },
+      "20-50": {
+        "candidate": 0.5420060495493357,
+        "rt600": 0.5680248975917097
+      },
+      "200-400": {
+        "candidate": 0.5787021863901566,
+        "rt600": 0.6359029050927087
+      },
+      "400-1000000000": {
+        "candidate": 0.5880156444158761,
+        "rt600": 0.666690084227326
+      },
+      "50-100": {
+        "candidate": 0.5792131395194259,
+        "rt600": 0.5790183020058499
+      }
+    },
+    "whole_fold": {
+      "candidate": 0.5835784083869228,
+      "rt600": 0.6382763032336511
+    },
+    "within_t_rank_corr_rt600": 0.38170592359325234
+  },
+  "ensemble_marginal": {
+    "fold": 0,
+    "gain_vs_base": 0.0006115389992309428,
+    "marginal_vs_clone": 0.0003014699051322456,
+    "rt600_7stream": 0.6382763032336511,
+    "rt600_plus_RT-1201": 0.6388878422328821,
+    "rt600_plus_seedclone": 0.6385863723277498
+  },
+  "exp_id": "RT-1201",
+  "feature_build_runtime_s": 177.9868700504303,
+  "feature_columns": [
+    "res32_run_pct90",
+    "res32_mass_pct90",
+    "res32_growth90",
+    "res64_run_pct90",
+    "res64_mass_pct90",
+    "res64_growth90",
+    "res128_run_pct90",
+    "res128_mass_pct90",
+    "res128_growth90"
+  ],
+  "generated": "2026-08-24",
+  "implementation_note": "Run-length percentile uses exact interval-union matched-length history null. Mass percentile uses a history-only episode-length empirical null as the cheap mass companion.",
+  "oof_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1201.npy",
+  "pair_flow": {
+    "cell_never_break_neg": {
+      "damage": 3107,
+      "net_pair_lift": -1054,
+      "repairs": 2053,
+      "total_pairs_sampled": 15582
+    },
+    "cell_pre_break_neg": {
+      "damage": 2840,
+      "net_pair_lift": -1242,
+      "repairs": 1598,
+      "total_pairs_sampled": 13378
+    },
+    "dominant_cell": {
+      "damage": 3172,
+      "net_pair_lift": -1151,
+      "repairs": 2021,
+      "total_pairs_sampled": 15598
+    },
+    "whole_fold": {
+      "damage": 4244,
+      "net_pair_lift": -1447,
+      "repairs": 2797,
+      "total_pairs_sampled": 19562
+    }
+  },
+  "prefix_verification": {
+    "message": "ok",
+    "ok": 1,
+    "prefixes_checked": 29,
+    "series_checked": 8
+  },
+  "result_status": "PRE-CLEANUP / PROVISIONAL",
+  "rt600_reproduction": {
+    "mean": 0.6258112639463216,
+    "per_fold": [
+      0.6382763032336511,
+      0.6204018503410609,
+      0.6339302291124634,
+      0.6175075054046519,
+      0.6189404316397805
+    ],
+    "pooled": 0.6256269256734708
+  },
+  "runtime_s": 254.44697499275208,
+  "verdict": "KILL"
+}
