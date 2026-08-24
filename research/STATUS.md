@@ -45,6 +45,16 @@ short and gets updated whenever that changes materially.
   accounting in [`RDOF_LEDGER.md`](RDOF_LEDGER.md).
 - **Failed experiments:** [`FAILED_EXPERIMENTS.md`](FAILED_EXPERIMENTS.md) —
   read before proposing anything that resembles a killed idea.
+- **Next-wave research direction:**
+  [`NEW_AVENUES_2026.md`](NEW_AVENUES_2026.md) — broad-exploration survey
+  written 2026-08-24 after the Wave-7/8 dead end: nine functional classes
+  absent from the 500-column bank, 79 source-backed mechanisms in 15
+  families ([`new_avenues_2026.csv`](new_avenues_2026.csv)), four new
+  descriptive diagnostics
+  ([`reports/new_avenues_2026_diagnostics.json`](reports/new_avenues_2026_diagnostics.json)),
+  and an 11-experiment queue. Reusable plugin harness in
+  [`scripts/novel_streams/`](scripts/novel_streams/). **Design only — no
+  experiment ID consumed, no promotion, no change to the anchor.**
 - **Final Wave reports:** [`reports/wave4/`](reports/wave4/),
   [`reports/wave5/`](reports/wave5/), [`reports/wave6/`](reports/wave6/),
   [`reports/wave7/`](reports/wave7/); Wave 8's report is on the
@@ -53,6 +63,7 @@ short and gets updated whenever that changes materially.
   [`FINAL_ARCHITECTURE_FREEZE.md`](FINAL_ARCHITECTURE_FREEZE.md),
   [`FINAL_REPRODUCIBILITY_MANIFEST.json`](FINAL_REPRODUCIBILITY_MANIFEST.json).
 
-_Last updated: 2026-08-24, during the repository cleanup pass. Update this
+_Last updated: 2026-08-24, during the repository cleanup pass and the
+new-avenues research-direction pass. Update this
 file whenever the production anchor, external score, or active research
 conclusion changes — see `AGENTS.md` at the repo root for the update rule._
