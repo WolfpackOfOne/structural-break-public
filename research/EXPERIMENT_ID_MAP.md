@@ -374,6 +374,8 @@ produced on this branch. Pre-registration:
 |---|---|
 | `RT-1200` | Pilot 2 relay score-state transform of RT-600 evidence, fold-0 screen candidate. |
 | `RT-1201` | Pilot 3 IM2 matched-length empirical run-null plus excursion dwell-bank scalar, fold-0 screen candidate. |
+| `RT-1202` | Pilot 4 real trajectory-geometry scalar, fold-0 screen candidate. |
+| `RT-1203` | Pilot 4 shuffled-history trajectory-geometry control scalar, fold-0 screen control. |
 
 Pilot 1, specialist-competence and failure-manifold diagnostics, is
 diagnostic-only and consumes no RT ID.

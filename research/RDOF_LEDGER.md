@@ -86,6 +86,7 @@ Degrees of freedom prospectively allocated before scoring:
 | Specialist competence + failure manifolds | none | 0 | all dev folds descriptive | Diagnostic only; fixed fingerprint quintiles, `k in {2,3}`, one permutation seed. |
 | Relay score-state | `RT-1200` | 1 | fold 0 | Fixed pickup/dropout quantiles, fixed charge/cool constants, no threshold tuning. |
 | IM2+dwell bank | `RT-1201` | 1 | fold 0 | Fixed AR(2) residual-square channel, windows `{32,64,128}`, q90 band, fixed scalar mean. |
+| Trajectory geometry | `RT-1202`, `RT-1203` | 1 primary + 1 shuffled-order control | fold 0 | Fixed windows `{16,64}`, 2,000 evenly spaced history references, non-overlap online neighbour rule, seed-0 history-order control. |
 
 Continuation to 5 folds requires the preregistered marginal-vs-clone gates.
 
