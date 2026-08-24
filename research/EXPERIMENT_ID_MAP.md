@@ -424,3 +424,12 @@ Result filed 2026-08-24:
 `RT-1208` KILL: marginal_vs_clone `-0.000036`; `RT-1209` entropy-only
 control marginal_vs_clone `-0.000508`; candidate-control gap `+0.000472`,
 below the preregistered `+0.0005` distinguishability floor.
+
+Reserved prospectively on 2026-08-24 before any Pilot 10 score was produced.
+Pre-registration:
+`research/reports/new_avenues_2026/PILOT10_PREREG.md`.
+
+| ID | is |
+|---|---|
+| `RT-1210` | Pilot 10 joint size-duration rarity features on AR(2) residual-square excursions, fold-0 screen candidate. |
+| `RT-1211` | Pilot 10 matched dwell-only rarity features on the same excursion states, fold-0 binding control. |

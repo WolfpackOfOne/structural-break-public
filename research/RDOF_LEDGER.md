@@ -124,6 +124,12 @@ entropy-control marginal_vs_clone `-0.000508`; candidate-control gap
 no 5-fold continuation because the primary `+0.0010` marginal gate failed and
 the entropy-control gap missed the `+0.0005` distinguishability floor.
 
+Pilot 10 preregistered 2026-08-24 before scoring:
+
+| pilot | scored IDs | variants | fold screen | notes |
+|---|---|---:|---|---|
+| Joint size-duration rarity | `RT-1210`, `RT-1211` | 1 joint rarity candidate + 1 dwell-only rarity control | fold 0 | Fixed AR(2) residual-square channel, windows `{32,64,128}`, q90 band, historical endpoint joint null with `1/(2*n_endpoints)` floor, candidate-control gap gate +0.0005 and dominant-cell control gate. |
+
 ---
 
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)
