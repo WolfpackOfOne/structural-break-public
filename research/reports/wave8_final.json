@@ -1,0 +1,36 @@
+{
+  "wave": 8,
+  "prereg_sha": "78fa5cf",
+  "pilot_fold": 0,
+  "t2_gate": {
+    "source": "research/wave7-teacher-distillation@5093e0a",
+    "exp_id": "RT-995",
+    "mean_delta_vs_rt990": 0.00943,
+    "folds_positive": "5/5",
+    "bootstrap_ci": [0.0043, 0.0137],
+    "legs_cleared": "3/4 (magnitude, folds, bootstrap; alt-partition and ensemble-integration unrun)",
+    "verdict": "PASS -- Wave 8 licensed to proceed"
+  },
+  "mechanisms": {
+    "SST": {"exp_ids": ["RT-1006", "RT-1007"], "dominant_cell_delta_full_pop": -0.00060,
+            "ensemble_marginal_vs_clone": -0.00031, "verdict": "FAIL"},
+    "ORR": {"exp_ids": ["RT-1020", "RT-1021"], "recoverability": 0.737,
+            "whole_delta_ensemble_scale": -0.00005, "ensemble_marginal_vs_clone": -0.00032,
+            "verdict": "FAIL", "note": "mechanism visible (recoverability >> 0.55), aggregate flat"},
+    "PCFB": {"exp_ids": ["RT-1030", "RT-1031", "RT-1032", "RT-1033"],
+             "pca16_legal_cell_delta": -0.00148, "pls16_legal_cell_delta": -0.00270,
+             "pls_minus_pca": -0.00252, "ensemble_marginal_vs_clone": -0.00031,
+             "verdict": "FAIL", "note": "core hypothesis contradicted: PLS worse than PCA"},
+    "CFEP": {"exp_ids": ["RT-1041", "RT-1042"], "c_minus_b_whole": -0.00374,
+             "c_minus_b_cell": -0.00375, "ensemble_marginal_vs_clone": -0.00031,
+             "verdict": "FAIL", "note": "binding comparison (C vs matched-BCE B) lost outright"},
+    "TGMC": {"exp_ids": ["RT-1051", "RT-1052"], "t_minus_r_whole": 0.00502,
+             "t_vs_control_whole": -0.00416, "ensemble_marginal_vs_clone": -0.00031,
+             "verdict": "FAIL", "note": "T>R as hypothesized, but both below no-synthetic control"}
+  },
+  "promotions": "none -- no mechanism cleared its pilot gate",
+  "external_score_ladder": {"anchor": 0.6268, "measured_wave8_increment": 0.0},
+  "assessment_0650": "NOT SUPPORTED",
+  "next_experiment": "finish T2's promotion battery (alt-partition + ensemble-integration) before proposing a sixth future-aware mechanism",
+  "finding": "FUTURE-AWARE TRANSFER FAMILY DID NOT CAPTURE ENOUGH MARGINAL ALPHA"
+}

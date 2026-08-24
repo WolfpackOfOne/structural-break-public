@@ -247,7 +247,9 @@ is high but real TS-AUC is flat, without simulator tuning.
 
 ## 6. LEAKAGE / CAUSALITY TEST SUITE (BEFORE ANY SCORE)
 
-`research/scripts/test_wave8_causality.py`, run to green before §7:
+`tests/test_wave8_causality.py` (top-level `tests/`, matching
+`test_no_tau_leakage.py`/`test_neural_causality.py`'s existing location and
+pytest convention), run to green before §7:
 outer-fold purity (fold-purity sentinel, both nested-target and nested-teacher
 variants; must also demonstrate it *rejects* the old contaminated
 global-OOF scheme, 20/20, exactly as `wave7_teacher_nested.py` already proved

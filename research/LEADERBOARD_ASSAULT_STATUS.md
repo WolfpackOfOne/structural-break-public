@@ -3,7 +3,17 @@
 **Written 2026-08-23 on `research/wave6-alpha`, end of the W7-D0/D3R session.
 Updated 2026-08-23 on `research/wave7-teacher-distillation` after the W7
 teacher/distillation one-fold pilot.**
-Read this before starting any further Wave-7 work.
+**Updated 2026-08-23 on `research/wave8-future-aware-distillation`: all five
+Wave-8 mechanisms (SST/ORR/PCFB/CFEP/TGMC) ran real fold-0 pilots and were
+all KILLED at their pre-registered gates. External score is still 0.6268 --
+unchanged, no submission attempted. Full report: `research/reports/
+wave8_final.md`. The only standing positive result anywhere in the pipeline
+remains T2 (`RT-995`, +0.00943 dev-fold marginal, 3/4 promotion legs
+cleared) from `research/wave7-teacher-distillation` -- not re-derived here,
+cited by SHA. Highest-value next step: finish T2's remaining two legs
+(alternate-partition, ensemble-integration) before proposing new
+future-aware mechanisms.**
+Read this before starting any further Wave-7 or Wave-8 work.
 
 ---
 

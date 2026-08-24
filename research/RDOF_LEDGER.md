@@ -833,3 +833,27 @@ margin. **VERDICT: CONTINUE.** This is a single-fold screen only — it has
 alternate partitions) and licenses no submission. Full writeup:
 `research/reports/wave7_teacher_pilot.md`. Evidence:
 `research/reports/wave7_teacher_pilot.json`.
+
+## WAVE 8 (`research/wave8-future-aware-distillation`)
+
+Five mechanisms (SST, ORR, PCFB, CFEP, TGMC), five fold-0 pilots, five real
+degrees of freedom spent (one pilot each, no channel/hyperparameter search
+beyond what was frozen in `research/WAVE8_FUTURE_AWARE_PREREG.md` before any
+score existed): 24 SST target-column choices frozen from existing feature
+names (no search), 2 PCFB methods × 1 fixed `(h,d)`, 1 fixed CFEP
+architecture reused from `RT-970`/`RT-971`, 1 fixed TGMC intervention family.
+No hyperparameter was tuned after seeing a score; no arm outside the 5.1–5.5
+spec was run. Two implementation bugs were found and fixed mid-wave (an
+overly strict lockbox-inclusive assertion costing ~45 min of SST-C compute
+once; an unstandardized-then-NaN-masked CFEP regression target) — both are
+implementation corrections, not research degrees of freedom, and are
+recorded in the relevant commits, not here.
+
+**All five KILLED at the pilot gate.** No promotion, no full-CV, no
+bootstrap, no alternate-partition run — the pre-registered stopping rule
+(execution-brief section 29) fired: *"FUTURE-AWARE TRANSFER FAMILY DID NOT
+CAPTURE ENOUGH MARGINAL ALPHA."* Full writeup: `research/reports/
+wave8_final.md`. Per-mechanism evidence: `research/reports/wave8_{sst,orr,
+pcfb,cfep,tgmc}.{md,json}`. Comparison + redundancy:
+`research/reports/wave8_pilot_comparison.{md,json}`, `research/reports/
+wave8_futureaware_redundancy.{md,json}`.
