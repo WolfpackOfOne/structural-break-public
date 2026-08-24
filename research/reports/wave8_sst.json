@@ -1,0 +1,28 @@
+{
+  "spec": "combined",
+  "outer_fold": 0,
+  "eligible_fraction_fold0": 0.639402530465043,
+  "A_control_whole": 0.6265641785501449,
+  "A_control_whole_eligible_only": 0.6268672159068944,
+  "A_control_cell": 0.6638108917990431,
+  "A_control_cell_eligible_only": 0.6680993366143672,
+  "B_oracle_whole_eligible_only": 0.6308392219598372,
+  "B_oracle_cell_eligible_only": 0.6742586921989561,
+  "C_legal_whole": 0.6232568762478442,
+  "C_legal_whole_eligible_only": 0.6280220213016079,
+  "C_legal_cell": 0.6632107371891385,
+  "C_legal_cell_eligible_only": 0.6762021795730515,
+  "delta_oracle_minus_control_cell_eligible_pop": 0.00615935558458891,
+  "delta_legal_minus_control_cell_full_pop": -0.0006001546099045907,
+  "delta_legal_minus_control_cell_eligible_pop": 0.008102842958684353,
+  "retention_R_eligible_pop": 1.3155342060390487,
+  "ensemble": {
+    "fold": 0,
+    "rt600_7stream": 0.6382763032336511,
+    "rt600_plus_seedclone": 0.6385863723277498,
+    "rt600_plus_sst_combined": 0.6382762885780244,
+    "marginal_vs_clone": -0.0003100837497254094,
+    "gain_vs_base": -1.465562671221221e-08
+  },
+  "continuation_gate_cleared": false
+}
