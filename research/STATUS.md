@@ -61,17 +61,19 @@ short and gets updated whenever that changes materially.
   `research/current` at `aca2c4f` and is infrastructure-only: no pilot run,
   no new score, no promotion, and RT-600 still the production anchor.
 - **First New Avenues execution branch:**
-  `research/new-avenues-pilots-2026` ran the first three queued pilots plus
-  user-directed Pilot 4. Pilot 1 specialist/failure-manifold diagnostics are
-  **WEAK**; `RT-1200` relay score-state is **KILL**
-  (`marginal_vs_clone=-0.000207`); `RT-1201` IM2+dwell scalar is **KILL**
-  (`marginal_vs_clone=+0.000301`); `RT-1202` trajectory geometry is **KILL**
-  (`marginal_vs_clone=-0.002587`) with `RT-1203` shuffled-order control also
-  negative (`marginal_vs_clone=-0.003042`). No 5-fold confirmation is
-  warranted. These results were revalidated after merging the `aca2c4f`
-  harness cleanup: the 11 novel-stream harness tests passed, all old-vs-clean
-  marginals matched exactly, and no candidate among Pilots 1-4 cleared the
-  `+0.001` marginal-vs-clone screen.
+  `research/new-avenues-pilots-2026` has now scored Pilots 1-7, 10, 9(i), and
+  the Pilot 3 / IM3 observer arms. Pilot 1 specialist/failure-manifold
+  diagnostics are **WEAK**. Every scored first-sweep candidate through
+  `RT-1215` is **KILL** or a negative/control result: `RT-1200` relay
+  score-state, `RT-1201` IM2+dwell scalar, `RT-1202` trajectory geometry,
+  `RT-1204` scale survival, `RT-1206` spectral impulsiveness, `RT-1208`
+  ordinal transition/irreversibility, `RT-1210` joint size-duration rarity,
+  `RT-1212` scalar historical-difficulty gate, `RT-1214` Kalman/NIS observer,
+  and `RT-1215` Hankel-DMD observer all missed the `+0.0010`
+  marginal-vs-clone gate. `RT-1215` also failed the preregistered Hankel
+  redundancy guard (`rho=+0.8859 > 0.85`). No 5-fold confirmation is
+  warranted so far; next in the autonomous first-sweep queue is Pilot 8
+  weighted conformal test martingale.
 - **Final Wave reports:** [`reports/wave4/`](reports/wave4/),
   [`reports/wave5/`](reports/wave5/), [`reports/wave6/`](reports/wave6/),
   [`reports/wave7/`](reports/wave7/); Wave 8's report is on the

@@ -1391,3 +1391,66 @@ path. RT600 sentinel reproduced exactly in the expected tolerance
 `0.638276`, E1 `0.638586`). Final status is **FINAL SCREEN RESULT**.
 
 Report: `research/reports/new_avenues_2026/pilot09_difficulty_gate.{md,json}`.
+
+---
+
+## RT-1214 / RT-1215 -- Pilot 3 / IM3 individual observer residuals -- KILL (2026-08-24)
+
+**Mechanism.** Two separately scored frozen per-series observers fit on history
+only. `RT-1214` is an AR(2)-state Kalman observer with fixed history-only
+`q x r` noise-grid selection and emits NIS accumulation, windowed NIS excess,
+and normalized-innovation whiteness. `RT-1215` is a Hankel-DMD observer with
+delay 16, rank 4, horizons 1 and 5, historical-subspace residual, and
+effective-rank monitors.
+
+**Variant.** Preregistered Mode-A fold-0 ABL feature-addition screen from
+`research/reports/new_avenues_2026/PILOT03_OBSERVERS_PREREG.md`. The base
+legal bank already includes `m04_resid`, so the binding marginal tests whether
+either observer adds ensemble value beyond existing scalar residual monitors
+and beyond the `RT-401` seed clone. The two arms are not unioned.
+
+**Result.** Fold 0 integration:
+
+| arm | TS-AUC |
+|---|---:|
+| RT600 | 0.638276 |
+| RT600 + RT-401 seed clone | 0.638586 |
+| RT600 + RT-1214 | 0.638722 |
+| RT600 + RT-1215 | 0.638812 |
+
+`RT-1214` binding marginal vs clone: **+0.000135**. Gain vs RT600 alone:
+**+0.000446**. Standalone whole-fold TS-AUC was 0.630817; dominant-cell AUC
+was 0.670067 versus RT-600 at 0.664277; within-t correlation with RT-600 was
++0.8836; sampled dominant-cell pair-flow net was -98.
+
+`RT-1215` binding marginal vs clone: **+0.000226**. Gain vs RT600 alone:
+**+0.000536**. Standalone whole-fold TS-AUC was 0.631331; dominant-cell AUC
+was 0.673238 versus RT-600 at 0.664277; within-t correlation with RT-600 was
++0.8859; sampled dominant-cell pair-flow net was -11.
+
+**Binding gate.** KILL for both arms because each missed the primary
+`+0.0010` marginal-vs-clone gate. Hankel-DMD also failed the preregistered C1
+redundancy guard because within-t rank correlation with RT-600 exceeded the
+0.85 ceiling.
+
+**What this falsifies.** These exact frozen observer constructions failed to
+add enough marginal ensemble alpha under the fixed AR(2)-state Kalman grid,
+fixed Hankel delay/rank/horizon design, history-only null calibration,
+Mode-A fold-0 ABL screen, and existing `m04_resid` base-bank boundary.
+
+**What this does not falsify.** It does not falsify all state-space,
+innovation, delay-embedding, subspace-tracking, or adaptive observer methods.
+It specifically kills these two preregistered non-adaptive observer arms as
+eighth streams in this screen.
+
+**Causality and status.** `harness.verify()` passed for both observer
+mechanisms. Registered feature modules passed prefix invariance at `atol=0.0`;
+Kalman first-valid/NaN semantics, future-mutation prefix stability,
+deterministic replay, and history-only fit replay checks passed. Pilot 3
+observers do not recompute the known `m07_bayes::bo_p_lt25_z`
+stream-parity path. RT600 sentinel reproduced exactly in the expected
+tolerance (`mean=0.625811`, `pooled=0.625627`, dominant `0.664277`,
+fold-0 E0 `0.638276`, E1 `0.638586`). Final status is
+**FINAL SCREEN RESULT**.
+
+Report: `research/reports/new_avenues_2026/pilot03_observers.{md,json}`.

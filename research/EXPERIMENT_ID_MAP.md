@@ -466,3 +466,11 @@ produced. Pre-registration:
 |---|---|
 | `RT-1214` | Pilot 3 frozen AR(2)-state Kalman/NIS observer features, fold-0 screen arm. |
 | `RT-1215` | Pilot 3 frozen Hankel-DMD observer features, fold-0 screen arm. |
+
+Result filed 2026-08-24:
+`research/reports/new_avenues_2026/pilot03_observers.{md,json}`.
+`RT-1214` KILL: marginal_vs_clone `+0.000135`. `RT-1215` KILL:
+marginal_vs_clone `+0.000226`; the Hankel-DMD arm also failed the
+preregistered redundancy gate with within-t rank correlation `+0.8859` versus
+RT-600, above the `0.85` ceiling. Neither arm cleared the `+0.0010` primary
+marginal gate.

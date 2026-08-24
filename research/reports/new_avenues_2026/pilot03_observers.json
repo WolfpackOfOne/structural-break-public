@@ -1,0 +1,653 @@
+{
+  "RT-1214": {
+    "diagnostic_pack": {
+      "age_buckets": {
+        "0-5": {
+          "candidate": 0.5141907554977431,
+          "rt600": 0.5152445330859063
+        },
+        "100-1000000000": {
+          "candidate": 0.6689954984379208,
+          "rt600": 0.675917278353309
+        },
+        "20-50": {
+          "candidate": 0.5816936011212167,
+          "rt600": 0.5894557799021534
+        },
+        "5-20": {
+          "candidate": 0.5435274480330766,
+          "rt600": 0.5520505250854593
+        },
+        "50-100": {
+          "candidate": 0.6074304472220184,
+          "rt600": 0.6169058332601237
+        }
+      },
+      "dominant_cell": {
+        "candidate": 0.6700672598071861,
+        "rt600": 0.6777110899011463
+      },
+      "fold": 0,
+      "label": "RT-1214",
+      "mature_vs_neverbreak": {
+        "candidate": 0.667935767199545,
+        "rt600": 0.676800868805288
+      },
+      "mature_vs_prebreak": {
+        "candidate": 0.6760149388856518,
+        "rt600": 0.6802509546650244
+      },
+      "t_buckets": {
+        "0-20": {
+          "candidate": 0.5437310967844635,
+          "rt600": 0.5300204619017298
+        },
+        "100-200": {
+          "candidate": 0.625020397481072,
+          "rt600": 0.6390075342102901
+        },
+        "20-50": {
+          "candidate": 0.5614899049840962,
+          "rt600": 0.5680248975917097
+        },
+        "200-400": {
+          "candidate": 0.6305301417199579,
+          "rt600": 0.6359029050927087
+        },
+        "400-1000000000": {
+          "candidate": 0.6604869836076843,
+          "rt600": 0.666690084227326
+        },
+        "50-100": {
+          "candidate": 0.5697372282442192,
+          "rt600": 0.5790183020058499
+        }
+      },
+      "whole_fold": {
+        "candidate": 0.630816523292869,
+        "rt600": 0.6382763032336511
+      },
+      "within_t_rank_corr_rt600": 0.8835752943554889
+    },
+    "ensemble_marginal": {
+      "fold": 0,
+      "gain_vs_base": 0.0004455530351297199,
+      "marginal_vs_clone": 0.00013548394103102268,
+      "rt600_7stream": 0.6382763032336511,
+      "rt600_plus_RT-1214": 0.6387218562687809,
+      "rt600_plus_seedclone": 0.6385863723277498
+    },
+    "pair_flow": {
+      "cell_never_break_neg": {
+        "damage": 1056,
+        "net_pair_lift": -158,
+        "repairs": 898,
+        "total_pairs_sampled": 15582
+      },
+      "cell_pre_break_neg": {
+        "damage": 834,
+        "net_pair_lift": 50,
+        "repairs": 884,
+        "total_pairs_sampled": 13378
+      },
+      "dominant_cell": {
+        "damage": 1025,
+        "net_pair_lift": -98,
+        "repairs": 927,
+        "total_pairs_sampled": 15598
+      },
+      "whole_fold": {
+        "damage": 1475,
+        "net_pair_lift": -195,
+        "repairs": 1280,
+        "total_pairs_sampled": 19562
+      }
+    },
+    "training": {
+      "fit_summaries": [
+        {
+          "fold": 0,
+          "runtime_s": 103.1,
+          "train_rows": 400000,
+          "ts_auc_scored": 0.630816523292869,
+          "valid_rows": 806334
+        },
+        {
+          "fold": 1,
+          "runtime_s": 203.4,
+          "train_rows": 400000,
+          "valid_rows": 812939
+        },
+        {
+          "fold": 2,
+          "runtime_s": 301.1,
+          "train_rows": 400000,
+          "valid_rows": 806691
+        },
+        {
+          "fold": 3,
+          "runtime_s": 398.5,
+          "train_rows": 400000,
+          "valid_rows": 802506
+        },
+        {
+          "fold": 4,
+          "runtime_s": 497.8,
+          "train_rows": 400000,
+          "valid_rows": 804054
+        }
+      ],
+      "foldpure_oof_support_note": "Folds 1-4 were predicted only to provide fold-pure SCDF calibration support for the existing ensemble marginal path; no TS-AUC was computed or used for those folds.",
+      "importance_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1214.importance.csv",
+      "oof_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1214.npy",
+      "result_row": {
+        "agent": "codex-new-avenues",
+        "causal_verified": "harness.verify + prefix-invariance@module + future-mutation",
+        "date": "2026-08-24 19:31",
+        "experiment_id": "RT-1214",
+        "falsification_condition": "KILL if marginal_vs_clone < +0.0010 against RT600 + RT-401 seed clone.",
+        "feature_set": "m00_core,m01_seq,m02_dist,m03_dyn,m04_resid,m06_loc,m07_bayes,m17_kalman_nis",
+        "fold_std": 0.0,
+        "folds": "0",
+        "git_sha": "5c16c0b",
+        "hypothesis": "Pilot 3 / IM3 tests whether individualized frozen historical observers expose break information through innovation or dynamical-subspace residuals. The Kalman/NIS arm should add ensemble alpha through filter-consistency residuals.",
+        "lockbox_touched": "no",
+        "mean_oof_ts_auc": 0.630816523292869,
+        "model": "lgbm",
+        "n_features": 506,
+        "notes": "Pilot 3 frozen AR(2)-state Kalman/NIS observer arm. Fold-0 screen only; folds 1-4 generated only as fold-pure SCDF calibration support.",
+        "objective": "binary",
+        "per_fold_ts_auc": "0.63082",
+        "persistence": "none",
+        "pooled_oof_ts_auc": 0.630816523292869,
+        "protocol": "pilot_fold0_only",
+        "random_seed": 0,
+        "sample_mode": "uniform",
+        "status": "recorded",
+        "test_reduced_touched": "no",
+        "train_rows": 400000,
+        "train_series": 8000,
+        "training_runtime_s": 497.9
+      }
+    }
+  },
+  "RT-1215": {
+    "diagnostic_pack": {
+      "age_buckets": {
+        "0-5": {
+          "candidate": 0.5062306759789925,
+          "rt600": 0.5152445330859063
+        },
+        "100-1000000000": {
+          "candidate": 0.6723462412521148,
+          "rt600": 0.675917278353309
+        },
+        "20-50": {
+          "candidate": 0.5750955325897581,
+          "rt600": 0.5894557799021534
+        },
+        "5-20": {
+          "candidate": 0.542286388157213,
+          "rt600": 0.5520505250854593
+        },
+        "50-100": {
+          "candidate": 0.6067071385541669,
+          "rt600": 0.6169058332601237
+        }
+      },
+      "dominant_cell": {
+        "candidate": 0.6732376553336862,
+        "rt600": 0.6777110899011463
+      },
+      "fold": 0,
+      "label": "RT-1215",
+      "mature_vs_neverbreak": {
+        "candidate": 0.6699223735516979,
+        "rt600": 0.676800868805288
+      },
+      "mature_vs_prebreak": {
+        "candidate": 0.6824885586787237,
+        "rt600": 0.6802509546650244
+      },
+      "t_buckets": {
+        "0-20": {
+          "candidate": 0.5306596890586862,
+          "rt600": 0.5300204619017298
+        },
+        "100-200": {
+          "candidate": 0.6259129406334091,
+          "rt600": 0.6390075342102901
+        },
+        "20-50": {
+          "candidate": 0.556931019369409,
+          "rt600": 0.5680248975917097
+        },
+        "200-400": {
+          "candidate": 0.6338998484367419,
+          "rt600": 0.6359029050927087
+        },
+        "400-1000000000": {
+          "candidate": 0.6606546199215022,
+          "rt600": 0.666690084227326
+        },
+        "50-100": {
+          "candidate": 0.5614350002347008,
+          "rt600": 0.5790183020058499
+        }
+      },
+      "whole_fold": {
+        "candidate": 0.6313312252386775,
+        "rt600": 0.6382763032336511
+      },
+      "within_t_rank_corr_rt600": 0.8858580997826474
+    },
+    "ensemble_marginal": {
+      "fold": 0,
+      "gain_vs_base": 0.0005360661856309568,
+      "marginal_vs_clone": 0.00022599709153225955,
+      "rt600_7stream": 0.6382763032336511,
+      "rt600_plus_RT-1215": 0.6388123694192821,
+      "rt600_plus_seedclone": 0.6385863723277498
+    },
+    "pair_flow": {
+      "cell_never_break_neg": {
+        "damage": 983,
+        "net_pair_lift": -130,
+        "repairs": 853,
+        "total_pairs_sampled": 15582
+      },
+      "cell_pre_break_neg": {
+        "damage": 790,
+        "net_pair_lift": 49,
+        "repairs": 839,
+        "total_pairs_sampled": 13378
+      },
+      "dominant_cell": {
+        "damage": 931,
+        "net_pair_lift": -11,
+        "repairs": 920,
+        "total_pairs_sampled": 15598
+      },
+      "whole_fold": {
+        "damage": 1437,
+        "net_pair_lift": -129,
+        "repairs": 1308,
+        "total_pairs_sampled": 19562
+      }
+    },
+    "training": {
+      "fit_summaries": [
+        {
+          "fold": 0,
+          "runtime_s": 100.2,
+          "train_rows": 400000,
+          "ts_auc_scored": 0.6313312252386775,
+          "valid_rows": 806334
+        },
+        {
+          "fold": 1,
+          "runtime_s": 200.4,
+          "train_rows": 400000,
+          "valid_rows": 812939
+        },
+        {
+          "fold": 2,
+          "runtime_s": 302.6,
+          "train_rows": 400000,
+          "valid_rows": 806691
+        },
+        {
+          "fold": 3,
+          "runtime_s": 401.3,
+          "train_rows": 400000,
+          "valid_rows": 802506
+        },
+        {
+          "fold": 4,
+          "runtime_s": 498.0,
+          "train_rows": 400000,
+          "valid_rows": 804054
+        }
+      ],
+      "foldpure_oof_support_note": "Folds 1-4 were predicted only to provide fold-pure SCDF calibration support for the existing ensemble marginal path; no TS-AUC was computed or used for those folds.",
+      "importance_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1215.importance.csv",
+      "oof_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1215.npy",
+      "result_row": {
+        "agent": "codex-new-avenues",
+        "causal_verified": "harness.verify + prefix-invariance@module + future-mutation",
+        "date": "2026-08-24 19:40",
+        "experiment_id": "RT-1215",
+        "falsification_condition": "KILL if marginal_vs_clone < +0.0010 or dominant-cell within-t rho with RT600 exceeds 0.85.",
+        "feature_set": "m00_core,m01_seq,m02_dist,m03_dyn,m04_resid,m06_loc,m07_bayes,m17_hankel_dmd",
+        "fold_std": 0.0,
+        "folds": "0",
+        "git_sha": "5c16c0b",
+        "hypothesis": "Pilot 3 / IM3 tests whether individualized frozen historical observers expose break information through innovation or dynamical-subspace residuals. The Hankel-DMD arm should add ensemble alpha through delay-embedded reconstruction and rank dynamics.",
+        "lockbox_touched": "no",
+        "mean_oof_ts_auc": 0.6313312252386775,
+        "model": "lgbm",
+        "n_features": 506,
+        "notes": "Pilot 3 frozen Hankel-DMD observer arm. Fold-0 screen only; folds 1-4 generated only as fold-pure SCDF calibration support.",
+        "objective": "binary",
+        "per_fold_ts_auc": "0.63133",
+        "persistence": "none",
+        "pooled_oof_ts_auc": 0.6313312252386775,
+        "protocol": "pilot_fold0_only",
+        "random_seed": 0,
+        "sample_mode": "uniform",
+        "status": "recorded",
+        "test_reduced_touched": "no",
+        "train_rows": 400000,
+        "train_series": 8000,
+        "training_runtime_s": 498.2
+      }
+    }
+  },
+  "branch": "research/new-avenues-pilots-2026",
+  "causal_checks": {
+    "deterministic_replay_ok": true,
+    "dmd_cols": [
+      "dmd_resid_h1_z",
+      "dmd_resid_h5_z",
+      "dmd_subspace_resid_z",
+      "dmd_effrank_w32_z",
+      "dmd_effrank_w64_z",
+      "dmd_resid_ratio_h5_h1"
+    ],
+    "dmd_delay": 16,
+    "dmd_rank": 4,
+    "dmd_windows": [
+      32,
+      64
+    ],
+    "first_valid_nan_semantics": {
+      "dmd_row0_all_finite_with_history_warmup": true,
+      "kalman_nis_log_and_cum_finite": true,
+      "kalman_row31_w32_finite": true,
+      "kalman_row63_w64_finite": true,
+      "kalman_rows_before_31_w32_nan": true,
+      "kalman_rows_before_63_w64_nan": true
+    },
+    "future_mutation_prefix_ok": true,
+    "harness_verify_dmd": {
+      "message": "ok",
+      "ok": true
+    },
+    "harness_verify_kalman": {
+      "message": "ok",
+      "ok": true
+    },
+    "history_only_fits": {
+      "dmd_fitted_rank": 4,
+      "dmd_nulls_replay_equal": true,
+      "dmd_operator_replay_equal": true,
+      "dmd_subspace_replay_equal": true,
+      "kalman_grid_choice_replay_equal": true,
+      "kalman_phi_replay_equal": true
+    },
+    "kalman_cols": [
+      "nis_log",
+      "nis_cum_z",
+      "nis_w32_z",
+      "nis_w64_z",
+      "innov_acf_w32_z",
+      "innov_acf_w64_z"
+    ],
+    "kalman_q_grid": [
+      0.01,
+      0.05,
+      0.2
+    ],
+    "kalman_r_grid": [
+      0.05,
+      0.2,
+      1.0
+    ],
+    "kalman_windows": [
+      32,
+      64
+    ],
+    "m04_boundary_note": "Mode A already includes m04_resid in the base bank; these arms test incremental observer residual value beyond that existing residual block.",
+    "m07_bayes_parity_note": "Pilot 3 observers do not recompute m07_bayes::bo_p_lt25_z; they use the existing cached base-bank features and independent observer blocks.",
+    "module_prefix_invariance": {
+      "m17_hankel_dmd": [
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 8245
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 4119
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 6325
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 574
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 502
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 2088
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 318
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 655
+        }
+      ],
+      "m17_kalman_nis": [
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 8245
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 4119
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 6325
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 574
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 502
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 2088
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 318
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 655
+        }
+      ]
+    }
+  },
+  "continuation_arms": [],
+  "exp_ids": [
+    "RT-1214",
+    "RT-1215"
+  ],
+  "feature_build_runtime_s": 2898.868586063385,
+  "feature_cache": {
+    "m17_hankel_dmd": {
+      "cols": [
+        "dmd_resid_h1_z",
+        "dmd_resid_h5_z",
+        "dmd_subspace_resid_z",
+        "dmd_effrank_w32_z",
+        "dmd_effrank_w64_z",
+        "dmd_resid_ratio_h5_h1"
+      ],
+      "dev_series": 8000,
+      "lockbox_rows_filled": 0,
+      "module": "m17_hankel_dmd",
+      "shape": [
+        5036517,
+        6
+      ]
+    },
+    "m17_kalman_nis": {
+      "cols": [
+        "nis_log",
+        "nis_cum_z",
+        "nis_w32_z",
+        "nis_w64_z",
+        "innov_acf_w32_z",
+        "innov_acf_w64_z"
+      ],
+      "dev_series": 8000,
+      "lockbox_rows_filled": 0,
+      "module": "m17_kalman_nis",
+      "shape": [
+        5036517,
+        6
+      ]
+    },
+    "runtime_s": 2898.868586063385
+  },
+  "feature_definitions": {
+    "dmd_cols": [
+      "dmd_resid_h1_z",
+      "dmd_resid_h5_z",
+      "dmd_subspace_resid_z",
+      "dmd_effrank_w32_z",
+      "dmd_effrank_w64_z",
+      "dmd_resid_ratio_h5_h1"
+    ],
+    "dmd_delay": 16,
+    "dmd_rank": 4,
+    "dmd_windows": [
+      32,
+      64
+    ],
+    "kalman_cols": [
+      "nis_log",
+      "nis_cum_z",
+      "nis_w32_z",
+      "nis_w64_z",
+      "innov_acf_w32_z",
+      "innov_acf_w64_z"
+    ],
+    "kalman_q_grid": [
+      0.01,
+      0.05,
+      0.2
+    ],
+    "kalman_r_grid": [
+      0.05,
+      0.2,
+      1.0
+    ],
+    "kalman_windows": [
+      32,
+      64
+    ]
+  },
+  "feature_modules": [
+    "m17_kalman_nis",
+    "m17_hankel_dmd"
+  ],
+  "generated": "2026-08-24",
+  "head_sha": "5c16c0b",
+  "interpretation": "Neither observer arm cleared the preregistered 5-fold continuation gate. This kills or shelves these exact frozen-observer constructions under the Mode-A fold-0 ABL screen, with m04_resid already present in the base bank; it does not falsify all state-space or delay-embedding observer ideas.",
+  "overall_continuation_status": "CONTINUE_TO_PILOT8",
+  "prereg_sha": "0a9d97e",
+  "rt600_sentinel": {
+    "diffs": {
+      "dominant_cell": -2.943492131479708e-06,
+      "fold0_e0": -3.696766348815217e-06,
+      "fold0_e1_seedclone": -3.627672250150482e-06,
+      "mean": 1.2639463216057578e-06,
+      "pooled": -7.432652926464556e-08
+    },
+    "dominant_cell": 0.6642770565078685,
+    "expected": {
+      "dominant_cell": 0.66428,
+      "fold0_e0": 0.63828,
+      "fold0_e1_seedclone": 0.63859,
+      "mean": 0.62581,
+      "pooled": 0.625627
+    },
+    "fold0_e0": 0.6382763032336511,
+    "fold0_e1_seedclone": 0.6385863723277498,
+    "mean": 0.6258112639463216,
+    "ok": true,
+    "per_fold": [
+      0.6382763032336511,
+      0.6204018503410609,
+      0.6339302291124634,
+      0.6175075054046519,
+      0.6189404316397805
+    ],
+    "pooled": 0.6256269256734708
+  },
+  "runtime_s": 4120.529539823532,
+  "verdicts": {
+    "RT-1214": {
+      "continuation_status": "KILL",
+      "gate_failures": [
+        {
+          "gate": "primary_marginal_vs_clone",
+          "message": "kalman_nis marginal_vs_clone is below +0.0010",
+          "observed": 0.00013548394103102268,
+          "threshold": 0.001
+        }
+      ],
+      "reason": "kalman_nis marginal_vs_clone is below +0.0010",
+      "verdict": "KILL"
+    },
+    "RT-1215": {
+      "continuation_status": "KILL",
+      "gate_failures": [
+        {
+          "gate": "primary_marginal_vs_clone",
+          "message": "hankel_dmd marginal_vs_clone is below +0.0010",
+          "observed": 0.00022599709153225955,
+          "threshold": 0.001
+        },
+        {
+          "gate": "hankel_redundancy_rho",
+          "message": "Hankel-DMD within-t rank correlation with RT600 exceeds 0.85",
+          "observed": 0.8858580997826474,
+          "threshold": 0.85
+        }
+      ],
+      "reason": "hankel_dmd marginal_vs_clone is below +0.0010",
+      "verdict": "KILL"
+    }
+  }
+}

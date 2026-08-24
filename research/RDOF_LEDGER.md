@@ -157,6 +157,14 @@ Pilot 3 observers preregistered 2026-08-24 before scoring:
 |---|---|---:|---|---|
 | Individual observer residuals | `RT-1214`, `RT-1215` | 1 frozen Kalman/NIS arm + 1 frozen Hankel-DMD arm | fold 0 | Fixed AR(2)-state Kalman grid `{q} x {r}`; fixed Hankel delay `d=16`, rank `r=4`, horizons `{1,5}`; base bank includes `m04_resid`; Hankel redundancy gate rho <= 0.85. |
 
+Pilot 3 observer result filed 2026-08-24:
+`RT-1214` Kalman/NIS marginal_vs_clone `+0.000135`; `RT-1215` Hankel-DMD
+marginal_vs_clone `+0.000226`, with Hankel within-t rank correlation
+`+0.8859` versus RT-600. Consumed the two preregistered fold-0 variants and
+stopped with no 5-fold continuation because both arms missed the primary
+`+0.0010` marginal gate; Hankel-DMD also failed the preregistered rho
+redundancy gate.
+
 ---
 
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)
