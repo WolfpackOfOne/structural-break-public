@@ -978,9 +978,9 @@ need a fresh preregistration and ID, and must still beat the same seed-clone
 gate.
 
 **Causality and status.** Prefix-state verification passed on 8 series / 29
-prefixes. The result is marked PRE-CLEANUP / PROVISIONAL because the expected
-novel-stream cleanup commit had not landed on `origin/research/current` at run
-time.
+prefixes. Post-cleanup reproduction after `aca2c4f` matched the original
+metrics exactly at tolerance `1e-12` (`marginal_vs_clone=-0.000206633`);
+final status is **FINAL SCREEN RESULT**.
 
 Report: `research/reports/new_avenues_2026/pilot02_relay_logic.{md,json}`.
 
@@ -1024,9 +1024,9 @@ candidate.
 **Causality and status.** Prefix verification passed on 8 series / 29 prefixes.
 The run-length null uses exact interval-union counting of matched-length
 historical segments. The mass companion uses a history-only episode-length
-empirical null. The result is marked PRE-CLEANUP / PROVISIONAL because the
-expected novel-stream cleanup commit had not landed on `origin/research/current`
-at run time.
+empirical null. Post-cleanup reproduction after `aca2c4f` matched the original
+metrics exactly at tolerance `1e-12` (`marginal_vs_clone=+0.000301470`);
+final status is **FINAL SCREEN RESULT**.
 
 Report: `research/reports/new_avenues_2026/pilot03_im2_dwell.{md,json}`.
 
@@ -1076,8 +1076,9 @@ different reason to expect signal.
 
 **Causality and status.** Prefix verification passed on 8 series / 29 prefixes.
 The prior-online nearest-neighbour search excludes overlapping windows ending
-after `t-m`. The result is marked PRE-CLEANUP / PROVISIONAL because the
-expected novel-stream cleanup commit had not landed on `origin/research/current`
-at run time.
+after `t-m`. Post-cleanup reproduction after `aca2c4f` matched the original
+metrics exactly at tolerance `1e-12` (`RT-1202 marginal_vs_clone=-0.002586857`,
+`RT-1203 marginal_vs_clone=-0.003041629`); final status is
+**FINAL SCREEN RESULT**.
 
 Report: `research/reports/new_avenues_2026/pilot04_trajectory_geometry.{md,json}`.

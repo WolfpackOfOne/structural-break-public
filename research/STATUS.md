@@ -68,8 +68,10 @@ short and gets updated whenever that changes materially.
   (`marginal_vs_clone=+0.000301`); `RT-1202` trajectory geometry is **KILL**
   (`marginal_vs_clone=-0.002587`) with `RT-1203` shuffled-order control also
   negative (`marginal_vs_clone=-0.003042`). No 5-fold confirmation is
-  warranted. These pilot results are being revalidated after the `aca2c4f`
-  harness cleanup merge before any new pilot execution continues.
+  warranted. These results were revalidated after merging the `aca2c4f`
+  harness cleanup: the 11 novel-stream harness tests passed, all old-vs-clean
+  marginals matched exactly, and no candidate among Pilots 1-4 cleared the
+  `+0.001` marginal-vs-clone screen.
 - **Final Wave reports:** [`reports/wave4/`](reports/wave4/),
   [`reports/wave5/`](reports/wave5/), [`reports/wave6/`](reports/wave6/),
   [`reports/wave7/`](reports/wave7/); Wave 8's report is on the

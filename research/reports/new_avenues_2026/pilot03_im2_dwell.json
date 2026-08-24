@@ -1,7 +1,7 @@
 {
   "branch": "research/new-avenues-pilots-2026",
   "candidate": "IM2 matched-length run null plus excursion dwell bank",
-  "cleanup_incorporated": 0,
+  "cleanup_incorporated": true,
   "constants": {
     "feature_center": [
       0.6371257305145264,
@@ -111,7 +111,7 @@
     "rt600_plus_seedclone": 0.6385863723277498
   },
   "exp_id": "RT-1201",
-  "feature_build_runtime_s": 177.9868700504303,
+  "feature_build_runtime_s": 172.71389603614807,
   "feature_columns": [
     "res32_run_pct90",
     "res32_mass_pct90",
@@ -152,13 +152,101 @@
       "total_pairs_sampled": 19562
     }
   },
+  "post_cleanup_reproduction": {
+    "changed": false,
+    "cleanup_sha": "aca2c4f9b68ad6315956f7c499ebefb2ae311f7b",
+    "final_status": "FINAL SCREEN RESULT",
+    "merge_commit": "81aa56c",
+    "notes": "Exact original pilot runner rerun after aca2c4f merge; no retuning, no new RT ID, no lockbox/test data.",
+    "numeric_tolerance": 1e-12,
+    "old_vs_clean": {
+      "dominant": {
+        "changed": false,
+        "clean": 0.6101579099132464,
+        "delta": 0.0,
+        "old": 0.6101579099132464
+      },
+      "dominant_damage": {
+        "changed": false,
+        "clean": 3172,
+        "delta": 0,
+        "old": 3172
+      },
+      "dominant_net": {
+        "changed": false,
+        "clean": -1151,
+        "delta": 0,
+        "old": -1151
+      },
+      "dominant_repairs": {
+        "changed": false,
+        "clean": 2021,
+        "delta": 0,
+        "old": 2021
+      },
+      "e0": {
+        "changed": false,
+        "clean": 0.6382763032336511,
+        "delta": 0.0,
+        "old": 0.6382763032336511
+      },
+      "e1": {
+        "changed": false,
+        "clean": 0.6385863723277498,
+        "delta": 0.0,
+        "old": 0.6385863723277498
+      },
+      "e2": {
+        "changed": false,
+        "clean": 0.6388878422328821,
+        "delta": 0.0,
+        "old": 0.6388878422328821
+      },
+      "marginal_vs_clone": {
+        "changed": false,
+        "clean": 0.0003014699051322456,
+        "delta": 0.0,
+        "old": 0.0003014699051322456
+      },
+      "mature_vs_never": {
+        "changed": false,
+        "clean": 0.613459422882462,
+        "delta": 0.0,
+        "old": 0.613459422882462
+      },
+      "mature_vs_pre": {
+        "changed": false,
+        "clean": 0.6009454268185858,
+        "delta": 0.0,
+        "old": 0.6009454268185858
+      },
+      "rho": {
+        "changed": false,
+        "clean": 0.38170592359325234,
+        "delta": 0.0,
+        "old": 0.38170592359325234
+      },
+      "standalone": {
+        "changed": false,
+        "clean": 0.5835784083869228,
+        "delta": 0.0,
+        "old": 0.5835784083869228
+      }
+    },
+    "verification": {
+      "message": "ok",
+      "ok": true,
+      "prefixes_checked": 29,
+      "series_checked": 8
+    }
+  },
   "prefix_verification": {
     "message": "ok",
-    "ok": 1,
+    "ok": true,
     "prefixes_checked": 29,
     "series_checked": 8
   },
-  "result_status": "PRE-CLEANUP / PROVISIONAL",
+  "result_status": "FINAL SCREEN RESULT",
   "rt600_reproduction": {
     "mean": 0.6258112639463216,
     "per_fold": [
@@ -170,6 +258,6 @@
     ],
     "pooled": 0.6256269256734708
   },
-  "runtime_s": 254.44697499275208,
+  "runtime_s": 244.3484399318695,
   "verdict": "KILL"
 }

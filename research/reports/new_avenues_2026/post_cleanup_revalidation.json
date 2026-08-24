@@ -1,0 +1,344 @@
+{
+  "all_reproduced": true,
+  "cleanup_sha": "aca2c4f9b68ad6315956f7c499ebefb2ae311f7b",
+  "comparisons": {
+    "RT-1200": {
+      "dominant": {
+        "changed": false,
+        "clean": 0.6582295961436627,
+        "delta": 0.0,
+        "old": 0.6582295961436627
+      },
+      "dominant_damage": {
+        "changed": false,
+        "clean": 1476,
+        "delta": 0,
+        "old": 1476
+      },
+      "dominant_net": {
+        "changed": false,
+        "clean": -318,
+        "delta": 0,
+        "old": -318
+      },
+      "dominant_repairs": {
+        "changed": false,
+        "clean": 1158,
+        "delta": 0,
+        "old": 1158
+      },
+      "e0": {
+        "changed": false,
+        "clean": 0.6382763032336511,
+        "delta": 0.0,
+        "old": 0.6382763032336511
+      },
+      "e1": {
+        "changed": false,
+        "clean": 0.6385863723277498,
+        "delta": 0.0,
+        "old": 0.6385863723277498
+      },
+      "e2": {
+        "changed": false,
+        "clean": 0.6383797389829954,
+        "delta": 0.0,
+        "old": 0.6383797389829954
+      },
+      "marginal_vs_clone": {
+        "changed": false,
+        "clean": -0.00020663334475445883,
+        "delta": 0.0,
+        "old": -0.00020663334475445883
+      },
+      "mature_vs_never": {
+        "changed": false,
+        "clean": 0.6558591182202723,
+        "delta": 0.0,
+        "old": 0.6558591182202723
+      },
+      "mature_vs_pre": {
+        "changed": false,
+        "clean": 0.6648441355984896,
+        "delta": 0.0,
+        "old": 0.6648441355984896
+      },
+      "prefix_verification": {
+        "message": "ok",
+        "ok": 1,
+        "prefixes_checked": 29,
+        "series_checked": 8
+      },
+      "rho": {
+        "changed": false,
+        "clean": 0.7745811809431761,
+        "delta": 0.0,
+        "old": 0.7745811809431761
+      },
+      "standalone": {
+        "changed": false,
+        "clean": 0.6196105599887116,
+        "delta": 0.0,
+        "old": 0.6196105599887116
+      }
+    },
+    "RT-1201": {
+      "dominant": {
+        "changed": false,
+        "clean": 0.6101579099132464,
+        "delta": 0.0,
+        "old": 0.6101579099132464
+      },
+      "dominant_damage": {
+        "changed": false,
+        "clean": 3172,
+        "delta": 0,
+        "old": 3172
+      },
+      "dominant_net": {
+        "changed": false,
+        "clean": -1151,
+        "delta": 0,
+        "old": -1151
+      },
+      "dominant_repairs": {
+        "changed": false,
+        "clean": 2021,
+        "delta": 0,
+        "old": 2021
+      },
+      "e0": {
+        "changed": false,
+        "clean": 0.6382763032336511,
+        "delta": 0.0,
+        "old": 0.6382763032336511
+      },
+      "e1": {
+        "changed": false,
+        "clean": 0.6385863723277498,
+        "delta": 0.0,
+        "old": 0.6385863723277498
+      },
+      "e2": {
+        "changed": false,
+        "clean": 0.6388878422328821,
+        "delta": 0.0,
+        "old": 0.6388878422328821
+      },
+      "marginal_vs_clone": {
+        "changed": false,
+        "clean": 0.0003014699051322456,
+        "delta": 0.0,
+        "old": 0.0003014699051322456
+      },
+      "mature_vs_never": {
+        "changed": false,
+        "clean": 0.613459422882462,
+        "delta": 0.0,
+        "old": 0.613459422882462
+      },
+      "mature_vs_pre": {
+        "changed": false,
+        "clean": 0.6009454268185858,
+        "delta": 0.0,
+        "old": 0.6009454268185858
+      },
+      "prefix_verification": {
+        "message": "ok",
+        "ok": 1,
+        "prefixes_checked": 29,
+        "series_checked": 8
+      },
+      "rho": {
+        "changed": false,
+        "clean": 0.38170592359325234,
+        "delta": 0.0,
+        "old": 0.38170592359325234
+      },
+      "standalone": {
+        "changed": false,
+        "clean": 0.5835784083869228,
+        "delta": 0.0,
+        "old": 0.5835784083869228
+      }
+    },
+    "RT-1202": {
+      "dominant": {
+        "changed": false,
+        "clean": 0.5003078121537549,
+        "delta": 0.0,
+        "old": 0.5003078121537549
+      },
+      "dominant_damage": {
+        "changed": false,
+        "clean": 5434,
+        "delta": 0,
+        "old": 5434
+      },
+      "dominant_net": {
+        "changed": false,
+        "clean": -2974,
+        "delta": 0,
+        "old": -2974
+      },
+      "dominant_repairs": {
+        "changed": false,
+        "clean": 2460,
+        "delta": 0,
+        "old": 2460
+      },
+      "e0": {
+        "changed": false,
+        "clean": 0.6382763032336511,
+        "delta": 0.0,
+        "old": 0.6382763032336511
+      },
+      "e1": {
+        "changed": false,
+        "clean": 0.6385863723277498,
+        "delta": 0.0,
+        "old": 0.6385863723277498
+      },
+      "e2": {
+        "changed": false,
+        "clean": 0.6359995149866899,
+        "delta": 0.0,
+        "old": 0.6359995149866899
+      },
+      "marginal_vs_clone": {
+        "changed": false,
+        "clean": -0.0025868573410599005,
+        "delta": 0.0,
+        "old": -0.0025868573410599005
+      },
+      "mature_vs_never": {
+        "changed": false,
+        "clean": 0.5014101310507508,
+        "delta": 0.0,
+        "old": 0.5014101310507508
+      },
+      "mature_vs_pre": {
+        "changed": false,
+        "clean": 0.4972319211007167,
+        "delta": 0.0,
+        "old": 0.4972319211007167
+      },
+      "prefix_verification": {
+        "message": "ok",
+        "ok": true,
+        "prefixes_checked": 29,
+        "series_checked": 8
+      },
+      "rho": {
+        "changed": false,
+        "clean": 0.003912508286385561,
+        "delta": 0.0,
+        "old": 0.003912508286385561
+      },
+      "standalone": {
+        "changed": false,
+        "clean": 0.4993241154717414,
+        "delta": 0.0,
+        "old": 0.4993241154717414
+      }
+    },
+    "RT-1203": {
+      "dominant": {
+        "changed": false,
+        "clean": 0.4896501628018786,
+        "delta": 0.0,
+        "old": 0.4896501628018786
+      },
+      "dominant_damage": {
+        "changed": false,
+        "clean": 5487,
+        "delta": 0,
+        "old": 5487
+      },
+      "dominant_net": {
+        "changed": false,
+        "clean": -3130,
+        "delta": 0,
+        "old": -3130
+      },
+      "dominant_repairs": {
+        "changed": false,
+        "clean": 2357,
+        "delta": 0,
+        "old": 2357
+      },
+      "e0": {
+        "changed": false,
+        "clean": 0.6382763032336511,
+        "delta": 0.0,
+        "old": 0.6382763032336511
+      },
+      "e1": {
+        "changed": false,
+        "clean": 0.6385863723277498,
+        "delta": 0.0,
+        "old": 0.6385863723277498
+      },
+      "e2": {
+        "changed": false,
+        "clean": 0.6355447435623658,
+        "delta": 0.0,
+        "old": 0.6355447435623658
+      },
+      "marginal_vs_clone": {
+        "changed": false,
+        "clean": -0.0030416287653840524,
+        "delta": 0.0,
+        "old": -0.0030416287653840524
+      },
+      "mature_vs_never": {
+        "changed": false,
+        "clean": 0.486356248528824,
+        "delta": 0.0,
+        "old": 0.486356248528824
+      },
+      "mature_vs_pre": {
+        "changed": false,
+        "clean": 0.4988414426298617,
+        "delta": 0.0,
+        "old": 0.4988414426298617
+      },
+      "prefix_verification": {
+        "message": "ok",
+        "ok": true,
+        "prefixes_checked": 29,
+        "series_checked": 8
+      },
+      "rho": {
+        "changed": false,
+        "clean": 0.007449944711364755,
+        "delta": 0.0,
+        "old": 0.007449944711364755
+      },
+      "standalone": {
+        "changed": false,
+        "clean": 0.49382375251781835,
+        "delta": 0.0,
+        "old": 0.49382375251781835
+      }
+    }
+  },
+  "final_status": "FINAL SCREEN RESULT: Pilots 1-4 revalidated; no candidate cleared +0.001 marginal-vs-clone.",
+  "harness_cleanup_tests": "pytest -q tests/test_novel_streams_harness.py: 11 passed",
+  "m07_bayes_production_parity_issue": {
+    "affected_pilots_1_to_4": false,
+    "pre_existing": true,
+    "reason": "Pilot screens used committed RT600 OOF arrays and/or raw-history candidate transforms. They did not recompute production m07_bayes stream-engine features, and none of the candidate mechanisms reads m07_bayes::bo_p_lt25_z directly."
+  },
+  "merge_commit": "81aa56c",
+  "new_rt_ids_allocated": false,
+  "numeric_tolerance": 1e-12,
+  "pilot1": {
+    "affected_by_cleanup": false,
+    "changed": false,
+    "reason": "No dependency on novel_streams.harness/common; cleanup did not modify wave8_common, wave5_lib, sbr features, raw store, or committed OOF arrays.",
+    "verdict": "WEAK"
+  },
+  "research_hygiene": "OK: RESULTS.csv has 215 experiment rows, no duplicate IDs",
+  "results_csv_rows_changed": false
+}

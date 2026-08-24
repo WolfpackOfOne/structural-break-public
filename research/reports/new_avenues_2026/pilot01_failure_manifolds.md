@@ -79,6 +79,17 @@ The diagnostic does not allocate an RT ID and does not update `RESULTS.csv`.
 | `RT-414` | +0.7937 | 1243 | 1613 | -370 |
 | `RT-415` | +0.9110 | 795 | 1027 | -232 |
 
+## Post-Cleanup Reproduction
+
+Cleanup SHA: `aca2c4f9b68ad6315956f7c499ebefb2ae311f7b`.
+
+Changed: **no**. Pilot 1 does not use `novel_streams.harness.verify()` or
+`novel_streams.common`; it uses committed OOF streams, history-only
+fingerprints, `wave5_lib`, `wave8_common.pair_repair_stats`, and raw store
+history. The cleanup did not modify those paths.
+
+Final status: **FINAL DIAGNOSTIC RESULT**. Verdict remains **WEAK**.
+
 ## Interpretation
 
 History-only fingerprints do carry weak monotone information about where RT-600 fails, but the fold-held selector headroom is read against a same-procedure permutation control. This pilot opens a future gate only if the real selector headroom and specialist-advantage monotonicity clear the preregistered thresholds.

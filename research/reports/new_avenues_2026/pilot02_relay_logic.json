@@ -1,7 +1,7 @@
 {
   "branch": "research/new-avenues-pilots-2026",
   "candidate": "relay score-state transform of RT-600 evidence",
-  "cleanup_incorporated": false,
+  "cleanup_incorporated": true,
   "constants": {
     "component_center": [
       0.0,
@@ -134,12 +134,101 @@
       "total_pairs_sampled": 19562
     }
   },
+  "post_cleanup_reproduction": {
+    "changed": false,
+    "cleanup_sha": "aca2c4f9b68ad6315956f7c499ebefb2ae311f7b",
+    "final_status": "FINAL SCREEN RESULT",
+    "merge_commit": "81aa56c",
+    "notes": "Exact original pilot runner rerun after aca2c4f merge; no retuning, no new RT ID, no lockbox/test data.",
+    "numeric_tolerance": 1e-12,
+    "old_vs_clean": {
+      "dominant": {
+        "changed": false,
+        "clean": 0.6582295961436627,
+        "delta": 0.0,
+        "old": 0.6582295961436627
+      },
+      "dominant_damage": {
+        "changed": false,
+        "clean": 1476,
+        "delta": 0,
+        "old": 1476
+      },
+      "dominant_net": {
+        "changed": false,
+        "clean": -318,
+        "delta": 0,
+        "old": -318
+      },
+      "dominant_repairs": {
+        "changed": false,
+        "clean": 1158,
+        "delta": 0,
+        "old": 1158
+      },
+      "e0": {
+        "changed": false,
+        "clean": 0.6382763032336511,
+        "delta": 0.0,
+        "old": 0.6382763032336511
+      },
+      "e1": {
+        "changed": false,
+        "clean": 0.6385863723277498,
+        "delta": 0.0,
+        "old": 0.6385863723277498
+      },
+      "e2": {
+        "changed": false,
+        "clean": 0.6383797389829954,
+        "delta": 0.0,
+        "old": 0.6383797389829954
+      },
+      "marginal_vs_clone": {
+        "changed": false,
+        "clean": -0.00020663334475445883,
+        "delta": 0.0,
+        "old": -0.00020663334475445883
+      },
+      "mature_vs_never": {
+        "changed": false,
+        "clean": 0.6558591182202723,
+        "delta": 0.0,
+        "old": 0.6558591182202723
+      },
+      "mature_vs_pre": {
+        "changed": false,
+        "clean": 0.6648441355984896,
+        "delta": 0.0,
+        "old": 0.6648441355984896
+      },
+      "rho": {
+        "changed": false,
+        "clean": 0.7745811809431761,
+        "delta": 0.0,
+        "old": 0.7745811809431761
+      },
+      "standalone": {
+        "changed": false,
+        "clean": 0.6196105599887116,
+        "delta": 0.0,
+        "old": 0.6196105599887116
+      }
+    },
+    "verification": {
+      "message": "ok",
+      "ok": true,
+      "prefixes_checked": 29,
+      "series_checked": 8
+    }
+  },
   "prefix_verification": {
     "message": "ok",
-    "ok": 1,
+    "ok": true,
     "prefixes_checked": 29,
     "series_checked": 8
   },
+  "result_status": "FINAL SCREEN RESULT",
   "rt600_reproduction": {
     "mean": 0.6258112639463216,
     "per_fold": [
@@ -151,7 +240,6 @@
     ],
     "pooled": 0.6256269256734708
   },
-  "runtime_s": 99.60204792022705,
-  "result_status": "PRE-CLEANUP / PROVISIONAL",
+  "runtime_s": 64.33798789978027,
   "verdict": "KILL"
 }

@@ -13,9 +13,10 @@ Starting `origin/research/current` SHA:
 Scored-result HEAD before this final report:
 `d1d6bd6`.
 
-Cleanup incorporated: **No**. At final sync, `origin/research/current` was still
-`6c37cb122f83012c39706f1f182ce8e3182461be`; the sibling local
-`research/current` cleanup commit `f236c62` had not landed remotely.
+Cleanup incorporated in the initial scoring commit: **No**. Post-cleanup
+revalidation merged `origin/research/current` at
+`aca2c4f9b68ad6315956f7c499ebefb2ae311f7b` and reproduced Pilots 1-3 exactly;
+see `post_cleanup_revalidation.{md,json}`.
 
 Cache setup: local ignored `cache/store` and `cache/features` symlink to
 `structural-break-claude-wave3/cache`; local ignored `research/oof` contains
@@ -148,16 +149,37 @@ Falsified here:
 Still open:
 
 * dwell information as a trained feature block or as joint size-duration rarity;
-* trajectory shape / nearest-neighbour provenance from Pilot 4;
 * lower-level relay logic only if preregistered as a feature block, not as a
   score post-processor.
 
+Pilot 4 trajectory shape / nearest-neighbour provenance was subsequently run
+as `RT-1202` with shuffled control `RT-1203` and also killed.
+
 ## I. Next Action
 
-**MOVE TO PILOT 4.**
+**PILOT 4 COMPLETED SEPARATELY; CONTINUE THE BROAD SWEEP ONLY AFTER THE
+POST-CLEANUP CHECKPOINT.**
 
 No candidate deserves 5-fold confirmation. `RT-1200` and `RT-1201` both fail the
 `+0.0010` marginal-vs-clone gate.
+
+## I.1 Post-Cleanup Reproduction
+
+Cleanup SHA: `aca2c4f9b68ad6315956f7c499ebefb2ae311f7b`.
+
+`pytest -q tests/test_novel_streams_harness.py`: 11 passed.
+
+`research/scripts/check_research_hygiene.py`: OK, 215 experiment rows, no
+duplicate IDs.
+
+| item | old marginal | clean marginal | changed | final verdict |
+|---|---:|---:|---|---|
+| Pilot 1 diagnostic | n/a | n/a | no affected path | WEAK |
+| `RT-1200` | -0.000206633 | -0.000206633 | no | KILL |
+| `RT-1201` | +0.000301470 | +0.000301470 | no | KILL |
+
+Floating metrics were compared at tolerance `1e-12`; pair-flow counts matched
+exactly. Existing `RESULTS.csv` rows were not duplicated or edited.
 
 ## J. GitHub / CI
 
@@ -187,9 +209,13 @@ Tests / verification:
 * Pilot scripts: `py_compile` passed.
 * `RT-1200`: prefix-state verification passed on 8 series / 29 prefixes.
 * `RT-1201`: prefix verification passed on 8 series / 29 prefixes.
+* Post-cleanup reproduction: `RT-1200` and `RT-1201` matched exactly after
+  merging `aca2c4f`; Pilot 1 had no affected harness path.
 * Full pytest was not run; these pilots did not edit shared package code.
 
-PR: not opened because the expected cleanup commit has not landed on
-`origin/research/current`; opening a ready PR would be misleading.
+PR: not opened during the initial first-three-pilot run because the expected
+cleanup commit had not landed on `origin/research/current` yet. The cleanup is
+now merged into this pilot branch and the first-three-pilot results are final
+screen results.
 
 Lockbox/test usage: none. Production branch: untouched.

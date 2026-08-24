@@ -145,6 +145,15 @@
     "min_series_weight": 500.0,
     "never_break_series_with_weight": 3239
   },
+  "post_cleanup_reproduction": {
+    "affected_by_cleanup": false,
+    "changed": false,
+    "cleanup_sha": "aca2c4f9b68ad6315956f7c499ebefb2ae311f7b",
+    "final_status": "FINAL DIAGNOSTIC RESULT",
+    "merge_commit": "81aa56c",
+    "novel_streams_harness_tests": "11 passed",
+    "reason": "Pilot 1 diagnostic uses committed OOF streams, history fingerprints, wave5_lib, wave8_common.pair_repair_stats, and raw store history; aca2c4f changed novel_streams harness/common/docs/tests only and did not modify those scoring paths."
+  },
   "rt600_reproduction": {
     "dominant_cell_auc": 0.6642770565078685,
     "mean": 0.6258112639463216,
