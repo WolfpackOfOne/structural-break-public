@@ -388,3 +388,9 @@ Pre-registration:
 |---|---|
 | `RT-1204` | Pilot 5 scale-survival cross-scale summary features on dyadic AR(2) residual-square coarse-graining, fold-0 screen candidate. |
 | `RT-1205` | Pilot 5 six individual per-scale surprise features on the same dyadic residual-square coarse-graining, fold-0 binding control. |
+
+Result filed 2026-08-24:
+`research/reports/new_avenues_2026/pilot05_scale_survival.{md,json}`.
+`RT-1204` KILL: marginal_vs_clone `-0.000236`; `RT-1205` control
+marginal_vs_clone `-0.000707`; summary-control gap `+0.000471`, below the
+preregistered `+0.0005` distinguishability floor.

@@ -91,6 +91,13 @@ Degrees of freedom prospectively allocated before scoring:
 
 Continuation to 5 folds requires the preregistered marginal-vs-clone gates.
 
+Pilot 5 result filed 2026-08-24:
+`RT-1204` summary marginal_vs_clone `-0.000236`; `RT-1205` individual-control
+marginal_vs_clone `-0.000707`; summary-control gap `+0.000471`.
+Consumed the two preregistered fold-0 variants and stopped with no 5-fold
+continuation because the primary `+0.0010` marginal gate failed and the
+summary-control gap missed the `+0.0005` distinguishability floor.
+
 ---
 
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)

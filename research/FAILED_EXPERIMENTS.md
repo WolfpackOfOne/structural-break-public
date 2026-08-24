@@ -1082,3 +1082,61 @@ metrics exactly at tolerance `1e-12` (`RT-1202 marginal_vs_clone=-0.002586857`,
 **FINAL SCREEN RESULT**.
 
 Report: `research/reports/new_avenues_2026/pilot04_trajectory_geometry.{md,json}`.
+
+---
+
+## RT-1204 / RT-1205 -- Pilot 5 scale-survival coarse-graining -- KILL (2026-08-24)
+
+**Mechanism.** Dyadic causal coarse-graining of the AR(2) residual-square stream
+at scales `{1,2,4,8,16,32}`. Each online trailing block mean is compared against
+the same-scale historical block-mean empirical null. `RT-1204` emits the five
+cross-scale functionals: q05/q01 survival counts, q05/q01 largest surviving
+scale code, and log-scale surprise slope. `RT-1205` is the binding control with
+the six individual per-scale surprises only.
+
+**Variant.** Preregistered Mode-A fold-0 ABL feature-addition screen from
+`research/reports/new_avenues_2026/PILOT05_PREREG.md`. Both arms use the same
+LightGBM architecture, fold, row budget, seed, and base legal bank; only the
+Pilot-5 feature block differs.
+
+**Result.** Fold 0 integration:
+
+| arm | TS-AUC |
+|---|---:|
+| RT600 | 0.638276 |
+| RT600 + RT-401 seed clone | 0.638586 |
+| RT600 + RT-1204 | 0.638350 |
+| RT600 + RT-1205 | 0.637880 |
+
+`RT-1204` binding marginal vs clone: **-0.000236**. Gain vs RT600 alone:
+**+0.000074**. Standalone whole-fold TS-AUC was 0.629444; dominant-cell AUC was
+0.670218 versus RT-600 at 0.677711; within-t correlation with RT-600 was
++0.8860; sampled dominant-cell pair-flow net was -131.
+
+`RT-1205` individual-scale control marginal vs clone was **-0.000707**.
+Summary minus individual-control marginal was only **+0.000471**, just below
+the preregistered +0.0005 distinguishability floor.
+
+**Binding gate.** KILL because `RT-1204 marginal_vs_clone < +0.0010`. The
+second scientific gate also failed: the summary arm did not beat the individual
+per-scale control by the preregistered +0.0005 floor.
+
+**What this falsifies.** Explicit scale-survival count / largest-surviving-scale
+code / log-scale decay summaries on this frozen dyadic AR(2) residual-square
+coarse-grained stream do not add enough competition-useful marginal ensemble
+alpha to justify confirmation.
+
+**What this does not falsify.** It does not falsify all multiscale
+representations or all residual-scale detectors. It specifically falsifies this
+small E1/E4 cross-scale functional, under the fixed thresholds and Mode-A
+fold-0 ABL screen, as a promotion candidate.
+
+**Causality and status.** `harness.verify()` passed for both summary and
+individual mechanisms. Registered feature modules passed prefix invariance at
+`atol=0.0`; first-valid/NaN semantics, future-mutation prefix stability, and
+deterministic replay checks passed. RT600 sentinel reproduced exactly in the
+expected tolerance (`mean=0.625811`, `pooled=0.625627`, dominant
+`0.664277`, fold-0 E0 `0.638276`, E1 `0.638586`). Final status is
+**FINAL SCREEN RESULT**.
+
+Report: `research/reports/new_avenues_2026/pilot05_scale_survival.{md,json}`.

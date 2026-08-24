@@ -351,23 +351,51 @@ def candidate_result(exp_id: str, cand: np.ndarray, base: np.ndarray, c: Ctx) ->
     return {"diagnostic_pack": pack, "pair_flow": pair_flow, "ensemble_marginal": marg}
 
 
-def gate_verdict(summary_margin: float, control_margin: float) -> tuple[str, str, str]:
+def gate_verdict(summary_margin: float, control_margin: float) -> tuple[str, str, str, list[dict]]:
     gap = summary_margin - control_margin
+    failures = []
     if summary_margin < 0.0010:
-        return "KILL", "KILL", "summary marginal_vs_clone is below +0.0010"
+        failures.append(
+            {
+                "gate": "primary_marginal_vs_clone",
+                "threshold": 0.0010,
+                "observed": summary_margin,
+                "message": "summary marginal_vs_clone is below +0.0010",
+            }
+        )
     if control_margin >= summary_margin:
-        return "KILL", "KILL", "individual-scale control matches or exceeds summary"
+        failures.append(
+            {
+                "gate": "individual_control_not_worse",
+                "threshold": "control < summary",
+                "observed_summary_minus_control": gap,
+                "message": "individual-scale control matches or exceeds summary",
+            }
+        )
+    elif gap < 0.0005:
+        failures.append(
+            {
+                "gate": "summary_control_distinguishability",
+                "threshold": 0.0005,
+                "observed_summary_minus_control": gap,
+                "message": "summary-control gap is below the preregistered +0.0005 distinguishability floor",
+            }
+        )
+    if summary_margin < 0.0010:
+        return "KILL", "KILL", failures[0]["message"], failures
+    if control_margin >= summary_margin:
+        return "KILL", "KILL", "individual-scale control matches or exceeds summary", failures
     if gap < 0.0005:
-        return "KILL", "KILL", "summary-control gap is below the preregistered +0.0005 distinguishability floor"
+        return "KILL", "KILL", failures[0]["message"], failures
     if summary_margin < 0.0020:
-        return "WEAK", "NO_5FOLD", "summary clears kill floor but remains in the weak +0.001 to +0.002 band"
+        return "WEAK", "NO_5FOLD", "summary clears kill floor but remains in the weak +0.001 to +0.002 band", failures
     if summary_margin < 0.0030:
-        return "INTERESTING", "CONTINUE", "summary clears the preregistered 5-fold continuation gate"
+        return "INTERESTING", "CONTINUE", "summary clears the preregistered 5-fold continuation gate", failures
     if summary_margin < 0.0050:
-        return "SERIOUS", "CONTINUE", "summary clears the serious screen band; confirm before any next pilot"
+        return "SERIOUS", "CONTINUE", "summary clears the serious screen band; confirm before any next pilot", failures
     if summary_margin < 0.0080:
-        return "MAJOR", "CONTINUE", "summary clears the major screen band; confirm before any next pilot"
-    return "BREAKTHROUGH", "CONTINUE", "summary clears the breakthrough screen band; confirm before any next pilot"
+        return "MAJOR", "CONTINUE", "summary clears the major screen band; confirm before any next pilot", failures
+    return "BREAKTHROUGH", "CONTINUE", "summary clears the breakthrough screen band; confirm before any next pilot", failures
 
 
 def write_report(result: dict) -> None:
@@ -436,6 +464,8 @@ def write_report(result: dict) -> None:
         "",
         f"Summary minus individual-scale marginal: `{result['summary_minus_control_marginal']:+.6f}`.",
         f"Verdict: **{result['verdict']}** ({result['continuation_status']}) -- {result['verdict_reason']}.",
+        "Failed gates: "
+        + ("; ".join(f"`{x['gate']}` ({x['message']})" for x in result["gate_failures"]) if result["gate_failures"] else "none"),
         "",
         "## Diagnostic Pack",
         "",
@@ -525,7 +555,7 @@ def main() -> None:
 
     summary_margin = summary_result["ensemble_marginal"]["marginal_vs_clone"]
     control_margin = control_result["ensemble_marginal"]["marginal_vs_clone"]
-    verdict, continuation_status, reason = gate_verdict(summary_margin, control_margin)
+    verdict, continuation_status, reason, gate_failures = gate_verdict(summary_margin, control_margin)
 
     if verdict == "KILL":
         interpretation = (
@@ -568,6 +598,7 @@ def main() -> None:
         SUMMARY_ID: summary_result,
         CONTROL_ID: control_result,
         "summary_minus_control_marginal": summary_margin - control_margin,
+        "gate_failures": gate_failures,
         "verdict": verdict,
         "continuation_status": continuation_status,
         "verdict_reason": reason,
