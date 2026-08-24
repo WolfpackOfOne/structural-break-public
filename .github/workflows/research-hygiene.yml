@@ -1,0 +1,17 @@
+name: Research hygiene
+
+on:
+  push:
+    branches: ["research/**"]
+    paths: ["research/RESULTS.csv"]
+
+jobs:
+  check-results-csv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Check RESULTS.csv for duplicate experiment IDs
+        run: python research/scripts/check_research_hygiene.py
