@@ -904,3 +904,36 @@ seven specialists, and no submission until it does. Full writeup:
 `research/reports/wave7_teacher_nested.md`. Evidence:
 `research/reports/wave7_teacher_nested.json`,
 `research/reports/wave7_teacher_nested_fold_purity_test.json`.
+
+## WAVE 7 — T2 PROMOTION BATTERY, LEG 4/ENSEMBLE-INTEGRATION (`research/wave7-t2-promotion`)
+
+Leg 4 (alternate-partition confirmation) was **not run** — a resource
+decision, made explicit rather than silently skipped: the ensemble-
+integration leg below (the binding measurement for competition value)
+already gates T2 at MOSTLY REDUNDANT, and alternate partitions would cost
+~15h of additional compute to re-confirm a standalone number that has
+already been shown not to translate into ensemble value. Fold files
+(`research/folds/folds_alt{1,2,3}.parquet`) remain ready if this leg is
+wanted for the written record.
+
+**Ensemble-integration result (`RT-1100`, pre-registered
+`research/WAVE7_T2_INTEGRATION_PREREG.md`):** E0 (RT-600 seven specialists,
+fold 0) = 0.63828; E1 (+ matched seed clone `RT-401`) = 0.63859; E2 (+ `T2`)
+= 0.63882. **E2 − E1 = +0.00024** → **MOSTLY REDUNDANT** by the
+pre-registered bands. T2 correlates 0.71–0.91 with the seven specialists
+individually and 0.91 with the seed clone itself — statistically
+indistinguishable from an exchangeable eighth stream. Same-t pair-repair
+vs the E0 blend is net-negative for both T2 (−15) and the seed clone (−66),
+uncalibrated.
+
+T2's standalone `T2 − T0` (+0.00943, clears its own promotion legs against
+a matched single-model control) does **not** transfer to ensemble value —
+the gap between the two numbers (+0.00943 vs +0.00024, ~40×) is itself the
+finding. T2 is redundant, not disqualified: it remains the only positive
+ensemble marginal measured anywhere in this project (Wave 8's five
+mechanisms were all ≈ −0.0003), just too small to matter on its own.
+
+Full writeup: `research/reports/wave7_t2_promotion_final.md`. Evidence:
+`research/reports/wave7_t2_ensemble_integration.{md,json}`,
+`research/reports/wave7_t2_pairflow.{md,json}`,
+`research/reports/wave7_t2_promotion_final.json`.

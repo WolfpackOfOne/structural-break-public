@@ -147,3 +147,14 @@ research/oof/RT-994.npy, RT-995.npy
 research/oof/nested_Q_outer{0..4}_inner{...}.npy  (20 inner-teacher checkpoints)
 ```
 Ledger and ID map updated: `research/RDOF_LEDGER.md`, `research/EXPERIMENT_ID_MAP.md`.
+
+**T2 promotion battery closed out (`research/wave7-t2-promotion`, forked from
+`research/wave7-teacher-distillation@5093e0a`):** ensemble-integration test
+against the actual RT-600 seven-specialist ensemble run (the leg every prior
+status note flagged as outstanding). Result: `E2 − E1 = +0.00024`, MOSTLY
+REDUNDANT — T2's standalone `+0.00943` single-model edge does not survive
+contact with the ensemble; T2 correlates 0.71–0.91 with the seven
+specialists, ~0.91 with a plain exchangeable seed clone. Alternate-partition
+confirmation (leg 4) was not run given this result (see
+`research/RDOF_LEDGER.md`). T2 is not promoted, not submitted. Full report:
+`research/reports/wave7_t2_promotion_final.md`.

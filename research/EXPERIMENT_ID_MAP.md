@@ -345,3 +345,19 @@ but a smaller, real, robust effect survived for `T2`.
 
 Pre-registration: `research/WAVE7_TEACHER_NESTED_PREREG.md`. Result:
 `research/reports/wave7_teacher_nested.{md,json}`.
+
+### `RT-1100` — T2 ensemble-integration blend (E2 arm)
+
+| ID | is |
+|---|---|
+| `RT-1100` | RT-600 seven specialists + `RT-995` (T2), equal weight, cross-fitted SCDF calibration, fold 0. E2 arm of `research/WAVE7_T2_INTEGRATION_PREREG.md`. Blend, not a retrained model. |
+
+E0 (seven specialists alone) and E1 (+`RT-401` matched seed clone) are
+reused, not newly retrained or ID'd (E1 is the same construction Wave 8 used
+under `rt600_plus_seedclone` for every one of its five mechanisms). Result:
+`E2 − E1 = +0.00024` → MOSTLY REDUNDANT. Full writeup:
+`research/reports/wave7_t2_promotion_final.md`. Pre-registration:
+`research/WAVE7_T2_INTEGRATION_PREREG.md`.
+
+Alternate-partition leg (`RT-994`/`RT-995`'s leg 4) was not run — see
+`research/RDOF_LEDGER.md` for the resource-cost rationale.
