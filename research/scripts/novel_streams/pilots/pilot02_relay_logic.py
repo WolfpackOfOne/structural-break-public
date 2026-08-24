@@ -187,6 +187,8 @@ def main() -> None:
         "ensemble_marginal": marg,
         "runtime_s": runtime,
         "verdict": verdict,
+        "cleanup_incorporated": False,
+        "result_status": "PRE-CLEANUP / PROVISIONAL",
         "oof_artifact": str(OOFDIR / f"{EXP_ID}.npy"),
     }
     json_path = OUTDIR / "pilot02_relay_logic.json"
@@ -214,6 +216,9 @@ def main() -> None:
         f"* Prefix verification: `{verify['message']}` over `{verify['prefixes_checked']}` prefixes.",
         "",
         "## Binding Marginal Result",
+        "",
+        "**Status:** PRE-CLEANUP / PROVISIONAL. The expected novel-stream cleanup "
+        "commit has not landed on `origin/research/current` yet.",
         "",
         "| arm | fold-0 TS-AUC |",
         "|---|---:|",

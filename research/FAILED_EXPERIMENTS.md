@@ -941,3 +941,45 @@ study, ask what the *unit* is and whether the oracle quantity determines the
 *target at that unit*. And treat an implausibly large effect as a bug signal
 first and a discovery second — +0.249 on a saturated ensemble was never going to
 be real.
+
+---
+
+## RT-1200 -- Pilot 2 relay score-state transform -- KILL (2026-08-24)
+
+**Mechanism.** Protective-relay logic applied as a causal transform of RT-600
+evidence: operate/reset integral, thermal-replica state, picked-up dwell, and
+pickup-to-reset cycle count.
+
+**Variant.** Single preregistered fold-0 F-arm score-state candidate from
+`research/reports/new_avenues_2026/PILOTS_01_03_PREREG.md`.
+
+**Result.** Fold 0 integration:
+
+| arm | TS-AUC |
+|---|---:|
+| RT600 | 0.638276 |
+| RT600 + RT-401 seed clone | 0.638586 |
+| RT600 + RT-1200 | 0.638380 |
+
+Binding marginal vs clone: **-0.000207**. Gain vs RT600 alone: **+0.000103**.
+Standalone whole-fold candidate TS-AUC was 0.619611. Dominant-cell candidate
+AUC was 0.658230 versus RT-600 at 0.677711; within-t correlation with RT-600
+was +0.7746; sampled dominant-cell pair-flow net was -318.
+
+**Binding gate.** KILL because `marginal_vs_clone < +0.0010`.
+
+**What this falsifies.** A simple relay-style state transform of the existing
+RT-600 score path does not add competition-useful marginal ensemble alpha.
+The explicit reset/count state is not enough to beat an exchangeable seed clone.
+
+**What this does not falsify.** Relay logic on lower-level evidence channels is
+not fully falsified by this F-arm result. A future A-mode feature block would
+need a fresh preregistration and ID, and must still beat the same seed-clone
+gate.
+
+**Causality and status.** Prefix-state verification passed on 8 series / 29
+prefixes. The result is marked PRE-CLEANUP / PROVISIONAL because the expected
+novel-stream cleanup commit had not landed on `origin/research/current` at run
+time.
+
+Report: `research/reports/new_avenues_2026/pilot02_relay_logic.{md,json}`.
