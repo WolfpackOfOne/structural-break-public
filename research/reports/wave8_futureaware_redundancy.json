@@ -1,0 +1,109 @@
+{
+  "pairwise": [
+    {
+      "a": "T2",
+      "b": "SST",
+      "within_t_rank_corr": 0.9098361925782595,
+      "a_repairs": 894,
+      "b_repairs": 719
+    },
+    {
+      "a": "T2",
+      "b": "ORR",
+      "within_t_rank_corr": 0.6747764367051717,
+      "a_repairs": 894,
+      "b_repairs": 769
+    },
+    {
+      "a": "T2",
+      "b": "PCFB",
+      "within_t_rank_corr": 0.9103637591884691,
+      "a_repairs": 894,
+      "b_repairs": 733
+    },
+    {
+      "a": "T2",
+      "b": "CFEP",
+      "within_t_rank_corr": 0.9070073501528382,
+      "a_repairs": 894,
+      "b_repairs": 711
+    },
+    {
+      "a": "T2",
+      "b": "TGMC",
+      "within_t_rank_corr": 0.8965498721231999,
+      "a_repairs": 894,
+      "b_repairs": 920
+    },
+    {
+      "a": "SST",
+      "b": "ORR",
+      "within_t_rank_corr": 0.7311160280159221,
+      "a_repairs": 719,
+      "b_repairs": 769
+    },
+    {
+      "a": "SST",
+      "b": "PCFB",
+      "within_t_rank_corr": 0.9377573934766406,
+      "a_repairs": 719,
+      "b_repairs": 733
+    },
+    {
+      "a": "SST",
+      "b": "CFEP",
+      "within_t_rank_corr": 0.9388015282030711,
+      "a_repairs": 719,
+      "b_repairs": 711
+    },
+    {
+      "a": "SST",
+      "b": "TGMC",
+      "within_t_rank_corr": 0.9114406295968491,
+      "a_repairs": 719,
+      "b_repairs": 920
+    },
+    {
+      "a": "ORR",
+      "b": "PCFB",
+      "within_t_rank_corr": 0.7328832712989637,
+      "a_repairs": 769,
+      "b_repairs": 733
+    },
+    {
+      "a": "ORR",
+      "b": "CFEP",
+      "within_t_rank_corr": 0.7327677215981538,
+      "a_repairs": 769,
+      "b_repairs": 711
+    },
+    {
+      "a": "ORR",
+      "b": "TGMC",
+      "within_t_rank_corr": 0.7153026047275004,
+      "a_repairs": 769,
+      "b_repairs": 920
+    },
+    {
+      "a": "PCFB",
+      "b": "CFEP",
+      "within_t_rank_corr": 0.9413664674785921,
+      "a_repairs": 733,
+      "b_repairs": 711
+    },
+    {
+      "a": "PCFB",
+      "b": "TGMC",
+      "within_t_rank_corr": 0.914369605578086,
+      "a_repairs": 733,
+      "b_repairs": 920
+    },
+    {
+      "a": "CFEP",
+      "b": "TGMC",
+      "within_t_rank_corr": 0.9139736752788966,
+      "a_repairs": 711,
+      "b_repairs": 920
+    }
+  ]
+}
