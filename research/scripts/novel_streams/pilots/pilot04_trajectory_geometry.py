@@ -36,6 +36,8 @@ SHUFFLE_SEED = 0
 
 
 def finite_float(x):
+    if isinstance(x, (bool, np.bool_)):
+        return bool(x)
     if isinstance(x, (np.floating, float)):
         x = float(x)
         return x if np.isfinite(x) else None

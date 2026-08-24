@@ -1029,3 +1029,55 @@ expected novel-stream cleanup commit had not landed on `origin/research/current`
 at run time.
 
 Report: `research/reports/new_avenues_2026/pilot03_im2_dwell.{md,json}`.
+
+---
+
+## RT-1202 / RT-1203 -- Pilot 4 trajectory geometry -- KILL (2026-08-24)
+
+**Mechanism.** Shape-similarity trajectory geometry from z-normalized
+subsequences over windows 16 and 64: nearest-neighbour provenance
+(`d_hist` versus prior non-overlapping online neighbour) plus a cheap
+history-boundary arc-rate proxy. `RT-1203` is the preregistered shuffled-history
+control: same provenance distances, seed-0 permutation of historical arc order.
+
+**Variant.** Single preregistered fold-0 real scalar plus shuffled-order control
+from `research/reports/new_avenues_2026/PILOT04_PREREG.md`.
+
+**Result.** Fold 0 integration:
+
+| arm | TS-AUC |
+|---|---:|
+| RT600 | 0.638276 |
+| RT600 + RT-401 seed clone | 0.638586 |
+| RT600 + RT-1202 | 0.636000 |
+| RT600 + RT-1203 | 0.635545 |
+
+`RT-1202` binding marginal vs clone: **-0.002587**. Gain vs RT600 alone:
+**-0.002277**. Standalone whole-fold candidate TS-AUC was 0.499324;
+dominant-cell candidate AUC was 0.500308 versus RT-600 at 0.677711;
+within-t correlation with RT-600 was +0.0039; sampled dominant-cell pair-flow
+net was -2974.
+
+`RT-1203` shuffled-control marginal vs clone was **-0.003042**; real minus
+shuffled marginal was only +0.000455, and both arms damaged the ensemble.
+
+**Binding gate.** KILL because `RT-1202 marginal_vs_clone < +0.0010`.
+
+**What this falsifies.** This cheap direct trajectory-geometry scalar does not
+carry usable same-t ranking signal. It is almost random standalone and actively
+hurts the RT-600 ensemble after the same seed-clone gate used for the previous
+pilots.
+
+**What this does not falsify.** It does not prove that all temporal-order
+information is absent. It falsifies this sampled-reference NN provenance plus
+boundary arc-rate scalar as a promotion candidate. A learned sequence model or a
+trained feature block would need a new preregistration and a materially
+different reason to expect signal.
+
+**Causality and status.** Prefix verification passed on 8 series / 29 prefixes.
+The prior-online nearest-neighbour search excludes overlapping windows ending
+after `t-m`. The result is marked PRE-CLEANUP / PROVISIONAL because the
+expected novel-stream cleanup commit had not landed on `origin/research/current`
+at run time.
+
+Report: `research/reports/new_avenues_2026/pilot04_trajectory_geometry.{md,json}`.
