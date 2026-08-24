@@ -361,3 +361,19 @@ under `rt600_plus_seedclone` for every one of its five mechanisms). Result:
 
 Alternate-partition leg (`RT-994`/`RT-995`'s leg 4) was not run — see
 `research/RDOF_LEDGER.md` for the resource-cost rationale.
+
+---
+
+# NEW AVENUES 2026 PILOTS (`research/new-avenues-pilots-2026`)
+
+Reserved prospectively on 2026-08-24 before any New Avenues pilot score was
+produced on this branch. Pre-registration:
+`research/reports/new_avenues_2026/PILOTS_01_03_PREREG.md`.
+
+| ID | is |
+|---|---|
+| `RT-1200` | Pilot 2 relay score-state transform of RT-600 evidence, fold-0 screen candidate. |
+| `RT-1201` | Pilot 3 IM2 matched-length empirical run-null plus excursion dwell-bank scalar, fold-0 screen candidate. |
+
+Pilot 1, specialist-competence and failure-manifold diagnostics, is
+diagnostic-only and consumes no RT ID.

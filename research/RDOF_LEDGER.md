@@ -71,6 +71,26 @@ A claimed gain below +0.001, after this many experiments, is "indistinguishable"
 
 ---
 
+# NEW AVENUES 2026 PILOTS -- PREREGISTERED 2026-08-24
+
+Branch: `research/new-avenues-pilots-2026`.
+Starting base: `origin/research/current` at
+`6c37cb122f83012c39706f1f182ce8e3182461be`.
+Pre-registration:
+`research/reports/new_avenues_2026/PILOTS_01_03_PREREG.md`.
+
+Degrees of freedom prospectively allocated before scoring:
+
+| pilot | scored IDs | variants | fold screen | notes |
+|---|---|---:|---|---|
+| Specialist competence + failure manifolds | none | 0 | all dev folds descriptive | Diagnostic only; fixed fingerprint quintiles, `k in {2,3}`, one permutation seed. |
+| Relay score-state | `RT-1200` | 1 | fold 0 | Fixed pickup/dropout quantiles, fixed charge/cool constants, no threshold tuning. |
+| IM2+dwell bank | `RT-1201` | 1 | fold 0 | Fixed AR(2) residual-square channel, windows `{32,64,128}`, q90 band, fixed scalar mean. |
+
+Continuation to 5 folds requires the preregistered marginal-vs-clone gates.
+
+---
+
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)
 
 Pre-registration is written **before** the run. Each block states the
