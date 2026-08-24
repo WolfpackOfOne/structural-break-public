@@ -226,7 +226,11 @@ def scalar_candidate(c: Ctx, feats: np.ndarray) -> tuple[np.ndarray, dict]:
     center, scale = robust_center_scale(feats[train_rows])
     z = (feats - center) / scale
     cand = np.full(len(c.d.y), np.nan, dtype=np.float64)
-    cand[c.dev] = np.nanmean(z[c.dev], axis=1)
+    with np.errstate(invalid="ignore"):
+        row_mean = np.nanmean(z[c.dev], axis=1)
+    # Before the first registered window fills, no dwell evidence is available.
+    # Use the neutral scalar 0.0 rather than letting NaN enter TS-AUC.
+    cand[c.dev] = np.nan_to_num(row_mean, nan=0.0, posinf=0.0, neginf=0.0)
     return cand, {
         "feature_center": center.tolist(),
         "feature_scale": scale.tolist(),
