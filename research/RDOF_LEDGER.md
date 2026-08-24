@@ -151,6 +151,12 @@ deranged-control marginal_vs_clone `+0.000269`; candidate-control gap
 no 5-fold continuation because the deranged control exceeded the real scalar
 and the real scalar missed the primary `+0.0010` marginal gate.
 
+Pilot 3 observers preregistered 2026-08-24 before scoring:
+
+| pilot | scored IDs | variants | fold screen | notes |
+|---|---|---:|---|---|
+| Individual observer residuals | `RT-1214`, `RT-1215` | 1 frozen Kalman/NIS arm + 1 frozen Hankel-DMD arm | fold 0 | Fixed AR(2)-state Kalman grid `{q} x {r}`; fixed Hankel delay `d=16`, rank `r=4`, horizons `{1,5}`; base bank includes `m04_resid`; Hankel redundancy gate rho <= 0.85. |
+
 ---
 
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)

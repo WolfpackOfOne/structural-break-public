@@ -457,3 +457,12 @@ Result filed 2026-08-24:
 marginal_vs_clone `+0.000269`; candidate-control gap `-0.000105`. The
 deranged control exceeded the real scalar, and the real scalar also failed the
 primary `+0.0010` marginal gate.
+
+Reserved prospectively on 2026-08-24 before any Pilot 3 observer score was
+produced. Pre-registration:
+`research/reports/new_avenues_2026/PILOT03_OBSERVERS_PREREG.md`.
+
+| ID | is |
+|---|---|
+| `RT-1214` | Pilot 3 frozen AR(2)-state Kalman/NIS observer features, fold-0 screen arm. |
+| `RT-1215` | Pilot 3 frozen Hankel-DMD observer features, fold-0 screen arm. |
