@@ -441,3 +441,12 @@ control marginal_vs_clone `-0.000237`; candidate-control gap `-0.000285`.
 The primary marginal gate failed, the dwell-only control exceeded the joint
 candidate, and the candidate lost the dominant-cell control comparison by
 `-0.000896` AUC.
+
+Reserved prospectively on 2026-08-24 before any Pilot 9(i) score was produced.
+Pre-registration:
+`research/reports/new_avenues_2026/PILOT09_PREREG.md`.
+
+| ID | is |
+|---|---|
+| `RT-1212` | Pilot 9(i) nested scalar historical-difficulty conditioner predicting RT-600 dominant-cell loss propensity, fold-0 screen candidate. |
+| `RT-1213` | Pilot 9(i) within-fold deranged scalar control preserving fold-wise scalar marginals, fold-0 binding control. |

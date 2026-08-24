@@ -138,6 +138,12 @@ Consumed the two preregistered fold-0 variants and stopped with no 5-fold
 continuation because the primary `+0.0010` marginal gate failed and the
 dwell-only control exceeded the joint-rarity arm.
 
+Pilot 9(i) preregistered 2026-08-24 before scoring:
+
+| pilot | scored IDs | variants | fold screen | notes |
+|---|---|---:|---|---|
+| Scalar historical-difficulty gate | `RT-1212`, `RT-1213` | 1 nested scalar candidate + 1 within-fold deranged control | fold 0 | Fixed 23 history-only fingerprints; target is RT-600 dominant-cell pair loss rate only; nested fold-pure scalar construction; derangement-control gap gate +0.0005. |
+
 ---
 
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)
