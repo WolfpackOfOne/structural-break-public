@@ -111,6 +111,12 @@ Consumed the two preregistered fold-0 variants and stopped with no 5-fold
 continuation because the primary `+0.0010` marginal gate failed and the
 plain-energy control exceeded the contrast arm.
 
+Pilot 7 preregistered 2026-08-24 before scoring:
+
+| pilot | scored IDs | variants | fold screen | notes |
+|---|---|---:|---|---|
+| Ordinal transition divergence + time irreversibility | `RT-1208`, `RT-1209` | 1 transition/asymmetry candidate + 1 entropy-only control | fold 0 | Fixed order-3 ordinal codes with `m03_dyn` tie convention; 6x6 transition KL; Ramsey-Rothman increment asymmetry; matched-count null grid `{16,64,256}`; entropy-control gap gate +0.0005. |
+
 ---
 
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)

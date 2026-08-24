@@ -409,3 +409,12 @@ Result filed 2026-08-24:
 `RT-1206` KILL: marginal_vs_clone `-0.000353`; `RT-1207` plain-energy
 control marginal_vs_clone `+0.000189`; contrast-control gap `-0.000542`.
 Primary marginal gate failed, and the control exceeded the contrast.
+
+Reserved prospectively on 2026-08-24 before any Pilot 7 score was produced.
+Pre-registration:
+`research/reports/new_avenues_2026/PILOT07_PREREG.md`.
+
+| ID | is |
+|---|---|
+| `RT-1208` | Pilot 7 ordinal transition divergence plus time-irreversibility features, fold-0 screen candidate. |
+| `RT-1209` | Pilot 7 matched permutation-entropy-only ordinal control, fold-0 binding control. |
