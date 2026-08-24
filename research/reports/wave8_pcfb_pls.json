@@ -1,0 +1,21 @@
+{
+  "method": "pls",
+  "eligible_fraction_fold0": 0.639402530465043,
+  "A_control_cell": 0.6638108917990431,
+  "A_control_cell_eligible": 0.6680993366143672,
+  "B_oracle_cell_eligible": 0.673756586144709,
+  "C_legal_cell_full": 0.6611104717807901,
+  "C_legal_cell_eligible": 0.6663669246295351,
+  "delta_oracle_minus_control": 0.005657249530341857,
+  "delta_legal_minus_control_full": -0.0027004200182529914,
+  "delta_legal_minus_control_eligible": -0.001732411984832094,
+  "retention_R": -0.3062286674011015,
+  "ensemble": {
+    "fold": 0,
+    "rt600_7stream": 0.6382763032336511,
+    "rt600_plus_seedclone": 0.6385863723277498,
+    "rt600_plus_pcfb_pls": 0.6382762885780244,
+    "marginal_vs_clone": -0.0003100837497254094,
+    "gain_vs_base": -1.465562671221221e-08
+  }
+}
