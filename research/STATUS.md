@@ -49,12 +49,17 @@ short and gets updated whenever that changes materially.
   [`NEW_AVENUES_2026.md`](NEW_AVENUES_2026.md) — broad-exploration survey
   written 2026-08-24 after the Wave-7/8 dead end: nine functional classes
   absent from the 500-column bank, 79 source-backed mechanisms in 15
-  families ([`new_avenues_2026.csv`](new_avenues_2026.csv)), four new
-  descriptive diagnostics
+  families ([`new_avenues_2026.csv`](new_avenues_2026.csv)), six descriptive
+  diagnostics `D1`–`D6`
   ([`reports/new_avenues_2026_diagnostics.json`](reports/new_avenues_2026_diagnostics.json)),
   and an 11-experiment queue. Reusable plugin harness in
-  [`scripts/novel_streams/`](scripts/novel_streams/). **Design only — no
-  experiment ID consumed, no promotion, no change to the anchor.**
+  [`scripts/novel_streams/`](scripts/novel_streams/) — imports with no
+  environment set up; the shared ensemble/pair-flow helpers it reuses are
+  already on this branch at `scripts/wave8_common.py`, so no sibling branch
+  or worktree is needed. Regression-tested by
+  `tests/test_novel_streams_harness.py`. The cleanup completed on
+  `research/current` at `aca2c4f` and is infrastructure-only: no pilot run,
+  no new score, no promotion, and RT-600 still the production anchor.
 - **First New Avenues execution branch:**
   `research/new-avenues-pilots-2026` ran the first three queued pilots plus
   user-directed Pilot 4. Pilot 1 specialist/failure-manifold diagnostics are
@@ -63,8 +68,8 @@ short and gets updated whenever that changes materially.
   (`marginal_vs_clone=+0.000301`); `RT-1202` trajectory geometry is **KILL**
   (`marginal_vs_clone=-0.002587`) with `RT-1203` shuffled-order control also
   negative (`marginal_vs_clone=-0.003042`). No 5-fold confirmation is
-  warranted. Cleanup from the parallel harness work had not landed on
-  `origin/research/current` when these were recorded.
+  warranted. These pilot results are being revalidated after the `aca2c4f`
+  harness cleanup merge before any new pilot execution continues.
 - **Final Wave reports:** [`reports/wave4/`](reports/wave4/),
   [`reports/wave5/`](reports/wave5/), [`reports/wave6/`](reports/wave6/),
   [`reports/wave7/`](reports/wave7/); Wave 8's report is on the
@@ -73,7 +78,7 @@ short and gets updated whenever that changes materially.
   [`FINAL_ARCHITECTURE_FREEZE.md`](FINAL_ARCHITECTURE_FREEZE.md),
   [`FINAL_REPRODUCIBILITY_MANIFEST.json`](FINAL_REPRODUCIBILITY_MANIFEST.json).
 
-_Last updated: 2026-08-24, during the repository cleanup pass and the
-new-avenues research-direction pass. Update this
+_Last updated: 2026-08-24, during the repository cleanup pass, the new-avenues
+research-direction pass, and the novel-stream harness cleanup pass. Update this
 file whenever the production anchor, external score, or active research
 conclusion changes — see `AGENTS.md` at the repo root for the update rule._

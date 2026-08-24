@@ -1,12 +1,33 @@
 """Shared loader for the 2026 new-avenues diagnostics. READ-ONLY on the repo."""
-import os, sys, json
-ROOT = os.environ.get("SBR_ROOT")
-sys.path.insert(0, f"{ROOT}/src"); sys.path.insert(0, f"{ROOT}/research/scripts")
-import numpy as np
-from wave5_lib import Ctx, SPECIALISTS, SEEDCLONES, load_oof, FOLDS, OOFDIR
-from sbr.metric import ts_auc_flat
+import os
+import sys
 
-OUT = os.path.dirname(os.path.abspath(__file__))
+#: The checkout this file belongs to. Its `src` and `research/scripts` are
+#: ALWAYS importable, so `import harness` works with no environment set up and
+#: keeps working when SBR_ROOT points at a data-only tree.
+REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.."))
+
+#: Where the data lives: cache/store, cache/features, research/folds,
+#: research/oof. Defaults to REPO; SBR_ROOT points it elsewhere when the
+#: caches are shared across worktrees (the usual local setup).
+ROOT = os.environ.get("SBR_ROOT", REPO)
+
+for _p in (f"{REPO}/src", f"{REPO}/research/scripts",
+           f"{ROOT}/src", f"{ROOT}/research/scripts"):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
+import numpy as np  # noqa: E402,F401
+from wave5_lib import SPECIALISTS, Ctx, load_oof  # noqa: E402,F401
+
+from sbr.metric import ts_auc_flat  # noqa: E402,F401
+
+#: Diagnostic artifacts land under cache/, which .gitignore already covers.
+#: They used to be written next to the source, which left .npz files untracked
+#: in the working tree of whoever ran a diagnostic. These are runner scripts,
+#: so the directory is created here rather than lazily at each save site.
+OUT = os.path.join(ROOT, "cache", "novel_streams")
+os.makedirs(OUT, exist_ok=True)
 
 def rt600(c=None, cache=True):
     """Cross-fitted SCDF equal-weight blend of the seven RT-600 specialists."""
