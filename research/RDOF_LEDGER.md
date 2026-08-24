@@ -98,6 +98,12 @@ Consumed the two preregistered fold-0 variants and stopped with no 5-fold
 continuation because the primary `+0.0010` marginal gate failed and the
 summary-control gap missed the `+0.0005` distinguishability floor.
 
+Pilot 6 preregistered 2026-08-24 before scoring:
+
+| pilot | scored IDs | variants | fold screen | notes |
+|---|---|---:|---|---|
+| Spectral impulsiveness contrast | `RT-1206`, `RT-1207` | 1 contrast + 1 plain-energy control | fold 0 | Fixed m03 dyadic Goertzel frequencies collapsed into four bands; segment length 32; adaptive half-prefix window; historical-null grid `{16,64,256}`; contrast-control gap gate +0.0005. |
+
 ---
 
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)

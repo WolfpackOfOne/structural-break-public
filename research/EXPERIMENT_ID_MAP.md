@@ -394,3 +394,12 @@ Result filed 2026-08-24:
 `RT-1204` KILL: marginal_vs_clone `-0.000236`; `RT-1205` control
 marginal_vs_clone `-0.000707`; summary-control gap `+0.000471`, below the
 preregistered `+0.0005` distinguishability floor.
+
+Reserved prospectively on 2026-08-24 before any Pilot 6 score was produced.
+Pre-registration:
+`research/reports/new_avenues_2026/PILOT06_PREREG.md`.
+
+| ID | is |
+|---|---|
+| `RT-1206` | Pilot 6 spectral impulsiveness contrast features: band energy with low spectral-kurtosis / low robust-negentropy impulse evidence, fold-0 screen candidate. |
+| `RT-1207` | Pilot 6 matched plain band-energy features on the same four frequency bands, fold-0 binding control. |
