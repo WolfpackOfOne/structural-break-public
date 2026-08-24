@@ -165,6 +165,12 @@ stopped with no 5-fold continuation because both arms missed the primary
 `+0.0010` marginal gate; Hankel-DMD also failed the preregistered rho
 redundancy gate.
 
+Pilot 8 preregistered 2026-08-24 before scoring:
+
+| pilot | scored IDs | variants | fold screen | notes |
+|---|---|---:|---|---|
+| Weighted conformal test martingale | `RT-1216`, `RT-1217`, `RT-1218` | 1 weighted CTM arm + 1 matched unweighted CTM control + 1 parameter-free e-value aggregation arm | fold 0 | Fixed historical-PIT payoffs, fixed tail-rate weight formula, fixed Vovk power grid, no learned H2 weights; H1 never-break split gate compares `RT-1216` to `RT-1217`. |
+
 ---
 
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)

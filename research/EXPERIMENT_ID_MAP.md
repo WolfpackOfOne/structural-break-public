@@ -474,3 +474,13 @@ marginal_vs_clone `+0.000226`; the Hankel-DMD arm also failed the
 preregistered redundancy gate with within-t rank correlation `+0.8859` versus
 RT-600, above the `0.85` ceiling. Neither arm cleared the `+0.0010` primary
 marginal gate.
+
+Reserved prospectively on 2026-08-24 before any Pilot 8 score was produced.
+Pre-registration:
+`research/reports/new_avenues_2026/PILOT08_PREREG.md`.
+
+| ID | is |
+|---|---|
+| `RT-1216` | Pilot 8 weighted conformal test martingale feature arm, fold-0 screen candidate. |
+| `RT-1217` | Pilot 8 matched unweighted conformal test martingale feature control, fold-0 binding control. |
+| `RT-1218` | Pilot 8 parameter-free e-value aggregation direct-score arm, fold-0 screen candidate. |
