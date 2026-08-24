@@ -1,0 +1,21 @@
+{
+  "A_control_whole": 0.6265641785501449,
+  "A_control_cell": 0.6638108917990431,
+  "B_bce_embedding_whole": 0.6253962936418366,
+  "B_bce_embedding_cell": 0.6664722384957185,
+  "C_future_embedding_whole": 0.6216598562702171,
+  "C_future_embedding_cell": 0.6627216567494683,
+  "delta_C_minus_B_whole": -0.003736437371619439,
+  "delta_C_minus_B_cell": -0.0037505817462502034,
+  "delta_C_minus_A_whole": -0.004904322279927764,
+  "delta_C_minus_A_cell": -0.0010892350495748104,
+  "ensemble": {
+    "fold": 0,
+    "rt600_7stream": 0.6382763032336511,
+    "rt600_plus_seedclone": 0.6385863723277498,
+    "rt600_plus_cfep_c": 0.6382762885780244,
+    "marginal_vs_clone": -0.0003100837497254094,
+    "gain_vs_base": -1.465562671221221e-08
+  },
+  "continuation_gate_cleared": false
+}
