@@ -1,0 +1,21 @@
+{
+  "n_candidate_pairs": 1460,
+  "n_teacher_confirmed": 234,
+  "control_A_whole": 0.6265641785501449,
+  "control_A_cell": 0.6638108917990431,
+  "TGMC_R_whole": 0.6173789733584009,
+  "TGMC_R_cell": 0.6491193156298656,
+  "TGMC_T_whole": 0.6224015995209603,
+  "TGMC_T_cell": 0.6621117501350696,
+  "T_minus_R_whole": 0.00502262616255944,
+  "T_minus_R_cell": -0.001699141663973447,
+  "ensemble": {
+    "fold": 0,
+    "rt600_7stream": 0.6382763032336511,
+    "rt600_plus_seedclone": 0.6385863723277498,
+    "rt600_plus_tgmc_t": 0.6382762885780244,
+    "marginal_vs_clone": -0.0003100837497254094,
+    "gain_vs_base": -1.465562671221221e-08
+  },
+  "continuation_gate_cleared": false
+}
