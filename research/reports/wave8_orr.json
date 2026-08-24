@@ -1,0 +1,19 @@
+{
+  "n_confirmed_pairs": 877,
+  "recoverability": 0.7366020524515393,
+  "whole_fold0_rt600": 0.6382763032336511,
+  "whole_fold0_blend": 0.6382297020046509,
+  "delta_whole": -4.660122900024266e-05,
+  "cell_rt600": 0.6777110899011463,
+  "cell_blend": 0.6776684756731749,
+  "delta_cell": -4.2614227971360386e-05,
+  "ensemble": {
+    "fold": 0,
+    "rt600_7stream": 0.6382763032336511,
+    "rt600_plus_seedclone": 0.6385863723277498,
+    "rt600_plus_orr": 0.6382696129400625,
+    "marginal_vs_clone": -0.000316759387687382,
+    "gain_vs_base": -6.690293588684781e-06
+  },
+  "continuation_gate_cleared": false
+}

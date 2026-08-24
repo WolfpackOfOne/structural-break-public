@@ -217,6 +217,35 @@ def synthetic_features(hist, online, modules=FULL):
     return np.concatenate(mats, axis=1), names
 
 
+def pair_repair_stats(base_score, cand_score, y, t, rows, n_pairs_per_t=20, seed=0):
+    """Same-t (positive, negative) pair repairs/damage between two scores on
+    the SAME row population -- the shared diagnostic every Wave-8 mechanism's
+    comparison table reports (execution-brief section 22)."""
+    rng = np.random.default_rng(seed)
+    yy, tt = y[rows], t[rows]
+    order = np.argsort(tt, kind="stable")
+    t_sorted = tt[order]
+    b = np.flatnonzero(np.r_[True, t_sorted[1:] != t_sorted[:-1]])
+    e = np.r_[b[1:], len(t_sorted)]
+    repairs = damage = total_pairs = 0
+    for lo, hi in zip(b, e):
+        idx = rows[order[lo:hi]]
+        p_idx = idx[y[idx] == 1]
+        n_idx = idx[y[idx] == 0]
+        if len(p_idx) == 0 or len(n_idx) == 0:
+            continue
+        k = min(n_pairs_per_t, len(p_idx), len(n_idx))
+        pp = rng.choice(p_idx, k, replace=False)
+        nn = rng.choice(n_idx, k, replace=False)
+        base_right = base_score[pp] > base_score[nn]
+        cand_right = cand_score[pp] > cand_score[nn]
+        repairs += int((~base_right & cand_right).sum())
+        damage += int((base_right & ~cand_right).sum())
+        total_pairs += k
+    return {"total_pairs_sampled": total_pairs, "repairs": repairs, "damage": damage,
+            "net_pair_lift": repairs - damage}
+
+
 def ensemble_marginal(candidate_oof, c=None, fold=0, label="candidate"):
     """RT600 vs RT600+seed-clone vs RT600+candidate, fold-0 pilot, legal
     cross-fitted SCDF calibration (wave5_lib.Ctx.crossfit_blend) -- never a
