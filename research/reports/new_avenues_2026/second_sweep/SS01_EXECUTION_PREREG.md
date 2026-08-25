@@ -214,7 +214,10 @@ For `RT-1219` and controls report:
 - runtime and peak memory if available.
 
 Pair-flow evaluation uses the deterministic 64-pair-per-t sample with seed
-`20260825`, matching the first-sweep repair-reservoir synthesis convention.
+`20260825`, matching the first-sweep repair-reservoir synthesis convention:
+each sample label uses the same SHA256-derived stable seed as
+`research/scripts/analyze_first_sweep.py`, and sampled pairs are positive/
+negative row combinations within each same-`t` group.
 
 A sensor family counts as contributing for the SS-01 screen gate only if it is
 selected on at least `1%` of fold-0 rows receiving a non-RT600 action and on at
