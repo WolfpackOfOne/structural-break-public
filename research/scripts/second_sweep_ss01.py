@@ -428,6 +428,19 @@ def fit_one_outer(
     }
 
 
+def compact_target_summary(target: dict) -> dict:
+    return {
+        "n_pairs": target["n_pairs"],
+        "rt600_wrong_pairs": target["rt600_wrong_pairs"],
+        "rt600_right_pairs": target["rt600_right_pairs"],
+        "mean_pair_weight": target["mean_pair_weight"],
+        "n_exposed_rows": target["n_exposed_rows"],
+        "n_rt600_only_rows": target["n_rt600_only_rows"],
+        "target_counts": target["target_counts"],
+        "target_sensor_counts": target["target_sensor_counts"],
+    }
+
+
 def train_arbiter_oof(
     c: Ctx,
     scores: dict[str, np.ndarray],
@@ -452,7 +465,7 @@ def train_arbiter_oof(
             {
                 "fold": int(f),
                 "sensors": list(sensors),
-                "target": res["target"],
+                "target": compact_target_summary(res["target"]),
                 "action_counts": res["action_counts"],
                 "action_sensor_counts": res["action_sensor_counts"],
                 "n_non_rt600_actions": res["n_non_rt600_actions"],
@@ -1062,7 +1075,7 @@ def run_score(include_holdouts: bool = True) -> None:
     result = {
         "generated": time.strftime("%Y-%m-%d %H:%M"),
         "branch": "research/new-avenues-pilots-2026",
-        "execution_prereg_sha": "b451aa7",
+        "execution_prereg_sha": "32b5427",
         "head_sha": git_sha(),
         "exp_ids": [EXP_ID, *CONTROL_IDS],
         "sensor_ids": SENSOR_IDS,

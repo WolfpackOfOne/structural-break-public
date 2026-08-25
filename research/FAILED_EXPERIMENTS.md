@@ -1531,3 +1531,66 @@ Report: `research/reports/new_avenues_2026/pilot08_weighted_ctm.{md,json}`.
 **First-sweep status.** Pilot 8 was the remaining planned first-sweep
 mechanism. No arm cleared continuation, so the New Avenues first-sweep queue is
 exhausted with no 5-fold confirmation candidate.
+
+---
+
+## RT-1219 / RT-1220 / RT-1221 / RT-1222 -- Second Sweep SS-01 repair-damage arbiter -- KILL (2026-08-25)
+
+**Hypothesis.** A fold-pure constrained action policy can use frozen
+first-sweep killed arms as causal sensors to identify when a small correction
+repairs an RT600 same-t pair inversion without also damaging RT600-correct
+pairs.
+
+**Variant.** Execution preregistered in
+`research/reports/new_avenues_2026/second_sweep/SS01_EXECUTION_PREREG.md` at
+`32b5427`, following the program preregistration in
+`research/reports/new_avenues_2026/SECOND_SWEEP_PREREG.md`. `RT-1219` is the
+candidate arbiter. `RT-1220` is the global average frozen-sensor control.
+`RT-1221` is the shuffled repair/damage-target arbiter control. `RT-1222` is
+the train-fold-selected single-best killed-arm blend control.
+
+**Result.** Fold 0 integration:
+
+| arm | TS-AUC | marginal vs clone |
+|---|---:|---:|
+| RT600 | 0.638276 | |
+| RT600 + RT-401 seed clone | 0.638586 | |
+| RT600 + RT-1219 | 0.638276 | -0.000310 |
+| RT600 + RT-1220 | 0.638900 | +0.000314 |
+| RT600 + RT-1221 | 0.638276 | -0.000310 |
+| RT600 + RT-1222 | 0.638904 | +0.000317 |
+
+Dominant-cell pair-flow for `RT-1219`: repairs `0`, damage `0`, net `0`,
+RT600-right damage rate `0.0000`. It retained `0.0000` of the original
+first-sweep dominant repair reservoir (`0 / 14868`) while rejecting `1.0000`
+of the original candidate-union damage (`0 / 28505`). The policy selected
+RT600-only for all `806334` fold-0 validation rows, leaving `0` non-RT600
+action rows and `0` contributing sensor families.
+
+**Binding gate.** KILL because the candidate missed the `+0.0015`
+marginal-vs-clone gate, produced no positive dominant-cell net pair lift, had
+fewer than two contributing sensor families, and failed all three control-gap
+requirements: candidate minus `RT-1220` was `-0.000624`, candidate minus
+`RT-1221` was `+0.000000`, and candidate minus `RT-1222` was `-0.000627`.
+
+**What this falsifies.** Under the frozen state representation and fixed
+bounded-correction action set, first-sweep killed arms should not be reused as
+production arbitration sensors. The first-sweep repair reservoir is not
+separable from damage by this preregistered causal arbiter.
+
+**What this does not falsify.** It does not falsify residual pair-ranking over
+the incumbent 500-feature bank, negative-side calibration, or specialist
+disagreement routing. Those are distinct Second Sweep mechanisms with their
+own preregistered gates.
+
+**Causality and status.** Preflight reproduced the RT600 sentinel exactly in
+the expected tolerance (`mean=0.625811`, `pooled=0.625627`, dominant
+`0.664277`, fold-0 E0 `0.638276`, E1 `0.638586`) and reproduced the canonical
+dominant pair sample (`50540` pairs, `16193` RT600-wrong, `34347`
+RT600-right). Frozen sensors were finite on dev rows and zero finite on
+lockbox rows; new OOF lockbox finite counts were `0` for `RT-1219` through
+`RT-1222`. No lockbox/test/submission/production path was used. Final status:
+**FINAL SCREEN RESULT**.
+
+Report:
+`research/reports/new_avenues_2026/second_sweep/ss01_repair_damage_arbiter.{md,json}`.

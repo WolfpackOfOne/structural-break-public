@@ -181,6 +181,21 @@ marginal_vs_clone `-0.002214`, also KILL. Consumed the three preregistered
 fold-0 variants; no Pilot 8 arm advanced, exhausting the planned New Avenues
 first-sweep queue.
 
+Second Sweep SS-01 preregistered for execution on 2026-08-25 before scoring:
+
+| pilot | scored IDs | variants | fold screen | notes |
+|---|---|---:|---|---|
+| Repair-damage arbiter | `RT-1219`, `RT-1220`, `RT-1221`, `RT-1222` | 1 constrained action-policy candidate + 3 binding controls | fold 0 | Frozen first-sweep candidate sensors used only as causal OOF covariates; pair target penalizes damage at 2x repair weight; SCDF_NSEEN calibration is outer/inner fold-pure; family holdouts are diagnostic-only and consume no RT IDs. |
+
+SS-01 result filed 2026-08-25:
+`RT-1219` candidate marginal_vs_clone `-0.000310`; dominant-cell pair-flow
+repairs `0`, damage `0`, net `0`; non-RT600 action rows `0`; contributing
+families `0`. Controls were `RT-1220` global average (`+0.000314`),
+`RT-1221` shuffled-target arbiter (`-0.000310`), and `RT-1222` train-selected
+single-best killed arm (`+0.000317`). Consumed the four preregistered RT IDs,
+performed no hyperparameter sweep, made no lockbox/test/submission access, and
+stopped SS-01 with no SS-01b because the mandatory screen gates failed.
+
 ---
 
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)

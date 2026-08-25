@@ -21,10 +21,15 @@ short and gets updated whenever that changes materially.
   single-model alpha, but E2 (RT600 + T2 ensemble, ≈0.63882) beats E1
   (RT600 + seed clone, ≈0.63859) by only +0.00024 — essentially no marginal
   ensemble alpha. The first New Avenues sweep is now
-  **FIRST_SWEEP_EXHAUSTED**; the second sweep is designed but not executed.
-  Full detail: `reports/wave7/` and tag `wave7-t2-promotion-mostly-redundant`,
-  plus `reports/new_avenues_2026/FIRST_SWEEP_SYNTHESIS.md` and
-  `reports/new_avenues_2026/SECOND_SWEEP_PREREG.md`.
+  **FIRST_SWEEP_EXHAUSTED**. Second Sweep `SS-01` repair-damage arbitration is
+  **KILL**: the fold-pure arbiter selected no first-sweep sensor actions,
+  retained `0.0000` of the dominant repair reservoir, and failed the
+  marginal/control/contribution gates. Next authorized action is `SS-02`
+  Dominant-Cell Residual Ranker. Full detail: `reports/wave7/` and tag
+  `wave7-t2-promotion-mostly-redundant`, plus
+  `reports/new_avenues_2026/FIRST_SWEEP_SYNTHESIS.md`,
+  `reports/new_avenues_2026/SECOND_SWEEP_PREREG.md`, and
+  `reports/new_avenues_2026/second_sweep/ss01_repair_damage_arbiter.md`.
 - **Latest major negative result:** Wave 8 future-aware transfer family —
   five pilots (ORR, TGMC, SST, PCFB, CFEP), all KILL on the full population.
   Lives on the sibling branch `research/wave8-future-aware-distillation`
@@ -85,10 +90,13 @@ short and gets updated whenever that changes materially.
   `reports/new_avenues_2026/FIRST_SWEEP_SYNTHESIS.md`, with normalized matrix
   `reports/new_avenues_2026/first_sweep_matrix.csv`, repair/overlap
   diagnostics, and a source manifest. The second sweep is preregistered in
-  `reports/new_avenues_2026/SECOND_SWEEP_PREREG.md`; recommended first run is
-  `SS-01 Repair-Damage Arbiter`. It has **not** been executed: no new RT id,
-  no new score, no `RESULTS.csv` edit, and production `RT-600` remains
-  unchanged.
+  `reports/new_avenues_2026/SECOND_SWEEP_PREREG.md`. `SS-01`
+  Repair-Damage Arbiter (`RT-1219` plus controls `RT-1220`/`RT-1221`/`RT-1222`)
+  is **KILL**: marginal_vs_clone `-0.000310`, dominant repairs/damage/net
+  `0/0/0`, repair-reservoir retention `0.0000`, and `0` contributing sensor
+  families. First-sweep killed arms are closed as production arbitration
+  sensors under the frozen state representation. Proceed next to `SS-02`;
+  production `RT-600` remains unchanged.
 - **Final Wave reports:** [`reports/wave4/`](reports/wave4/),
   [`reports/wave5/`](reports/wave5/), [`reports/wave6/`](reports/wave6/),
   [`reports/wave7/`](reports/wave7/); Wave 8's report is on the
@@ -97,8 +105,7 @@ short and gets updated whenever that changes materially.
   [`FINAL_ARCHITECTURE_FREEZE.md`](FINAL_ARCHITECTURE_FREEZE.md),
   [`FINAL_REPRODUCIBILITY_MANIFEST.json`](FINAL_REPRODUCIBILITY_MANIFEST.json).
 
-_Last updated: 2026-08-25, after the First Sweep synthesis and Second Sweep
-preregistration were completed without running a new experiment. Update this
-file whenever the production anchor, external score, or active research
-conclusion changes — see
+_Last updated: 2026-08-25, after SS-01 was executed and killed on its
+preregistered fold-0 screen. Update this file whenever the production anchor,
+external score, or active research conclusion changes — see
 `AGENTS.md` at the repo root for the update rule._

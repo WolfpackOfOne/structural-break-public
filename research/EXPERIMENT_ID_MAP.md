@@ -493,3 +493,26 @@ preregistered mature-vs-never split (`+0.002135`), but that split gate cannot
 override the primary marginal miss. `RT-1218` KILL: marginal_vs_clone
 `-0.002214`. No Pilot 8 arm cleared continuation; the planned New Avenues
 first-sweep queue is exhausted.
+
+Second Sweep SS-01 reserved prospectively on 2026-08-25 before any SS-01 score
+was produced. Program pre-registration:
+`research/reports/new_avenues_2026/SECOND_SWEEP_PREREG.md`. Execution
+pre-registration:
+`research/reports/new_avenues_2026/second_sweep/SS01_EXECUTION_PREREG.md`
+at `32b5427`.
+
+| ID | is |
+|---|---|
+| `RT-1219` | SS-01 constrained repair-damage arbiter over frozen first-sweep sensors, fold-0 screen candidate. |
+| `RT-1220` | SS-01 global average of the same frozen first-sweep sensors, fold-0 binding control. |
+| `RT-1221` | SS-01 shuffled repair/damage-target arbiter, fold-0 binding control. |
+| `RT-1222` | SS-01 single-best killed-arm blend selected on train folds only, fold-0 binding control. |
+
+Result filed 2026-08-25:
+`research/reports/new_avenues_2026/second_sweep/ss01_repair_damage_arbiter.{md,json}`.
+`RT-1219` KILL: marginal_vs_clone `-0.000310`; dominant-cell repairs `0`,
+damage `0`, net `0`; contributing sensor families `0`; repair-reservoir
+retention `0.0000`; first-sweep candidate-union damage rejected `1.0000`.
+Controls did not lose: `RT-1220` marginal_vs_clone `+0.000314`, `RT-1221`
+`-0.000310`, and `RT-1222` `+0.000317`. SS-01 failed the preregistered
+mandatory gates and no SS-01b is authorized.
