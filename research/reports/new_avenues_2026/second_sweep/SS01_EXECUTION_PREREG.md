@@ -124,6 +124,9 @@ least one sampled exposure receive a class target:
 - `1..12`: the family with maximum positive utility, ties resolved by the
   sensor order listed above.
 
+Each row's LightGBM sample weight is its accumulated pair-exposure weight from
+the sampled pairs. No additional class balancing is applied.
+
 The shuffled-target control uses the same pair sample and features, but applies
 a seed-`2026082502` within-outer-train permutation to the row class targets
 before fitting.
@@ -212,6 +215,11 @@ For `RT-1219` and controls report:
 
 Pair-flow evaluation uses the deterministic 64-pair-per-t sample with seed
 `20260825`, matching the first-sweep repair-reservoir synthesis convention.
+
+A sensor family counts as contributing for the SS-01 screen gate only if it is
+selected on at least `1%` of fold-0 rows receiving a non-RT600 action and on at
+least `100` fold-0 validation rows. Smaller selections are reported but do not
+count toward the "at least two families contribute" gate.
 
 Repair-reservoir reporting uses the first-sweep synthesis baselines:
 
