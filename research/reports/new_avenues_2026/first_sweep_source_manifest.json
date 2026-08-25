@@ -1,0 +1,61 @@
+{
+  "forbidden_actions": [
+    "no training",
+    "no new OOF score",
+    "no TS-AUC calculation for a new candidate",
+    "no RESULTS.csv edit",
+    "no RT id allocation",
+    "no lockbox/test/submission touch"
+  ],
+  "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+  "oof_used": {
+    "RT-1200": "167d6890b7c51c81a2b70ec82ec9fff0832a0b607a3fbb5927bb0b66618a0fa3",
+    "RT-1201": "e8e2cd1607e562ed5aa5396d1c41c852a4a8bf4d585fbd8434d1291bfcd82790",
+    "RT-1202": "56b490b0fc2d7b778dfd03f10cbf5fbec24885aac3564828e470744605f0d326",
+    "RT-1203": "1df07f10c5da773a948f9d7df13713ad52fa911b3ec47ba6637af5a07f3374a4",
+    "RT-1204": "817237260dbf50b9a732f23b1e345f870bcd52643f8bd1635aa023d2015c954d",
+    "RT-1205": "9cb40d283be04ce485f94452fd2b37ebc80891de430c57035fabc01412373b8b",
+    "RT-1206": "021a1486348d29665918e998569fa1988d13289ceb120bbf532b45e3d6bffe2f",
+    "RT-1207": "79387983d97226762831d6c448b42026829415576a21ebe634311617008ce17f",
+    "RT-1208": "1ec71589959e22e03b56e8786ca5b4ecb4de1f5cce57c84e8776d54edb4177b3",
+    "RT-1209": "3f7737546eeb3069efff262010fd1177e69e69f647aa403551800dd993c0d62d",
+    "RT-1210": "968e470f04dde9f75628198773c7ffd85a1333c52ce3dfedd04a8d4b70f9f423",
+    "RT-1211": "c05840fe18a90ab6bba85adb1992a8cd8007965dddd99580faee2233ba00fe35",
+    "RT-1212": "2221c714f02c1abef45246ea4aecb1c6cbce3b38adcc6d3a4796a140c9229a7a",
+    "RT-1213": "96bc7dc4e259475fcd191d638ab89b8e83e82c51d0cbba502c020a0139c2a832",
+    "RT-1214": "19e4da7fc2d4d8b0f2d69dd489155765021456d6555a649f75515b22c6fa5dcb",
+    "RT-1215": "1d7114bdc3d30ce37d78801d31725d20bfb6c4396b4c848b3d57c7d7de7c7e76",
+    "RT-1216": "23ed08681b5ccd67e6c108622cd78b60fd36d0c4efaafea68e15fd0d2ce24e67",
+    "RT-1217": "d80ebd3a712bb6d89b65ebc426d8243733e15e0bc3e9e8d63bb73b4ebc843982",
+    "RT-1218": "9e2d4be01eb9fa0456aa51b13c24e96dd54639beea8c00b001331e0a63483370",
+    "RT-300": "bd3e6456fef300a7d0fefacec92095724ab2401fbe046c28733c9600b96879d3",
+    "RT-401": "16e1a10e75f3a2adf12d0efdfe8f4dd9391cfb53f871909a3f7392d2f175f57e",
+    "RT-410": "cbe1282006585cdcceb020b8c67ba62e2cc8be551bb93b81d9a19bac8ec628cb",
+    "RT-411": "f08248b3c47683046e4531637179a198df5cdcb024539ddc098eb88ca1158612",
+    "RT-412": "2684cec6917c22b44af0b37f5e5b055e6159d7d452b0989bdc21cee0f73a3ae0",
+    "RT-413": "f101827affa4394e83b007c22cadaa06f1f4021771615a6db02c17c50b6ba4ac",
+    "RT-414": "31e98d95f7453d2a9bdf22ad877df6c1e8a032a9b7d12464c76d77885921972f",
+    "RT-415": "04e6cc609a4791021d164f8037a1f2df8f8bca9618d408a97cdd7253ee0127b6",
+    "RT-995": "988eb7c4665088a74fcc4617527d6289df8b969163bb04af900c73745090f144",
+    "RT600_BLEND": "7381d5a5ff0b445a5fad024e969c5dfddee5cde0817c182b2dc4df79fe433932"
+  },
+  "repair_sampling": {
+    "pairs_per_t": 64,
+    "seed": 20260825
+  },
+  "reports": {
+    "pilot01_failure_manifolds.json": "7c4713e9cf2aab29c61c68cadf7230a67e84ceff1d35c23531a2a4d34ccac784",
+    "pilot02_relay_logic.json": "826edda51221de844b3771a3b5830e6ee40bad7ba3c36645072129d617b2df0f",
+    "pilot03_im2_dwell.json": "f4e2a8e342eb4a0aeee47fa3dd6b034a874d6b689bb637e2f6cf0e4a14db7e74",
+    "pilot03_observers.json": "d9ec7882e1fcf56a7e51feb77fcc7866d90a558faaad70e68304c76a2e1ab124",
+    "pilot04_trajectory_geometry.json": "a006234a29832c8d381e17bd72c35a9a40407ad08e37ec52c27838beef10e437",
+    "pilot05_scale_survival.json": "efb06ee8d496fdfded2e46d2f9fa9518f797346801eeedd2f0b8cc0e975b5622",
+    "pilot06_spectral_impulse.json": "09d2082a004bb16b873d8a0959a9e4a6d0212a7eadebc69319935460709be2d6",
+    "pilot07_ordinal_irreversibility.json": "652c7f2056c236cc65dedfc5d2193e2a170a900eb3730b95cb7880ed7d63d770",
+    "pilot08_weighted_ctm.json": "4e79fa8b3181515b3e232d342dd59a7c2b0897048072b4ebe142c1891c31c125",
+    "pilot09_difficulty_gate.json": "549a13135eeb4b2d49b42696c8b72ae01991b36d0843b613f19bb4dbdbac43d6",
+    "pilot10_joint_rarity.json": "fc314445aec5f9fabc777f9706395b72e453170a1e3e00297e4861f49592bf38"
+  },
+  "results_csv_sha256": "56dc98e84d254d411babbd62709c6dfd8c8a6a9f13335357e624a17c9da52f05",
+  "script": "research/scripts/analyze_first_sweep.py"
+}
