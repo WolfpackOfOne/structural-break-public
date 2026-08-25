@@ -61,19 +61,22 @@ short and gets updated whenever that changes materially.
   `research/current` at `aca2c4f` and is infrastructure-only: no pilot run,
   no new score, no promotion, and RT-600 still the production anchor.
 - **First New Avenues execution branch:**
-  `research/new-avenues-pilots-2026` has now scored Pilots 1-7, 10, 9(i), and
-  the Pilot 3 / IM3 observer arms. Pilot 1 specialist/failure-manifold
-  diagnostics are **WEAK**. Every scored first-sweep candidate through
-  `RT-1215` is **KILL** or a negative/control result: `RT-1200` relay
-  score-state, `RT-1201` IM2+dwell scalar, `RT-1202` trajectory geometry,
-  `RT-1204` scale survival, `RT-1206` spectral impulsiveness, `RT-1208`
-  ordinal transition/irreversibility, `RT-1210` joint size-duration rarity,
-  `RT-1212` scalar historical-difficulty gate, `RT-1214` Kalman/NIS observer,
-  and `RT-1215` Hankel-DMD observer all missed the `+0.0010`
-  marginal-vs-clone gate. `RT-1215` also failed the preregistered Hankel
-  redundancy guard (`rho=+0.8859 > 0.85`). No 5-fold confirmation is
-  warranted so far; next in the autonomous first-sweep queue is Pilot 8
-  weighted conformal test martingale.
+  `research/new-avenues-pilots-2026` has completed the planned first sweep:
+  Pilots 1-8, 10, 9(i), and the Pilot 3 / IM3 observer arms. Pilot 1
+  specialist/failure-manifold diagnostics are **WEAK**. Every scored
+  first-sweep candidate is **KILL** or a negative/control result: `RT-1200`
+  relay score-state, `RT-1201` IM2+dwell scalar, `RT-1202` trajectory
+  geometry, `RT-1204` scale survival, `RT-1206` spectral impulsiveness,
+  `RT-1208` ordinal transition/irreversibility, `RT-1210` joint
+  size-duration rarity, `RT-1212` scalar historical-difficulty gate,
+  `RT-1214` Kalman/NIS observer, `RT-1215` Hankel-DMD observer, `RT-1216`
+  weighted conformal test martingale, and `RT-1218` parameter-free e-value
+  aggregation all failed the primary continuation gate. `RT-1216` was the
+  closest miss at marginal_vs_clone `+0.000937` after beating its unweighted
+  CTM control on mature-vs-never AUC by `+0.002135`; `RT-1218` was negative
+  at `-0.002214`. `RT-1215` also failed the preregistered Hankel redundancy
+  guard (`rho=+0.8859 > 0.85`). No 5-fold confirmation is warranted from the
+  first sweep; the remaining planned first-sweep mechanisms are exhausted.
 - **Final Wave reports:** [`reports/wave4/`](reports/wave4/),
   [`reports/wave5/`](reports/wave5/), [`reports/wave6/`](reports/wave6/),
   [`reports/wave7/`](reports/wave7/); Wave 8's report is on the
@@ -82,7 +85,7 @@ short and gets updated whenever that changes materially.
   [`FINAL_ARCHITECTURE_FREEZE.md`](FINAL_ARCHITECTURE_FREEZE.md),
   [`FINAL_REPRODUCIBILITY_MANIFEST.json`](FINAL_REPRODUCIBILITY_MANIFEST.json).
 
-_Last updated: 2026-08-24, during the repository cleanup pass, the new-avenues
-research-direction pass, and the novel-stream harness cleanup pass. Update this
-file whenever the production anchor, external score, or active research
-conclusion changes — see `AGENTS.md` at the repo root for the update rule._
+_Last updated: 2026-08-24, after Pilot 8 completed and the New Avenues planned
+first-sweep queue was exhausted. Update this file whenever the production
+anchor, external score, or active research conclusion changes — see
+`AGENTS.md` at the repo root for the update rule._

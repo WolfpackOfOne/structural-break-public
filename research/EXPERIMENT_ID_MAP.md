@@ -484,3 +484,12 @@ Pre-registration:
 | `RT-1216` | Pilot 8 weighted conformal test martingale feature arm, fold-0 screen candidate. |
 | `RT-1217` | Pilot 8 matched unweighted conformal test martingale feature control, fold-0 binding control. |
 | `RT-1218` | Pilot 8 parameter-free e-value aggregation direct-score arm, fold-0 screen candidate. |
+
+Result filed 2026-08-24:
+`research/reports/new_avenues_2026/pilot08_weighted_ctm.{md,json}`.
+`RT-1216` KILL: marginal_vs_clone `+0.000937`, below the `+0.0010`
+primary gate. The weighted arm did beat the matched unweighted CTM on the
+preregistered mature-vs-never split (`+0.002135`), but that split gate cannot
+override the primary marginal miss. `RT-1218` KILL: marginal_vs_clone
+`-0.002214`. No Pilot 8 arm cleared continuation; the planned New Avenues
+first-sweep queue is exhausted.

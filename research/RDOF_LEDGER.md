@@ -171,6 +171,16 @@ Pilot 8 preregistered 2026-08-24 before scoring:
 |---|---|---:|---|---|
 | Weighted conformal test martingale | `RT-1216`, `RT-1217`, `RT-1218` | 1 weighted CTM arm + 1 matched unweighted CTM control + 1 parameter-free e-value aggregation arm | fold 0 | Fixed historical-PIT payoffs, fixed tail-rate weight formula, fixed Vovk power grid, no learned H2 weights; H1 never-break split gate compares `RT-1216` to `RT-1217`. |
 
+Pilot 8 result filed 2026-08-24:
+`RT-1216` weighted CTM marginal_vs_clone `+0.000937`; `RT-1217`
+matched unweighted CTM control marginal_vs_clone `+0.000212`; weighted minus
+unweighted mature-vs-never AUC `+0.002135`. The H1 split gate passed, but the
+weighted arm stopped with no 5-fold continuation because it missed the primary
+`+0.0010` marginal gate. `RT-1218` parameter-free e-value aggregation
+marginal_vs_clone `-0.002214`, also KILL. Consumed the three preregistered
+fold-0 variants; no Pilot 8 arm advanced, exhausting the planned New Avenues
+first-sweep queue.
+
 ---
 
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)

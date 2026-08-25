@@ -24,3 +24,9 @@ This table is a compact research checkpoint, not a replacement for
 | 9(i) | RT-1213 | within-fold deranged scalar control | n/a | 0.630245 | 0.666912 | 0.664874 | 0.8712 | 902 | 1128 | -226 | 0.638276 | 0.638586 | 0.638855 | +0.000269 | n/a | 1176.1s | control exceeded candidate | none |
 | 3/IM3 | RT-1214 | frozen AR(2)-state Kalman/NIS observer | RT-401 | 0.630817 | 0.670067 | 0.667936 | 0.8836 | 927 | 1025 | -98 | 0.638276 | 0.638586 | 0.638722 | +0.000135 | n/a | 4120.5s | KILL | none |
 | 3/IM3 | RT-1215 | frozen Hankel-DMD observer | RT-401 | 0.631331 | 0.673238 | 0.669922 | 0.8859 | 920 | 931 | -11 | 0.638276 | 0.638586 | 0.638812 | +0.000226 | n/a | 4120.5s | KILL; rho>0.85 | none |
+| 8 | RT-1216 | weighted conformal test martingale | RT-1217 | 0.634279 | 0.673986 | 0.670290 | 0.8653 | 992 | 1027 | -35 | 0.638276 | 0.638586 | 0.639523 | +0.000937 | +0.002135 | 1651.5s | KILL | none |
+| 8 | RT-1217 | matched unweighted CTM control | n/a | 0.629803 | 0.670833 | 0.668155 | 0.8683 | 999 | 1044 | -45 | 0.638276 | 0.638586 | 0.638799 | +0.000212 | n/a | 1651.5s | negative control | none |
+| 8 | RT-1218 | parameter-free e-value aggregation | RT-401 | 0.525678 | 0.536757 | 0.540505 | 0.1341 | 2202 | 4369 | -2167 | 0.638276 | 0.638586 | 0.636373 | -0.002214 | n/a | 1651.5s | KILL | none |
+
+First-sweep status: exhausted. No Pilot 8 arm cleared continuation; no planned
+New Avenues first-sweep candidate cleared a 5-fold confirmation gate.

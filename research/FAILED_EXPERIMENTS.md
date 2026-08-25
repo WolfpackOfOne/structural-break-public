@@ -1454,3 +1454,80 @@ fold-0 E0 `0.638276`, E1 `0.638586`). Final status is
 **FINAL SCREEN RESULT**.
 
 Report: `research/reports/new_avenues_2026/pilot03_observers.{md,json}`.
+
+---
+
+## RT-1216 / RT-1217 / RT-1218 -- Pilot 8 weighted conformal test martingale -- KILL (2026-08-24)
+
+**Mechanism.** `RT-1216` adds eight conformal test martingale channels using
+historical-PIT tail, dispersion, dependence, volatility-cluster, and Vovk
+power-martingale payoffs. Its betting fraction is scaled by a predictable
+recent benign-tail weight that excludes the current row. `RT-1217` is the
+matched unweighted CTM control with the same payoffs and fixed weight 1.
+`RT-1218` is a parameter-free direct score: the log-average of the five
+preregistered `m07_bayes` e-process log-capitals, with no learned weights.
+
+**Variant.** Preregistered Mode-A fold-0 ABL feature-addition screen from
+`research/reports/new_avenues_2026/PILOT08_PREREG.md`. H1 tested the weighted
+CTM feature block against the matched unweighted CTM control. H2 tested direct
+e-value aggregation against RT600 + `RT-401` seed-clone marginal value.
+
+**Result.** Fold 0 integration:
+
+| arm | TS-AUC |
+|---|---:|
+| RT600 | 0.638276 |
+| RT600 + RT-401 seed clone | 0.638586 |
+| RT600 + RT-1216 | 0.639523 |
+| RT600 + RT-1217 | 0.638799 |
+| RT600 + RT-1218 | 0.636373 |
+
+`RT-1216` binding marginal vs clone: **+0.000937**. Gain vs RT600 alone:
+**+0.001247**. Standalone whole-fold TS-AUC was 0.634279; dominant-cell AUC
+was 0.673986 versus RT-600 at 0.664277; mature-vs-never AUC was 0.670290;
+within-t correlation with RT-600 was +0.8653; sampled dominant-cell pair-flow
+net was -35.
+
+`RT-1217` matched unweighted control marginal vs clone was **+0.000212**.
+Control standalone whole-fold TS-AUC was 0.629803; dominant-cell AUC was
+0.670833; mature-vs-never AUC was 0.668155; within-t correlation with RT-600
+was +0.8683; sampled dominant-cell pair-flow net was -45.
+
+Weighted minus unweighted mature-vs-never AUC was **+0.002135**, so the H1
+split gate passed. Weighted minus unweighted marginal was **+0.000724**.
+
+`RT-1218` direct e-value aggregation marginal vs clone was **-0.002214**.
+Standalone whole-fold TS-AUC was 0.525678; dominant-cell AUC was 0.536757;
+mature-vs-never AUC was 0.540505; within-t correlation with RT-600 was
++0.1341; sampled dominant-cell pair-flow net was -2167.
+
+**Binding gate.** KILL for `RT-1216` because marginal_vs_clone was below the
+primary `+0.0010` gate. The H1 split gate passed, but it was secondary and
+cannot promote an arm that misses the primary marginal floor. KILL for
+`RT-1218` because marginal_vs_clone was negative and below `+0.0010`.
+
+**What this falsifies.** The exact weighted CTM construction failed to clear
+the continuation floor despite beating its unweighted split control. The
+parameter-free log-average of existing `m07_bayes` e-process capitals was
+actively harmful in ensemble integration under the fold-0 screen.
+
+**What this does not falsify.** It does not falsify all conformal martingales,
+all e-values, or all anytime-valid aggregations. It specifically falsifies the
+fixed historical-PIT payoff bank, fixed benign-tail weight formula, fixed power
+grid, no-learned-weight H2 aggregation, and Mode-A fold-0 ABL integration path
+used here.
+
+**Causality and status.** `harness.verify()` passed for both weighted and
+unweighted CTM mechanisms. Registered feature modules passed prefix invariance
+at `atol=0.0`; finite/peak checks, omega predictability, future-mutation
+prefix stability, deterministic replay, exact H2 m07-column selection, and
+zero-lockbox-fill checks passed. RT600 sentinel reproduced exactly in the
+expected tolerance (`mean=0.625811`, `pooled=0.625627`, dominant `0.664277`,
+fold-0 E0 `0.638276`, E1 `0.638586`). Final status is
+**FINAL SCREEN RESULT**.
+
+Report: `research/reports/new_avenues_2026/pilot08_weighted_ctm.{md,json}`.
+
+**First-sweep status.** Pilot 8 was the remaining planned first-sweep
+mechanism. No arm cleared continuation, so the New Avenues first-sweep queue is
+exhausted with no 5-fold confirmation candidate.
