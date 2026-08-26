@@ -750,7 +750,9 @@ class StreamM02Dist:
         if jm is None:
             o[44] = nan
         else:
-            o[44] = nts[jm[t]].sg_of(cu2[t1] / L - (cu[t1] / L) ** 2)
+            # `mL * mL`, never `mL ** 2` -- see the note in s_m06_loc.step
+            mL = cu[t1] / L
+            o[44] = nts[jm[t]].sg_of(cu2[t1] / L - mL * mL)
 
         # ---- CUSUM ----------------------------------------------------------
         o[45] = 20.0 if cu_u > 20.0 else (0.0 if cu_u < 0.0 else cu_u)
