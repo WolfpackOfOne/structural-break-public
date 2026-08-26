@@ -22,20 +22,24 @@ short and gets updated whenever that changes materially.
   (RT600 + seed clone, ≈0.63859) by only +0.00024 — essentially no marginal
   ensemble alpha. The first New Avenues sweep is now
   **FIRST_SWEEP_EXHAUSTED**. Second Sweep `SS-01` repair-damage arbitration,
-  `SS-02` dominant-cell residual ranking, and `SS-03` negative-side null-state
-  calibration are all **KILL**. SS-01 selected no first-sweep sensor actions;
-  SS-02 produced negative pair flow (`dominant net=-108`) and negative
-  marginal_vs_clone (`-0.000290`); SS-03 produced negative mature-vs-never net
-  pair flow (`-49`), negative marginal_vs_clone (`-0.000299`), and failed the
-  prebreak damage-rate cap (`0.0199 > 0.0150`). The next authorized action is
-  `SS-04` specialist-disagreement micro-routing. Full detail:
+  `SS-02` dominant-cell residual ranking, `SS-03` negative-side null-state
+  calibration, and `SS-04` specialist-disagreement micro-routing are all
+  **KILL**. SS-01 selected no first-sweep sensor actions; SS-02 produced
+  negative pair flow (`dominant net=-108`) and negative marginal_vs_clone
+  (`-0.000290`); SS-03 produced negative mature-vs-never net pair flow (`-49`),
+  negative marginal_vs_clone (`-0.000299`), and failed the prebreak damage-rate
+  cap (`0.0199 > 0.0150`); SS-04 produced no dominant or targeted
+  specialist-disagreement repairs on the canonical sample and negative
+  marginal_vs_clone (`-0.000312`). The preregistered Second Sweep is
+  **EXHAUSTED** with no confirmation candidate. Full detail:
   `reports/wave7/` and tag
   `wave7-t2-promotion-mostly-redundant`, plus
   `reports/new_avenues_2026/FIRST_SWEEP_SYNTHESIS.md`,
   `reports/new_avenues_2026/SECOND_SWEEP_PREREG.md`,
   `reports/new_avenues_2026/second_sweep/ss01_repair_damage_arbiter.md`, and
   `reports/new_avenues_2026/second_sweep/ss02_residual_ranker.md`, and
-  `reports/new_avenues_2026/second_sweep/ss03_null_calibrator.md`.
+  `reports/new_avenues_2026/second_sweep/ss03_null_calibrator.md`, and
+  `reports/new_avenues_2026/second_sweep/ss04_specialist_router.md`.
 - **Latest major negative result:** Wave 8 future-aware transfer family —
   five pilots (ORR, TGMC, SST, PCFB, CFEP), all KILL on the full population.
   Lives on the sibling branch `research/wave8-future-aware-distillation`
@@ -110,8 +114,13 @@ short and gets updated whenever that changes materially.
   prebreak damage rate `0.0199`, deranged-control marginal gap `+0.000049`,
   and unweighted-CTM control marginally exceeded the candidate. First-sweep
   killed-arm arbitration, incumbent-bank residual pair ranking, and the fixed
-  null-state calibration are closed under their frozen screens. Proceed next
-  to `SS-04`; production `RT-600` remains unchanged.
+  null-state calibration are closed under their frozen screens. `SS-04`
+  Specialist Disagreement Micro-Router (`RT-1230` plus controls
+  `RT-1231`/`RT-1232`/`RT-1233`) is **KILL**: marginal_vs_clone `-0.000312`,
+  dominant repairs/damage/net `0/0/0`, majority-correct net `0`, near-split
+  net `0`, and all three controls failed the `+0.0005` gap requirement. The
+  preregistered Second Sweep is exhausted with no 5-fold confirmation
+  candidate; production `RT-600` remains unchanged.
 - **Final Wave reports:** [`reports/wave4/`](reports/wave4/),
   [`reports/wave5/`](reports/wave5/), [`reports/wave6/`](reports/wave6/),
   [`reports/wave7/`](reports/wave7/); Wave 8's report is on the
@@ -120,7 +129,7 @@ short and gets updated whenever that changes materially.
   [`FINAL_ARCHITECTURE_FREEZE.md`](FINAL_ARCHITECTURE_FREEZE.md),
   [`FINAL_REPRODUCIBILITY_MANIFEST.json`](FINAL_REPRODUCIBILITY_MANIFEST.json).
 
-_Last updated: 2026-08-25, after SS-03 was executed and killed on its
+_Last updated: 2026-08-25, after SS-04 was executed and killed on its
 preregistered fold-0 screen. Update this file whenever the production anchor,
 external score, or active research conclusion changes — see
 `AGENTS.md` at the repo root for the update rule._

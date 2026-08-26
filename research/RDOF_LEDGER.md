@@ -228,6 +228,24 @@ slightly exceeded the candidate on marginal_vs_clone (`-0.000290` vs
 search, made no lockbox/test/submission access, and stopped SS-03 with no
 SS-03b because the mandatory screen gates failed.
 
+Second Sweep SS-04 preregistered for execution on 2026-08-25 before scoring:
+
+| pilot | scored IDs | variants | fold screen | notes |
+|---|---|---:|---|---|
+| Specialist disagreement micro-router | `RT-1230`, `RT-1231`, `RT-1232`, `RT-1233` | 1 bounded row-level specialist action router + 3 controls | fold 0 | Candidate uses fixed row-local repair/damage target, multinomial logistic router, action alpha `0.25`, delta clip `0.35`, action probability gate `0.20` with keep-gap `0.05`; controls are global specialist logistic stack, Pilot-1 `exc_max_run64` static selector replay, and shuffled disagreement-target router. |
+
+SS-04 result filed 2026-08-25:
+`RT-1230` candidate marginal_vs_clone `-0.000312`; dominant-cell pair-flow
+repairs `0`, damage `0`, net `0`; majority-correct specialist-disagreement
+net `0`; near-split net `0`. Controls were `RT-1231` global logistic stack
+(`-0.000441`), `RT-1232` static selector replay (`-0.000555`), and
+`RT-1233` shuffled target router (`-0.000310`); all three failed the
+candidate-control gap requirement of `+0.000500`. Consumed the four
+preregistered RT IDs, performed no action-threshold or alpha/cap tuning, made
+no lockbox/test/submission access, and stopped SS-04 with no SS-04b because
+the mandatory screen gates failed. The preregistered Second Sweep is now
+exhausted.
+
 ---
 
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)

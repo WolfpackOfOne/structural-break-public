@@ -1738,3 +1738,80 @@ on lockbox rows. New OOF lockbox finite counts were `0` for `RT-1225` through
 
 Report:
 `research/reports/new_avenues_2026/second_sweep/ss03_null_calibrator.{md,json}`.
+
+---
+
+## RT-1230 / RT-1231 / RT-1232 / RT-1233 -- Second Sweep SS-04 specialist-disagreement action router -- KILL (2026-08-25)
+
+**Hypothesis.** A bounded fold-pure specialist-disagreement router can identify
+same-t dominant-cell rows where one of the seven frozen specialists is more
+trustworthy than the RT600 blend, especially in majority-correct and near-split
+specialist configurations, without learning a global reweighting or replaying
+the failed Pilot-1 static selector.
+
+**Variant.** Execution preregistered in
+`research/reports/new_avenues_2026/second_sweep/SS04_EXECUTION_PREREG.md` at
+`25f40ac`, after SS-01, SS-02, and SS-03 were killed. `RT-1230` is the
+candidate. `RT-1231` is the global logistic specialist reweighting control.
+`RT-1232` is the Pilot-1 `exc_max_run64` static history-fingerprint selector
+replay control. `RT-1233` is the shuffled disagreement-target router control.
+
+The candidate trained a fold-pure row-level action router on exposed
+outer-training same-t pairs where RT600 was wrong and at least one frozen
+specialist was right. It could either keep RT600 or move a row toward one
+specialist by a bounded amount. The binding fold-0 score used only
+pre-registered router outputs and no post-score thresholding.
+
+**Result.** Fold 0 integration:
+
+| arm | TS-AUC | marginal vs clone |
+|---|---:|---:|
+| RT600 | 0.638276 | |
+| RT600 + RT-401 seed clone | 0.638586 | |
+| RT600 + RT-1230 | 0.638275 | -0.000312 |
+| RT600 + RT-1231 | 0.638145 | -0.000441 |
+| RT600 + RT-1232 | 0.638031 | -0.000555 |
+| RT600 + RT-1233 | 0.638276 | -0.000310 |
+
+Candidate pair-flow:
+
+| split | repairs | damage | net | RT600-right damage rate |
+|---|---:|---:|---:|---:|
+| dominant cell | 0 | 0 | 0 | 0.0000 |
+| majority-correct subgroup | 0 | 0 | 0 | 0.0000 |
+| near-split subgroup | 0 | 0 | 0 | 0.0000 |
+
+The global logistic specialist reweighting control lost more than the
+candidate, but the gap was only `+0.000130`. The Pilot-1 static selector replay
+control gap was `+0.000243`, and the shuffled-target router gap was
+`-0.000002`. None reached the required `+0.000500` control gap.
+
+**Binding gate.** KILL because the candidate missed the `+0.0010`
+marginal-vs-clone gate (`-0.000312`), missed the majority-correct net-pair
+gate (`0` versus `>0`), missed the near-split net-pair gate (`0` versus `>0`),
+and failed all three control-separation gates.
+
+**What this falsifies.** The preregistered bounded specialist-disagreement
+router did not expose a usable residual action surface inside RT600's dominant
+same-t failure reservoir. The result also rules out the specific global
+logistic specialist reweighting control and the preregistered Pilot-1
+`exc_max_run64` selector replay as rescue mechanisms under the same fold-0
+binding screen.
+
+**What this does not falsify.** It does not falsify future research using
+materially different state representations, new data, different base models,
+or a new preregistered research program. It does not authorize SS-04b,
+threshold tuning, action-cap tuning, relabeling of the disagreement target, or
+another Second Sweep mechanism.
+
+**Causality and status.** Preflight reproduced the RT600 sentinel in the
+expected tolerance and reproduced the canonical dominant pair sample (`50540`
+pairs, `16193` RT600-wrong, `34347` RT600-right). Required frozen OOF scores
+were finite on all `4032524` dev rows and zero finite on lockbox rows. New OOF
+lockbox finite counts were `0` for `RT-1230` through `RT-1233`. No
+lockbox/test/submission/production path was used. Final status:
+**FINAL SCREEN RESULT**. With SS-04 killed, the preregistered Second Sweep is
+**EXHAUSTED**.
+
+Report:
+`research/reports/new_avenues_2026/second_sweep/ss04_specialist_router.{md,json}`.

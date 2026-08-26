@@ -562,3 +562,26 @@ damage `773`, net `-114`; mature-vs-never net `-49`; mature-vs-prebreak net
 `+0.000049` marginal versus the required `+0.000500`, and the unweighted CTM
 state control `RT-1228` slightly exceeded the candidate. SS-03 failed the
 mandatory gates and no SS-03b is authorized.
+
+Second Sweep SS-04 reserved prospectively on 2026-08-25 before any SS-04 score
+was produced. Program pre-registration:
+`research/reports/new_avenues_2026/SECOND_SWEEP_PREREG.md`. Execution
+pre-registration:
+`research/reports/new_avenues_2026/second_sweep/SS04_EXECUTION_PREREG.md`
+at `25f40ac`.
+
+| ID | is |
+|---|---|
+| `RT-1230` | SS-04 bounded row-level specialist action router, fold-0 screen candidate. |
+| `RT-1231` | SS-04 global logistic specialist reweighting control. |
+| `RT-1232` | SS-04 Pilot-1 `exc_max_run64` static history-fingerprint selector replay control. |
+| `RT-1233` | SS-04 shuffled disagreement-target router control. |
+
+Result filed 2026-08-25:
+`research/reports/new_avenues_2026/second_sweep/ss04_specialist_router.{md,json}`.
+`RT-1230` KILL: marginal_vs_clone `-0.000312`; dominant-cell repairs `0`,
+damage `0`, net `0`; majority-correct specialist-disagreement net `0`;
+near-split net `0`. Controls did not lose by the required `+0.000500` gap:
+`RT-1231` candidate-control gap `+0.000130`, `RT-1232` gap `+0.000243`, and
+`RT-1233` gap `-0.000002`. SS-04 failed the mandatory gates, no SS-04b is
+authorized, and the preregistered Second Sweep is exhausted.
