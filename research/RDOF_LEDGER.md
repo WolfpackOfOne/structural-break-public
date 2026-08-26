@@ -196,6 +196,21 @@ single-best killed arm (`+0.000317`). Consumed the four preregistered RT IDs,
 performed no hyperparameter sweep, made no lockbox/test/submission access, and
 stopped SS-01 with no SS-01b because the mandatory screen gates failed.
 
+Second Sweep SS-02 preregistered for execution on 2026-08-25 before scoring:
+
+| pilot | scored IDs | variants | fold screen | notes |
+|---|---|---:|---|---|
+| Dominant-cell residual ranker | `RT-1223`, `RT-1224` | 1 bounded residual-pair correction candidate + 1 shuffled residual-offset/weight control | fold 0 | Uses the incumbent 500 causal feature bank plus frozen RT600 specialist/seed-clone score state; no first-sweep killed sensor predictions; same-t residual pair loss includes 2x damage penalty and dominant-pair weighting. |
+
+SS-02 result filed 2026-08-25:
+`RT-1223` candidate marginal_vs_clone `-0.000290`; dominant-cell pair-flow
+repairs `330`, damage `438`, net `-108`; mature-vs-never net `-77`;
+mature-vs-prebreak net `-102`. `RT-1224` shuffled residual control
+marginal_vs_clone was `-0.000203`, so the candidate-control gap was
+`-0.000087`. Consumed the two preregistered RT IDs, performed no
+hyperparameter sweep, made no lockbox/test/submission access, and stopped
+SS-02 with no SS-02b because the mandatory screen gates failed.
+
 ---
 
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)

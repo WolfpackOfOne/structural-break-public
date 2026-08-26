@@ -1594,3 +1594,70 @@ lockbox rows; new OOF lockbox finite counts were `0` for `RT-1219` through
 
 Report:
 `research/reports/new_avenues_2026/second_sweep/ss01_repair_damage_arbiter.{md,json}`.
+
+---
+
+## RT-1223 / RT-1224 -- Second Sweep SS-02 dominant-cell residual ranker -- KILL (2026-08-25)
+
+**Hypothesis.** A bounded correction model trained directly against RT600
+residual same-t pair errors over the incumbent 500-feature bank can repair
+dominant-cell inversions without damaging already-correct RT600 rankings.
+
+**Variant.** Execution preregistered in
+`research/reports/new_avenues_2026/second_sweep/SS02_EXECUTION_PREREG.md` at
+`3b39954`, after SS-01 was killed. `RT-1223` is the candidate. `RT-1224` is
+the shuffled residual-offset/weight control. Inputs are the existing legal
+500-feature bank plus frozen RT600 specialist and seed-clone score state; no
+first-sweep killed sensor prediction is used.
+
+**Result.** Fold 0 integration:
+
+| arm | TS-AUC | marginal vs clone |
+|---|---:|---:|
+| RT600 | 0.638276 | |
+| RT600 + RT-401 seed clone | 0.638586 | |
+| RT600 + RT-1223 | 0.638297 | -0.000290 |
+| RT600 + RT-1224 | 0.638384 | -0.000203 |
+
+Candidate pair-flow:
+
+| split | repairs | damage | net | RT600-right damage rate |
+|---|---:|---:|---:|---:|
+| whole fold | 494 | 587 | -93 | 0.0142 |
+| dominant cell | 330 | 438 | -108 | 0.0128 |
+| mature-vs-never | 376 | 453 | -77 | 0.0130 |
+| mature-vs-prebreak | 328 | 430 | -102 | 0.0130 |
+
+The shuffled residual control had dominant-cell net `-105` and
+marginal_vs_clone `-0.000203`, so the real residual target did not separate
+from its shuffled control.
+
+**Binding gate.** KILL because the candidate missed the `+0.0015`
+marginal-vs-clone gate, missed the dominant-cell `+300` net-pair gate with
+`-108`, failed the never-break/pre-break pair-flow clause (`-77` and `-102`),
+and missed the shuffled-control gap (`-0.000087` observed versus `+0.000500`
+required).
+
+**What this falsifies.** After SS-01 had already closed first-sweep sensor
+arbitration, SS-02 falsifies this preregistered bounded residual-pair
+correction over the incumbent 500-column causal bank. The current causal
+feature representation did not provide a stable row-level correction signal for
+RT600's dominant same-t residual inversions under the fixed loss, damage
+penalty, correction magnitude, and training budget.
+
+**What this does not falsify.** It does not falsify negative-side null-state
+calibration or specialist-disagreement routing, which are the next distinct
+Second Sweep mechanisms. It also does not justify tuning the residual loss,
+damage penalty, correction cap, row budget, or feature subset.
+
+**Causality and status.** Preflight reproduced the RT600 sentinel exactly in
+the expected tolerance and reproduced the canonical dominant pair sample
+(`50540` pairs, `16193` RT600-wrong, `34347` RT600-right). The script loaded
+the 500 incumbent causal feature-bank columns, seven frozen specialist OOF
+scores, and `RT-401`; it loaded no first-sweep killed sensor IDs. New OOF
+lockbox finite counts were `0` for `RT-1223` and `RT-1224`. No
+lockbox/test/submission/production path was used. Final status:
+**FINAL SCREEN RESULT**.
+
+Report:
+`research/reports/new_avenues_2026/second_sweep/ss02_residual_ranker.{md,json}`.

@@ -516,3 +516,24 @@ retention `0.0000`; first-sweep candidate-union damage rejected `1.0000`.
 Controls did not lose: `RT-1220` marginal_vs_clone `+0.000314`, `RT-1221`
 `-0.000310`, and `RT-1222` `+0.000317`. SS-01 failed the preregistered
 mandatory gates and no SS-01b is authorized.
+
+Second Sweep SS-02 reserved prospectively on 2026-08-25 before any SS-02 score
+was produced. Program pre-registration:
+`research/reports/new_avenues_2026/SECOND_SWEEP_PREREG.md`. Execution
+pre-registration:
+`research/reports/new_avenues_2026/second_sweep/SS02_EXECUTION_PREREG.md`
+at `3b39954`.
+
+| ID | is |
+|---|---|
+| `RT-1223` | SS-02 bounded residual same-t pair correction over the incumbent 500-feature bank, fold-0 screen candidate. |
+| `RT-1224` | SS-02 shuffled residual-offset/weight control, fold-0 binding control. |
+
+Result filed 2026-08-25:
+`research/reports/new_avenues_2026/second_sweep/ss02_residual_ranker.{md,json}`.
+`RT-1223` KILL: marginal_vs_clone `-0.000290`; dominant-cell repairs `330`,
+damage `438`, net `-108`; mature-vs-never net `-77`; mature-vs-prebreak net
+`-102`; RT600-right dominant damage rate `0.0128`. The shuffled residual
+control `RT-1224` had marginal_vs_clone `-0.000203`, so the candidate-control
+gap was `-0.000087` instead of the required `+0.000500`. SS-02 failed the
+mandatory gates and no SS-02b is authorized.

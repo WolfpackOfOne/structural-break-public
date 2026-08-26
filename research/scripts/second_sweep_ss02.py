@@ -53,6 +53,7 @@ SEEDCLONE = "RT-401"
 EXECUTION_PREREG_SHA = "3b39954"
 
 FULL_MODULES = ["m00_core", "m01_seq", "m02_dist", "m03_dyn", "m04_resid", "m06_loc", "m07_bayes"]
+SCORE_STATE_FEATURE_COUNT = 25
 FORBIDDEN_TOKENS = (
     "tau",
     "cut",
@@ -673,8 +674,8 @@ def run_score() -> None:
             "confirmation."
         )
 
-    # Feature count for the ledger is the declared 500 bank plus 24 score-state covariates.
-    ledger_n_features = 524
+    # Feature count for the ledger is the declared 500 bank plus frozen score-state covariates.
+    ledger_n_features = len(names) + SCORE_STATE_FEATURE_COUNT
     result = {
         "generated": time.strftime("%Y-%m-%d %H:%M"),
         "branch": "research/new-avenues-pilots-2026",
@@ -701,7 +702,7 @@ def run_score() -> None:
         "feature_bank": {
             "modules": FULL_MODULES,
             "n_features": len(names),
-            "score_state_features": 24,
+            "score_state_features": SCORE_STATE_FEATURE_COUNT,
             "ledger_n_features": ledger_n_features,
             "forbidden_first_sweep_ids_loaded": [],
         },
