@@ -14,7 +14,40 @@ failures is a batch-versus-streaming float difference in a production module.
 If one silently starts passing, the most likely cause is that somebody changed
 what the streaming engine emits -- which changes RT-600's live predictions --
 and the second most likely is that a test stopped asserting anything.  Both need
-a human.
+a human.  That rule was applied, not waived: see below.
+
+2026-08-26 -- THE FIFTEEN WERE RESOLVED AND THE SET IS NOW EMPTY.
+--------------------------------------------------------------
+The alert fired.  All fifteen disappeared at once, a human investigated, and the
+cause was the third possibility the paragraph above does not list: the defect
+they pinned was found and repaired.  The rationale recorded against them was
+that repairing the streaming twin would change frozen production semantics.  It
+would not, because the streaming twin was never the defect -- three primitives
+underneath it were, and the batch path is the reference by construction because
+it wrote the feature cache RT-600 was trained on:
+
+  * ``math.lgamma`` disagrees between numba and CPython by up to 512 ULP, and
+    the BOCPD Student-t constant table was built independently on each side.
+    Now single-sourced from ``m07_bayes._bocpd_ct``   (b41da11)
+  * ``scipy.signal.lfilter`` contracts ``b0*x + z`` into an arm64 FMA, rounding
+    once where Python rounds twice.  Now matched by ``sbr.stream._fp.fma``
+  * a Python scalar ``x ** 2`` goes through libm ``pow`` where numpy squares by
+    multiplication.  Now matched                                     (03e4637)
+
+No test was removed, xfailed or loosened, no tolerance was relaxed and no
+expected output was edited to obtain green: the whole repair is in the shipped
+engine, and the batch path is bit-identical before and after, so no refit is
+implied.  Evidence is in ``engineering/reports/rt600_final_reliability/``
+(STREAM_PARITY_REPRO.md for the root cause, BUGFIX_IMPACT.json for the measured
+prediction impact) and the regeneration was authorised by the owner as an
+engineering-only release action.
+
+The previous fingerprint is preserved verbatim under ``ARCHIVE_DIR`` and is also
+summarised inside the new one under ``previous_fingerprint``, so the historical
+fact that these fifteen failed -- and why they were left failing -- is not lost.
+
+The gate below is UNCHANGED, and against an empty pinned set it is strictly
+stronger than it was: every failure is now a new failure.
 
 The gate REQUIRES the artifact environment (SBR_STORE / SBR_FEATURES /
 SBR_MODEL_DIR).  Without it, dozens of tests fail or skip for reasons that have
@@ -22,19 +55,65 @@ nothing to do with the code, and the fingerprint would be meaningless.
 """
 from __future__ import annotations
 
-import argparse, json, os, re, subprocess, sys, time
+import argparse, hashlib, json, os, re, subprocess, sys, time
 from pathlib import Path
 
 ROOT = os.environ.get(
     "SBR_ROOT", os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 FINGERPRINT = f"{ROOT}/research/known_failures.json"
 
+#: --generate copies the fingerprint it is about to replace in here, verbatim and
+#: under a content-addressed name, before writing the new one.  A regeneration
+#: must never be the only record that the previous failure set existed.
+ARCHIVE_DIR = f"{ROOT}/research/archive/known_failures"
+
 BASELINE_SHA = "9aaa9b0"
 BASELINE_BRANCH = "claude/rt600-baseline-submission"
 BASELINE_NOTE = ("the RT-600 submission baseline, PRE-WAVE-5. Running the same "
                  "four parity files there reproduces the identical 15 node ids.")
 
-#: why each family fails, and why it is not repaired
+#: How each family was resolved, keyed by the class name it was pinned under.
+#: Kept after the set went empty because deleting it would delete the record of
+#: what the fifteen were.
+RESOLVED = {
+    "m07_bayes_stream_parity": {
+        "resolved_by": "b41da11",
+        "resolved_how": (
+            "the BOCPD Student-t log-normalising constant table is now built "
+            "once, by m07_bayes._bocpd_ct, and imported by _BocpdStream instead "
+            "of recomputed. numba's math.lgamma and CPython's disagree by up to "
+            "512 ULP on this grid, so the two sides had been sitting on "
+            "different constants since the streaming port was written."),
+    },
+    "m06_loc_stream_parity": {
+        "resolved_by": "03e4637",
+        "resolved_how": (
+            "scalar-square parity: a Python `x ** 2` goes through libm pow, "
+            "numpy's array `** 2` is a squaring multiply, and they differ on "
+            "688 of 500,000 doubles. m06's rolling variance is a cumsum "
+            "difference that cancels to ~1e-14, so one ULP moved the emitted "
+            "float32 by 15%."),
+    },
+    "m01_seq_stream_parity": {
+        "resolved_by": "03e4637",
+        "resolved_how": (
+            "arm64 fused-multiply-add parity: scipy.signal.lfilter contracts "
+            "b0*x + z into a single-rounding FMA, which sbr.stream._fp.fma now "
+            "reproduces exactly (Dekker two-product/two-sum, since math.fma is "
+            "3.13+ and the frozen environment is 3.11.6)."),
+    },
+    "engine_parity_real": {
+        "resolved_by": "b41da11 and 03e4637",
+        "resolved_how": (
+            "no independent defect: this is the assembled-engine view of the "
+            "three above, and went green when they did."),
+    },
+}
+
+#: why each family failed, and the rationale under which it was left unrepaired.
+#: PRESERVED VERBATIM. The `why_not_fixed` text is the position that was
+#: overturned on 2026-08-26 -- see RESOLVED above and the module docstring --
+#: and it is kept unedited so the overturned reasoning stays readable.
 CLASSES = {
     "m07_bayes_stream_parity": {
         "modules": ["m07_bayes"],
@@ -147,8 +226,37 @@ def run_suite() -> tuple[list[str], dict]:
     return sorted(a_fail | b_fail), counts
 
 
-def generate():
+def archive_previous() -> dict:
+    """Copy the fingerprint about to be replaced into ARCHIVE_DIR, verbatim.
+
+    Returns a summary of what was archived, for embedding in the new document,
+    or ``None`` when there is no previous fingerprint to preserve.
+    """
+    if not os.path.exists(FINGERPRINT):
+        return None
+    raw = open(FINGERPRINT, "rb").read()
+    sha = hashlib.sha256(raw).hexdigest()
+    old = json.loads(raw)
+    stamp = (old.get("generated_at") or "unknown").split(" ")[0]
+    os.makedirs(ARCHIVE_DIR, exist_ok=True)
+    name = f"known_failures_{stamp}_{sha[:12]}.json"
+    with open(os.path.join(ARCHIVE_DIR, name), "wb") as fh:
+        fh.write(raw)
+    return {
+        "archived_to": f"research/archive/known_failures/{name}",
+        "sha256": sha,
+        "generated_at": old.get("generated_at"),
+        "generated_on_sha": old.get("generated_on_sha"),
+        "counts": old.get("counts"),
+        "n_known_failures": len(old.get("known_failures") or []),
+        "known_failures": old.get("known_failures"),
+        "policy": old.get("policy"),
+    }
+
+
+def generate(reason=None, authorised_by=None):
     envs = required_env()
+    previous = archive_previous()
     failed, counts = run_suite()
     unclassified = [n for n in failed if classify(n) == "UNCLASSIFIED"]
     doc = {
@@ -172,6 +280,15 @@ def generate():
         },
         "counts": counts,
         "classes": CLASSES,
+        "resolved": RESOLVED,
+        "previous_fingerprint": previous,
+        "regeneration": {
+            "reason": reason,
+            "authorised_by": authorised_by,
+            "previous_sha256": (previous or {}).get("sha256"),
+            "previous_n_known_failures": (previous or {}).get("n_known_failures"),
+            "new_n_known_failures": len(failed),
+        } if (reason or authorised_by) else None,
         "known_failures": [{"node_id": n, "class": classify(n)} for n in failed],
         "policy": (
             "DO NOT modify production feature or streaming semantics to make "
@@ -182,6 +299,10 @@ def generate():
         doc["WARNING_unclassified"] = unclassified
     json.dump(doc, open(FINGERPRINT, "w"), indent=1)
     print(f"wrote {FINGERPRINT}: {len(failed)} known failures, counts {counts}")
+    if previous:
+        print(f"  previous fingerprint sha256 {previous['sha256']}")
+        print(f"  archived verbatim to {previous['archived_to']} "
+              f"({previous['n_known_failures']} pinned failures)")
     for n in failed:
         print(f"  [{classify(n)}] {n}")
     return 1 if unclassified else 0
@@ -221,5 +342,9 @@ def gate():
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--generate", action="store_true")
+    ap.add_argument("--reason", default=None,
+                    help="why the fingerprint is being regenerated; recorded in it")
+    ap.add_argument("--authorised-by", default=None,
+                    help="who authorised the regeneration; recorded in it")
     a = ap.parse_args()
-    raise SystemExit(generate() if a.generate else gate())
+    raise SystemExit(generate(a.reason, a.authorised_by) if a.generate else gate())

@@ -1,7 +1,7 @@
 {
  "schema": "sbr.known_failures/1",
- "generated_at": "2026-08-22 19:43:40",
- "generated_on_sha": "16d6d50b5eb42cbab41b1f7343aa2ff97fb25d1e",
+ "generated_at": "2026-08-26 14:26:20",
+ "generated_on_sha": "a18ed733d74836509e734ba88cd1a7b78646db82",
  "baseline_sha": "9aaa9b0",
  "baseline_branch": "claude/rt600-baseline-submission",
  "baseline_note": "the RT-600 submission baseline, PRE-WAVE-5. Running the same four parity files there reproduces the identical 15 node ids.",
@@ -12,22 +12,22 @@
  },
  "execution": {
   "two_processes": true,
-  "reason": "torch and LightGBM each ship libomp.dylib and loading both into one process segfaults on macOS/arm64 -- reproduced inside lightgbm/basic.py. Process 1 runs the suite excluding tests/test_neural_causality.py; process 2 runs only that file. Results are unioned.",
+  "reason": "torch and LightGBM each ship libomp.dylib and loading both into one process segfaults on macOS/arm64 -- reproduced inside lightgbm/basic.py. Process 1 runs the suite excluding tests/test_neural_causality.py, tests/test_crf01_causality.py, tests/test_crf02_causality.py; process 2 runs only those files. Results are unioned.",
   "do_not": "do NOT set KMP_DUPLICATE_LIB_OK to run them together -- that trades a loud crash for silent numerical corruption"
  },
  "counts": {
-  "failed": 15,
-  "passed": 650,
-  "skipped": 1,
+  "failed": 0,
+  "passed": 795,
+  "skipped": 5,
   "processes": {
    "non_torch": {
-    "failed": 15,
-    "passed": 632,
-    "skipped": 1
+    "failed": 0,
+    "passed": 726,
+    "skipped": 5
    },
    "torch_only": {
     "failed": 0,
-    "passed": 18,
+    "passed": 69,
     "skipped": 0
    }
   }
@@ -62,67 +62,118 @@
    "why_not_fixed": "same root cause; same reason."
   }
  },
- "known_failures": [
-  {
-   "node_id": "tests/test_stream_engine_parity.py::test_engine_parity_real[0]",
-   "class": "engine_parity_real"
+ "resolved": {
+  "m07_bayes_stream_parity": {
+   "resolved_by": "b41da11",
+   "resolved_how": "the BOCPD Student-t log-normalising constant table is now built once, by m07_bayes._bocpd_ct, and imported by _BocpdStream instead of recomputed. numba's math.lgamma and CPython's disagree by up to 512 ULP on this grid, so the two sides had been sitting on different constants since the streaming port was written."
   },
-  {
-   "node_id": "tests/test_stream_engine_parity.py::test_engine_parity_real[137]",
-   "class": "engine_parity_real"
+  "m06_loc_stream_parity": {
+   "resolved_by": "03e4637",
+   "resolved_how": "scalar-square parity: a Python `x ** 2` goes through libm pow, numpy's array `** 2` is a squaring multiply, and they differ on 688 of 500,000 doubles. m06's rolling variance is a cumsum difference that cancels to ~1e-14, so one ULP moved the emitted float32 by 15%."
   },
-  {
-   "node_id": "tests/test_stream_engine_parity.py::test_engine_parity_real[4242]",
-   "class": "engine_parity_real"
+  "m01_seq_stream_parity": {
+   "resolved_by": "03e4637",
+   "resolved_how": "arm64 fused-multiply-add parity: scipy.signal.lfilter contracts b0*x + z into a single-rounding FMA, which sbr.stream._fp.fma now reproduces exactly (Dekker two-product/two-sum, since math.fma is 3.13+ and the frozen environment is 3.11.6)."
   },
-  {
-   "node_id": "tests/test_stream_engine_parity.py::test_engine_parity_real[7777]",
-   "class": "engine_parity_real"
-  },
-  {
-   "node_id": "tests/test_stream_parity_m01_seq.py::test_bitwise_parity_synthetic[39]",
-   "class": "m01_seq_stream_parity"
-  },
-  {
-   "node_id": "tests/test_stream_parity_m06_loc.py::test_real_store_bitwise",
-   "class": "m06_loc_stream_parity"
-  },
-  {
-   "node_id": "tests/test_stream_parity_m06_loc.py::test_synthetic_bitwise[22]",
-   "class": "m06_loc_stream_parity"
-  },
-  {
-   "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[2546]",
-   "class": "m07_bayes_stream_parity"
-  },
-  {
-   "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[2649]",
-   "class": "m07_bayes_stream_parity"
-  },
-  {
-   "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[319]",
-   "class": "m07_bayes_stream_parity"
-  },
-  {
-   "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[4313]",
-   "class": "m07_bayes_stream_parity"
-  },
-  {
-   "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[4330]",
-   "class": "m07_bayes_stream_parity"
-  },
-  {
-   "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[7885]",
-   "class": "m07_bayes_stream_parity"
-  },
-  {
-   "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_synthetic_bitwise[t3_2]",
-   "class": "m07_bayes_stream_parity"
-  },
-  {
-   "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_synthetic_bitwise[var_shrink]",
-   "class": "m07_bayes_stream_parity"
+  "engine_parity_real": {
+   "resolved_by": "b41da11 and 03e4637",
+   "resolved_how": "no independent defect: this is the assembled-engine view of the three above, and went green when they did."
   }
- ],
+ },
+ "previous_fingerprint": {
+  "archived_to": "research/archive/known_failures/known_failures_2026-08-22_0bd576da7bb7.json",
+  "sha256": "0bd576da7bb7dadb0e7ab10f29aa5de822838de4e1d014c82aabbc237f127a73",
+  "generated_at": "2026-08-22 19:43:40",
+  "generated_on_sha": "16d6d50b5eb42cbab41b1f7343aa2ff97fb25d1e",
+  "counts": {
+   "failed": 15,
+   "passed": 650,
+   "skipped": 1,
+   "processes": {
+    "non_torch": {
+     "failed": 15,
+     "passed": 632,
+     "skipped": 1
+    },
+    "torch_only": {
+     "failed": 0,
+     "passed": 18,
+     "skipped": 0
+    }
+   }
+  },
+  "n_known_failures": 15,
+  "known_failures": [
+   {
+    "node_id": "tests/test_stream_engine_parity.py::test_engine_parity_real[0]",
+    "class": "engine_parity_real"
+   },
+   {
+    "node_id": "tests/test_stream_engine_parity.py::test_engine_parity_real[137]",
+    "class": "engine_parity_real"
+   },
+   {
+    "node_id": "tests/test_stream_engine_parity.py::test_engine_parity_real[4242]",
+    "class": "engine_parity_real"
+   },
+   {
+    "node_id": "tests/test_stream_engine_parity.py::test_engine_parity_real[7777]",
+    "class": "engine_parity_real"
+   },
+   {
+    "node_id": "tests/test_stream_parity_m01_seq.py::test_bitwise_parity_synthetic[39]",
+    "class": "m01_seq_stream_parity"
+   },
+   {
+    "node_id": "tests/test_stream_parity_m06_loc.py::test_real_store_bitwise",
+    "class": "m06_loc_stream_parity"
+   },
+   {
+    "node_id": "tests/test_stream_parity_m06_loc.py::test_synthetic_bitwise[22]",
+    "class": "m06_loc_stream_parity"
+   },
+   {
+    "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[2546]",
+    "class": "m07_bayes_stream_parity"
+   },
+   {
+    "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[2649]",
+    "class": "m07_bayes_stream_parity"
+   },
+   {
+    "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[319]",
+    "class": "m07_bayes_stream_parity"
+   },
+   {
+    "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[4313]",
+    "class": "m07_bayes_stream_parity"
+   },
+   {
+    "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[4330]",
+    "class": "m07_bayes_stream_parity"
+   },
+   {
+    "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[7885]",
+    "class": "m07_bayes_stream_parity"
+   },
+   {
+    "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_synthetic_bitwise[t3_2]",
+    "class": "m07_bayes_stream_parity"
+   },
+   {
+    "node_id": "tests/test_stream_parity_m07_bayes.py::test_parity_synthetic_bitwise[var_shrink]",
+    "class": "m07_bayes_stream_parity"
+   }
+  ],
+  "policy": "DO NOT modify production feature or streaming semantics to make these green. Any NEW failure, any DISAPPEARANCE, and any RENAME is a gate failure requiring a human decision."
+ },
+ "regeneration": {
+  "reason": "the fifteen pinned failures were resolved by verified engineering corrections on engineering/rt600-final-reliability-2026 (b41da11 lgamma single-sourcing, 03e4637 arm64 FMA and scalar-square parity); no test was removed, xfailed or loosened and no tolerance or expected output was changed",
+  "authorised_by": "repository owner, 2026-08-26, engineering-only release authorisation (release action 1 of 2)",
+  "previous_sha256": "0bd576da7bb7dadb0e7ab10f29aa5de822838de4e1d014c82aabbc237f127a73",
+  "previous_n_known_failures": 15,
+  "new_n_known_failures": 0
+ },
+ "known_failures": [],
  "policy": "DO NOT modify production feature or streaming semantics to make these green. Any NEW failure, any DISAPPEARANCE, and any RENAME is a gate failure requiring a human decision."
 }
