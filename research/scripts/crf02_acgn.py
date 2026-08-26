@@ -28,7 +28,7 @@ the ranking head, which PROTOCOL.md permits.
 """
 from __future__ import annotations
 
-import argparse, json, os, sys, time
+import argparse, hashlib, json, os, sys, time
 
 import numpy as np
 
@@ -71,9 +71,15 @@ N_FEAT = 10
 CLIPS = {"pit": (0.005, 0.995), "neglog": (-5.0, 20.0), "ad": (-5.0, 20.0),
          "surp": (-10.0, 10.0), "lshift": (0.0, 20.0)}
 
-ARMS = {"candidate":  dict(exp_id="RT-1237", null="learned", derange=False, feats="all"),
-        "fixed_null": dict(exp_id="RT-1238", null="fixed",   derange=False, feats="all"),
-        "deranged":   dict(exp_id="RT-1239", null="learned", derange=True,  feats="all"),
+#: RT-1237/RT-1238/RT-1239 are VOID and RETIRED -- their fold-0 run silently
+#: loaded a 24-series, 1-epoch, HWIN=128 null written by a unit test instead of
+#: the preregistered one.  The ids are not recycled.  The corrected run, which
+#: executes CRF02_EXECUTION_PREREG.md unchanged, uses RT-1240/RT-1241/RT-1242.
+VOID_IDS = ("RT-1237", "RT-1238", "RT-1239")
+
+ARMS = {"candidate":  dict(exp_id="RT-1240", null="learned", derange=False, feats="all"),
+        "fixed_null": dict(exp_id="RT-1241", null="fixed",   derange=False, feats="all"),
+        "deranged":   dict(exp_id="RT-1242", null="learned", derange=True,  feats="all"),
         "shared8_diag": dict(exp_id=None,    null="learned", derange=False, feats="shared8")}
 
 CACHE = os.environ.get("CRF02_CACHE", f"{ROOT}/cache/crf02")
@@ -287,6 +293,27 @@ def _null_ckpt(fold):
     return f"{CACHE}/null_fold{fold}.pt"
 
 
+def null_fingerprint(fold, seed, fit_series):
+    """Everything that defines WHICH null this is.
+
+    A checkpoint is only reusable if it was produced by the same frozen
+    configuration on the same fit set.  Checking the state sha alone proves
+    INTEGRITY, not PROVENANCE -- it happily accepts a correctly-stored null that
+    was fitted on the wrong series, with the wrong epoch count, over the wrong
+    history window.  That is not hypothetical: a 24-series, 1-epoch, HWIN=128
+    null written by a unit test was silently loaded by a real fold-0 run, and it
+    is why RT-1237/RT-1238/RT-1239 were voided.
+    """
+    ids = np.asarray(sorted(int(x) for x in fit_series), dtype=np.int64)
+    return {
+        "fold": int(fold), "seed": int(seed), "pretrain_epochs": int(PRETRAIN_EPOCHS),
+        "hwin": int(HWIN), "batch_series": int(BATCH_SERIES), "hidden": int(HIDDEN),
+        "bottleneck": int(BOTTLENECK), "n_levels": int(len(LEVELS)),
+        "lr": float(LR), "wd": float(WD), "n_fit_series": int(len(ids)),
+        "fit_series_sha256": hashlib.sha256(ids.tobytes()).hexdigest(),
+    }
+
+
 def pretrain_null(fold, d, nulls, log, seed=SEED):
     """One outer fold's generative null.  TRAINING-FOLD HISTORIES ONLY.
 
@@ -308,9 +335,18 @@ def pretrain_null(fold, d, nulls, log, seed=SEED):
 
     torch.manual_seed(seed * 1000 + fold)
     net = ACGN.build(seed * 1000 + fold, device)
+    fp = null_fingerprint(fold, seed, tr)
     ck = _null_ckpt(fold)
     if os.path.exists(ck):
         blob = torch.load(ck, weights_only=False)
+        got = blob["meta"].get("fingerprint")
+        if got != fp:
+            # LOUD, never silent: a checkpoint that does not match the frozen
+            # configuration is evidence something is wrong, not something to
+            # route around.
+            raise SystemExit(
+                f"CHECKPOINT PROVENANCE MISMATCH at {ck}\n  expected {fp}\n"
+                f"  found    {got}\nRefusing to reuse it. Delete it and re-run.")
         net.load_state_dict(blob["state_dict"])
         net.eval()
         for prm in net.parameters():
@@ -319,7 +355,7 @@ def pretrain_null(fold, d, nulls, log, seed=SEED):
         assert sha_state_dict(net.state_dict()) == blob["meta"]["state_sha256"], \
             "null checkpoint does not match its recorded state sha"
         log(f"  null fold {fold} loaded from checkpoint, state "
-            f"{blob['meta']['state_sha256'][:12]}")
+            f"{blob['meta']['state_sha256'][:12]}, fingerprint verified")
         return net, blob["meta"]
     opt = torch.optim.AdamW(net.parameters(), lr=LR, weight_decay=WD)
     hlen = np.array([len(nulls[s].hwin) for s in range(d.st.n_series)], dtype=np.int64)
@@ -363,7 +399,8 @@ def pretrain_null(fold, d, nulls, log, seed=SEED):
     meta = {"fit_series": int(len(tr)), "val_series": int(len(va)),
             "pinball_history": hist, "state_sha256": sha_state_dict(net.state_dict()),
             "n_parameters": int(sum(p.numel() for p in net.parameters())),
-            "pretrain_runtime_s": round(time.time() - t0, 1)}
+            "pretrain_runtime_s": round(time.time() - t0, 1),
+            "fingerprint": fp}
     os.makedirs(CACHE, exist_ok=True)
     torch.save({"state_dict": net.state_dict(), "meta": meta}, _null_ckpt(fold))
     return net, meta

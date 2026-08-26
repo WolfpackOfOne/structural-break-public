@@ -68,6 +68,19 @@ def data():
     return Data()
 
 
+@pytest.fixture(autouse=True)
+def _isolate_cache(tmp_path, monkeypatch):
+    """No test may write into the production cache.
+
+    A unit test's 24-series, 1-epoch, HWIN=128 null was written to
+    cache/crf02/null_fold0.pt and silently loaded by a real fold-0 run, which
+    is why RT-1237/RT-1238/RT-1239 were voided.  Every test now gets its own
+    throwaway cache directory, and the checkpoint's own provenance fingerprint
+    (test_ckpt_*) is the second, load-bearing guard.
+    """
+    monkeypatch.setattr(K2, "CACHE", str(tmp_path / "crf02"))
+
+
 @pytest.fixture(scope="module")
 def net64():
     dev = set_determinism(0)
@@ -498,6 +511,50 @@ def test_c10_derangement_is_a_true_within_fold_derangement(data):
     assert K2.DERANGE_SEED != K2.PAIR_SEED
 
 
+# ================================== the checkpoint provenance guard (post-mortem)
+def test_ckpt_fingerprint_captures_the_frozen_configuration(data):
+    tr = np.flatnonzero(np.isin(data.series_fold, [1, 2, 3, 4]))
+    fp = K2.null_fingerprint(0, 0, tr)
+    for k in ("fold", "seed", "pretrain_epochs", "hwin", "batch_series", "hidden",
+              "bottleneck", "n_levels", "lr", "wd", "n_fit_series", "fit_series_sha256"):
+        assert k in fp, f"fingerprint omits {k}"
+    assert fp["n_fit_series"] == len(tr)
+    assert fp["pretrain_epochs"] == K2.PRETRAIN_EPOCHS and fp["hwin"] == K2.HWIN
+    # a different fit SET changes the fingerprint even at the same size
+    other = np.flatnonzero(np.isin(data.series_fold, [0, 2, 3, 4]))
+    assert K2.null_fingerprint(0, 0, other)["fit_series_sha256"] != fp["fit_series_sha256"]
+    # so does a different epoch count, window, fold or seed
+    assert K2.null_fingerprint(1, 0, tr) != fp
+    assert K2.null_fingerprint(0, 1, tr) != fp
+
+
+def test_ckpt_provenance_mismatch_is_refused_loudly(data, monkeypatch, tmp_path):
+    """The exact defect that voided RT-1237/8/9: a checkpoint fitted on the wrong
+    series with the wrong epoch count must be REFUSED, not silently reused.
+
+    The state-sha check alone cannot catch it -- a toy null is perfectly
+    self-consistent.  Only the fingerprint can.
+    """
+    monkeypatch.setattr(K2, "CACHE", str(tmp_path))
+    monkeypatch.setattr(K2, "PRETRAIN_EPOCHS", 1)
+    monkeypatch.setattr(K2, "HWIN", 128)
+    sf0 = data.series_fold
+    toy_tr = np.concatenate([np.flatnonzero(sf0 == g)[:6] for g in (1, 2, 3, 4)])
+    sf = np.full_like(sf0, 9)
+    sf[toy_tr] = sf0[toy_tr]
+    sf[np.flatnonzero(sf0 == 0)[:8]] = 0
+    monkeypatch.setattr(data, "series_fold", sf)
+    nulls = [K2.SeriesNull(np.zeros(300))] * data.st.n_series
+    for s_ in toy_tr:
+        nulls[int(s_)] = K2.SeriesNull(data.st.hist(int(s_)))
+    K2.pretrain_null(0, data, nulls, log=lambda m: None)          # writes the toy ckpt
+    assert os.path.exists(K2._null_ckpt(0))
+
+    monkeypatch.setattr(data, "series_fold", sf0)                 # now the REAL fit set
+    with pytest.raises(SystemExit, match="CHECKPOINT PROVENANCE MISMATCH"):
+        K2.pretrain_null(0, data, nulls, log=lambda m: None)
+
+
 # ============================================ the shared-8 diagnostic is declared
 def test_shared8_diagnostic_consumes_no_id_and_drops_only_lshift():
     assert K2.ARMS["shared8_diag"]["exp_id"] is None, "the diagnostic must consume no RT id"
@@ -507,8 +564,11 @@ def test_shared8_diagnostic_consumes_no_id_and_drops_only_lshift():
     assert len(names) == 8
     for a in ("candidate", "fixed_null", "deranged"):
         assert K2.ARMS[a]["feats"] == "all"
-    assert K2.ARMS["candidate"]["exp_id"] == "RT-1237"
-    assert K2.ARMS["fixed_null"]["exp_id"] == "RT-1238"
-    assert K2.ARMS["deranged"]["exp_id"] == "RT-1239"
-    assert "RT-1236" not in {v["exp_id"] for v in K2.ARMS.values()}, \
+    assert K2.ARMS["candidate"]["exp_id"] == "RT-1240"
+    assert K2.ARMS["fixed_null"]["exp_id"] == "RT-1241"
+    assert K2.ARMS["deranged"]["exp_id"] == "RT-1242"
+    live = {v["exp_id"] for v in K2.ARMS.values()}
+    assert "RT-1236" not in live, \
         "RT-1236 is reserved to CRF-01's unrun C2 arm and must not be recycled"
+    for v in K2.VOID_IDS:
+        assert v not in live, f"{v} is VOID and retired; it must not be recycled"

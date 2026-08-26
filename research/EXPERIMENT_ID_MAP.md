@@ -724,3 +724,73 @@ TS-AUC, not an ensemble score; the `notes` column says so on all three rows.
 `marginal_vs_clone ≥ +0.0015` from CRF-01 or CRF-02 plus a passing mandatory
 isolation control. Both primaries are KILL and neither has a marginal. No further
 CRF id is allocated. `RT-1236` remains reserved and unconsumed.
+
+### `RT-1237` / `RT-1238` / `RT-1239` — **VOID**, and not reusable
+
+**Defect found 2026-08-26, immediately after the CRF-02 result was filed and
+pushed at `9a5ecc0`, during routine compute accounting for `CRF_FINAL.md`.**
+
+The reported CRF-02 fold-0 run did **not** train the preregistered generative
+null. It silently **loaded a checkpoint written by a unit test** —
+`fit_series = 24`, `pretrain_epochs = 1`, `HWIN = 128`, pinball `2.1786`, state
+`d70f793fe464…` — instead of the preregistered 6,383-series, 10-epoch,
+`HWIN = 1024` null. The tell was `pretrain_runtime_s = 0.2` against the 1,284.6 s
+the real pretraining had taken on the earlier attempt.
+
+**Cause.** A null checkpoint was added at `89149d5` so a downstream failure would
+not cost a refit. `tests/test_crf02_causality.py` exercises the **real**
+`pretrain_null` (that is the point of gates P3 and P6b) and `CACHE` resolved to the
+production `cache/crf02/`, so the test's toy null was written there and the next
+real run loaded it. The load-time assertion compared the checkpoint's `state_sha256`
+against its own recorded value — which proves **integrity, not provenance**, and a
+toy null is perfectly self-consistent.
+
+**What is and is not affected.**
+
+* `RT-1237` (candidate, learned null) — **VOID.** Produced by the toy null.
+* `RT-1239` (deranged `h_i`) — **VOID.** Same toy null.
+* `RT-1238` (fixed AR(5)+ECDF null) — **structurally unaffected**: its code path
+  never touches the neural null. It is voided anyway, because an arm's whole
+  purpose here is the *comparison*, and a control retained from a voided
+  comparison invites exactly the confusion this file exists to prevent. It is
+  re-run and is expected to reproduce bitwise, which is itself a check.
+* **CRF-01 (`RT-1234`/`RT-1235`) is unaffected and stands.** Verified directly: its
+  emitted metadata records `n_train_series = 6383`, `n_val_series = 1617`, 20
+  epochs, 906.6 s / 884.2 s. `crf01_nncsr.py` writes no checkpoint, and its tests
+  never call `emit` or `build_channels`, so nothing in `cache/crf01/` was
+  test-written.
+
+**The three ids are retired.** They are not reused, reassigned or recycled, per the
+`RT-900` precedent. Their `research/RESULTS.csv` rows are **left exactly as
+written** — the ledger is append-only and the record is the record — and they must
+never appear in a comparison table, an ensemble, a promotion decision, feature
+selection, production or a submission. `research/oof/RT-123{7,8,9}.npy` are the toy
+null's output and are equally void.
+
+**Two fixes, both asserted in code.**
+
+1. A null checkpoint now carries a **provenance fingerprint** — fold, seed,
+   `PRETRAIN_EPOCHS`, `HWIN`, `BATCH_SERIES`, `HIDDEN`, `BOTTLENECK`, `n_levels`,
+   `lr`, `wd`, `n_fit_series` and the **sha256 of the sorted fit-series ids** — and a
+   mismatch raises `CHECKPOINT PROVENANCE MISMATCH` and **stops the run**. It is
+   loud rather than a silent fall-through to retraining, because a mismatch is
+   evidence that something is wrong.
+2. Every test now gets a throwaway `CACHE` via an autouse fixture, so no test can
+   write into the production cache at all.
+
+`test_ckpt_provenance_mismatch_is_refused_loudly` reproduces the exact defect —
+writes a 24-series 1-epoch checkpoint, then asks for the real fit set — and
+requires the refusal. **27 gates now pass.**
+
+### CRF-02 corrected allocation
+
+| ID | is |
+|---|---|
+| `RT-1240` | CRF-02 candidate, **corrected run** — the learned amortized conditional generative null, executing `CRF02_EXECUTION_PREREG.md` @ `9a3d3c7` **unchanged**. |
+| `RT-1241` | CRF-02 C1 mandatory control, corrected run — fixed AR(5) + history residual ECDF null. |
+| `RT-1242` | CRF-02 C2 mandatory control, corrected run — deranged `h_i`. |
+
+**No design changed.** The execution preregistration is the one frozen at `9a3d3c7`,
+before any CRF-02 number existed; the defect was that the run did not execute it.
+The corrected run does. Verified unused before allocation on every ref, in every
+tracked file, and in every reachable commit.

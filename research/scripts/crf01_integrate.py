@@ -54,7 +54,8 @@ EXECUTION_PREREG_SHA = "afba958"
 ARMS = {"candidate": "RT-1234", "bce_control": "RT-1235", "shuffle_ctrl": "RT-1236",
         # CRF-02 arms, registered here because integration is shared and must stay
         # in the no-torch process.  "shared8_diag" consumes no RT id (prereg 11.1).
-        "acgn": "RT-1237", "fixed_null": "RT-1238", "deranged": "RT-1239",
+        # RT-1237/8/9 are VOID and retired; the corrected CRF-02 run uses 1240-1242
+        "acgn": "RT-1240", "fixed_null": "RT-1241", "deranged": "RT-1242",
         "shared8_diag": "shared8_diag"}
 
 # --- frozen gates, CRF01_EXECUTION_PREREG sections 7 and 13 ------------------
