@@ -223,3 +223,72 @@ def test_infer_is_deterministic_and_order_independent():
     order = [3, 0, 4, 1, 2]
     c = run_infer(infer, [series[i] for i in order], MODEL_DIR)
     assert all(np.array_equal(a[i], c[k]) for k, i in enumerate(order))
+
+
+# --------------------------------------------------------------- provenance
+# Added on engineering/rt600-final-reliability-2026 after applying the CRF-02
+# void-run lesson to the production artifact: a valid checksum proves
+# INTEGRITY, never PROVENANCE.  See
+# engineering/reports/rt600_final_reliability/RT600_DEPLOYMENT_READINESS.md.
+@needs_model
+def test_frozen_model_passes_its_own_provenance_gate():
+    from sbr.production.model import ProductionModel
+    ProductionModel.load(MODEL_DIR)          # must not raise
+
+
+@needs_model
+@pytest.mark.parametrize("field,value", [
+    (("trained_on", "n_series"), 24),            # the CRF-02 failure mode exactly
+    (("trained_on", "n_series"), 8000),          # a dev-fold model, not the final fit
+    (("trained_on", "partition"), "folds_dev"),  # the wrong partition
+    (("folds_sha256",), "0" * 64),               # a different fold assignment
+    (("calibration", "kind"), "logit_mean"),     # a rejected blend
+    (("calibration", "time_coord"), "log_t"),    # the pre-W4-E3 coordinate
+])
+def test_model_with_wrong_provenance_is_refused(tmp_path, field, value):
+    """The feature manifest still matches -- only the fit population is wrong."""
+    import shutil
+
+    from sbr.production.model import ProductionModel
+    shutil.copytree(MODEL_DIR, tmp_path / "m")
+    p = tmp_path / "m" / "manifest.json"
+    man = json.load(open(p))
+    node = man
+    for k in field[:-1]:
+        node = node[k]
+    node[field[-1]] = value
+    json.dump(man, open(p, "w"))
+
+    with pytest.raises(RuntimeError, match="MODEL PROVENANCE MISMATCH"):
+        ProductionModel.load(str(tmp_path / "m"))
+
+
+@needs_model
+def test_provenance_gate_has_a_documented_escape_hatch(tmp_path, monkeypatch):
+    """Research must be able to load a different model; production must not."""
+    import shutil
+
+    from sbr.production.model import ProductionModel
+    shutil.copytree(MODEL_DIR, tmp_path / "m")
+    p = tmp_path / "m" / "manifest.json"
+    man = json.load(open(p))
+    man["trained_on"]["n_series"] = 24
+    json.dump(man, open(p, "w"))
+
+    monkeypatch.setenv("SBR_ALLOW_UNPINNED_MODEL", "1")
+    ProductionModel.load(str(tmp_path / "m"))    # allowed, explicitly
+
+
+@needs_model
+def test_expected_provenance_matches_the_reproducibility_manifest():
+    """The pin must agree with the frozen record, not drift from it."""
+    from sbr.production.model import ProductionModel
+    rec = json.load(open(os.path.join(
+        _REPO, "research", "FINAL_REPRODUCIBILITY_MANIFEST.json")))
+    exp = ProductionModel.EXPECTED_PROVENANCE
+    assert exp["n_series"] == rec["training"]["n_series"]
+    assert exp["partition"] == rec["training"]["partition"]
+    assert exp["folds_sha256"] == rec["hashes"]["folds_final10k_sha256"]
+    assert exp["n_boosters"] == len(rec["training"]["streams"])
+    assert exp["calibration_kind"] == rec["calibration"]["kind"]
+    assert exp["calibration_time_coord"] == rec["calibration"]["time_coord"]

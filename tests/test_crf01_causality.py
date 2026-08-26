@@ -62,6 +62,21 @@ def spread(store):
     return [(store.hist(int(i)), store.online(int(i)), int(i)) for i in pick]
 
 
+@pytest.fixture(autouse=True)
+def _isolate_cache(tmp_path, monkeypatch):
+    """No test may write into the shared CRF-01 cache.
+
+    Mirrors the guard ``tests/test_crf02_causality.py`` gained after a unit
+    test's 24-series, 1-epoch null was written to ``cache/crf02/null_fold0.pt``
+    and silently loaded by a real fold-0 run, voiding RT-1237/1238/1239.  The
+    CRF-01 tests build their own inputs today and never reach
+    ``build_channels``/``emit``, so this is defence in depth rather than a fix
+    for a live leak -- but ``K.CACHE`` is a module global and the next test that
+    calls either of those would land in ``cache/crf01/`` for real.
+    """
+    monkeypatch.setattr(K, "CACHE", str(tmp_path / "crf01"))
+
+
 @pytest.fixture(scope="module")
 def data():
     from sbr.pipeline import Data

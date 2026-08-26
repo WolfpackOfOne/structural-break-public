@@ -96,7 +96,19 @@ def required_env() -> dict:
 #: The suite is therefore run in TWO processes and the results unioned. This is
 #: an environment hazard, not a test failure, and papering over it with
 #: KMP_DUPLICATE_LIB_OK would trade a loud crash for silent corruption.
-TORCH_TESTS = "tests/test_neural_causality.py"
+#: EVERY test file that imports torch, directly or through a helper. This list
+#: was "tests/test_neural_causality.py" alone until the CRF program added
+#: test_crf01_causality.py and test_crf02_causality.py, which import torch via
+#: wave6_neural_lib / crf01_nncsr / crf02_acgn. Leaving them in process 1 put
+#: torch and LightGBM back in one process and the gate SEGFAULTED inside
+#: lightgbm/basic.py rather than reporting -- i.e. the split silently stopped
+#: doing its job. Anything added here must import torch; anything that imports
+#: torch must be added here.
+TORCH_TESTS = (
+    "tests/test_neural_causality.py",
+    "tests/test_crf01_causality.py",
+    "tests/test_crf02_causality.py",
+)
 
 
 def _pytest(args) -> tuple[set, dict, int]:
@@ -127,8 +139,9 @@ def _pytest(args) -> tuple[set, dict, int]:
 
 def run_suite() -> tuple[list[str], dict]:
     """Two processes, unioned. See TORCH_TESTS above for why."""
-    a_fail, a_cnt, _ = _pytest([f"{ROOT}/tests", f"--ignore={ROOT}/{TORCH_TESTS}"])
-    b_fail, b_cnt, _ = _pytest([f"{ROOT}/{TORCH_TESTS}"])
+    ignores = [f"--ignore={ROOT}/{t}" for t in TORCH_TESTS]
+    a_fail, a_cnt, _ = _pytest([f"{ROOT}/tests", *ignores])
+    b_fail, b_cnt, _ = _pytest([f"{ROOT}/{t}" for t in TORCH_TESTS])
     counts = {k: a_cnt[k] + b_cnt[k] for k in ("failed", "passed", "skipped")}
     counts["processes"] = {"non_torch": a_cnt, "torch_only": b_cnt}
     return sorted(a_fail | b_fail), counts
@@ -152,8 +165,8 @@ def generate():
             "reason": ("torch and LightGBM each ship libomp.dylib and loading "
                        "both into one process segfaults on macOS/arm64 -- "
                        "reproduced inside lightgbm/basic.py. Process 1 runs the "
-                       "suite excluding " + TORCH_TESTS + "; process 2 runs only "
-                       "that file. Results are unioned."),
+                       "suite excluding " + ", ".join(TORCH_TESTS) +
+                       "; process 2 runs only those files. Results are unioned."),
             "do_not": ("do NOT set KMP_DUPLICATE_LIB_OK to run them together -- "
                        "that trades a loud crash for silent numerical corruption"),
         },

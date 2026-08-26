@@ -1,0 +1,15 @@
+{
+  "classification": "BUGFIX-PREDICTION-CHANGING",
+  "note": "No TS-AUC was computed for either version. The fix direction was chosen from intended semantics -- the batch path wrote the cache the frozen model was trained on -- never from score.",
+  "sample": "67 series: the 7 with known pre-fix feature divergence plus 60 drawn at random",
+  "n_series": 67,
+  "rows_total": 37795,
+  "rows_changed": 0,
+  "rows_changed_pct": 0.0,
+  "series_with_any_change": 0,
+  "max_abs_score_diff": 0.0,
+  "mean_abs_score_diff": 0.0,
+  "cross_series_pairs_at_matched_t": 912922,
+  "cross_series_pair_order_flips": 0,
+  "per_series_changed": []
+}
