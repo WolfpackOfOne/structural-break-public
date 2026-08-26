@@ -845,3 +845,22 @@ TS-AUC, not an ensemble score.
 isolation control. Both primaries are KILL and neither produced a marginal. No
 further CRF id is allocated. `RT-1236` remains reserved and unconsumed;
 `RT-1237`/`RT-1238`/`RT-1239` remain void and retired.
+
+---
+
+## Leaderboard Alpha 2026
+
+Program preregistration:
+`research/reports/leaderboard_alpha_2026/PROGRAM_PREREG.md` at `ed84d00`.
+
+### LA-01 · Specialist replacement salvage
+
+Reserved prospectively on 2026-08-26 before any LA-01 score, OOF vector,
+or pair-flow diagnostic existed on `research/leaderboard-alpha-2026`.
+Execution preregistration:
+`research/reports/leaderboard_alpha_2026/LA01_EXECUTION_PREREG.md`.
+
+| ID | arm |
+|---|---|
+| `RT-1243` | LA-01 headline nested seven-member replacement arm. For each outer fold, select on the other four folds which RT600 specialist is replaced by either `RT-731` (`m11_focus`) or `RT-751` (`m12_rdep`), then evaluate that frozen seven-member equal-SCDF blend on the outer fold. |
+| `RT-1244` | LA-01 secondary control. Same nested replacement protocol, but the replacement candidate is the exchangeable seed clone `RT-401`. |

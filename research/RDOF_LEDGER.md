@@ -1303,3 +1303,25 @@ Full writeup: `research/reports/wave7_t2_promotion_final.md`. Evidence:
 `research/reports/wave7_t2_ensemble_integration.{md,json}`,
 `research/reports/wave7_t2_pairflow.{md,json}`,
 `research/reports/wave7_t2_promotion_final.json`.
+
+---
+
+## Leaderboard Alpha 2026
+
+Program preregistration:
+`research/reports/leaderboard_alpha_2026/PROGRAM_PREREG.md` at `ed84d00`.
+
+### LA-01 specialist replacement salvage
+
+| Item | Degrees of freedom | Frozen before score |
+|---|---:|---|
+| candidate replacements | 2 | `RT-731` (`m11_focus`) and `RT-751` (`m12_rdep`) only |
+| replacement slots | 7 | the seven RT600 specialists only |
+| nested selection rule | 0 discretionary | for each outer fold, choose max four-fold inner mean TS-AUC; lexicographic tie-break |
+| weighting | 0 | seven total members, equal weights |
+| calibration | 0 | existing `wave5_lib.CANON_CAL` (`SCDF_NSEEN`) |
+| secondary control | 1 fixed | same nested rule replacing one specialist with `RT-401` |
+| pair-flow diagnostic sample | 0 | 64 same-`t` pairs per time point, seed `20260826` |
+
+Allocated IDs: `RT-1243` candidate, `RT-1244` seed-clone replacement control.
+No fold-0 architecture fishing, no weight tuning, no large retraining.
