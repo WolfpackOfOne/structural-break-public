@@ -280,7 +280,6 @@ def fit_logistic_multiclass(x: np.ndarray, y: np.ndarray, w: np.ndarray):
             solver="lbfgs",
             max_iter=LOGIT_MAX_ITER,
             fit_intercept=True,
-            multi_class="multinomial",
         )
         model.fit(xz, y, sample_weight=w)
     return model, med, scale
