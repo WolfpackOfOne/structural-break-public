@@ -878,3 +878,14 @@ folds `2/5`; dominant-cell repairs/damage/net `828/838/-10`; mature-vs-never
 net `-38`; mature-vs-prebreak net `-99`.
 
 The result closes specialist-replacement salvage. Continue to LA-02.
+
+### LA-02 · Counterfactual synthetic augmentation
+
+Reserved prospectively on 2026-08-26 before any LA-02 score, OOF vector, or
+pair-flow diagnostic existed. Execution preregistration:
+`research/reports/leaderboard_alpha_2026/LA02_EXECUTION_PREREG.md`.
+
+| ID | arm |
+|---|---|
+| `RT-1245` | LA-02 C1 same-count synthetic fixed-null-only control. Seven RT600 stream configs trained on real rows plus synthetic null-only rows; validation remains real only. |
+| `RT-1246` | LA-02 candidate paired counterfactual augmentation. Seven RT600 stream configs trained on real rows plus paired persistent-positive/transient-hard-negative synthetic rows; validation remains real only. |

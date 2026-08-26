@@ -1329,3 +1329,20 @@ No fold-0 architecture fishing, no weight tuning, no large retraining.
 **Result.** `RT-1243` is KILL: `marginal_vs_clone = -0.000005408`, positive
 folds `2/5`, dominant-cell net `-10`. Specialist-replacement salvage is closed;
 no further degrees of freedom are allocated to LA-01.
+
+### LA-02 counterfactual synthetic augmentation
+
+| Item | Degrees of freedom | Frozen before score |
+|---|---:|---|
+| synthetic ratio | 1 | `0.33` of selected real training rows |
+| persistent mechanisms | 3 | location, scale, dependence only |
+| transient mechanisms | 4 | outlier, shock, variance burst, temporary displacement only |
+| null generator | 0 | fixed per-series AR(5) plus history residual ECDF |
+| model architecture | 0 | exact seven RT600 stream configs |
+| validation | 0 | real validation rows only |
+| controls | 1 | same-count fixed-null-only synthetic control |
+| pair-flow diagnostic sample | 0 | 64 same-`t` pairs per time point, seed `20260826` |
+
+Allocated IDs: `RT-1245` C1 null-only control, `RT-1246` paired
+counterfactual candidate. No ratio sweep, no model-family change, no validation
+sampling adjustment.
