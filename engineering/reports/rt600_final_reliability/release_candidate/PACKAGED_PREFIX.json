@@ -1,0 +1,30 @@
+{
+  "n_series": 14,
+  "prefixes": [
+    1,
+    2,
+    3,
+    5,
+    10,
+    16,
+    20,
+    32,
+    50,
+    64,
+    100,
+    128,
+    200,
+    256
+  ],
+  "cells": 7261000,
+  "mismatches": 0,
+  "detail": [],
+  "PASS": true,
+  "_meta": {
+    "phase": "prefix",
+    "notebook": "/path/to/workspace/structural-break-rt600-reliability/submissions/C_ensemble_deployable.ipynb",
+    "notebook_sha256": "a32f638c3ad2483d8205789e370e828078639b9a4781fb5bc35699a19188b433",
+    "payload_dir": "/private/var/folders/g1/zkz92mc14jn1pk1yy20_6x740000gn/T/rc_9jp_utie/_sbr_payload_74995/sbr",
+    "run_at": "2026-08-26T18:36:56Z"
+  }
+}

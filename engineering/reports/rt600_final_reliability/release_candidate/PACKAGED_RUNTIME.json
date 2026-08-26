@@ -1,0 +1,46 @@
+{
+  "benchmark": {
+    "hist~1000_online~1000": {
+      "n_series": 3,
+      "n_points": 2769,
+      "wall_s": 4.369333267211914,
+      "s_per_series": 1.4564444224039714,
+      "ms_per_point": 1.5779462864615075
+    },
+    "hist~5000_online~1000": {
+      "n_series": 3,
+      "n_points": 2893,
+      "wall_s": 5.060183763504028,
+      "s_per_series": 1.6867279211680095,
+      "ms_per_point": 1.7491129497075797
+    },
+    "hist~3000_online~500": {
+      "n_series": 3,
+      "n_points": 1510,
+      "wall_s": 2.778134822845459,
+      "s_per_series": 0.9260449409484863,
+      "ms_per_point": 1.8398243859903702
+    },
+    "short_online_10_20": {
+      "n_series": 3,
+      "n_points": 51,
+      "wall_s": 0.444652795791626,
+      "s_per_series": 0.14821759859720865,
+      "ms_per_point": 8.718682270424038
+    }
+  },
+  "n_series_timed": 12,
+  "marginal_ms_per_point": 1.5374680463648807,
+  "fixed_ms_per_series": 128.93107920495845,
+  "mean_online_len": 503.6517,
+  "projected_10k_hours": 2.5091096512564146,
+  "peak_rss_mb": 619.6875,
+  "rss_growth_mb": 122.78125,
+  "_meta": {
+    "phase": "runtime",
+    "notebook": "/path/to/workspace/structural-break-rt600-reliability/submissions/C_ensemble_deployable.ipynb",
+    "notebook_sha256": "a32f638c3ad2483d8205789e370e828078639b9a4781fb5bc35699a19188b433",
+    "payload_dir": "/private/var/folders/g1/zkz92mc14jn1pk1yy20_6x740000gn/T/rc_jm8gksu6/_sbr_payload_75151/sbr",
+    "run_at": "2026-08-26T18:37:39Z"
+  }
+}

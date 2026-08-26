@@ -1,0 +1,31 @@
+14:40:21 
+14:40:23 started
+14:40:23 running local test
+14:40:23 internet access isn't restricted, no check will be done
+14:40:23 
+14:40:24 executing - command=train
+14:40:29 executing - command=get_parallelism
+14:40:29 using a parallelism of 1
+14:40:29 executing - command=infer
+14:42:03 checking determinism by executing the inference again with 10% of the data (tolerance: 1e-08)
+14:42:03 executing - command=infer
+14:42:10 save prediction - path=prediction
+14:42:10 determinism check: passed
+14:42:10 ended
+14:42:10 
+14:42:10 duration - time=00:01:47
+14:42:10 memory - before="278.43 MB" after="2.55 GB" consumed="2.27 GB"
+project: found /path/to/workspace/structural-break-claude-wave3
+payload ok; source and model verified by sha256
+data/X_train.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/X_train.parquet (218514418 bytes)
+data/X_train.parquet: already exists, file length match
+data/X_test.reduced.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/X_test.reduced.parquet (2587435 bytes)
+data/X_test.reduced.parquet: already exists, file length match
+data/y_train.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/y_train.parquet (8356193 bytes)
+data/y_train.parquet: already exists, file length match
+data/y_test.reduced.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/y_test.reduced.parquet (106299 bytes)
+data/y_test.reduced.parquet: already exists, file length match
+data/y_test_index.reduced.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/y_test_index.reduced.parquet (3674 bytes)
+data/y_test_index.reduced.parquet: already exists, file length match
+data/y_train_index.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/y_train_index.parquet (100183 bytes)
+data/y_train_index.parquet: already exists, file length match
