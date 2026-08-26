@@ -1912,7 +1912,18 @@ never-break false-positive mass is a conditional-**null misspecification** probl
 `CRF-03` does not open on CRF-01, whose opening rule needs
 `marginal_vs_clone >= +0.0015` and which has no marginal at all.
 
-## RT-1237 / RT-1238 / RT-1239 -- CRF-02 ACGN amortized conditional generative null -- KILL (2026-08-26)
+## RT-1237 / RT-1238 / RT-1239 -- CRF-02 ACGN -- **VOID, SUPERSEDED** (2026-08-26)
+
+> **THIS ENTRY IS VOID. Do not cite its numbers.** The run it describes silently
+> loaded a 24-series, 1-epoch, `HWIN = 128` null written by a unit test instead of
+> the preregistered one. The ids are retired. The corrected run is
+> `RT-1240`/`RT-1241`/`RT-1242`, filed below, and it reaches the same verdict
+> (KILL) **for a different reason**: the derangement control PASSES on the real
+> null, so the failure is amortization, not an inert bottleneck. Kept, not
+> deleted, because the record is the record. See `EXPERIMENT_ID_MAP.md` and
+> `crf02_acgn.md` §7.
+
+The original text follows unchanged.
 
 **Program preregistration** `research/reports/causal_representation_frontier/CRF_PROGRAM_PREREG.md` @ `85d121f`.
 **Execution preregistration** `research/reports/causal_representation_frontier/CRF02_EXECUTION_PREREG.md` @ `9a3d3c7`.
@@ -2002,5 +2013,81 @@ stale pinball gradients on the frozen null, not a label leak -- fixed by clearin
 them at freeze time, tightening the assert to its real contract, and adding a
 regression test for that exact case. Nothing frozen changed and the correction is
 its own pushed pre-score commit.
+
+**CRF-03 does not open** and the CRF program is exhausted. See `CRF_FINAL.md`.
+
+
+## RT-1240 / RT-1241 / RT-1242 -- CRF-02 ACGN amortized conditional generative null -- KILL (2026-08-26, CORRECTED RUN)
+
+**Supersedes the void `RT-1237`/`RT-1238`/`RT-1239` entry above.** Same frozen
+execution preregistration (`CRF02_EXECUTION_PREREG.md` @ `9a3d3c7`, unchanged); the
+defect was that the earlier run did not execute it. **Report**
+`research/reports/causal_representation_frontier/crf02_acgn.{md,json}`.
+
+**Hypothesis.** Unchanged: a global, amortized, nonlinear, distributional null
+learned from break-free histories only prices "normal" better than the project's
+fixed per-series historical calibration, and the sequential departure of the online
+stream from it is a different discriminative direction.
+
+**The numbers.** Candidate `RT-1240`: standalone whole-fold TS-AUC **0.559140** at
+within-`t` rho **+0.2887**, dominant-cell **0.579573**. Null pretrained on 6,383
+training-fold series' break-free histories, 10 epochs, pinball `0.364706 ->
+0.243881`, 1,364.9 s, state `e58bc20e05d9`, provenance fingerprint verified.
+
+**Two gates failed, one passed:**
+
+1. **Cheap abandon gate** -- `0.559140 < 0.600` AND rho `0.2887 <= 0.60`. FIRED.
+2. **Learned-null isolation** -- candidate minus C1 = **`-0.021446`** whole-fold
+   (`-0.020337` dominant) against a required `+0.000500`. FAILED.
+3. **Derangement** -- candidate minus C2 = **`+0.003377`** whole-fold
+   (`+0.008391` dominant). **PASSED.**
+
+`RT-1241`, the **fixed**-null control (AR(5) + 256-knot history residual ECDF, per
+series, feeding identical downstream statistics into an identical ranking head):
+**0.580586** / **0.599909**. It reproduced **bitwise** from the void run, which is
+itself confirmation that its code path never touches the neural null. `RT-1242`,
+deranged `h_i`: `0.555763` / `0.571182`.
+
+Pair flow negative in every cell for every arm; candidate pre-break damage rate on
+RT600-correct pairs `0.3929` against the `0.0150` cap.
+
+**Why it failed -- and the passing derangement control is what makes this sharp.**
+The conditioning **works**: permuting `h_i` across series costs the candidate
+`0.0034` whole-fold and `0.0084` on the dominant cell, so the 8-dimensional history
+bottleneck carries real series-specific information and the model is not memorising
+a series identifier. **And the fixed null still beats it by 0.0214.** The learned
+null is conditioning correctly and losing anyway.
+
+The reason is capacity placement, not capability. The fixed null has, in effect,
+five AR coefficients plus a 256-knot empirical residual distribution **per series**,
+paid for by that series' own break-free history at zero generalisation cost -- the
+history is complete at `t = 0` and carries no label. The learned null compresses all
+of that into **8 floats** shared across a population whose heterogeneity is the whole
+reason this project's foundation is per-series historical calibration.
+**Amortizing the null across series loses more than the learned nonlinearity gains.**
+
+The declared no-id shared-8 diagnostic makes the conclusion conservative rather than
+flattering: refit on the eight features the fixed-null control also has, the
+candidate reaches `0.551432` and loses to `RT-1241` by `-0.029154`, worse than the
+headline `-0.021446`.
+
+**What this closes.** Exactly what `CRF_PROGRAM_PREREG.md` 2.9 wrote before any
+number existed: **learned amortized generative nulls are closed for this problem.**
+The per-series historical calibration the project already ships **is** the right
+null -- now measured against a matched, correctly-conditioned learned alternative
+rather than assumed. The never-break false-positive mass is **not** a
+conditional-null misspecification problem in CRF-02's sense. Because the derangement
+control passed, this is a statement about **amortization**, not about a broken
+implementation.
+
+Combined with CRF-01, this closes **H-A** (representation saturation), **H-B**
+(objective mismatch) and **H-E** (learned-null misspecification), leaving **H-D**.
+
+**Retry warranted?** **No `CRF-02b`.** No MDN, no flow, no deeper head, no different
+quantile grid, no second epoch count, no seed re-roll -- forbidden by
+`CRF_PROGRAM_PREREG.md` 0.8/0.9 and unsupported: the null converged cleanly, so it
+was not under-trained. A **wider bottleneck** is the one thing this result genuinely
+motivates, and it is a **different experiment** that this program does not
+authorise. It is recorded as a hypothesis in `CRF_FINAL.md`, not run.
 
 **CRF-03 does not open** and the CRF program is exhausted. See `CRF_FINAL.md`.

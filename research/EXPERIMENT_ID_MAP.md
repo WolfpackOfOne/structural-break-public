@@ -794,3 +794,54 @@ requires the refusal. **27 gates now pass.**
 before any CRF-02 number existed; the defect was that the run did not execute it.
 The corrected run does. Verified unused before allocation on every ref, in every
 tracked file, and in every reachable commit.
+
+### CRF-02 corrected result, filed 2026-08-26
+
+`research/reports/causal_representation_frontier/crf02_acgn.{md,json}`.
+
+**`RT-1240` KILL.** Two mandatory gates failed and one passed.
+
+1. **Cheap abandon gate fired**: fold-0 standalone whole-fold TS-AUC `0.559140`
+   (below `0.600`) at within-`t` ρ `+0.2887` (below `0.60`).
+2. **Learned-null isolation failed**: candidate − C1 = **`-0.021446`** whole-fold
+   (`-0.020337` dominant-cell) against a required `+0.000500`. The **fixed**
+   per-series null `RT-1241` — AR(5) + 256-knot history residual ECDF — reached
+   `0.580586` / `0.599909` through **identical** downstream statistics and an
+   **identical** ranking head.
+3. **Derangement gate PASSED**: candidate − C2 = **`+0.003377`** whole-fold
+   (`+0.008391` dominant-cell). The 8-dimensional history bottleneck carries real
+   series-specific information; the model is **not** memorising a series identifier.
+   The `m05_ctx` rule was **not** triggered.
+
+**The passing derangement control is what makes this negative sharp.** The learned
+null conditions correctly and loses anyway, so the failure is **amortization**, not
+a broken implementation. The fixed null holds five AR coefficients plus a 256-knot
+empirical residual distribution *per series*, paid for by that series' own break-free
+history at zero generalisation cost; the learned null compresses all of it into
+**8 floats** shared across a population whose heterogeneity is the reason per-series
+historical calibration is this project's foundation.
+
+`RT-1241` reproduced the void `RT-1238` **bitwise**, confirming its code path never
+touched the neural null. The declared no-id shared-8 diagnostic reached `0.551432`,
+**below** the 10-feature candidate, so the isolation gate is conservative in the
+candidate's favour: on the eight shared features the candidate loses by `-0.029154`.
+
+`marginal_vs_clone` was never computed for any arm — the abandon gate fired and folds
+1–4 were deliberately not trained — so the isolation comparisons are on standalone
+fold-0 TS-AUC exactly as `CRF02_EXECUTION_PREREG.md` §8 stage S1 preregistered. Both
+mandatory controls ran **before** the gate was read.
+
+Generative null provenance, now verified by fingerprint: 6,383 training-fold series'
+break-free histories, 10 epochs, `HWIN = 1024`, pinball `0.364706 → 0.243881`,
+1,364.9 s, state `e58bc20e05d9…`.
+
+`RT-1240`/`RT-1241`/`RT-1242` OOF vectors are fold-0 only: finite on the 806,334
+fold-0 rows, NaN on folds 1–4, zero finite lockbox rows. Their `mean_oof_ts_auc` /
+`pooled_oof_ts_auc` / `per_fold_ts_auc` columns hold the arm's **standalone** fold-0
+TS-AUC, not an ensemble score.
+
+**CRF-03 does not open.** `CRF_PROGRAM_PREREG.md` §3.1 requires a fold-0
+`marginal_vs_clone ≥ +0.0015` from CRF-01 or CRF-02 plus a passing mandatory
+isolation control. Both primaries are KILL and neither produced a marginal. No
+further CRF id is allocated. `RT-1236` remains reserved and unconsumed;
+`RT-1237`/`RT-1238`/`RT-1239` remain void and retired.

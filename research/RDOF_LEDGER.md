@@ -351,7 +351,10 @@ with a contaminated positive control.
 `RT-1236` is deliberately skipped rather than recycled: it stays reserved to
 CRF-01's gate-blocked C2 arm.
 
-CRF-02 result filed 2026-08-26:
+CRF-02 result filed 2026-08-26 -- **VOID, SUPERSEDED, do not cite these
+numbers** (the run silently loaded a 24-series/1-epoch/HWIN=128 null written
+by a unit test; ids `RT-1237`/`RT-1238`/`RT-1239` retired). Kept because the
+record is the record; the corrected entry follows:
 `RT-1237` KILL on three independent mandatory grounds -- the cheap abandon
 gate fired (standalone `0.527807` at rho `+0.2212`); the learned-null
 isolation gate failed at `-0.052779` whole-fold against a required
@@ -398,9 +401,39 @@ pushed and nothing was rewritten.
 **CRF-03 does not open.** Its opening rule needs a fold-0
 `marginal_vs_clone >= +0.0015` from CRF-01 or CRF-02 plus a passing mandatory
 isolation control. Both primaries are KILL and neither produced a marginal at
-all. The CRF program is EXHAUSTED at three commits of chronology per
-experiment, six scored arms, two reserved-and-unconsumed slots, and 0.94 h of
-the 15 h screening budget. No `CRF-04` is invented.
+all. The CRF program is EXHAUSTED. No `CRF-04` is invented.
+
+CRF-02 result, CORRECTED RUN, filed 2026-08-26 (`RT-1240`/`RT-1241`/`RT-1242`,
+reserved at `fb24c39` before the corrected scores existed; same frozen
+execution preregistration `9a3d3c7`, unchanged):
+
+`RT-1240` KILL. Cheap abandon gate fired (standalone `0.559140` at rho
+`+0.2887`). Learned-null isolation FAILED at `-0.021446` whole-fold against a
+required `+0.000500`: the FIXED per-series null `RT-1241` reached `0.580586`
+through identical downstream statistics and an identical ranking head.
+**Derangement PASSED at `+0.003377` whole-fold (`+0.008391` dominant)** --
+so the 8-dimensional history bottleneck does carry real series information and
+the model is not memorising a series identifier.
+
+**That passing control is what makes the negative sharp.** The learned null is
+conditioning correctly and losing anyway, so the failure is **amortization**,
+not a broken implementation: the fixed null holds five AR coefficients plus a
+256-knot empirical residual distribution PER SERIES, paid for by that series'
+own break-free history at zero generalisation cost, while the learned null
+compresses all of it into 8 floats shared across a population whose
+heterogeneity is the reason per-series historical calibration is this project's
+foundation.
+
+**Additional degrees of freedom consumed by the correction: three retired ids
+and one re-run.** No design changed, no threshold moved, no arm was added or
+dropped, and the corrected run executes the preregistration frozen before any
+CRF-02 number existed. `RT-1241` reproduced the void run's `RT-1238` BITWISE,
+confirming its code path never touched the neural null.
+
+**Total CRF program spend: 0.93 h of the 15 h screening budget** -- CRF-01
+0.497 h, CRF-02 corrected run 0.411 h, plus a 0.36 h void run that is counted
+against the budget even though its numbers are retired, because compute spent
+is compute spent.
 
 ---
 

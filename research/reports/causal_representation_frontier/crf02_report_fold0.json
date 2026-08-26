@@ -2,165 +2,165 @@
  "stage": "fold0_report_no_ensemble",
  "arms": {
   "acgn": {
-   "experiment_id": "RT-1237",
-   "standalone_whole_fold_ts_auc": 0.5278070181956493,
-   "standalone_dominant_cell_ts_auc": 0.5393088644124541,
-   "within_t_rho_vs_rt600": 0.22123361783703385,
+   "experiment_id": "RT-1240",
+   "standalone_whole_fold_ts_auc": 0.5591398101208211,
+   "standalone_dominant_cell_ts_auc": 0.5795726125982837,
+   "within_t_rho_vs_rt600": 0.28868176972417225,
    "diagnostic_pack": {
-    "label": "RT-1237",
+    "label": "RT-1240",
     "fold": 0,
     "whole_fold": {
      "rt600": 0.6382763032336511,
-     "candidate": 0.5278070181956493
+     "candidate": 0.5591398101208211
     },
     "dominant_cell": {
      "rt600": 0.6777110899011463,
-     "candidate": 0.5393088644124541
+     "candidate": 0.5795726125982837
     },
     "mature_vs_neverbreak": {
      "rt600": 0.676800868805288,
-     "candidate": 0.5345463429744576
+     "candidate": 0.5835060764979413
     },
     "mature_vs_prebreak": {
      "rt600": 0.6802509546650244,
-     "candidate": 0.5525981195644407
+     "candidate": 0.5685967448622071
     },
     "t_buckets": {
      "0-20": {
       "rt600": 0.5300204619017298,
-      "candidate": 0.543607562612756
+      "candidate": 0.5050532938023984
      },
      "20-50": {
       "rt600": 0.5680248975917097,
-      "candidate": 0.515267990966368
+      "candidate": 0.5248484221663083
      },
      "50-100": {
       "rt600": 0.5790183020058499,
-      "candidate": 0.5291077839333492
+      "candidate": 0.5384626272087407
      },
      "100-200": {
       "rt600": 0.6390075342102901,
-      "candidate": 0.5326669789096131
+      "candidate": 0.5618454137749064
      },
      "200-400": {
       "rt600": 0.6359029050927087,
-      "candidate": 0.530251812893426
+      "candidate": 0.5573603137858929
      },
      "400-1000000000": {
       "rt600": 0.666690084227326,
-      "candidate": 0.5226213984099221
+      "candidate": 0.57022303288603
      }
     },
     "age_buckets": {
      "0-5": {
       "rt600": 0.5152445330859063,
-      "candidate": 0.5083372366736977
+      "candidate": 0.5122589749480134
      },
      "5-20": {
       "rt600": 0.5520505250854593,
-      "candidate": 0.5055857976970471
+      "candidate": 0.5218448444468249
      },
      "20-50": {
       "rt600": 0.5894557799021534,
-      "candidate": 0.5068363454613849
+      "candidate": 0.5295284888853538
      },
      "50-100": {
       "rt600": 0.6169058332601237,
-      "candidate": 0.5126842753719397
+      "candidate": 0.5355009217536989
      },
      "100-1000000000": {
       "rt600": 0.675917278353309,
-      "candidate": 0.5420001516111915
+      "candidate": 0.5817698703401736
      }
     },
-    "within_t_rank_corr_rt600": 0.22123361783703385
+    "within_t_rank_corr_rt600": 0.28868176972417225
    },
    "pair_flow": {
     "whole_fold": {
      "total_pairs_sampled": 63380,
      "rt600_wrong": 22143,
      "rt600_right": 41237,
-     "repairs": 9666,
-     "damage": 16832,
-     "net_pair_lift": -7166,
-     "repair_rate_of_rt600_wrong": 0.43652621595989705,
-     "damage_rate_of_rt600_right": 0.4081771224870868
+     "repairs": 9723,
+     "damage": 15356,
+     "net_pair_lift": -5633,
+     "repair_rate_of_rt600_wrong": 0.439100392900691,
+     "damage_rate_of_rt600_right": 0.37238402405606613
     },
     "dominant_cell": {
      "total_pairs_sampled": 50540,
      "rt600_wrong": 16193,
      "rt600_right": 34347,
-     "repairs": 6815,
-     "damage": 13531,
-     "net_pair_lift": -6716,
-     "repair_rate_of_rt600_wrong": 0.42086086580621257,
-     "damage_rate_of_rt600_right": 0.3939499810754942
+     "repairs": 6991,
+     "damage": 12264,
+     "net_pair_lift": -5273,
+     "repair_rate_of_rt600_wrong": 0.4317297597727413,
+     "damage_rate_of_rt600_right": 0.35706175211808894
     },
     "mature_vs_never": {
      "total_pairs_sampled": 50540,
      "rt600_wrong": 15804,
      "rt600_right": 34736,
-     "repairs": 6625,
-     "damage": 13670,
-     "net_pair_lift": -7045,
-     "repair_rate_of_rt600_wrong": 0.4191976714755758,
-     "damage_rate_of_rt600_right": 0.3935398433901428
+     "repairs": 6995,
+     "damage": 12171,
+     "net_pair_lift": -5176,
+     "repair_rate_of_rt600_wrong": 0.44260946595798534,
+     "damage_rate_of_rt600_right": 0.3503857669276831
     },
     "mature_vs_prebreak": {
      "total_pairs_sampled": 48677,
      "rt600_wrong": 15616,
      "rt600_right": 33061,
-     "repairs": 6834,
-     "damage": 13702,
-     "net_pair_lift": -6868,
-     "repair_rate_of_rt600_wrong": 0.4376280737704918,
-     "damage_rate_of_rt600_right": 0.41444602401621244
+     "repairs": 6257,
+     "damage": 12991,
+     "net_pair_lift": -6734,
+     "repair_rate_of_rt600_wrong": 0.40067879098360654,
+     "damage_rate_of_rt600_right": 0.3929403224342881
     }
    },
    "unique_repair": {
     "rt600_wrong": 16193,
-    "candidate_repairs": 6815,
+    "candidate_repairs": 6991,
     "clone_repairs": 3012,
-    "unique_repairs": 5365,
-    "unique_repair_coverage": 0.33131600074106093,
-    "repair_jaccard_vs_clone": 0.17309299271815687
+    "unique_repairs": 5533,
+    "unique_repair_coverage": 0.34169085407274746,
+    "repair_jaccard_vs_clone": 0.17062609713282623
    },
-   "prebreak_damage_rate_on_rt600_correct": 0.41444602401621244,
+   "prebreak_damage_rate_on_rt600_correct": 0.3929403224342881,
    "marginal_vs_clone": null,
    "marginal_vs_clone_status": "NOT COMPUTED - the section 7 abandon gate fired, so folds 1-4 were never trained and no fold-pure five-fold OOF exists to calibrate against",
    "fold_meta": {
     "loss_history": [
-     0.6896437418460846,
-     0.6843493363261223,
-     0.6826778408885003,
-     0.6813874727487564,
-     0.6803137305378913,
-     0.6805640503764152,
-     0.6791800978779793,
-     0.6781935906410217,
-     0.6788758307695388,
-     0.6783078068494797,
-     0.6771659135818482,
-     0.6770886188745499,
-     0.6763479834794999,
-     0.6759067425131797,
-     0.6755594119429589,
-     0.6752447602152825,
-     0.674847087264061,
-     0.6749280461668968,
-     0.6745849117636681,
-     0.6745858392119408
+     0.6879608809947968,
+     0.6807534912228584,
+     0.6776848927140235,
+     0.675767742395401,
+     0.6746592953801155,
+     0.6734432083368301,
+     0.6727437725663186,
+     0.6710025840997695,
+     0.6710149058699608,
+     0.6692062073945999,
+     0.6693124380707741,
+     0.6685847741365433,
+     0.6683501330018043,
+     0.6675827878713608,
+     0.66757339656353,
+     0.6669106772542,
+     0.6665378502011299,
+     0.6665089336037636,
+     0.6660852625966072,
+     0.6659536027908325
     ],
-    "runtime_s": 31.5
+    "runtime_s": 40.5
    }
   },
   "fixed_null": {
-   "experiment_id": "RT-1238",
+   "experiment_id": "RT-1241",
    "standalone_whole_fold_ts_auc": 0.580585557211104,
    "standalone_dominant_cell_ts_auc": 0.5999093513451308,
    "within_t_rho_vs_rt600": 0.3683485006037545,
    "diagnostic_pack": {
-    "label": "RT-1238",
+    "label": "RT-1241",
     "fold": 0,
     "whole_fold": {
      "rt600": 0.6382763032336511,
@@ -304,313 +304,313 @@
      0.6671218550205231,
      0.6669856703281403
     ],
-    "runtime_s": 31.1
+    "runtime_s": 40.2
    }
   },
   "deranged": {
-   "experiment_id": "RT-1239",
-   "standalone_whole_fold_ts_auc": 0.5287877690705279,
-   "standalone_dominant_cell_ts_auc": 0.5401535302183709,
-   "within_t_rho_vs_rt600": 0.22421557771791897,
+   "experiment_id": "RT-1242",
+   "standalone_whole_fold_ts_auc": 0.5557630511396809,
+   "standalone_dominant_cell_ts_auc": 0.5711818326541517,
+   "within_t_rho_vs_rt600": 0.24380552989829649,
    "diagnostic_pack": {
-    "label": "RT-1239",
+    "label": "RT-1242",
     "fold": 0,
     "whole_fold": {
      "rt600": 0.6382763032336511,
-     "candidate": 0.5287877690705279
+     "candidate": 0.5557630511396809
     },
     "dominant_cell": {
      "rt600": 0.6777110899011463,
-     "candidate": 0.5401535302183709
+     "candidate": 0.5711818326541517
     },
     "mature_vs_neverbreak": {
      "rt600": 0.676800868805288,
-     "candidate": 0.5350107324270097
+     "candidate": 0.569422034228842
     },
     "mature_vs_prebreak": {
      "rt600": 0.6802509546650244,
-     "candidate": 0.5545039017461941
+     "candidate": 0.5760923428942576
     },
     "t_buckets": {
      "0-20": {
       "rt600": 0.5300204619017298,
-      "candidate": 0.5441531027804308
+      "candidate": 0.4838700851639605
      },
      "20-50": {
       "rt600": 0.5680248975917097,
-      "candidate": 0.5162624025934391
+      "candidate": 0.5240561990925676
      },
      "50-100": {
       "rt600": 0.5790183020058499,
-      "candidate": 0.5306990465413519
+      "candidate": 0.5389696526463682
      },
      "100-200": {
       "rt600": 0.6390075342102901,
-      "candidate": 0.5336216370528537
+      "candidate": 0.5697965576586895
      },
      "200-400": {
       "rt600": 0.6359029050927087,
-      "candidate": 0.5312688732517689
+      "candidate": 0.5605734207406442
      },
      "400-1000000000": {
       "rt600": 0.666690084227326,
-      "candidate": 0.5234278537100112
+      "candidate": 0.5515415288157958
      }
     },
     "age_buckets": {
      "0-5": {
       "rt600": 0.5152445330859063,
-      "candidate": 0.5089441190832072
+      "candidate": 0.5159559603758743
      },
      "5-20": {
       "rt600": 0.5520505250854593,
-      "candidate": 0.5065589746198784
+      "candidate": 0.5257533783339737
      },
      "20-50": {
       "rt600": 0.5894557799021534,
-      "candidate": 0.5076325006897352
+      "candidate": 0.5327257363497402
      },
      "50-100": {
       "rt600": 0.6169058332601237,
-      "candidate": 0.5138502208611454
+      "candidate": 0.5382935985331578
      },
      "100-1000000000": {
       "rt600": 0.675917278353309,
-      "candidate": 0.5429877146548345
+      "candidate": 0.5733917907378465
      }
     },
-    "within_t_rank_corr_rt600": 0.22421557771791897
+    "within_t_rank_corr_rt600": 0.24380552989829649
    },
    "pair_flow": {
     "whole_fold": {
      "total_pairs_sampled": 63380,
      "rt600_wrong": 22143,
      "rt600_right": 41237,
-     "repairs": 9631,
-     "damage": 16734,
-     "net_pair_lift": -7103,
-     "repair_rate_of_rt600_wrong": 0.43494558099625164,
-     "damage_rate_of_rt600_right": 0.40580061595169387
+     "repairs": 9582,
+     "damage": 16164,
+     "net_pair_lift": -6582,
+     "repair_rate_of_rt600_wrong": 0.4327326920471481,
+     "damage_rate_of_rt600_right": 0.39197807793971434
     },
     "dominant_cell": {
      "total_pairs_sampled": 50540,
      "rt600_wrong": 16193,
      "rt600_right": 34347,
-     "repairs": 6786,
-     "damage": 13483,
-     "net_pair_lift": -6697,
-     "repair_rate_of_rt600_wrong": 0.4190699685049095,
-     "damage_rate_of_rt600_right": 0.3925524791102571
+     "repairs": 6935,
+     "damage": 13313,
+     "net_pair_lift": -6378,
+     "repair_rate_of_rt600_wrong": 0.4282714753288458,
+     "damage_rate_of_rt600_right": 0.3876029929833755
     },
     "mature_vs_never": {
      "total_pairs_sampled": 50540,
      "rt600_wrong": 15804,
      "rt600_right": 34736,
-     "repairs": 6607,
-     "damage": 13656,
-     "net_pair_lift": -7049,
-     "repair_rate_of_rt600_wrong": 0.4180587193115667,
-     "damage_rate_of_rt600_right": 0.393136803316444
+     "repairs": 6876,
+     "damage": 13368,
+     "net_pair_lift": -6492,
+     "repair_rate_of_rt600_wrong": 0.43507972665148065,
+     "damage_rate_of_rt600_right": 0.38484569322892676
     },
     "mature_vs_prebreak": {
      "total_pairs_sampled": 48677,
      "rt600_wrong": 15616,
      "rt600_right": 33061,
-     "repairs": 6810,
-     "damage": 13610,
-     "net_pair_lift": -6800,
-     "repair_rate_of_rt600_wrong": 0.43609118852459017,
-     "damage_rate_of_rt600_right": 0.4116632890717159
+     "repairs": 6577,
+     "damage": 13367,
+     "net_pair_lift": -6790,
+     "repair_rate_of_rt600_wrong": 0.4211705942622951,
+     "damage_rate_of_rt600_right": 0.4043132391639696
     }
    },
    "unique_repair": {
     "rt600_wrong": 16193,
-    "candidate_repairs": 6786,
+    "candidate_repairs": 6935,
     "clone_repairs": 3012,
-    "unique_repairs": 5334,
-    "unique_repair_coverage": 0.32940159328104734,
-    "repair_jaccard_vs_clone": 0.17397555715312724
+    "unique_repairs": 5470,
+    "unique_repair_coverage": 0.33780028407336504,
+    "repair_jaccard_vs_clone": 0.17271869842018392
    },
-   "prebreak_damage_rate_on_rt600_correct": 0.4116632890717159,
+   "prebreak_damage_rate_on_rt600_correct": 0.4043132391639696,
    "marginal_vs_clone": null,
    "marginal_vs_clone_status": "NOT COMPUTED - the section 7 abandon gate fired, so folds 1-4 were never trained and no fold-pure five-fold OOF exists to calibrate against",
    "fold_meta": {
     "loss_history": [
-     0.6895733076334,
-     0.6843903639912605,
-     0.6827017238736153,
-     0.6813647511601448,
-     0.6803503257036209,
-     0.6805900347232818,
-     0.6792214405536652,
-     0.6782517501711846,
-     0.6789196935296059,
-     0.6783688688278198,
-     0.6772185850143433,
-     0.6771487542986869,
-     0.676398110985756,
-     0.6759650722146034,
-     0.6756216928362846,
-     0.6753114852309227,
-     0.6749061006307602,
-     0.6749877223372459,
-     0.6746452283859253,
-     0.6746562254428864
+     0.6872781178355217,
+     0.6812898525595665,
+     0.6789482125639915,
+     0.6773787698149681,
+     0.6769822686910629,
+     0.6757696142792702,
+     0.6753061753511429,
+     0.6739813941717148,
+     0.673982101380825,
+     0.6728233352303505,
+     0.6729954120516777,
+     0.6722557258605957,
+     0.6721167653799057,
+     0.6715461763739586,
+     0.6712629225850105,
+     0.6707781237363816,
+     0.6705095708370209,
+     0.6704036837816238,
+     0.6701361349225045,
+     0.6699520918726921
     ],
-    "runtime_s": 31.7
+    "runtime_s": 33.5
    }
   },
   "shared8_diag": {
    "experiment_id": "shared8_diag",
-   "standalone_whole_fold_ts_auc": 0.5318639814510181,
-   "standalone_dominant_cell_ts_auc": 0.5338718969723945,
-   "within_t_rho_vs_rt600": 0.2036748815797752,
+   "standalone_whole_fold_ts_auc": 0.55143226581895,
+   "standalone_dominant_cell_ts_auc": 0.5689199916237248,
+   "within_t_rho_vs_rt600": 0.2623120952886111,
    "diagnostic_pack": {
     "label": "shared8_diag",
     "fold": 0,
     "whole_fold": {
      "rt600": 0.6382763032336511,
-     "candidate": 0.5318639814510181
+     "candidate": 0.55143226581895
     },
     "dominant_cell": {
      "rt600": 0.6777110899011463,
-     "candidate": 0.5338718969723945
+     "candidate": 0.5689199916237248
     },
     "mature_vs_neverbreak": {
      "rt600": 0.676800868805288,
-     "candidate": 0.5308703371542728
+     "candidate": 0.571326744580459
     },
     "mature_vs_prebreak": {
      "rt600": 0.6802509546650244,
-     "candidate": 0.5422473961268403
+     "candidate": 0.5622042309607563
     },
     "t_buckets": {
      "0-20": {
       "rt600": 0.5300204619017298,
-      "candidate": 0.5574757242916268
+      "candidate": 0.5260105758516396
      },
      "20-50": {
       "rt600": 0.5680248975917097,
-      "candidate": 0.5335747444879246
+      "candidate": 0.529021899097315
      },
      "50-100": {
       "rt600": 0.5790183020058499,
-      "candidate": 0.5466836953160524
+      "candidate": 0.5464670001687696
      },
      "100-200": {
       "rt600": 0.6390075342102901,
-      "candidate": 0.5454748195487062
+      "candidate": 0.5520293904566103
      },
      "200-400": {
       "rt600": 0.6359029050927087,
-      "candidate": 0.5297177530551583
+      "candidate": 0.5524309075581557
      },
      "400-1000000000": {
       "rt600": 0.666690084227326,
-      "candidate": 0.5214562065041729
+      "candidate": 0.5543573454308127
      }
     },
     "age_buckets": {
      "0-5": {
       "rt600": 0.5152445330859063,
-      "candidate": 0.5138005457715139
+      "candidate": 0.49391352385612236
      },
      "5-20": {
       "rt600": 0.5520505250854593,
-      "candidate": 0.5205289454415594
+      "candidate": 0.507221215972226
      },
      "20-50": {
       "rt600": 0.5894557799021534,
-      "candidate": 0.5198539520185812
+      "candidate": 0.5236066364731969
      },
      "50-100": {
       "rt600": 0.6169058332601237,
-      "candidate": 0.5298134523636628
+      "candidate": 0.5351667539180046
      },
      "100-1000000000": {
       "rt600": 0.675917278353309,
-      "candidate": 0.5380426930663686
+      "candidate": 0.5728225068426647
      }
     },
-    "within_t_rank_corr_rt600": 0.2036748815797752
+    "within_t_rank_corr_rt600": 0.2623120952886111
    },
    "pair_flow": {
     "whole_fold": {
      "total_pairs_sampled": 63380,
      "rt600_wrong": 22143,
      "rt600_right": 41237,
-     "repairs": 9729,
-     "damage": 17607,
-     "net_pair_lift": -7878,
-     "repair_rate_of_rt600_wrong": 0.4393713588944587,
-     "damage_rate_of_rt600_right": 0.42697092417004145
+     "repairs": 9677,
+     "damage": 15855,
+     "net_pair_lift": -6178,
+     "repair_rate_of_rt600_wrong": 0.4370229869484713,
+     "damage_rate_of_rt600_right": 0.38448480733322016
     },
     "dominant_cell": {
      "total_pairs_sampled": 50540,
      "rt600_wrong": 16193,
      "rt600_right": 34347,
-     "repairs": 6919,
-     "damage": 14902,
-     "net_pair_lift": -7983,
-     "repair_rate_of_rt600_wrong": 0.4272833940591614,
-     "damage_rate_of_rt600_right": 0.43386613095758
+     "repairs": 6829,
+     "damage": 12983,
+     "net_pair_lift": -6154,
+     "repair_rate_of_rt600_wrong": 0.42172543691718645,
+     "damage_rate_of_rt600_right": 0.37799516697237023
     },
     "mature_vs_never": {
      "total_pairs_sampled": 50540,
      "rt600_wrong": 15804,
      "rt600_right": 34736,
-     "repairs": 6750,
-     "damage": 15051,
-     "net_pair_lift": -8301,
-     "repair_rate_of_rt600_wrong": 0.4271070615034169,
-     "damage_rate_of_rt600_right": 0.4332968678028558
+     "repairs": 6718,
+     "damage": 12946,
+     "net_pair_lift": -6228,
+     "repair_rate_of_rt600_wrong": 0.42508225765628954,
+     "damage_rate_of_rt600_right": 0.37269691386457854
     },
     "mature_vs_prebreak": {
      "total_pairs_sampled": 48677,
      "rt600_wrong": 15616,
      "rt600_right": 33061,
-     "repairs": 6688,
-     "damage": 13942,
-     "net_pair_lift": -7254,
-     "repair_rate_of_rt600_wrong": 0.42827868852459017,
-     "damage_rate_of_rt600_right": 0.421705332567073
+     "repairs": 6086,
+     "damage": 13762,
+     "net_pair_lift": -7676,
+     "repair_rate_of_rt600_wrong": 0.3897284836065574,
+     "damage_rate_of_rt600_right": 0.4162608511539276
     }
    },
    "unique_repair": {
     "rt600_wrong": 16193,
-    "candidate_repairs": 6919,
+    "candidate_repairs": 6829,
     "clone_repairs": 3012,
-    "unique_repairs": 5562,
-    "unique_repair_coverage": 0.3434817513740505,
-    "repair_jaccard_vs_clone": 0.1582691859108934
+    "unique_repairs": 5459,
+    "unique_repair_coverage": 0.337120978200457,
+    "repair_jaccard_vs_clone": 0.16172824932121355
    },
-   "prebreak_damage_rate_on_rt600_correct": 0.421705332567073,
+   "prebreak_damage_rate_on_rt600_correct": 0.4162608511539276,
    "marginal_vs_clone": null,
    "marginal_vs_clone_status": "NOT COMPUTED - the section 7 abandon gate fired, so folds 1-4 were never trained and no fold-pure five-fold OOF exists to calibrate against",
    "fold_meta": {
     "loss_history": [
-     0.6900138622522354,
-     0.6872996014356613,
-     0.6866213852167129,
-     0.6864248380064965,
-     0.6856564992666244,
-     0.6860926133394242,
-     0.6855592516064644,
-     0.6852094128727912,
-     0.6854967394471169,
-     0.6852985817193985,
-     0.6845944970846176,
-     0.6845183899998665,
-     0.6842838767170906,
-     0.684002302289009,
-     0.6838878819346428,
-     0.683588530421257,
-     0.6835327145457267,
-     0.6835076174139977,
-     0.6833596137166024,
-     0.6833939838409424
+     0.6893900975584983,
+     0.6854270565509796,
+     0.6842937976121902,
+     0.6830904594063759,
+     0.68264061242342,
+     0.6822586774826049,
+     0.6812695342302323,
+     0.6800859761238098,
+     0.679936848282814,
+     0.6786176392436027,
+     0.6786206188797951,
+     0.6782378208637238,
+     0.6778363341093063,
+     0.6774915108084678,
+     0.6773496100306511,
+     0.6768100133538246,
+     0.6767307582497597,
+     0.6765382620692253,
+     0.676223481297493,
+     0.6763302502036095
     ],
-    "runtime_s": 31.1
+    "runtime_s": 34.6
    }
   }
  },
@@ -643,9 +643,9 @@
   },
   "ok": true
  },
- "git_sha": "89149d5",
+ "git_sha": "fb24c39",
  "execution_prereg_sha": "afba958",
- "runtime_s": 95.8,
+ "runtime_s": 85.0,
  "lockbox_touched": "no",
  "test_reduced_touched": "no"
 }

@@ -144,16 +144,31 @@ short and gets updated whenever that changes materially.
     short. `RT-1234` set a **new best standalone-at-low-redundancy point**
     (0.59276 at ρ 0.446, prior record `RT-1201`'s 0.58358) — the frontier moved
     and the answer did not change.
-  - **`CRF-02` ACGN** (`RT-1237`, controls `RT-1238`/`RT-1239`) — **KILL** on three
-    independent mandatory grounds: abandon gate fired (`0.527807` at ρ `+0.2212`);
-    **learned-null isolation failed at `-0.052779`**, because the **fixed**
-    per-series null (AR(5) + history residual ECDF) through identical statistics
-    and an identical head reached `0.580586` and beat the learned null by `0.0528`;
-    and the **derangement gate failed at `-0.000981`**, so the 8-dimensional history
-    bottleneck carries no usable series information. Amortizing the null across
-    series **loses** information rather than adding it: the per-series historical
-    calibration the project already ships is the right null, now measured against a
-    matched learned alternative rather than assumed.
+  - **`CRF-02` ACGN** (`RT-1240`, controls `RT-1241`/`RT-1242`) — **KILL**. The
+    abandon gate fired (`0.559140` at ρ `+0.2887`) and the **learned-null isolation
+    gate failed at `-0.021446`**: the **fixed** per-series null (AR(5) + 256-knot
+    history residual ECDF), through identical downstream statistics and an identical
+    ranking head, reached `0.580586` and beat the learned null. The **derangement
+    control PASSED** (`+0.003377` whole, `+0.008391` dominant), so the 8-dimensional
+    history bottleneck does carry real series information and the model is not
+    memorising a series identifier — which makes the negative sharp rather than
+    ambiguous: **the learned null conditions correctly and loses anyway.** The
+    failure is **amortization**. The fixed null holds five AR coefficients plus a
+    256-knot empirical residual distribution *per series*, paid for by that series'
+    own break-free history at zero generalisation cost; the learned null compresses
+    all of it into 8 floats shared across a population whose heterogeneity is the
+    reason per-series historical calibration is this project's foundation. The null
+    the project already ships **is** the right null — now measured against a matched,
+    correctly-conditioned learned alternative rather than assumed.
+  - **One void run, recorded.** `RT-1237`/`RT-1238`/`RT-1239` are **VOID and
+    retired**: that run silently loaded a 24-series, 1-epoch null written by a unit
+    test instead of the preregistered one. Caught by compute accounting
+    (`pretrain_runtime_s = 0.2` against a real 1,284.6 s). It mattered
+    scientifically, not just procedurally — the toy null made the derangement
+    control *tie*, which would have supported the wrong mechanism. Fixed with a
+    checkpoint **provenance fingerprint** that stops the run on mismatch, and
+    test-isolated caches. `CRF-01` was verified unaffected. Detail in
+    `EXPERIMENT_ID_MAP.md` and `crf02_acgn.md` §7.
   - **Reading.** The representation × objective factorial is complete and empty, and
     learned generative nulls are closed. **H-A** (representation saturation),
     **H-B** (objective mismatch) and **H-E** (null misspecification) are all closed,
@@ -172,8 +187,9 @@ short and gets updated whenever that changes materially.
 _Last updated: 2026-08-26, after the Causal Representation Frontier program was
 executed to exhaustion on `research/causal-representation-frontier-2026`: `CRF-01`
 NNCSR (`RT-1234`/`RT-1235`) and `CRF-02` ACGN
-(`RT-1237`/`RT-1238`/`RT-1239`) are both KILL on their preregistered fold-0
+(`RT-1240`/`RT-1241`/`RT-1242`) are both KILL on their preregistered fold-0
 screens, `CRF-03` did not open, and model search under this program is stopped.
-`RT-1236` remains reserved and unconsumed. Update this file whenever the production anchor,
+`RT-1236` remains reserved and unconsumed; `RT-1237`/`RT-1238`/`RT-1239` are void
+and retired. Update this file whenever the production anchor,
 external score, or active research conclusion changes — see
 `AGENTS.md` at the repo root for the update rule._
