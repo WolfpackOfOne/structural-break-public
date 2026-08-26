@@ -80,7 +80,7 @@ from sbr.features.m07_bayes import (
     AR_ORDER, ARCH_GRID, BET_C, BLK_STRIDE, BO_AL0, BO_HAZ, BO_HIST_MAX,
     BO_KAP0, F_ARCH, F_DEP, F_LOC, F_VAR, GCLIP, GRAPA_K0, HAZ_FAST, HAZ_SLOW, MU_GRID,
     POS_GRID, POW_EPS, RHO_GRID, R_MAX, VAR_GRID, ZCAP, _AddNull,
-    _fam_lse, _fam_norm, _llr_matrix, _MargNull, _mix_bet, _PosNull,
+    _bocpd_ct, _fam_lse, _fam_norm, _llr_matrix, _MargNull, _mix_bet, _PosNull,
     _signed_surprise,
 )
 from sbr.transforms import _ar_resid, _fit_ar
@@ -388,14 +388,17 @@ class _BocpdStream:
         self.hnu = [0.0] * R
         self.kp1 = [0.0] * R
         self.kp2 = [0.0] * R
+        # shared with the batch kernel: numba's lgamma and CPython's disagree by
+        # up to 512 ULP on this grid, so the table must come from one source or
+        # the batch-trained and stream-served features sit on different constants
+        ct = _bocpd_ct(al0, R)
         for r in range(R):
             kp = kap0 + r
             al = al0 + 0.5 * r
             nu = 2.0 * al
             self.kap[r] = kp
             self.nu[r] = nu
-            self.ct[r] = (math.lgamma(0.5 * (nu + 1.0)) - math.lgamma(0.5 * nu)
-                          - 0.5 * math.log(nu * math.pi))
+            self.ct[r] = float(ct[r])
             self.sf[r] = (kp + 1.0) / (al * kp)
             self.hnu[r] = 0.5 * (nu + 1.0)
             self.kp1[r] = kp + 1.0
