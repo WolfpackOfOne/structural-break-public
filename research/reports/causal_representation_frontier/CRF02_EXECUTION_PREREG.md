@@ -443,6 +443,53 @@ per-series streaming state, CRF-02
     + an 8 x 253 float32 ring buffer + five O(1) accumulators and peaks
 ```
 
+### 13.4b CORRECTION, made before any CRF-02 score existed
+
+The first fold-0 attempt **stopped at the live isolation assert**, exactly as §10
+requires, and produced no score of any kind — it died before the first ranking head
+trained. Recorded here rather than quietly repaired:
+
+```
+AssertionError: ISOLATION VIOLATION: label reached the null:
+  ['body.blocks.0.c1.conv.bias', 'body.blocks.0.c1.conv.parametrizations.weight.original0', …]
+```
+
+**Diagnosis: a false positive of the sentinel, not a leak.** `pretrain_null` set
+`requires_grad_(False)` on every generative parameter, but their `.grad` tensors
+still held the **pinball loss's** gradients from the final pretraining step. The
+live check tested "is any generative gradient non-zero?", which those stale tensors
+satisfy. The label could not have reached them — they carry `requires_grad = False`
+and the ranking head consumes precomputed NumPy features, so the generative graph is
+not in its backward pass at all.
+
+**Why it is fixed rather than reasoned away.** A sentinel that has to be explained
+away is worthless the one time it fires for a real reason. Three changes, none of
+which touches a frozen scientific quantity:
+
+1. `pretrain_null` now clears `p.grad = None` when it freezes the null, so
+   afterwards **any** non-`None` generative gradient can only have come from the
+   label.
+2. The live assert is tightened from "gradient is non-zero" to
+   "`requires_grad` **or** `grad is not None`", which is the actual contract.
+3. A new regression test, `test_p6b_freezing_the_null_clears_its_pretraining_gradients`,
+   covers precisely the case the static P6 test missed — it exercises the **real**
+   `pretrain_null` and asserts no stale gradient survives. **25 gates now pass.**
+
+Separately, the pretrained null is now checkpointed to `cache/crf02/null_fold{f}.pt`
+and verified against its recorded `state_sha256` on load, so a downstream failure
+does not cost a 21-minute refit. Deterministic training makes a loaded null
+bitwise identical to a freshly trained one.
+
+**Nothing frozen changed:** not the model, the channels, the signals, the levels,
+the objective, the head, the standardiser, the seeds, the gates or the thresholds.
+An end-to-end smoke run over 200 training and 60 validation series with a 1-epoch
+null then exercised all four arms — candidate 10 features, fixed-null 10, deranged
+10, shared-8 diagnostic 8 — with the isolation check passing and finite scores
+throughout, before the real fold-0 run was started.
+
+This correction is its own commit, pushed **before** the first CRF-02 score exists.
+The Stage-B commit `ad6ecd7` is left exactly as pushed; nothing is rewritten.
+
 ### 13.5 Implementation commit
 
 Stage A execution preregistration: `9a3d3c7` (`Preregister CRF-02 ACGN execution`),

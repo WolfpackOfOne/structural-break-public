@@ -254,6 +254,36 @@ def test_p6_label_gradient_never_reaches_the_generative_null():
                for p in head.parameters()), "the head received no gradient at all"
 
 
+def test_p6b_freezing_the_null_clears_its_pretraining_gradients(data, monkeypatch):
+    """The case the LIVE assert caught that the static P6 test did not.
+
+    After pretraining, every generative parameter still carries the PINBALL
+    loss's gradient.  Those are stale the moment the null is frozen, and leaving
+    them makes any downstream "did the label touch the null?" check measure
+    pretraining instead of the label -- a false positive that would have to be
+    reasoned away exactly when it matters.  pretrain_null therefore clears them,
+    so afterwards a non-None generative grad can ONLY have come from the label.
+    """
+    monkeypatch.setattr(K2, "PRETRAIN_EPOCHS", 1)
+    monkeypatch.setattr(K2, "HWIN", 128)
+    sf0 = data.series_fold
+    keep_tr = np.concatenate([np.flatnonzero(sf0 == g)[:4] for g in (1, 2, 3, 4)])
+    sf = np.full_like(sf0, 9)
+    sf[keep_tr] = sf0[keep_tr]
+    sf[np.flatnonzero(sf0 == 0)[:4]] = 0
+    monkeypatch.setattr(data, "series_fold", sf)
+    nulls = [K2.SeriesNull(np.zeros(200))] * data.st.n_series
+    for s_ in keep_tr:
+        nulls[int(s_)] = K2.SeriesNull(data.st.hist(int(s_)))
+
+    net, _ = K2.pretrain_null(0, data, nulls, log=lambda m: None)
+    stale = [n for n, p in net.named_parameters()
+             if p.requires_grad or p.grad is not None]
+    assert not stale, (
+        "the null was frozen but still carries pretraining gradients; the live "
+        f"isolation assert would false-positive on {stale[:3]}")
+
+
 # ============================================ C1 bitwise prefix invariance
 def test_c1_prefix_invariance_bitwise_atol_zero(spread, net64):
     """atol = 0.0 over the whole 10-feature block, in float64.

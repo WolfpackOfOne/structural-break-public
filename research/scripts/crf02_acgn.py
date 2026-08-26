@@ -283,6 +283,10 @@ def _pack_hist(nulls, ids):
 
 
 # ================================================================= pretraining
+def _null_ckpt(fold):
+    return f"{CACHE}/null_fold{fold}.pt"
+
+
 def pretrain_null(fold, d, nulls, log, seed=SEED):
     """One outer fold's generative null.  TRAINING-FOLD HISTORIES ONLY.
 
@@ -304,6 +308,19 @@ def pretrain_null(fold, d, nulls, log, seed=SEED):
 
     torch.manual_seed(seed * 1000 + fold)
     net = ACGN.build(seed * 1000 + fold, device)
+    ck = _null_ckpt(fold)
+    if os.path.exists(ck):
+        blob = torch.load(ck, weights_only=False)
+        net.load_state_dict(blob["state_dict"])
+        net.eval()
+        for prm in net.parameters():
+            prm.requires_grad_(False)
+            prm.grad = None
+        assert sha_state_dict(net.state_dict()) == blob["meta"]["state_sha256"], \
+            "null checkpoint does not match its recorded state sha"
+        log(f"  null fold {fold} loaded from checkpoint, state "
+            f"{blob['meta']['state_sha256'][:12]}")
+        return net, blob["meta"]
     opt = torch.optim.AdamW(net.parameters(), lr=LR, weight_decay=WD)
     hlen = np.array([len(nulls[s].hwin) for s in range(d.st.n_series)], dtype=np.int64)
     n_steps = PRETRAIN_EPOCHS * int(np.ceil(len(tr) / BATCH_SERIES))
@@ -337,10 +354,19 @@ def pretrain_null(fold, d, nulls, log, seed=SEED):
     net.eval()
     for prm in net.parameters():          # FROZEN before any signal is computed
         prm.requires_grad_(False)
-    return net, {"fit_series": int(len(tr)), "val_series": int(len(va)),
-                 "pinball_history": hist, "state_sha256": sha_state_dict(net.state_dict()),
-                 "n_parameters": int(sum(p.numel() for p in net.parameters())),
-                 "pretrain_runtime_s": round(time.time() - t0, 1)}
+        # Clear the PINBALL loss's gradients.  They are stale the moment the null
+        # is frozen, and leaving them would make the downstream isolation assert
+        # measure pretraining rather than the label -- which is exactly the false
+        # positive it raised on the first attempt.  After this, ANY non-None grad
+        # on a generative parameter can only have come from the ranking head.
+        prm.grad = None
+    meta = {"fit_series": int(len(tr)), "val_series": int(len(va)),
+            "pinball_history": hist, "state_sha256": sha_state_dict(net.state_dict()),
+            "n_parameters": int(sum(p.numel() for p in net.parameters())),
+            "pretrain_runtime_s": round(time.time() - t0, 1)}
+    os.makedirs(CACHE, exist_ok=True)
+    torch.save({"state_dict": net.state_dict(), "meta": meta}, _null_ckpt(fold))
+    return net, meta
 
 
 # =========================================================== signal generation
@@ -512,8 +538,9 @@ def train_ranking_head(arm, fold, d, F, log, gen_params=None, seed=SEED):
             loss.backward()
             if not checked and gen_params is not None:
                 bad = [n for n, p in gen_params
-                       if p.grad is not None and float(p.grad.abs().sum()) > 0.0]
-                assert not bad, f"ISOLATION VIOLATION: label reached the null: {bad[:5]}"
+                       if p.requires_grad or p.grad is not None]
+                assert not bad, (
+                    f"ISOLATION VIOLATION: the label reached the null: {bad[:5]}")
                 checked = True
             nn.utils.clip_grad_norm_(net.parameters(), CLIP_GRAD)
             opt.step(); sched.step()
