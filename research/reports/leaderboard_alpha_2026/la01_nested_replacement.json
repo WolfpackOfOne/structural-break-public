@@ -1,0 +1,294 @@
+{
+  "arms": {
+    "e0_rt600": {
+      "feature_set": "RT-300,RT-410,RT-411,RT-412,RT-413,RT-414,RT-415",
+      "scores": {
+        "fold_std": 0.008564048588253301,
+        "mean_ts_auc": 0.6258113418832281,
+        "per_fold_ts_auc": [
+          0.638276215299891,
+          0.6204019581662752,
+          0.6339304299070194,
+          0.6175075878311903,
+          0.6189405182117643
+        ],
+        "pooled_ts_auc": 0.6256269345441687
+      }
+    },
+    "rt1243_candidate_replacement": {
+      "feature_set": "RT-300,RT-410,RT-411,RT-412,RT-413,RT-414,RT-415,RT-731,RT-751",
+      "mean_delta_vs_e0": -0.0008362787200686395,
+      "scores": {
+        "fold_std": 0.009542732341049995,
+        "mean_ts_auc": 0.6249750631631594,
+        "per_fold_ts_auc": [
+          0.6391953795674682,
+          0.6202001417125228,
+          0.6333898426229534,
+          0.6160443556685649,
+          0.6160455962442876
+        ],
+        "pooled_ts_auc": 0.624730379756214
+      }
+    },
+    "rt1244_seedclone_replacement": {
+      "feature_set": "RT-300,RT-401,RT-410,RT-411,RT-412,RT-413,RT-414,RT-415",
+      "mean_delta_vs_e0": -0.0008308703587823763,
+      "scores": {
+        "fold_std": 0.008947857179263273,
+        "mean_ts_auc": 0.6249804715244457,
+        "per_fold_ts_auc": [
+          0.6378415513953996,
+          0.6201218318534933,
+          0.6335605588981115,
+          0.6170046248406685,
+          0.6163737906345554
+        ],
+        "pooled_ts_auc": 0.6247238138134424
+      }
+    }
+  },
+  "artifact_root": "/path/to/workspace/structural-break-wave5",
+  "calibration": "SCDF_NSEEN",
+  "calibration_cache_entries": 245,
+  "candidate_id": "RT-1243",
+  "clone_id": "RT-1244",
+  "experiment": "LA-01 specialist replacement salvage",
+  "gate": {
+    "dominant_pair_net_positive": false,
+    "marginal_vs_clone_ge_0_0015": false,
+    "positive_folds_ge_4": false
+  },
+  "git_sha": "1dd8be0",
+  "nested_selection": {
+    "rt1243_candidate_replacement": [
+      {
+        "inner_fold_ts_auc": [
+          0.6200954470235349,
+          0.6336349160969165,
+          0.6205615098113995,
+          0.6188642407661118
+        ],
+        "inner_mean_ts_auc": 0.6232890284244907,
+        "outer_fold": 0,
+        "replaced": "RT-413",
+        "replacement": "RT-751",
+        "replacement_label": "m12_rdep"
+      },
+      {
+        "inner_fold_ts_auc": [
+          0.6415092795251413,
+          0.6345165343421867,
+          0.6202717393157315,
+          0.616038783405569
+        ],
+        "inner_mean_ts_auc": 0.6280840841471571,
+        "outer_fold": 1,
+        "replaced": "RT-410",
+        "replacement": "RT-751",
+        "replacement_label": "m12_rdep"
+      },
+      {
+        "inner_fold_ts_auc": [
+          0.6396906957830588,
+          0.6209010307652005,
+          0.6187027276777413,
+          0.6193577876452776
+        ],
+        "inner_mean_ts_auc": 0.6246630604678196,
+        "outer_fold": 2,
+        "replaced": "RT-300",
+        "replacement": "RT-751",
+        "replacement_label": "m12_rdep"
+      },
+      {
+        "inner_fold_ts_auc": [
+          0.6383453568827564,
+          0.6214424714850291,
+          0.6339639514426111,
+          0.620414240618563
+        ],
+        "inner_mean_ts_auc": 0.6285415051072399,
+        "outer_fold": 3,
+        "replaced": "RT-300",
+        "replacement": "RT-731",
+        "replacement_label": "m11_focus"
+      },
+      {
+        "inner_fold_ts_auc": [
+          0.6415292221691737,
+          0.6202067981224237,
+          0.6345125333247383,
+          0.6202772881204288
+        ],
+        "inner_mean_ts_auc": 0.6291314604341911,
+        "outer_fold": 4,
+        "replaced": "RT-410",
+        "replacement": "RT-751",
+        "replacement_label": "m12_rdep"
+      }
+    ],
+    "rt1244_seedclone_replacement": [
+      {
+        "inner_fold_ts_auc": [
+          0.6200918169079842,
+          0.6338627138022318,
+          0.6188367307491789,
+          0.6192333573566824
+        ],
+        "inner_mean_ts_auc": 0.6230061547040193,
+        "outer_fold": 0,
+        "replaced": "RT-413",
+        "replacement": "RT-401"
+      },
+      {
+        "inner_fold_ts_auc": [
+          0.640121314734581,
+          0.6346948510631295,
+          0.6186326576267983,
+          0.6163639251924111
+        ],
+        "inner_mean_ts_auc": 0.6274531871542299,
+        "outer_fold": 1,
+        "replaced": "RT-410",
+        "replacement": "RT-401"
+      },
+      {
+        "inner_fold_ts_auc": [
+          0.6384072182830585,
+          0.6208108709151109,
+          0.6169867832417706,
+          0.6197210549809484
+        ],
+        "inner_mean_ts_auc": 0.6239814818552221,
+        "outer_fold": 2,
+        "replaced": "RT-300",
+        "replacement": "RT-401"
+      },
+      {
+        "inner_fold_ts_auc": [
+          0.6384023452871807,
+          0.6208013211952909,
+          0.6335419742464323,
+          0.619718691189393
+        ],
+        "inner_mean_ts_auc": 0.6281160829795742,
+        "outer_fold": 3,
+        "replaced": "RT-300",
+        "replacement": "RT-401"
+      },
+      {
+        "inner_fold_ts_auc": [
+          0.6401373956209779,
+          0.6201291531855497,
+          0.6346861871498817,
+          0.6186411588002337
+        ],
+        "inner_mean_ts_auc": 0.6283984736891608,
+        "outer_fold": 4,
+        "replaced": "RT-410",
+        "replacement": "RT-401"
+      }
+    ]
+  },
+  "pair_flow": {
+    "rt1243_vs_e0": {
+      "dominant_cell": {
+        "damage": 838,
+        "damage_rate": 0.016607871893455944,
+        "net_pair_lift": -10,
+        "repairs": 828,
+        "total_pairs_sampled": 50458
+      },
+      "mature_vs_never": {
+        "damage": 840,
+        "damage_rate": 0.016649488622849443,
+        "net_pair_lift": -38,
+        "repairs": 802,
+        "total_pairs_sampled": 50452
+      },
+      "mature_vs_prebreak": {
+        "damage": 724,
+        "damage_rate": 0.016442213794199804,
+        "net_pair_lift": -99,
+        "repairs": 625,
+        "total_pairs_sampled": 44033
+      },
+      "whole": {
+        "damage": 1205,
+        "damage_rate": 0.019068265974617842,
+        "net_pair_lift": -92,
+        "repairs": 1113,
+        "total_pairs_sampled": 63194
+      }
+    },
+    "rt1244_vs_e0": {
+      "dominant_cell": {
+        "damage": 811,
+        "damage_rate": 0.01607277339569543,
+        "net_pair_lift": -19,
+        "repairs": 792,
+        "total_pairs_sampled": 50458
+      },
+      "mature_vs_never": {
+        "damage": 770,
+        "damage_rate": 0.015262031237611988,
+        "net_pair_lift": -31,
+        "repairs": 739,
+        "total_pairs_sampled": 50452
+      },
+      "mature_vs_prebreak": {
+        "damage": 678,
+        "damage_rate": 0.015397542752026889,
+        "net_pair_lift": -61,
+        "repairs": 617,
+        "total_pairs_sampled": 44033
+      },
+      "whole": {
+        "damage": 1113,
+        "damage_rate": 0.017612431559958223,
+        "net_pair_lift": -24,
+        "repairs": 1089,
+        "total_pairs_sampled": 63194
+      }
+    }
+  },
+  "pair_seed": 20260826,
+  "pairs_per_t": 64,
+  "primary": {
+    "clone_fold_deltas_vs_e0": [
+      -0.000434663904491428,
+      -0.00028012631278184763,
+      -0.00036987100890795155,
+      -0.0005029629905217714,
+      -0.0025667275772088827
+    ],
+    "clone_mean_delta_vs_e0": -0.0008308703587823763,
+    "fold_deltas_vs_clone": [
+      0.0013538281720686385,
+      7.830985902945731e-05,
+      -0.0001707162751580782,
+      -0.0009602691721036782,
+      -0.00032819439026787744
+    ],
+    "fold_deltas_vs_e0": [
+      0.0009191642675772105,
+      -0.00020181645375239032,
+      -0.0005405872840660297,
+      -0.0014632321626254496,
+      -0.00289492196747676
+    ],
+    "marginal_vs_clone": -5.408361286263208e-06,
+    "mean_delta_vs_e0": -0.0008362787200686395,
+    "positive_folds_vs_clone": 2
+  },
+  "program": "LEADERBOARD ALPHA 2026",
+  "runtime_s": 185.03294897079468,
+  "verdict": "KILL",
+  "within_t_rank_corr": {
+    "rt1243_vs_e0_dev": 0.989998679956631,
+    "rt1243_vs_e0_dominant": 0.9921122896260294,
+    "rt1244_vs_e0_dev": 0.9910612041301062,
+    "rt1244_vs_e0_dominant": 0.992932157885421
+  }
+}

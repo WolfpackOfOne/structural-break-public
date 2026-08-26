@@ -864,3 +864,17 @@ Execution preregistration:
 |---|---|
 | `RT-1243` | LA-01 headline nested seven-member replacement arm. For each outer fold, select on the other four folds which RT600 specialist is replaced by either `RT-731` (`m11_focus`) or `RT-751` (`m12_rdep`), then evaluate that frozen seven-member equal-SCDF blend on the outer fold. |
 | `RT-1244` | LA-01 secondary control. Same nested replacement protocol, but the replacement candidate is the exchangeable seed clone `RT-401`. |
+
+### LA-01 result, filed 2026-08-26
+
+`RT-1243` is **KILL**. Full report:
+`research/reports/leaderboard_alpha_2026/LA01_NESTED_REPLACEMENT.md`; metrics:
+`la01_nested_replacement.{json,csv}`.
+
+E0 RT600 seven-specialist mean TS-AUC `0.625811342`; `RT-1244` nested
+seed-replacement control `0.624980472`; `RT-1243` nested `m11_focus`/`m12_rdep`
+replacement `0.624975063`. Primary `marginal_vs_clone = -0.000005408`; positive
+folds `2/5`; dominant-cell repairs/damage/net `828/838/-10`; mature-vs-never
+net `-38`; mature-vs-prebreak net `-99`.
+
+The result closes specialist-replacement salvage. Continue to LA-02.

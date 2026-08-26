@@ -184,12 +184,11 @@ short and gets updated whenever that changes materially.
   [`FINAL_ARCHITECTURE_FREEZE.md`](FINAL_ARCHITECTURE_FREEZE.md),
   [`FINAL_REPRODUCIBILITY_MANIFEST.json`](FINAL_REPRODUCIBILITY_MANIFEST.json).
 
-_Last updated: 2026-08-26, after the Causal Representation Frontier program was
-executed to exhaustion on `research/causal-representation-frontier-2026`: `CRF-01`
-NNCSR (`RT-1234`/`RT-1235`) and `CRF-02` ACGN
-(`RT-1240`/`RT-1241`/`RT-1242`) are both KILL on their preregistered fold-0
-screens, `CRF-03` did not open, and model search under this program is stopped.
-`RT-1236` remains reserved and unconsumed; `RT-1237`/`RT-1238`/`RT-1239` are void
-and retired. Update this file whenever the production anchor,
-external score, or active research conclusion changes — see
-`AGENTS.md` at the repo root for the update rule._
+_Last updated: 2026-08-26 on `research/leaderboard-alpha-2026`: Leaderboard
+Alpha 2026 is active. LA-01 specialist replacement salvage (`RT-1243`/`RT-1244`)
+is KILL (`marginal_vs_clone = -0.000005`, positive folds `2/5`, dominant net
+`-10`) and closed. Production `RT-600` remains unchanged; proceed to LA-02
+counterfactual synthetic augmentation under
+`reports/leaderboard_alpha_2026/PROGRAM_PREREG.md`. Update this file whenever
+the production anchor, external score, or active research conclusion changes —
+see `AGENTS.md` at the repo root for the update rule._

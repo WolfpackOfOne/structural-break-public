@@ -2016,6 +2016,42 @@ its own pushed pre-score commit.
 
 **CRF-03 does not open** and the CRF program is exhausted. See `CRF_FINAL.md`.
 
+## RT-1243 / RT-1244 -- LA-01 specialist replacement salvage -- KILL (2026-08-26)
+
+**Program preregistration** `research/reports/leaderboard_alpha_2026/PROGRAM_PREREG.md`
+@ `ed84d00`.
+**Execution preregistration** `research/reports/leaderboard_alpha_2026/LA01_EXECUTION_PREREG.md`
+@ `73677fc`.
+
+**Hypothesis.** `m11_focus` and/or `m12_rdep` contained useful specialization
+that prior ordinary integration erased because it added streams instead of
+replacing a redundant RT600 specialist.
+
+**What was done.** Full five-fold artifact-only nested replacement. For each
+outer fold, the replaced RT600 specialist and replacement candidate were chosen
+using only the other four folds under fold-pure SCDF calibration. `RT-1243`
+allowed `RT-731` (`m11_focus`) or `RT-751` (`m12_rdep`); `RT-1244` used the same
+nested rule with seed clone `RT-401`.
+
+**Result.** E0 RT600 mean TS-AUC `0.625811342`; nested seed replacement
+`0.624980472`; nested m11/m12 replacement `0.624975063`.
+Primary `marginal_vs_clone = -0.000005408`, with only 2/5 folds positive.
+Fold deltas vs clone: `+0.001354`, `+0.000078`, `-0.000171`, `-0.000960`,
+`-0.000328`.
+
+**Pair flow.** Candidate vs E0, 64 same-`t` pairs per time point: whole dev net
+`-92`, dominant-cell repairs/damage/net `828/838/-10`, mature-vs-never net
+`-38`, mature-vs-prebreak net `-99`.
+
+**Why it failed.** The replacement rule mostly selected `m12_rdep`, but its
+outer-fold gains did not survive the seed-replacement control and did not repair
+dominant residual pairs on net. Replacement also lowered mean TS-AUC vs the
+untouched RT600 seven-specialist ensemble by `-0.000836`.
+
+**Retry warranted?** No. The preregistered full five-fold gate failed on all
+binding dimensions: marginal below `+0.0015`, fewer than 4/5 positive folds, and
+dominant-cell net not positive. Specialist-replacement salvage is closed.
+
 
 ## RT-1240 / RT-1241 / RT-1242 -- CRF-02 ACGN amortized conditional generative null -- KILL (2026-08-26, CORRECTED RUN)
 

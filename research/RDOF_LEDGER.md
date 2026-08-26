@@ -1325,3 +1325,7 @@ Program preregistration:
 
 Allocated IDs: `RT-1243` candidate, `RT-1244` seed-clone replacement control.
 No fold-0 architecture fishing, no weight tuning, no large retraining.
+
+**Result.** `RT-1243` is KILL: `marginal_vs_clone = -0.000005408`, positive
+folds `2/5`, dominant-cell net `-10`. Specialist-replacement salvage is closed;
+no further degrees of freedom are allocated to LA-01.

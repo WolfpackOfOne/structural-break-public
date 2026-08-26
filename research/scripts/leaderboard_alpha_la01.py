@@ -242,10 +242,6 @@ def score_vec(c: Ctx, v: np.ndarray):
 
 
 def append_result_rows(result: dict):
-    fieldnames = next(csv.DictReader(open(RESULTS_CSV))).fieldnames
-    if fieldnames is None:
-        raise RuntimeError("RESULTS.csv has no header")
-
     def row(exp_id: str, arm_key: str, status: str, notes: str):
         arm = result["arms"][arm_key]
         selected = result["nested_selection"][arm_key]
@@ -302,12 +298,16 @@ def append_result_rows(result: dict):
 
     with open(RESULTS_CSV, "r+", newline="") as fh:
         fcntl.flock(fh.fileno(), fcntl.LOCK_EX)
-        existing = {r["experiment_id"] for r in csv.DictReader(fh)}
+        reader = csv.DictReader(fh)
+        fieldnames = reader.fieldnames
+        if fieldnames is None:
+            raise RuntimeError("RESULTS.csv has no header")
+        existing = {r["experiment_id"] for r in reader}
         dup = [r["experiment_id"] for r in rows if r["experiment_id"] in existing]
         if dup:
             raise RuntimeError(f"RESULTS.csv already contains {dup}")
         fh.seek(0, os.SEEK_END)
-        writer = csv.DictWriter(fh, fieldnames=fieldnames)
+        writer = csv.DictWriter(fh, fieldnames=fieldnames, lineterminator="\n")
         for r in rows:
             writer.writerow({k: r.get(k, "") for k in fieldnames})
         fcntl.flock(fh.fileno(), fcntl.LOCK_UN)
