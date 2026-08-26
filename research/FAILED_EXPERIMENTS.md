@@ -1911,3 +1911,96 @@ evidence from the legal prefix; CRF-02 asks the different question of whether th
 never-break false-positive mass is a conditional-**null misspecification** problem.
 `CRF-03` does not open on CRF-01, whose opening rule needs
 `marginal_vs_clone >= +0.0015` and which has no marginal at all.
+
+## RT-1237 / RT-1238 / RT-1239 -- CRF-02 ACGN amortized conditional generative null -- KILL (2026-08-26)
+
+**Program preregistration** `research/reports/causal_representation_frontier/CRF_PROGRAM_PREREG.md` @ `85d121f`.
+**Execution preregistration** `research/reports/causal_representation_frontier/CRF02_EXECUTION_PREREG.md` @ `9a3d3c7`.
+**Preflight** `ad6ecd7`, **pre-score correction** `89149d5`.
+**Report** `research/reports/causal_representation_frontier/crf02_acgn.{md,json}`.
+
+**Hypothesis.** 73.99 % of dominant-cell loss is never-break negatives whose loss
+rate is predicted by heavy tails, long memory, and histories that produce few
+excursions and then wander -- the signature of **null misspecification**. Every null
+this project ships is a fixed rolling-mean historical calibration with AR(2) shared
+context. A **global, amortized, nonlinear, distributional** null learned from
+break-free histories only should price "normal" better, and the sequential departure
+of the online stream from it should be a different discriminative direction.
+
+**What was done.** Per outer fold, a generative null `q(x_t | h_i, x_{t-1..t-R})`
+pretrained on the **training-fold series' break-free histories only** -- no online
+row, no label, no future -- with the frozen `RT-970` TCN body, an 8-dimensional
+history bottleneck from mean-pooling the same encoder over the last 1024 points of
+`H_i`, and 21 monotone quantile knots (base + softplus increments) at the
+preregistered levels under pinball loss. The null was then **frozen**, five
+preregistered strictly causal online signals plus their running peaks computed
+(predictive PIT, predictive log score, running Anderson-Darling-weighted uniformity
+discrepancy, cumulative predictive surprise, encoder latent-state shift), and only
+then a 10->32->1 same-`t` pairwise ranking head fitted on training folds. Fold 0.
+
+**The numbers.** Candidate `RT-1237` standalone whole-fold TS-AUC **0.527807** at
+within-`t` rho **+0.2212**; dominant-cell **0.539309**.
+
+**Three independent mandatory gates failed:**
+
+1. **Cheap abandon gate** -- `0.527807 < 0.600` AND rho `0.2212 <= 0.60`. FIRED.
+2. **Learned-null isolation** -- candidate minus C1 = **`-0.052779`** whole-fold
+   (`-0.060600` dominant-cell) against a required `+0.000500`.
+3. **Derangement** -- candidate minus C2 = **`-0.000981`**. The `m05_ctx` rule kills
+   the arm regardless of its headline number.
+
+`RT-1238`, the **fixed**-null control (AR(5) + 256-knot history residual ECDF,
+per series, feeding **identical** downstream statistics into an **identical** ranking
+head): **0.580586** standalone, **0.599909** dominant-cell. `RT-1239`, the deranged
+`h_i` control: `0.528788` / `0.540154`. A declared no-id diagnostic refitting the
+candidate's head on the eight features the fixed-null control also has reached
+`0.531864`, **above** the 10-feature candidate.
+
+Pair flow negative in every cell for every arm; candidate pre-break damage rate on
+RT600-correct pairs `0.4144` against the `0.0150` cap.
+
+**Why it failed -- and this is the load-bearing part.** The learned null lost to the
+project's existing fixed apparatus by **0.0528**, and the candidate's own C2 control
+explains why. Permuting `h_i` across series moves the score by `-0.00098`, i.e. by
+nothing, so the 8-dimensional history bottleneck carries **no usable series-specific
+information at all**. The learned null is therefore in effect a **population-average**
+predictive distribution applied to every series alike, while the fixed null is a
+**per-series** fit -- five AR coefficients and a 256-knot empirical residual
+distribution -- paid for by that series' own break-free history at zero
+generalisation cost, because the history is complete at `t = 0`.
+
+Series heterogeneity in this data is large; that is the whole reason the project's
+foundation is per-series historical calibration. **Amortizing across series LOSES
+information here rather than adding it**, and an 8-float bottleneck is not a wide
+enough channel to recover what a per-series fit gets for free.
+
+Note this is **not** the usual `m05_ctx` failure. C2 did not win because `h_i` was a
+memorised series identifier; it won because `h_i` was doing nothing, so destroying it
+cost nothing. Both readings kill the arm, but the mechanism is what closes the lane.
+
+**What this closes.** Exactly what `CRF_PROGRAM_PREREG.md` 2.9 wrote before any
+number existed: **learned amortized generative nulls are closed for this problem.**
+The per-series historical calibration the project already ships **is** the right
+null -- now measured against a matched learned alternative rather than assumed. The
+never-break false-positive mass is **not** a conditional-null misspecification
+problem in the sense CRF-02 hypothesized: a strictly better-specified null was built
+and it did not help. `h_i`-style amortized conditioning is closed as a route.
+
+Combined with CRF-01, this closes **H-A** (representation saturation), **H-B**
+(objective mismatch) and **H-E** (learned-null misspecification), leaving **H-D**.
+
+**Retry warranted?** **No.** No `CRF-02b`. No MDN, no normalising flow, no wider
+bottleneck, no deeper head, no different quantile grid, no second epoch count, no
+seed re-roll -- all forbidden by `CRF_PROGRAM_PREREG.md` 0.8/0.9 and none supported
+by the evidence: the null was not under-trained (pinball converged cleanly from
+`0.364706` to `0.243881`), it was mis-conceived. A wider bottleneck is a different
+experiment and the program does not authorise one.
+
+**One pre-score failure, recorded.** The first fold-0 attempt stopped at the live
+isolation assert and produced **no score of any kind**. It was a false positive --
+stale pinball gradients on the frozen null, not a label leak -- fixed by clearing
+them at freeze time, tightening the assert to its real contract, and adding a
+regression test for that exact case. Nothing frozen changed and the correction is
+its own pushed pre-score commit.
+
+**CRF-03 does not open** and the CRF program is exhausted. See `CRF_FINAL.md`.

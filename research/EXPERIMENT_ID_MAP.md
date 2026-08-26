@@ -675,3 +675,52 @@ CRF-01's C2 temporal-shuffle arm, which was gate-blocked and never run.
 Collision audit before allocation: highest allocated id `RT-1235`; `RT-1237`,
 `RT-1238`, `RT-1239` appear in no `RESULTS.csv` on any ref, in no tracked file, and
 in no commit reachable from any ref.
+
+### CRF-02 result, filed 2026-08-26
+
+`research/reports/causal_representation_frontier/crf02_acgn.{md,json}`.
+
+**`RT-1237` KILL on three independent mandatory grounds.**
+
+1. **Cheap abandon gate fired**: fold-0 standalone whole-fold TS-AUC `0.527807`
+   (below `0.600`) at within-`t` ρ `+0.2212` (below `0.60`).
+2. **Learned-null isolation failed**: candidate − C1 = **`-0.052779`** whole-fold
+   (`-0.060600` dominant-cell) against a required `+0.000500`. The **fixed**
+   per-series null `RT-1238` — AR(5) + 256-knot history residual ECDF — reached
+   `0.580586` / `0.599909` through **identical** downstream statistics and an
+   **identical** ranking head, beating the learned null by `0.0528`.
+3. **Derangement gate failed**: candidate − C2 = **`-0.000981`**. Permuting `h_i`
+   across series within fold changes essentially nothing, so the 8-dimensional
+   history bottleneck carries no usable series information — the `m05_ctx` rule,
+   which kills the arm regardless of its headline number.
+
+`marginal_vs_clone` was never computed for any arm: the abandon gate fired and
+folds 1–4 were deliberately not trained, so the isolation comparisons are on
+standalone fold-0 TS-AUC exactly as `CRF02_EXECUTION_PREREG.md` §8 stage S1
+preregistered. Both mandatory controls were run **before** the gate was read so the
+scientific comparison would survive a headline failure — which is what happened.
+
+The declared shared-8 diagnostic (no RT id) refit the candidate's head on the eight
+features the fixed-null control also has and reached `0.531864`, **above** the
+10-feature candidate: the isolation gate was not flattered by the candidate's two
+extra encoder-derived features.
+
+Pair flow negative in every cell for every arm; pre-break damage rate on
+RT600-correct pairs `0.4144` (candidate) against the `0.0150` cap.
+
+**Reading.** The learned null is effectively a **population-average** predictive
+distribution, because C2 shows `h_i` conditions on nothing usable. The fixed null is
+a **per-series** fit paid for by that series' own break-free history at zero
+generalisation cost. Amortization across series therefore *loses* information rather
+than adding it, and an 8-float bottleneck is not a wide enough channel to recover
+what a per-series fit gets for free.
+
+`RT-1237`/`RT-1238`/`RT-1239` OOF vectors are fold-0 only: finite on the 806,334
+fold-0 rows, NaN on folds 1–4, zero finite lockbox rows. Their `mean_oof_ts_auc` /
+`pooled_oof_ts_auc` / `per_fold_ts_auc` columns hold the arm's **standalone** fold-0
+TS-AUC, not an ensemble score; the `notes` column says so on all three rows.
+
+**CRF-03 does not open.** `CRF_PROGRAM_PREREG.md` §3.1 requires a fold-0
+`marginal_vs_clone ≥ +0.0015` from CRF-01 or CRF-02 plus a passing mandatory
+isolation control. Both primaries are KILL and neither has a marginal. No further
+CRF id is allocated. `RT-1236` remains reserved and unconsumed.

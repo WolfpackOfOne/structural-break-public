@@ -126,33 +126,41 @@ short and gets updated whenever that changes materially.
   Both preregistered New Avenues sweeps are closed with no confirmation
   candidate. Production `RT-600` (external **0.6268**) is unchanged.
 - **Current research program:** **CAUSAL REPRESENTATION FRONTIER (CRF)** —
-  `CRF-01 KILL, CRF-02 IN PROGRESS`. Design and evidence in
-  [`reports/causal_representation_frontier/`](reports/causal_representation_frontier/):
-  `CAUSAL_REPRESENTATION_FRONTIER.md` (audit), `CRF_PROGRAM_PREREG.md` (program
-  preregistration at `85d121f`), `CRF01_EXECUTION_PREREG.md`,
-  `crf01_nncsr.{md,json}`, plus the supporting CSVs and the static checker
-  `scripts/audit_causal_representation_frontier.py`.
-  **`CRF-01` NNCSR (`RT-1234`, control `RT-1235`) is KILL**, abandoned at the
-  preregistered cheap abandon gate: fold-0 standalone whole-fold TS-AUC
-  `0.592762` (below the `0.600` necessary condition) at within-`t` rho vs RT600
-  `+0.4460`, so no five-fold spend, no C2 (`RT-1236` reserved and **not**
-  consumed), and `marginal_vs_clone` deliberately never computed. Pair flow was
-  negative in every cell (dominant net `-2,798`, mature-vs-never `-2,962`) and
-  the pre-break damage rate on RT600-correct pairs was `0.2626` against a
-  `0.0150` cap. Because `RT-970` is the same shell on the same folds, the ladder
-  `RT-970` 0.52618 → `RT-1235` 0.57054 → `RT-1234` 0.59276 isolates both factors
-  for the first time: **representation effect `+0.0444`**, **objective effect
-  `+0.0222`** — Wave 6 could not tell "family wrong" from "objective wrong", both
-  were partly wrong, and their sum is still short. `RT-1234` sets a **new best
-  standalone-at-low-redundancy point** (0.59276 at rho 0.446, prior record
-  `RT-1201`'s 0.58358): the frontier moved and the answer did not change. The
-  representation × objective factorial is now **complete and empty**, which closes
-  learned causal-prefix representations as an ensemble alpha source and objective
-  mismatch as a live explanation for the W7-D3R gap. `CRF-02` ACGN is
-  unconditional and independent of this result and is next; `CRF-03` does not open
-  on `CRF-01`. The audit's standing fact remains: across the 17 scored arms with
-  both numbers recorded, standalone AUC and within-`t` redundancy against RT-600
-  correlate at **+0.983**.
+  **`CRF_PROGRAM_EXHAUSTED`**. Both primaries are KILL, `CRF-03` did not open, and
+  model search under this program is stopped. Full account in
+  [`reports/causal_representation_frontier/CRF_FINAL.md`](reports/causal_representation_frontier/CRF_FINAL.md);
+  design and evidence in
+  [`reports/causal_representation_frontier/`](reports/causal_representation_frontier/).
+  - **`CRF-01` NNCSR** (`RT-1234`, control `RT-1235`; `RT-1236` reserved and **not**
+    consumed) — **KILL**, abandoned at the cheap abandon gate: fold-0 standalone
+    whole-fold TS-AUC `0.592762` (below the `0.600` necessary condition) at
+    within-`t` ρ `+0.4460`. Pair flow negative in every cell (dominant net
+    `-2,798`, mature-vs-never `-2,962`); pre-break damage rate on RT600-correct
+    pairs `0.2626` against a `0.0150` cap. Because `RT-970` is the same shell on
+    the same folds, the ladder `RT-970` 0.52618 → `RT-1235` 0.57054 → `RT-1234`
+    0.59276 isolates both factors for the first time: **representation effect
+    `+0.0444`**, **objective effect `+0.0222`**. Wave 6 could not tell "family
+    wrong" from "objective wrong"; both were partly wrong and their sum is still
+    short. `RT-1234` set a **new best standalone-at-low-redundancy point**
+    (0.59276 at ρ 0.446, prior record `RT-1201`'s 0.58358) — the frontier moved
+    and the answer did not change.
+  - **`CRF-02` ACGN** (`RT-1237`, controls `RT-1238`/`RT-1239`) — **KILL** on three
+    independent mandatory grounds: abandon gate fired (`0.527807` at ρ `+0.2212`);
+    **learned-null isolation failed at `-0.052779`**, because the **fixed**
+    per-series null (AR(5) + history residual ECDF) through identical statistics
+    and an identical head reached `0.580586` and beat the learned null by `0.0528`;
+    and the **derangement gate failed at `-0.000981`**, so the 8-dimensional history
+    bottleneck carries no usable series information. Amortizing the null across
+    series **loses** information rather than adding it: the per-series historical
+    calibration the project already ships is the right null, now measured against a
+    matched learned alternative rather than assumed.
+  - **Reading.** The representation × objective factorial is complete and empty, and
+    learned generative nulls are closed. **H-A** (representation saturation),
+    **H-B** (objective mismatch) and **H-E** (null misspecification) are all closed,
+    leaving **H-D**: the practical limit is the legal prefix itself and the residual
+    W7-D3R gap is predominantly **post-`t`** information. The remaining budget
+    belongs to deployment robustness rather than model search. Production `RT-600`
+    (external **0.6268**) is unchanged.
 - **Final Wave reports:** [`reports/wave4/`](reports/wave4/),
   [`reports/wave5/`](reports/wave5/), [`reports/wave6/`](reports/wave6/),
   [`reports/wave7/`](reports/wave7/); Wave 8's report is on the
@@ -161,10 +169,11 @@ short and gets updated whenever that changes materially.
   [`FINAL_ARCHITECTURE_FREEZE.md`](FINAL_ARCHITECTURE_FREEZE.md),
   [`FINAL_REPRODUCIBILITY_MANIFEST.json`](FINAL_REPRODUCIBILITY_MANIFEST.json).
 
-_Last updated: 2026-08-26, after `CRF-01` NNCSR was executed on its
-preregistered fold-0 screen and killed at the cheap abandon gate
-(`RT-1234`/`RT-1235`; `RT-1236` reserved, not run) on
-`research/causal-representation-frontier-2026`; previously updated when the
-Causal Representation Frontier program was audited and preregistered. Update this file whenever the production anchor,
+_Last updated: 2026-08-26, after the Causal Representation Frontier program was
+executed to exhaustion on `research/causal-representation-frontier-2026`: `CRF-01`
+NNCSR (`RT-1234`/`RT-1235`) and `CRF-02` ACGN
+(`RT-1237`/`RT-1238`/`RT-1239`) are both KILL on their preregistered fold-0
+screens, `CRF-03` did not open, and model search under this program is stopped.
+`RT-1236` remains reserved and unconsumed. Update this file whenever the production anchor,
 external score, or active research conclusion changes — see
 `AGENTS.md` at the repo root for the update rule._

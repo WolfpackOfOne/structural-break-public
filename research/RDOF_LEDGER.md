@@ -351,6 +351,57 @@ with a contaminated positive control.
 `RT-1236` is deliberately skipped rather than recycled: it stays reserved to
 CRF-01's gate-blocked C2 arm.
 
+CRF-02 result filed 2026-08-26:
+`RT-1237` KILL on three independent mandatory grounds -- the cheap abandon
+gate fired (standalone `0.527807` at rho `+0.2212`); the learned-null
+isolation gate failed at `-0.052779` whole-fold against a required
+`+0.000500`, because the FIXED per-series null `RT-1238` (AR(5) + 256-knot
+history residual ECDF, identical downstream statistics, identical ranking
+head) reached `0.580586` and beat the learned null by `0.0528`; and the
+derangement gate failed at `-0.000981`, so the 8-dimensional history
+bottleneck carries no usable series information (the `m05_ctx` rule).
+
+**Degrees of freedom actually consumed: three reserved ids, one outer fold,
+one seed, one architecture, one epoch count, 0.437 h of compute.** No MDN,
+no flow, no wider bottleneck, no deeper head, no alternative quantile grid,
+no second epoch count, no seed re-roll, no `CRF-02b`. No lockbox, test-data,
+production or submission access. Both mandatory controls were run BEFORE the
+abandon gate was read, deliberately, so the scientific comparison would
+survive a headline failure -- which it did.
+
+One additional degree of freedom was declared in advance and consumed no id:
+a shared-8-feature refit of the candidate's ranking head, to check that the
+learned-null isolation gate was not flattered by the candidate holding two
+encoder-derived features the fixed-null control structurally cannot have. It
+reached `0.531864`, ABOVE the 10-feature candidate, so the gate was if
+anything generous to the candidate.
+
+**What the spend bought.** A directly measured answer to
+`CRF_PROGRAM_PREREG.md` 2.9, which was written before any number existed:
+the per-series historical calibration the project already ships IS the right
+null, and it is now measured against a matched learned alternative rather
+than assumed. The mechanism is legible: C2 shows `h_i` conditions on nothing
+usable, so the learned null is effectively a population-average predictive
+distribution, while the fixed null is a per-series fit paid for by that
+series' own break-free history at zero generalisation cost. Amortizing across
+series LOSES information here rather than adding it.
+
+**One pre-score failure, recorded rather than repaired quietly.** The first
+fold-0 attempt stopped at the live isolation assert and produced no score.
+It was a false positive -- stale pinball gradients on the frozen null, not a
+label leak -- and it was fixed by clearing them at freeze time, tightening
+the assert to its real contract, and adding a regression test for exactly
+that case. Nothing frozen changed. The correction is its own pushed
+pre-score commit (`89149d5`); the Stage-B commit `ad6ecd7` was left as
+pushed and nothing was rewritten.
+
+**CRF-03 does not open.** Its opening rule needs a fold-0
+`marginal_vs_clone >= +0.0015` from CRF-01 or CRF-02 plus a passing mandatory
+isolation control. Both primaries are KILL and neither produced a marginal at
+all. The CRF program is EXHAUSTED at three commits of chronology per
+experiment, six scored arms, two reserved-and-unconsumed slots, and 0.94 h of
+the 15 h screening budget. No `CRF-04` is invented.
+
 ---
 
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)
