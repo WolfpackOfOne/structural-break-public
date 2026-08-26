@@ -328,6 +328,29 @@ project: `0.59276` at rho `0.446`, against the prior record of `RT-1201`'s
 `0.58358`. The `corr(standalone, rho) = +0.983` frontier moved and the answer
 did not change, which is the strongest available form of this negative.
 
+CRF-02 degrees of freedom prospectively allocated on 2026-08-26 before scoring:
+
+| experiment | scored IDs | variants | fold screen | notes |
+|---|---|---:|---|---|
+| CRF-02 ACGN amortized conditional generative null | `RT-1237`, `RT-1238`, `RT-1239` | 1 candidate + 2 mandatory controls (fixed null, deranged `h_i`) | fold 0 | Body is the same frozen `RT-970` shell as CRF-01. Head is 21 monotone quantile knots at the program-preregistered levels, base + softplus increments, pinball loss -- no MDN, no flow, no head search. History window fixed at the last 1024 points (~4x the measured receptive field 253) and used identically at training and inference, so there is no train/inference pooling mismatch. Conditioning is concatenation at the head, NOT FiLM -- FiLM is CRF-03's declared mechanism and is left unused so the two stay distinct. Five online signals plus their running peaks are fixed by `CRF_PROGRAM_PREREG.md` 2.4; the ranking head is 10->32->1 under CRF-01's same-`t` pairwise objective. |
+
+**Pretraining epochs fixed at 10 before any CRF-02 number existed, and this is a
+compute-budget choice, not a tuned one.** Each epoch sees ~6.5M history points
+against CRF-01's ~3.2M online points, so 10 epochs is already a larger token
+budget than CRF-01's 20, and the program's 15 h screening cap with 0.50 h
+already spent does not permit more. No other epoch count will be tried and a
+loss curve that "looks strange" is not grounds to change it.
+
+**The one genuinely fitted global object in CRF-02** is the 10-feature
+median/IQR standardiser for the ranking head, fitted on **training-fold rows
+only**, frozen, then applied everywhere. Unlike CRF-01 -- where every clip bound
+was a preregistered constant and no global standardiser existed at all -- this
+makes the section 0.5 purity requirement non-vacuous, and it is asserted in code
+with a contaminated positive control.
+
+`RT-1236` is deliberately skipped rather than recycled: it stays reserved to
+CRF-01's gate-blocked C2 arm.
+
 ---
 
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)

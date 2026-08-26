@@ -654,3 +654,24 @@ hypotheses were partly right and their sum is still insufficient.
 `research/RESULTS.csv` hold the arm's **standalone** fold-0 TS-AUC, **not** an
 ensemble score — unlike the SS-0x rows, which hold `E2`. The `notes` column says so
 on both rows.
+
+## CRF-02 · ACGN
+
+Reserved prospectively on 2026-08-26 **before any CRF-02 score, OOF vector or
+TS-AUC existed**. Execution preregistration:
+`research/reports/causal_representation_frontier/CRF02_EXECUTION_PREREG.md`.
+CRF-02 is **unconditional and independent of CRF-01's outcome**
+(`CRF_PROGRAM_PREREG.md` §2); it is not a response to CRF-01's kill.
+
+| ID | is |
+|---|---|
+| `RT-1237` | CRF-02 candidate — learned amortized conditional generative null `q(x_t \| h_i, x_{t-1..t-R})`, pretrained on the **training-fold series' break-free histories only** for that outer fold, 21 monotone quantile knots via base + softplus increments, pinball loss, no label; then **frozen**; then five preregistered causal online signals plus their running peaks into a 10→32→1 same-`t` pairwise ranking head. Fold-0 screen candidate. |
+| `RT-1238` | CRF-02 C1 mandatory control — matched **fixed** null (AR(5) + history residual ECDF) feeding identical downstream statistics and an identical ranking head. Isolates learned vs fixed conditional null. |
+| `RT-1239` | CRF-02 C2 mandatory control — history embeddings `h_i` deranged across series within fold, everything else identical. Isolates useful conditioning vs series identity/memorisation. If C2 matches or beats the candidate the arm is KILL regardless of its headline number (the `m05_ctx` rule). |
+
+**`RT-1236` is deliberately skipped, not recycled** — it remains reserved to
+CRF-01's C2 temporal-shuffle arm, which was gate-blocked and never run.
+
+Collision audit before allocation: highest allocated id `RT-1235`; `RT-1237`,
+`RT-1238`, `RT-1239` appear in no `RESULTS.csv` on any ref, in no tracked file, and
+in no commit reachable from any ref.
