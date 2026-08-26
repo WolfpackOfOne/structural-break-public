@@ -1,0 +1,27 @@
+{
+  "schema": "rt600_clean_release/crunch_output_contract/1",
+  "source": "prediction/prediction.parquet written by the clean-lineage crunch test run",
+  "n_rows": 50983,
+  "expected_rows": 50983,
+  "row_count_matches": true,
+  "index_names": [
+    "id",
+    "time"
+  ],
+  "columns": [
+    "prediction"
+  ],
+  "dtype": "float32",
+  "duplicate_index_rows": 0,
+  "missing_rows": 0,
+  "n_series": 100,
+  "nan": 0,
+  "inf": 0,
+  "outside_0_1": 0,
+  "min": 0.00390625,
+  "max": 0.99609375,
+  "all_finite": true,
+  "in_range": true,
+  "PASS": true,
+  "note": "no TS-AUC computed; the labels shipped with the reduced test set were not read."
+}

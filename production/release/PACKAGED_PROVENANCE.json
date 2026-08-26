@@ -1,0 +1,61 @@
+{
+  "schema": "rt600_clean_release/packaged_provenance/1",
+  "payload_sha256_self_check": "the boot cell verified both zips before unpacking; a mismatch aborts at import",
+  "frozen_artifact_loads": true,
+  "variants": [
+    {
+      "field": "trained_on.n_series",
+      "value": 24,
+      "why": "the CRF-02 failure mode exactly",
+      "refused": true,
+      "error": "MODEL PROVENANCE MISMATCH -- the feature bank matches but this is not the frozen RT-600 artifact."
+    },
+    {
+      "field": "trained_on.n_series",
+      "value": 8000,
+      "why": "a dev-fold model, not the final fit",
+      "refused": true,
+      "error": "MODEL PROVENANCE MISMATCH -- the feature bank matches but this is not the frozen RT-600 artifact."
+    },
+    {
+      "field": "trained_on.partition",
+      "value": "folds_dev",
+      "why": "the wrong partition",
+      "refused": true,
+      "error": "MODEL PROVENANCE MISMATCH -- the feature bank matches but this is not the frozen RT-600 artifact."
+    },
+    {
+      "field": "folds_sha256",
+      "value": "0000000000000000000000000000000000000000000000000000000000000000",
+      "why": "a different fold assignment",
+      "refused": true,
+      "error": "MODEL PROVENANCE MISMATCH -- the feature bank matches but this is not the frozen RT-600 artifact."
+    },
+    {
+      "field": "calibration.kind",
+      "value": "logit_mean",
+      "why": "a rejected blend",
+      "refused": true,
+      "error": "MODEL PROVENANCE MISMATCH -- the feature bank matches but this is not the frozen RT-600 artifact."
+    },
+    {
+      "field": "calibration.time_coord",
+      "value": "log_t",
+      "why": "the pre-W4-E3 time coordinate",
+      "refused": true,
+      "error": "MODEL PROVENANCE MISMATCH -- the feature bank matches but this is not the frozen RT-600 artifact."
+    }
+  ],
+  "escape_hatch": {
+    "var": "SBR_ALLOW_UNPINNED_MODEL=1",
+    "loads": true
+  },
+  "PASS": true,
+  "_meta": {
+    "phase": "provenance",
+    "notebook": "/path/to/workspace/structural-break-rt600-release/submissions/C_ensemble_deployable.ipynb",
+    "notebook_sha256": "5843458e15b0f4601f95f627432929ade77d3414b21d9703d977b908fdc2ba2c",
+    "payload_dir": "/var/folders/g1/zkz92mc14jn1pk1yy20_6x740000gn/T/sbr_payload_s4e1h0s2/sbr",
+    "run_at": "2026-08-26T19:50:26Z"
+  }
+}

@@ -1,0 +1,32 @@
+15:58:53 
+15:58:54 started
+15:58:54 running local test
+15:58:54 internet access isn't restricted, no check will be done
+15:58:54 
+15:58:55 executing - command=train
+15:59:01 executing - command=get_parallelism
+15:59:01 using a parallelism of 4
+project: found /path/to/workspace/structural-break-claude-wave3
+payload ok; source and model verified by sha256
+data/X_train.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/X_train.parquet (218514418 bytes)
+data/X_train.parquet: already exists, file length match
+data/X_test.reduced.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/X_test.reduced.parquet (2587435 bytes)
+data/X_test.reduced.parquet: already exists, file length match
+data/y_train.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/y_train.parquet (8356193 bytes)
+data/y_train.parquet: already exists, file length match
+data/y_test.reduced.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/y_test.reduced.parquet (106299 bytes)
+data/y_test.reduced.parquet: already exists, file length match
+data/y_test_index.reduced.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/y_test_index.reduced.parquet (3674 bytes)
+data/y_test_index.reduced.parquet: already exists, file length match
+data/y_train_index.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/y_train_index.parquet (100183 bytes)
+data/y_train_index.parquet: already exists, file length match
+15:59:01 executing - command=infer
+15:59:01 executing - command=infer
+15:59:01 executing - command=infer
+15:59:01 executing - command=infer
+15:59:04 [debug] 2 worker(s) killed due to error in another worker (2, 3)
+15:59:04 [debug] error during inference: 2 worker(s) died (exit codes: 0=-11, 1=-11)
+15:59:04 
+15:59:04 duration - time=00:00:09
+15:59:04 memory - before="278.92 MB" after="2.17 GB" consumed="1.89 GB"
+Aborted!

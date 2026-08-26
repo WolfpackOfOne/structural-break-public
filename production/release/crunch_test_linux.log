@@ -1,0 +1,37 @@
+20:00:27 
+20:00:28 started
+20:00:28 running local test
+20:00:28 internet access isn't restricted, no check will be done
+20:00:28 
+20:00:29 executing - command=train
+20:00:35 executing - command=get_parallelism
+20:00:35 using a parallelism of 4
+project: found /work
+payload ok; source and model verified by sha256
+data/X_train.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/X_train.parquet (218514418 bytes)
+data/X_train.parquet: already exists, file length match
+data/X_test.reduced.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/X_test.reduced.parquet (2587435 bytes)
+data/X_test.reduced.parquet: already exists, file length match
+data/y_train.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/y_train.parquet (8356193 bytes)
+data/y_train.parquet: already exists, file length match
+data/y_test.reduced.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/y_test.reduced.parquet (106299 bytes)
+data/y_test.reduced.parquet: already exists, file length match
+data/y_test_index.reduced.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/y_test_index.reduced.parquet (3674 bytes)
+data/y_test_index.reduced.parquet: already exists, file length match
+data/y_train_index.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/y_train_index.parquet (100183 bytes)
+data/y_train_index.parquet: already exists, file length match
+20:00:35 executing - command=infer
+20:00:35 executing - command=infer
+20:00:35 executing - command=infer
+20:00:35 executing - command=infer
+20:01:13 checking determinism by executing the inference again with 10% of the data (tolerance: 1e-08)
+20:01:13 executing - command=infer
+20:01:13 executing - command=infer
+20:01:13 executing - command=infer
+20:01:13 executing - command=infer
+20:01:17 save prediction - path=prediction
+20:01:17 determinism check: passed
+20:01:17 ended
+20:01:17 
+20:01:17 duration - time=00:00:49
+20:01:17 memory - before="212.03 MB" after="414.88 MB" consumed="202.85 MB"

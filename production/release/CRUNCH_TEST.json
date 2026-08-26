@@ -1,0 +1,61 @@
+{
+  "schema": "rt600_clean_release/crunch_test/1",
+  "purpose": "DEPLOYMENT TEST of the clean-lineage artifact only. One release candidate, one run. Not a research evaluation, no variant submissions, no model comparison, no tuning against any result.",
+  "cli_version": "11.11.0",
+  "result": "PASSED",
+  "run_at": "2026-08-26T20:00:28Z (container clock)",
+  "where": "research/docker/Dockerfile.linux-verify -- python:3.12-slim built from requirements.txt alone, plus crunch-cli 11.11.0. THIS IS PRODUCTION/RT600'S OWN DOCUMENTED HARNESS, kept for exactly this purpose in commit 7746205.",
+  "why_not_macos": "production/rt600 ships INFER_PARALLELISM = 4. The macOS crunch test runner segfaults LightGBM under forked workers -- a macOS fork+OpenMP hazard, not an artifact defect -- so the macOS gate is unreachable at P>1 and the branch's own record (research/reports/rt600_baseline_submission.md section 16.3) settles parallelism claims in this container instead. The macOS run was executed first and reproduced the documented SIGSEGV exactly; its log is kept beside this file as evidence that the behaviour is the known pre-existing one and not a release regression.",
+  "command": "docker run --rm -u $(id -u):$(id -g) -e HOME=/tmp -e SBR_ROOT=/work -v <claude-wave3>:/work -v <release>:/release -w /work sbr-linux-verify crunch test --main-file /release/submissions/C_ensemble_deployable.py --model-directory /tmp/resources",
+  "main_file_sha256": "36d5e75e5bfcdaff0c8a2ad12a8a6d1dfea9816f02b2eeb78fdc4eec4ef2d0a9",
+  "notebook_sha256": "5843458e15b0f4601f95f627432929ade77d3414b21d9703d977b908fdc2ba2c",
+  "infer_parallelism": 4,
+  "worker_deaths": 0,
+  "duration": "00:00:49",
+  "infer_wall": "00:00:38 (20:00:35 -> 20:01:13)",
+  "determinism_check": "passed (tolerance 1e-08, re-run on 10% of the data)",
+  "memory": {
+    "before": "212.03 MB",
+    "after": "414.88 MB",
+    "consumed": "202.85 MB"
+  },
+  "payload_self_check": "payload ok; source and model verified by sha256",
+  "requirements_txt_verified": "YES -- the image installs from requirements.txt alone on Python 3.12, the runner's Python. A build failure here is the LB-002 failure, caught before submission.",
+  "competition_verified": {
+    "project_found": "/work (structural-break-real-time)",
+    "n_data_files": 6,
+    "files": [
+      "X_train.parquet",
+      "X_test.reduced.parquet",
+      "y_train.parquet",
+      "y_test.reduced.parquet",
+      "y_test_index.reduced.parquet",
+      "y_train_index.parquet"
+    ],
+    "note": "y_test_index.reduced and y_train_index are real-time only and are both present, so this ran against the right competition, not the 2025 one."
+  },
+  "score_returned": null,
+  "score_note": "crunch test is a local execution test and returns no score. Nothing was submitted and no leaderboard number was produced, so there was no score available to select on even in principle.",
+  "environment_issues": "none",
+  "comparison_to_production_lb004_record": {
+    "lb004_duration": "00:00:58",
+    "clean_duration": "00:00:49",
+    "lb004_memory_consumed": "203.04 MB",
+    "clean_memory_consumed": "202.85 MB",
+    "lb004_rows": 50983,
+    "clean_rows": 50983,
+    "verdict": "materially identical; no regression"
+  },
+  "reference_run": {
+    "what": "the PRE-FIX production/rt600 artifact (entrypoint 74894ed1) run through the identical container immediately afterwards, purely as a reference. Not a second release test.",
+    "duration": "00:00:49",
+    "memory_consumed": "203.64 MB",
+    "prediction_parquet_bitwise_identical": true,
+    "n_rows": 50983,
+    "n_differing": 0,
+    "max_abs_delta": 0.0,
+    "md5_both": "6f38a1b8067425812fc932d3160f5115",
+    "meaning": "on the competition's reduced test set the accepted m06_loc correction changes nothing at all. The one changed prediction lives on training-store series 5509, which is not in this set."
+  },
+  "test_reduced_inspected_outside_the_runner": false
+}
