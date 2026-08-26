@@ -83,32 +83,49 @@ def composition(replaced: str, replacement: str) -> list[str]:
     return [replacement if s == replaced else s for s in SPECIALISTS]
 
 
-def calibrate_apply(P: dict[str, np.ndarray], streams: list[str], train_rows, eval_rows, t):
-    cols = []
-    for s in streams:
-        f = CANON_CAL(P[s][train_rows], t[train_rows])
-        cols.append(f(P[s][eval_rows], t[eval_rows]))
-    return np.column_stack(cols).mean(axis=1)
+class CalibratedFoldCache:
+    """Cache fold-pure calibrated stream vectors.
+
+    The math is unchanged from calling ``CANON_CAL`` per composition. The cache
+    avoids re-sorting the same stream scores for every replacement candidate.
+    """
+
+    def __init__(self, c: Ctx, P: dict[str, np.ndarray]):
+        self.c = c
+        self.P = P
+        self._cache: dict[tuple[str, tuple[int, ...], int], np.ndarray] = {}
+
+    def stream(self, name: str, train_folds, eval_fold: int) -> np.ndarray:
+        key = (name, tuple(sorted(int(x) for x in train_folds)), int(eval_fold))
+        if key not in self._cache:
+            train_rows = np.concatenate([self.c.rows[g] for g in key[1]])
+            eval_rows = self.c.rows[eval_fold]
+            f = CANON_CAL(self.P[name][train_rows], self.c.d.t[train_rows])
+            self._cache[key] = f(self.P[name][eval_rows], self.c.d.t[eval_rows])
+        return self._cache[key]
+
+    def blend(self, streams: list[str], train_folds, eval_fold: int) -> np.ndarray:
+        cols = [self.stream(s, train_folds, eval_fold) for s in streams]
+        return np.column_stack(cols).mean(axis=1)
 
 
-def score_composition_inner(c: Ctx, P: dict[str, np.ndarray], streams: list[str], outer_train_folds):
+def score_composition_inner(c: Ctx, cache: CalibratedFoldCache, streams: list[str], outer_train_folds):
     per = []
     for g in outer_train_folds:
         train_folds = [x for x in outer_train_folds if x != g]
-        train_rows = np.concatenate([c.rows[x] for x in train_folds])
         eval_rows = c.rows[g]
-        pred = calibrate_apply(P, streams, train_rows, eval_rows, c.d.t)
+        pred = cache.blend(streams, train_folds, g)
         per.append(float(ts_auc_flat(pred, c.d.y[eval_rows], c.d.t[eval_rows])))
     return float(np.mean(per)), tuple(per)
 
 
-def select_nested(c: Ctx, P: dict[str, np.ndarray], outer_fold: int, replacements: tuple[str, ...]):
+def select_nested(c: Ctx, cache: CalibratedFoldCache, outer_fold: int, replacements: tuple[str, ...]):
     outer_train = tuple(g for g in FOLDS if g != outer_fold)
     scored = []
     for repl in replacements:
         for replaced in SPECIALISTS:
             streams = composition(replaced, repl)
-            mean_auc, per = score_composition_inner(c, P, streams, outer_train)
+            mean_auc, per = score_composition_inner(c, cache, streams, outer_train)
             scored.append((mean_auc, repl, replaced, per))
     # Max score, then deterministic non-discretionary tie resolution.
     scored.sort(key=lambda x: (-x[0], x[1], x[2]))
@@ -116,28 +133,26 @@ def select_nested(c: Ctx, P: dict[str, np.ndarray], outer_fold: int, replacement
     return FoldChoice(outer_fold, replaced, repl, mean_auc, per)
 
 
-def evaluate_outer(c: Ctx, P: dict[str, np.ndarray], choices: dict[int, FoldChoice]):
+def evaluate_outer(c: Ctx, cache: CalibratedFoldCache, choices: dict[int, FoldChoice]):
     out = np.full(len(c.d.y), np.nan, dtype=np.float64)
     per = []
     for f in FOLDS:
         train_folds = [g for g in FOLDS if g != f]
-        train_rows = np.concatenate([c.rows[g] for g in train_folds])
         eval_rows = c.rows[f]
         ch = choices[f]
-        pred = calibrate_apply(P, composition(ch.replaced, ch.replacement), train_rows, eval_rows, c.d.t)
+        pred = cache.blend(composition(ch.replaced, ch.replacement), train_folds, f)
         out[eval_rows] = pred
         per.append(float(ts_auc_flat(pred, c.d.y[eval_rows], c.d.t[eval_rows])))
     return out, per
 
 
-def evaluate_fixed(c: Ctx, P: dict[str, np.ndarray], streams: list[str]):
+def evaluate_fixed(c: Ctx, cache: CalibratedFoldCache, streams: list[str]):
     out = np.full(len(c.d.y), np.nan, dtype=np.float64)
     per = []
     for f in FOLDS:
         train_folds = [g for g in FOLDS if g != f]
-        train_rows = np.concatenate([c.rows[g] for g in train_folds])
         eval_rows = c.rows[f]
-        pred = calibrate_apply(P, streams, train_rows, eval_rows, c.d.t)
+        pred = cache.blend(streams, train_folds, f)
         out[eval_rows] = pred
         per.append(float(ts_auc_flat(pred, c.d.y[eval_rows], c.d.t[eval_rows])))
     return out, per
@@ -311,12 +326,13 @@ def main():
         if lock_rows.size and np.isfinite(arr[lock_rows]).any():
             raise RuntimeError(f"{name} has finite lockbox predictions")
 
-    e0_vec, e0_per = evaluate_fixed(c, P, list(SPECIALISTS))
+    cache = CalibratedFoldCache(c, P)
+    e0_vec, e0_per = evaluate_fixed(c, cache, list(SPECIALISTS))
 
-    cand_choices = {f: select_nested(c, P, f, CANDIDATES) for f in FOLDS}
-    clone_choices = {f: select_nested(c, P, f, (SEEDCLONE,)) for f in FOLDS}
-    cand_vec, cand_per = evaluate_outer(c, P, cand_choices)
-    clone_vec, clone_per = evaluate_outer(c, P, clone_choices)
+    cand_choices = {f: select_nested(c, cache, f, CANDIDATES) for f in FOLDS}
+    clone_choices = {f: select_nested(c, cache, f, (SEEDCLONE,)) for f in FOLDS}
+    cand_vec, cand_per = evaluate_outer(c, cache, cand_choices)
+    clone_vec, clone_per = evaluate_outer(c, cache, clone_choices)
 
     arms = {
         "e0_rt600": {
@@ -395,6 +411,7 @@ def main():
         "pairs_per_t": ARGS.pairs_per_t,
         "pair_seed": ARGS.pair_seed,
         "runtime_s": float(time.time() - t0),
+        "calibration_cache_entries": len(cache._cache),
         "arms": arms,
         "nested_selection": {
             "rt1243_candidate_replacement": [
@@ -490,4 +507,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
