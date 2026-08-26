@@ -585,3 +585,33 @@ near-split net `0`. Controls did not lose by the required `+0.000500` gap:
 `RT-1231` candidate-control gap `+0.000130`, `RT-1232` gap `+0.000243`, and
 `RT-1233` gap `-0.000002`. SS-04 failed the mandatory gates, no SS-04b is
 authorized, and the preregistered Second Sweep is exhausted.
+
+---
+
+# CAUSAL REPRESENTATION FRONTIER (`research/causal-representation-frontier-2026`)
+
+Program preregistration:
+`research/reports/causal_representation_frontier/CRF_PROGRAM_PREREG.md` at
+`85d121f`. It freezes three designs and allocates no id; each experiment
+requires its own execution preregistration committed before any score exists.
+
+## CRF-01 · NNCSR
+
+Reserved prospectively on 2026-08-26 **before any CRF-01 score, OOF vector or
+TS-AUC existed**. Execution preregistration:
+`research/reports/causal_representation_frontier/CRF01_EXECUTION_PREREG.md`.
+
+| ID | is |
+|---|---|
+| `RT-1234` | CRF-01 candidate — eight null-normalised history-fitted channels (`pit`, `inn`, `inn_pit`, `abs_inn_pit`, `vol_norm`, `surp`, `exceed`, `lag1_pit`) into the `RT-970` causal dilated TCN shell (hidden 32, 35,649 params, measured receptive field 253), trained under the same-`t` pairwise logistic objective with `m_neg = 8`. No `elapsed` channel, no 500-column bank, no RT600. Fold-0 screen candidate. |
+| `RT-1235` | CRF-01 C1 mandatory control — byte-identical channels, architecture, optimiser, schedule, epochs, batches and seeds, masked rowwise BCE loss. Isolates the **objective**. |
+| `RT-1236` | CRF-01 C2 conditional control — identical arm and objective with online channels temporally shuffled within each series (one per-series permutation applied to all eight channels, label left at its original `t`). Isolates the **temporal representation**. Declared and reserved in advance; runs only if the candidate clears the preregistered cheap abandon gate. Diagnostic only — not causal at inference, never a deployment candidate. |
+
+`RT-401` and the seven RT-600 specialists `RT-300`, `RT-410`–`RT-415` are reused
+as frozen OOF vectors and consume no id.
+
+Collision audit performed before allocation: the highest previously allocated id
+in the `RT-12xx` band is `RT-1233`; `RT-1234`/`RT-1235`/`RT-1236` appear in no
+`RESULTS.csv` on any local or remote ref, in no tracked file, and in no commit
+reachable from any ref (`git log --all -S`). None is a recycled killed, void,
+abandoned, contaminated or reserved id.

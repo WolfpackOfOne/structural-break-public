@@ -248,6 +248,51 @@ exhausted.
 
 ---
 
+# CAUSAL REPRESENTATION FRONTIER -- PREREGISTERED 2026-08-26
+
+Branch: `research/causal-representation-frontier-2026`.
+Starting base: `origin/research/new-avenues-pilots-2026` at
+`b47b22ad7e0b85fe977cb65453ae8531227d414d`.
+Program preregistration:
+`research/reports/causal_representation_frontier/CRF_PROGRAM_PREREG.md` at
+`85d121f` (design only; allocated no id and authorised no run).
+
+The program allows three experiments and forbids a fourth. `CRF-03` opens only
+if `CRF-01` or `CRF-02` reaches WEAK on fold 0 and passes its own mandatory
+isolation control; if both primaries are KILL the program terminates and no
+architecture number 12 is invented. Screening budget is capped at 15 h before
+any serious confirmation, with no Optuna, no architecture search, no width or
+learning-rate sweep, no seed fishing and no re-rolled folds.
+
+CRF-01 degrees of freedom prospectively allocated before scoring:
+
+| experiment | scored IDs | variants | fold screen | notes |
+|---|---|---:|---|---|
+| CRF-01 NNCSR null-normalised causal sequence ranker | `RT-1234`, `RT-1235`, `RT-1236` | 1 candidate + 1 mandatory BCE control + 1 conditional temporal-shuffle control | fold 0 | Architecture is the `RT-970` shell verbatim (hidden 32, kernel 3, dilations 1/2/4/8/16/32, six residual blocks, 35,649 params, measured receptive field 253) -- **not** re-chosen. Eight channels fixed by `CRF_PROGRAM_PREREG.md` §1.4; every clip bound is a preregistered constant, so no global standardiser is fitted at all. Optimiser, schedule, epochs, batching, seeds and `m_neg = 8` inherited unchanged from `RT-970` / `sbr.pipeline._make_pairwise_t`. Uniform pair weighting only -- metric-shaped weighting is closed by `RT-700`. No `elapsed` channel in any arm. |
+
+One architecture, one objective pair, one seed, no hyperparameter search. The
+candidate and the BCE control share batch order, initial weights, step count and
+calibration exactly, so their difference isolates the objective and nothing else.
+
+A documented discrepancy resolved **before** any score existed: the program
+preregistration states receptive field 127 while also requiring the `RT-970`
+shell and ~35.7k parameters. Those are inconsistent -- 127 is the arithmetic for
+one convolution per dilation, and the `RT-970` block has two. Measured by
+single-timestep perturbation in float64, the shell's receptive field is **253**
+and it is strictly causal. The architecture instruction is binding and the
+derived number is not, so the shell was kept unchanged and the description
+corrected in `CRF01_EXECUTION_PREREG.md` §5.1. No layer, dilation or width was
+altered.
+
+Continuation to five folds requires the preregistered fold-0 gates: primary
+`marginal_vs_clone >= +0.0015`, objective isolation vs the BCE control
+`>= +0.0010`, positive dominant-cell and mature-vs-never pair flow, and a
+pre-break RT600-correct damage rate `<= 0.0150`. The cheap abandon gate
+(standalone fold-0 whole TS-AUC `< 0.600` **and** within-`t` rho `<= 0.60`) is
+evaluated first and may not be relaxed.
+
+---
+
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)
 
 Pre-registration is written **before** the run. Each block states the
