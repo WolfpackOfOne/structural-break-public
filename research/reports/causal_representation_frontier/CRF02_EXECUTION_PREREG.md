@@ -364,6 +364,87 @@ recycled RT id, no post-score tuning.
 
 ## 13. PREFLIGHT COMPLETED
 
-*Empty at Stage A by design. Filled in the Stage B commit
-`Validate CRF-02 purity and causality preflight` with actual test output, pushed
-**before** the first CRF-02 score exists.*
+**Filled at Stage B, before any CRF-02 TS-AUC, `marginal_vs_clone` or pair-flow
+number was produced or read.**
+
+### 13.1 Test command and result
+
+```
+SBR_ROOT="$W" PYTHONPATH="$W/src:$W/research/scripts" \
+  <torch python> -m pytest tests/test_crf02_causality.py -v -p no:randomly
+
+24 passed in 5.00 s
+```
+
+| gate | result |
+|---|---|
+| P1 null fit set is exactly `FOLDS \ {f}`, all five folds | PASS |
+| P2 the **global-pretraining** positive control contaminates 5/5 outer folds while CRF-02's per-fold scheme contaminates 0/5 | PASS |
+| P3 live `pretrain_null`; null **frozen** afterwards (`requires_grad` False on every generative parameter); a validation series' `h_i` is a reproducible no-grad forward pass of shape `(1, 8)` | PASS |
+| P3b the purity assertion is reachable — poisoning the fold selector raises `PURITY VIOLATION` before a gradient step | PASS |
+| P4 `μ_H`, `σ_H`, `Hwin`, `last_hist`, `φ`, `σ_res` reproduce bitwise from the history alone; `len(Hwin) = min(len(H), 1024)` | PASS |
+| P4b a `+100` perturbation of the second half of the online segment leaves every state constant identical and every earlier **signal row bitwise unchanged** | PASS |
+| P5 the 10-feature standardiser is bitwise unchanged when validation rows are overwritten with `9999.0`; the **contaminated** variant fitted on train+val is shown to differ | PASS |
+| P5b standardiser is deterministic, finite, and clipped to `±20` | PASS |
+| **P6 the label gradient never reaches the null** — after a backward pass through the ranking head, every generative parameter has zero/absent gradient while the head's parameters do receive one | PASS |
+| C1 **bitwise prefix invariance, `atol = 0.0`**, over the whole 10-feature block, 8 real series of ≥ 4 distinct lengths, cuts 3/10/37/111 | PASS |
+| C1b float32 prefix noise measured at **`4.768e-07`** | PASS |
+| C2 forbidden-name audit over every signal and feature name | PASS |
+| C3 truncation, worst surviving-row delta **`0.000e+00`** | PASS |
+| C4 batch composition of the pooled history state, worst delta **`1.735e-18`** | PASS |
+| C5 deterministic replay: identical state-dict sha256, bitwise identical signals | PASS |
+| C6 dev rows and lockbox rows are disjoint | PASS |
+| **C7 the strict-past shift** — obliterating `z_t` and everything after it leaves the predicted knots at `t` **bitwise unchanged** | PASS |
+| C7b `shift_input` carries the **last history point** at position 0, not a zero, and `zs[1:] == z[:-1]` exactly | PASS |
+| C7c AST audit: the signal builder references no `n_online`, `tau`, `elapsed`, reversal or flip | PASS |
+| C8 single-series inference is sufficient and reproducible | PASS |
+| C9 the 21 knots are monotone on real data; the level list is the program-preregistered one | PASS |
+| C9b the **fixed** null's knots are monotone and equally strictly causal | PASS |
+| C10 the derangement is a true fixed-point-free permutation **within each fold group**, and never touches the lockbox | PASS |
+| the §11.1 diagnostic consumes no RT id, drops exactly `lshift`/`peak_lshift`, and `RT-1236` appears in no arm | PASS |
+
+No regression: `test_crf01_causality.py` + `test_crf02_causality.py` +
+`test_neural_causality.py` = **66 passed**. No existing file was modified; CRF-02
+adds `research/scripts/crf02_acgn.py` and `tests/test_crf02_causality.py`, and
+registers its ids in the already-existing `crf01_integrate.py`.
+
+### 13.2 One disclosed deviation from §10's wording
+
+§10's gate C1 says "bitwise prefix invariance, `atol = 0.0`". It **passes exactly
+as written**, at `atol = 0.0` with a measured worst delta of `0.000e+00` — but in
+**`float64`**. In the deployed `float32` the same comparison moves by `4.768e-07`,
+because a convolution's reduction order depends on the sequence length. That is
+rounding, not dependence, and it is the same reason
+`tests/test_neural_causality.py`'s Wave-6 gate 5 casts the network to `float64`.
+Both numbers are reported so a `float32` reproduction differing in the seventh
+decimal is not later mistaken for a leak. CRF-01's gate C1 needed no such split
+because its channel builder is pure NumPy and never passes through a convolution.
+
+### 13.3 The gate that matters most
+
+**C7.** A causal TCN at position `t` sees `z_t`. If the strict-past shift were
+missing, the null would be pricing each observation partly with itself, every PIT
+would be spuriously well-calibrated, and every downstream signal would be
+worthless — and nothing else in this battery would catch it, because such a model
+is still perfectly "causal" in the prefix sense. The test obliterates `z_t` and
+everything after it and requires the predicted knots at `t` to be **bitwise
+unchanged**; the fixed-null control gets the same treatment in C9b.
+
+### 13.4 Environment and measured cost
+
+Identical to `CRF01_EXECUTION_PREREG.md` §18.1. Additional measured facts:
+
+```
+ACGN parameters (body 1-in/32-hidden + 32->8 bottleneck + 40->21 head)   35,878
+quantile levels                                                             21
+history window                                    last 1024 points (RF 253)
+per-series streaming state, CRF-02
+    h_i 8 floats + p_i 32 floats + AR(5) phi + 256-knot residual ECDF
+    + an 8 x 253 float32 ring buffer + five O(1) accumulators and peaks
+```
+
+### 13.5 Implementation commit
+
+Stage A execution preregistration: `9a3d3c7` (`Preregister CRF-02 ACGN execution`),
+pushed. Stage B implementation and this preflight: the commit containing this
+section. **No CRF-02 score existed when either was written.**

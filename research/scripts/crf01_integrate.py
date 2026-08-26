@@ -45,12 +45,17 @@ from wave5_lib import Ctx, FOLDS, SPECIALISTS                          # noqa: E
 from wave8_common import ensemble_marginal                             # noqa: E402
 
 CACHE = os.environ.get("CRF01_CACHE", f"{ROOT}/cache/crf01")
+CACHE2 = os.environ.get("CRF02_CACHE", f"{ROOT}/cache/crf02")
 OUTDIR = f"{ROOT}/research/reports/causal_representation_frontier"
 OOFDIR = f"{ROOT}/research/oof"
 SEEDCLONE = "RT-401"
 EXECUTION_PREREG_SHA = "afba958"
 
-ARMS = {"candidate": "RT-1234", "bce_control": "RT-1235", "shuffle_ctrl": "RT-1236"}
+ARMS = {"candidate": "RT-1234", "bce_control": "RT-1235", "shuffle_ctrl": "RT-1236",
+        # CRF-02 arms, registered here because integration is shared and must stay
+        # in the no-torch process.  "shared8_diag" consumes no RT id (prereg 11.1).
+        "acgn": "RT-1237", "fixed_null": "RT-1238", "deranged": "RT-1239",
+        "shared8_diag": "shared8_diag"}
 
 # --- frozen gates, CRF01_EXECUTION_PREREG sections 7 and 13 ------------------
 ABANDON_STANDALONE = 0.600
@@ -66,6 +71,15 @@ RT600_EXPECTED = {"mean": 0.625811, "pooled": 0.625627, "dominant_cell": 0.66427
 
 
 # ---------------------------------------------------------------- assembly
+CRF02_ARMS = ("acgn", "fixed_null", "deranged", "shared8_diag")
+
+
+def _score_tag(arm: str, fold: int) -> str:
+    """Where an arm's frozen per-fold score arrays live."""
+    base = CACHE2 if arm in CRF02_ARMS else CACHE
+    return f"{base}/scores/{ARMS[arm]}_fold{fold}"
+
+
 def load_arm(arm: str, folds=FOLDS, n_rows: int | None = None):
     """Assemble one arm's fold-pure OOF vector from the frozen per-fold arrays."""
     exp_id = ARMS[arm]
@@ -74,7 +88,7 @@ def load_arm(arm: str, folds=FOLDS, n_rows: int | None = None):
     oof = np.full(n_rows, np.nan, dtype=np.float32)
     meta = {}
     for f in folds:
-        tag = f"{CACHE}/scores/{exp_id}_fold{f}"
+        tag = _score_tag(arm, f)
         if not os.path.exists(f"{tag}.scores.npy"):
             return None, {}
         rows = np.load(f"{tag}.rows.npy")
@@ -171,23 +185,23 @@ def arm_pack(c: Ctx, base: np.ndarray, clone_cal: np.ndarray, score: np.ndarray,
 
 
 # --------------------------------------------------------------------- stages
-def stage_abandon(c: Ctx, base: np.ndarray) -> dict:
+def stage_abandon(c: Ctx, base: np.ndarray, a_arm: str = "candidate") -> dict:
     """Section 7.  Fold-0 model only -- this is the genuinely cheap first read."""
-    tag = f"{CACHE}/scores/{ARMS['candidate']}_fold0"
+    tag = _score_tag(a_arm, 0)
     rows = np.load(f"{tag}.rows.npy")
     vals = np.load(f"{tag}.scores.npy")
     score = np.full(len(c.d.y), np.nan, dtype=np.float32)
     score[rows] = vals
-    lockbox_check("candidate fold-0", score, c)
+    lockbox_check(f"{a_arm} fold-0", score, c)
     r = c.rows[0]
-    assert np.isfinite(score[r]).all(), "candidate is not finite on every fold-0 row"
+    assert np.isfinite(score[r]).all(), f"{a_arm} is not finite on every fold-0 row"
     dom = r[(c.d.t[r] >= 200) & ((c.d.y[r] == 0) | (c.age[r] >= 100))]
-    pack = diagnostic_pack(c, score, base, fold=0, label="RT-1234")
+    pack = diagnostic_pack(c, score, base, fold=0, label=ARMS[a_arm])
     standalone = float(ts_auc_flat(score[r], c.d.y[r], c.d.t[r]))
     rho = float(pack["within_t_rank_corr_rt600"])
     fired = bool(standalone < ABANDON_STANDALONE and rho <= ABANDON_RHO)
     return {
-        "stage": "abandon_gate", "experiment_id": ARMS["candidate"],
+        "stage": "abandon_gate", "experiment_id": ARMS[a_arm],
         "standalone_whole_fold_ts_auc": standalone,
         "standalone_dominant_cell_ts_auc": float(
             ts_auc_flat(score[dom], c.d.y[dom], c.d.t[dom])),
@@ -215,7 +229,7 @@ def stage_report_fold0(c: Ctx, base: np.ndarray, arms: list[str]) -> dict:
     dom = r[(c.d.t[r] >= 200) & ((c.d.y[r] == 0) | (c.age[r] >= 100))]
     out = {"stage": "fold0_report_no_ensemble", "arms": {}}
     for arm in arms:
-        tag = f"{CACHE}/scores/{ARMS[arm]}_fold0"
+        tag = _score_tag(arm, 0)
         if not os.path.exists(f"{tag}.scores.npy"):
             continue
         score = np.full(len(c.d.y), np.nan, dtype=np.float32)
@@ -354,7 +368,7 @@ def main():
     if a.stage == "sentinel":
         res = {"stage": "sentinel", "rt600_sentinel": sent}
     elif a.stage == "abandon":
-        res = stage_abandon(c, base)
+        res = stage_abandon(c, base, a.arms.split(",")[0])
     elif a.stage == "report_fold0":
         res = stage_report_fold0(c, base, a.arms.split(","))
     elif a.stage == "evaluate":
