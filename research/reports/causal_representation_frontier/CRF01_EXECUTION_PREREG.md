@@ -563,7 +563,240 @@ candidate.
 
 ## 18. PREFLIGHT COMPLETED
 
-*This section is empty at Stage A by design. It is filled in the Stage B commit
-`Validate CRF-01 purity and causality preflight` with the actual test commands and
-their actual output, and that commit is pushed **before** the first CRF-01 score
-exists.*
+**Filled at Stage B, before any CRF-01 TS-AUC, `marginal_vs_clone` or pair-flow
+number was produced or read.** `research/RESULTS.csv` is still byte-identical at
+sha256 `5b34c564e69f502c4a54d4ba1b702b400893358073e1897cd82453c83215512c`.
+
+### 18.1 Environment as actually used
+
+```
+host      macOS arm64 (Darwin 25.5.0) - platform macOS-26.5.2-arm64-arm-64bit
+          10 cores, 16 GB; torch threads 6; CPU only, MPS/CUDA unused
+torch     /path/to/workspace/structural-break-wave8/.venv/bin/python
+          python 3.11.6 - torch 2.13.0 - numpy 2.4.6 - scipy 1.17.1
+          lightgbm present but NEVER imported by crf01_nncsr.py (asserted in env report)
+no-torch  /path/to/workspace/structural-break-new-avenues-pilots/.venv/bin/python
+          python 3.11.6 - numpy 2.4.6 - lightgbm 4.7.0 - torch ABSENT
+          crf01_integrate.py asserts `"torch" not in sys.modules` at import time
+SBR_ROOT  the CRF worktree; cache/store and cache/features symlink into
+          structural-break-claude-wave3; research/folds/folds.parquet unchanged
+data      10,000 series - 5,036,517 online rows - dev 4,032,524 - fold 0 806,334
+          lockbox (fold -1) 1,003,993 rows, never loaded
+```
+
+`KMP_DUPLICATE_LIB_OK` was not set anywhere. The two processes are genuinely
+separate: running the whole `tests/` tree in one process that holds both torch and
+lightgbm crashes the interpreter on this host, which is the Wave-6 finding
+reproducing, and is precisely why the split exists.
+
+### 18.2 Test command and result
+
+```
+SBR_ROOT="$W" PYTHONPATH="$W/src:$W/research/scripts" \
+  <torch python> -m pytest tests/test_crf01_causality.py -v -p no:randomly
+
+test_p1_fitted_series_set_is_exactly_folds_minus_f                       PASSED
+test_p2_positive_control_contaminated_scheme_is_detected                 PASSED
+test_p3_live_fitting_path_asserts_purity_and_emits_only_its_own_fold     PASSED
+test_p3b_train_fold_rejects_a_contaminated_series_set                    PASSED
+test_p4_history_constants_depend_only_on_that_series_history             PASSED
+test_p4b_history_constants_ignore_the_online_segment                     PASSED
+test_p5_channel_output_is_independent_of_call_order_and_neighbours       PASSED
+test_p5b_channel_builder_takes_no_fold_and_no_label                      PASSED
+test_p6_perturbing_a_validation_series_does_not_move_a_training_batch    PASSED
+test_c1_prefix_invariance_bitwise_atol_zero                              PASSED
+test_c2_no_forbidden_columns                                             PASSED
+test_c3_truncation_reproduces_surviving_score_rows                       PASSED
+test_c4_batch_composition_does_not_change_a_prediction                   PASSED
+test_c4b_float32_batch_composition_noise_is_rounding_only                PASSED
+test_c8_no_cross_sectional_inference_single_series_is_sufficient         PASSED
+test_c5_deterministic_build_and_forward                                  PASSED
+test_c5b_pair_sampler_is_deterministic_and_respects_occupancy            PASSED
+test_c5c_pairs_are_same_t_and_correctly_signed                           PASSED
+test_c5d_padded_positions_never_enter_a_pair                             PASSED
+test_c6_emitted_rows_never_touch_the_lockbox                             PASSED
+test_c7_no_final_online_length_in_the_input_path                         PASSED
+test_shuffle_control_is_arm_scoped_and_deterministic                     PASSED
+test_architecture_matches_the_frozen_rt970_shell                         PASSED
+test_receptive_field_is_causal_and_253                                   PASSED
+
+24 passed in 3.56s
+```
+
+No regression elsewhere. `tests/test_crf01_causality.py` + `tests/test_neural_causality.py`
+= **42 passed** in the torch process; `tests/test_novel_streams_harness.py` +
+`tests/test_wave8_causality.py` + `tests/test_no_tau_leakage.py` +
+`tests/test_no_n_online_leakage.py` + `tests/test_causal_representation_frontier_audit.py`
+= **31 passed, 4 skipped** in the no-torch process. No existing file was modified;
+CRF-01 adds `research/scripts/crf01_nncsr.py`,
+`research/scripts/crf01_integrate.py` and `tests/test_crf01_causality.py` only. The
+15 pinned known failures were not touched or repaired.
+
+### 18.3 Fold purity proof
+
+* **Set arithmetic (P1).** For every `f in {0,1,2,3,4}` the fitted series set is
+  exactly `FOLDS \ {f}`; `train n val`, `train n lockbox` and `val n lockbox` are
+  all empty. Asserted for all five folds.
+* **Positive control (P2).** The contaminated scheme (fit on all five folds,
+  ignorant of the outer fold) is reproduced and shown to intersect `{f}` for
+  **5 / 5** outer folds, while the CRF-01 scheme intersects it for **0 / 5**. The
+  sentinel therefore detects the Wave-7 nested-teacher defect rather than passing
+  vacuously.
+* **Live fitting path (P3).** Called through the real `train_fold` entry point on a
+  tiny fold (6 training series drawn from **each** of folds 1-4, 8 validation series
+  from fold 0, every other series parked outside `FOLDS`). The emitted row set is
+  **exactly** the validation series' rows and is disjoint from the training series'.
+* **The purity assertion is reachable (P3b).** With the training-fold selector
+  deliberately poisoned to include fold 0, `train_fold` raises
+  `AssertionError: PURITY VIOLATION` before a single gradient step.
+* **Per-series constants (P4).** Every history constant - `mu`, `sd`, `phi`,
+  `sigma_H`, the three 256-knot ECDFs, `mad_H`, `q90_H`, `n_hist` - is bitwise
+  reproducible from that series' history alone.
+* **Constants ignore the online stream (P4b).** Adding `+100` to the second half of
+  a series' online segment leaves every constant identical and every channel row in
+  the first half **bitwise** unchanged. A history constant that moved with the
+  online stream would be a future leak; none does.
+* **No global standardiser (P5 / P5b).** Channel output is bitwise identical under
+  reversed call order; `causal_channels` takes only `(hist, online, null)` and
+  `HistoryNull` only `(hist)`; the module holds no `MEAN`/`STD`/`SCALE`/
+  `STANDARDISER`/`GLOBAL_CLIP` state. Every clip bound is a constant in section 4,
+  so `CRF_PROGRAM_PREREG.md` section 0.5's training-fold-only requirement for a
+  global standardiser is satisfied because **there is no global standardiser**.
+* **Cache is not a back door (P5c).** For 40 randomly chosen series the cached
+  `cache/crf01/channels.npy` rows are **bitwise equal** to a standalone
+  `causal_channels(h, o)` recomputation, so the whole-store build introduces no
+  cross-series state.
+* **Validation rows do not train (P6).** Overwriting every channel row of 16
+  validation series with `12345.0` leaves the packed training tensors `X`, `Y` and
+  `M` bitwise unchanged.
+
+### 18.4 Prefix invariance
+
+`atol = 0.0`, bitwise including the NaN pattern, on **8 real store series** spanning
+the online-length range (at least 4 distinct lengths), at cuts `(3, 10, 37, 111)`:
+**PASS, no channel differs in any bit.** This is the `PROTOCOL.md` section 3
+contract and it is the load-bearing proof that `len(online)` is a prefix length and
+never a final length.
+
+### 18.5 Truncation
+
+Channels rebuilt **and the encoder re-run** on truncated online segments at
+`k = 120` and `k = 200`, over the same 8 series. Worst surviving-row deviation
+**`2.220e-16`**, against the `1e-8` requirement. Run in `float64`, following the
+Wave-6 gate-5 precedent (`tests/test_neural_causality.py` casts the net to
+`float64` for exactly this reason).
+
+### 18.6 Batch composition
+
+A series' score against three different sets of batch companions, plus alone:
+worst deviation **`1.665e-16`** in `float64`, against the `1e-8` requirement -
+i.e. **zero information flows between batch members**, which is what makes
+length-bucketed batching legal rather than a covert length channel.
+
+Measured separately and reported rather than assumed: in the deployed `float32`
+the same comparison moves by **`1.490e-08`** on a score of scale `3.902e-01`
+(**relative `3.8e-08`**). That is convolution reduction-order rounding, not
+dependence - the `float64` result above is the statement about dependence. It is
+recorded here so that a `float32` reproduction of CRF-01 that differs in the eighth
+decimal is not later mistaken for a leak.
+
+### 18.7 Forbidden-column audit
+
+`wave8_common.assert_no_forbidden_columns` over all eight channel names: **clean**.
+The stricter CRF-01 guard, which additionally rejects `elapsed`, `rt600`, `age` and
+`rank`, is **clean** on the frozen set and correctly **raises** on `elapsed`,
+`rt600_logit` and `n_online_frac`. An AST audit of `causal_channels` confirms the
+builder's executable body contains no reference to `n_online`, `tau`, `elapsed`,
+`arange` or `linspace`, and reads no name outside its own arguments and the frozen
+constants of section 4.
+
+### 18.8 Deterministic replay
+
+Two independent `set_determinism(0)` + `CausalTCN.build(..., seed=7)` calls produce
+**identical `sha256` state dicts** and bitwise identical forward passes. The pair
+sampler is bitwise reproducible from `PAIR_SEED`, samples only same-`t` pairs
+(`pt == nt` everywhere), never samples a padded position, never returns a pair from
+a timestep with `< 8` negatives or `0` positives, and returns exactly
+`n_pos x m_neg` pairs per contributing timestep with `m_neg = 8`.
+
+### 18.9 Lockbox
+
+`finite(oof[fold == -1]) == 0` is asserted at emission for every arm and is
+re-checked inside `crf01_integrate.py` for every vector it loads. The row-index
+sentinel confirms the emitted row ranges of all five folds are disjoint from the
+1,003,993 lockbox rows. The lockbox was never loaded.
+
+### 18.10 C2 control construction
+
+`RT-1236`'s permutation is per series, identical across all eight channels, and
+deterministic from the series id. Verified: the label array and the validity mask
+are **bitwise unchanged** by the shuffle (the label stays at its original `t`), the
+channel tensor **is** changed, the permutation applied equals
+`_series_perm(sid, n)` exactly, and every channel's per-series **sorted** values are
+bitwise preserved - i.e. the marginal distribution survives and only temporal order
+is destroyed.
+
+### 18.11 Architecture and receptive field, measured
+
+```
+parameters (n_in=8, hidden=32)   35,649        (CRF_PROGRAM_PREREG "~35.7k")
+BatchNorm / RNN / GRU / LSTM / attention modules      none
+receptive field (float64, single-timestep perturbation at t=300, T=700)
+    outputs moved: 300..552      -> 253         nothing before t=300 moved
+```
+
+See section 5.1: the shell is the binding instruction, `253` is what it measures,
+and no layer, dilation or width was changed.
+
+### 18.12 RT-600 baseline sentinel, through the real integration path
+
+```
+<no-torch python> research/scripts/crf01_integrate.py --stage sentinel
+
+fold-0 E0 (seven specialists)            0.638276   expected 0.638276
+fold-0 E1 (+ RT-401 seed clone)          0.638586   expected 0.638586
+five-fold mean / pooled / dominant cell  reproduce within 5e-3
+runtime 84.7 s
+```
+
+The baseline the CRF-01 marginal will be measured against reproduces exactly. No
+CRF-01 arm was scored to produce this.
+
+### 18.13 Channel build and streaming cost, measured
+
+```
+whole-store channel build   10,000 series / 5,036,517 rows   8 s
+all channels finite         yes
+ECDF knots per series       256 / 256 / 256   (x, innovation, |innovation|)
+streaming state per series  ~20.0 KiB
+    = 3 x 256 float64 knot pairs (12,288 B) + phi and scalars (88 B)
+    + an 8 x 253 float32 ring buffer (8,096 B)
+```
+
+`CRF_PROGRAM_PREREG.md` section 1.8 estimated "~6 KB" from a 127-sample ring
+buffer; the measured figure is **~20 KiB**, because the true receptive field is 253
+(section 5.1) and because the three 256-knot ECDFs dominate. This is **reported,
+not optimised** - 10,000 concurrent series would hold ~200 MB of state, which is
+feasible, and shrinking it would be a post-hoc design change.
+
+### 18.14 Implementation commit
+
+Stage A execution preregistration: `afba958` (`Preregister CRF-01 NNCSR execution`),
+pushed to `origin/research/causal-representation-frontier-2026`.
+Stage B implementation and this preflight: the commit that contains this section.
+**No CRF-01 score existed when either was written.**
+
+### 18.15 One clarification recorded before any score
+
+`CRF_PROGRAM_PREREG.md` section 0.3 requires "unique repair coverage" without
+defining it. Fixed here, pre-score, and not changeable afterwards: on the canonical
+deterministic dominant-cell fold-0 pair sample, with `repairs(X)` the set of
+RT600-wrong pairs that arm `X` orders correctly,
+
+```
+unique_repair_coverage = |repairs(candidate) \ repairs(RT-401 clone)| / |rt600_wrong|
+```
+
+with the Jaccard against the clone reported alongside. The comparator is the matched
+exchangeable seed clone because `E1 = E0 + RT-401` is what the whole program is
+measured against.

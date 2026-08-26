@@ -1,0 +1,37 @@
+{
+ "stage": "sentinel",
+ "rt600_sentinel": {
+  "mean": 0.6258112639463216,
+  "per_fold": [
+   0.6382763032336511,
+   0.6204018503410609,
+   0.6339302291124634,
+   0.6175075054046519,
+   0.6189404316397805
+  ],
+  "pooled": 0.6256269256734708,
+  "dominant_cell": 0.6642770565078685,
+  "fold0_e0": 0.6382763032336511,
+  "fold0_e1_seedclone": 0.6385863723277498,
+  "expected": {
+   "mean": 0.625811,
+   "pooled": 0.625627,
+   "dominant_cell": 0.664277,
+   "fold0_e0": 0.638276,
+   "fold0_e1_seedclone": 0.638586
+  },
+  "diffs": {
+   "mean": 2.6394632157700215e-07,
+   "pooled": -7.432652926464556e-08,
+   "dominant_cell": 5.6507868495536684e-08,
+   "fold0_e0": 3.032336511887834e-07,
+   "fold0_e1_seedclone": 3.7232774985351824e-07
+  },
+  "ok": true
+ },
+ "git_sha": "afba958",
+ "execution_prereg_sha": "afba958",
+ "runtime_s": 84.7,
+ "lockbox_touched": "no",
+ "test_reduced_touched": "no"
+}
