@@ -259,6 +259,32 @@ def _absorb_blocks(llr, log_h, log1mh, logw, fam, famnorm, offs, pos, nfam):
 
 
 @njit(cache=True, fastmath=False)
+def _bocpd_ct(al0, R):
+    """Student-t log normalising constant per run length: the ONLY source of it.
+
+    ``ct[r] = lgamma((nu+1)/2) - lgamma(nu/2) - log(nu*pi)/2`` for
+    ``nu = 2*(al0 + r/2)``.  Eighty data-independent constants.
+
+    This lives in its own kernel because ``math.lgamma`` is the one primitive in
+    this module whose numba and CPython implementations disagree (up to 512 ULP
+    on this grid; ``log``/``exp``/``log1p`` agree bitwise).  The streaming
+    mirror ``sbr.stream.s_m07_bayes._BocpdStream`` imports this function rather
+    than recomputing the table, so both sides get the same bits under whichever
+    of the two ``lgamma`` implementations is actually in play -- including the
+    numba-absent fallback, where ``njit`` above degrades to a no-op and both
+    sides equally use CPython's.  Recomputing it independently is what put
+    batch-trained features and stream-served features on different constants.
+    """
+    ct = np.empty(R)
+    for r in range(R):
+        al = al0 + 0.5 * r
+        nu = 2.0 * al
+        ct[r] = (math.lgamma(0.5 * (nu + 1.0)) - math.lgamma(0.5 * nu)
+                 - 0.5 * math.log(nu * math.pi))
+    return ct
+
+
+@njit(cache=True, fastmath=False)
 def _bocpd(x, mu0, be0, kap0, al0, log_h, log1mh, R):
     """Adams-MacKay run-length posterior with a Normal-Inverse-Gamma model.
 
@@ -275,7 +301,7 @@ def _bocpd(x, mu0, be0, kap0, al0, log_h, log1mh, R):
     kap = np.empty(R)
     al = np.empty(R)
     nu = np.empty(R)
-    ct = np.empty(R)
+    ct = _bocpd_ct(al0, R)
     sf = np.empty(R)
     mu = np.empty(R)
     be = np.empty(R)
@@ -284,8 +310,6 @@ def _bocpd(x, mu0, be0, kap0, al0, log_h, log1mh, R):
         kap[r] = kap0 + r
         al[r] = al0 + 0.5 * r
         nu[r] = 2.0 * al[r]
-        ct[r] = (math.lgamma(0.5 * (nu[r] + 1.0)) - math.lgamma(0.5 * nu[r])
-                 - 0.5 * math.log(nu[r] * math.pi))
         sf[r] = (kap[r] + 1.0) / (al[r] * kap[r])
         mu[r] = mu0
         be[r] = be0

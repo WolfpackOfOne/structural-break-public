@@ -20,8 +20,11 @@ The online half is a set of scalar recursions:
   p = 1,2,3,5 in the parity test);
 * ``vol / volM / volG / cmb``     the predictive EWMA / GARCH recursions.
   ``scipy.signal.lfilter`` evaluates ``y = b0*x + z ; z = -a1*y`` sequentially in
-  double precision, so carrying the two scalars ``(y, z)`` reproduces it bit for
-  bit (verified in the parity test).
+  double precision, so carrying the two scalars ``(y, z)`` reproduces it -- but
+  only if the multiply-add is fused.  On arm64 ``lfilter`` compiles to an FMA and
+  rounds ONCE; a plain Python ``b0*x + z`` rounds twice and disagrees on ~20 % of
+  steps by 1 ULP, which the stateful recursion then carries forward.  ``_fma``
+  below supplies the single rounding, and the parity test now covers it.
 
 The null-calibration query ``(_Null.z)`` is ``np.interp`` on a 6-node log grid.
 Because ``np.interp`` is elementwise and ``np.log``/``np.exp`` are
@@ -61,6 +64,7 @@ from sbr.features.m04_resid import (
     _point_transforms,
     _std,
 )
+from sbr.stream._fp import fma as _fma
 from sbr.transforms import _ar_resid, _fit_ar, ar_filter_causal
 
 #: number of trailing historical z values kept in front of the online buffer and
@@ -75,7 +79,6 @@ _MAX_ONLINE = 1024
 #: integer dispatch codes for the per-point monitor transforms
 _MON_CODE = {"mean": 0, "var": 1, "abs": 2, "tail": 3, "acf1": 4, "acf1sq": 5}
 _NAN = float("nan")
-
 
 # --------------------------------------------------------------------- scalars
 def _clip1(v: float, lo: float, hi: float) -> float:
@@ -327,7 +330,7 @@ class StreamM04Resid:
             y = 1.0
             return y, (1.0 - alpha) * y
         z = (1.0 - alpha) * float(out_hist[-1])
-        y = alpha * float(xh[-1]) + z
+        y = _fma(alpha, float(xh[-1]), z)
         return y, (1.0 - alpha) * y
 
     def _grow(self):
@@ -378,17 +381,20 @@ class StreamM04Resid:
         # ---- vol : predictive EWMA of z^2
         y = self._vol_y
         e[self._i_vol] = (z / math.sqrt(_max1(y, 1e-9))) / self._vol_s
-        y = _HL22 * x2 + self._vol_z
+        y = _fma(_HL22, x2, self._vol_z)
         self._vol_y, self._vol_z = y, (1.0 - _HL22) * y
 
         # ---- volM : predictive EWMA of min(|z|, 4)
         y = self._volM_y
         e[self._i_volM] = (z / _max1(y, 1e-9)) / self._volM_s
         az = 4.0 if abs(z) > 4.0 else abs(z)       # np.minimum(np.abs(z), 4.0)
-        y = _HL63 * az + self._volM_z
+        y = _fma(_HL63, az, self._volM_z)
         self._volM_y, self._volM_z = y, (1.0 - _HL63) * y
 
         # ---- volG : predictive variance-targeted GARCH(1,1)
+        # NOT _fma: batch builds this in numpy as `om + a * x[:-1]`, which is two
+        # separate ufunc passes and therefore two roundings.  Only the lfilter
+        # recursion itself fuses, and there b0 == 1.0 so the multiply is exact.
         u = self._g_om + self._g_a * self._g_x2prev
         vg = 1.0 * u + self._g_z
         self._g_z = self._g_b * vg
@@ -399,7 +405,7 @@ class StreamM04Resid:
         rc = e[self._i_ar2]
         y = self._cmb_y
         e[self._i_cmb] = (rc / math.sqrt(_max1(y, 1e-9))) / self._cmb_s
-        y = _HL22 * (rc * rc) + self._cmb_z
+        y = _fma(_HL22, rc * rc, self._cmb_z)
         self._cmb_y, self._cmb_z = y, (1.0 - _HL22) * y
 
         # ------------------------------------------------------- monitors

@@ -64,6 +64,7 @@ from sbr.features.m01_seq import (
     _page_hinkley,
     _sr_log,
 )
+from sbr.stream._fp import fma as _fma
 
 _TABLE0 = 1024
 
@@ -198,20 +199,27 @@ class _Refl:
 
 
 class _Ewma:
-    """Bias-corrected EWMA; identical to ``lfilter`` + the arange-power table."""
+    """Bias-corrected EWMA; identical to ``lfilter`` + the arange-power table.
 
-    __slots__ = ("a", "b", "y", "den")
+    ``lfilter`` runs the *transposed direct form II* -- ``y = a*x + z`` then
+    ``z = (1-a)*y`` -- and contracts the multiply-add into an FMA.  Carrying
+    ``z`` and fusing here reproduces it bitwise; the previous
+    ``a*x + b*y_prev`` form rounded twice and drifted by 1 ULP.
+    """
+
+    __slots__ = ("a", "b", "z", "den")
 
     def __init__(self, hl, den):
         a = 1.0 - 2.0 ** (-1.0 / hl)
         self.a = a
         self.b = 1.0 - a
-        self.y = 0.0
+        self.z = 0.0            # lfilter's zi when no initial state is given
         self.den = den
 
     def push(self, x, t):
-        self.y = self.a * x + self.b * self.y
-        return self.y / self.den[t]
+        y = _fma(self.a, x, self.z)
+        self.z = self.b * y
+        return y / self.den[t]
 
 
 class _Sr:
