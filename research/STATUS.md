@@ -49,7 +49,8 @@ short and gets updated whenever that changes materially.
   future-information limit (CASE 2) that later Wave 7/8 work is measured
   against.
 - **Active research branch:** this worktree is
-  `research/new-avenues-pilots-2026`; the canonical chain remains
+  `research/causal-representation-frontier-2026`, forked from the exhausted
+  Second Sweep tip `research/new-avenues-pilots-2026@b47b22a`; the canonical chain remains
   `research/current` (wave2 → wave3-integration → wave5-alpha → wave6-alpha →
   wave7-teacher-distillation → wave7-t2-promotion). Standalone sibling
   branches still worth checking: `research/wave8-future-aware-distillation`
@@ -121,6 +122,34 @@ short and gets updated whenever that changes materially.
   net `0`, and all three controls failed the `+0.0005` gap requirement. The
   preregistered Second Sweep is exhausted with no 5-fold confirmation
   candidate; production `RT-600` remains unchanged.
+- **Sweep status:** `FIRST_SWEEP_EXHAUSTED` and `SECOND_SWEEP_EXHAUSTED`.
+  Both preregistered New Avenues sweeps are closed with no confirmation
+  candidate. Production `RT-600` (external **0.6268**) is unchanged.
+- **Current research program:** **CAUSAL REPRESENTATION FRONTIER (CRF)** —
+  `DESIGNED_NOT_EXECUTED`. An audit-and-preregistration program asking whether
+  the legal causal prefix contains break information that RT-600 and the
+  ~500-column representation fail to extract, and if so what representation and
+  objective could extract it as a genuinely new same-`t` ranking direction.
+  Design and evidence in
+  [`reports/causal_representation_frontier/`](reports/causal_representation_frontier/):
+  `CAUSAL_REPRESENTATION_FRONTIER.md` (audit),
+  `CRF_PROGRAM_PREREG.md` (program preregistration),
+  `prior_representation_audit.csv`, `representation_collision_matrix.csv`,
+  `crf_candidate_priority.csv`, `SOURCES.md`, plus the static checker
+  `scripts/audit_causal_representation_frontier.py`.
+  Three experiments are designed — `CRF-01` null-normalised causal sequence
+  ranker (primary, RT600-independent, the designated stop experiment),
+  `CRF-02` amortized conditional generative null, and `CRF-03` their integration
+  (conditional). **None has been executed.** No `RT` id was consumed, no
+  candidate score, OOF vector or TS-AUC exists, `RESULTS.csv` is byte-identical
+  (sha256 `5b34c564...5512c`), the lockbox was not opened and no production
+  artifact was touched. **Nothing in the CRF program is proven alpha; it is a
+  design, and its most likely outcome is closing a lane rather than finding
+  one.** The audit's binding new fact: across the 17 scored arms with both
+  numbers recorded, standalone AUC and within-`t` redundancy against RT-600
+  correlate at **+0.983** — nothing this project has built has ever been both
+  good and different — and the best standalone AUC ever reached at
+  rho <= 0.60 is `RT-1201`'s **0.58358**, which returned `+0.000301`.
 - **Final Wave reports:** [`reports/wave4/`](reports/wave4/),
   [`reports/wave5/`](reports/wave5/), [`reports/wave6/`](reports/wave6/),
   [`reports/wave7/`](reports/wave7/); Wave 8's report is on the
@@ -129,7 +158,9 @@ short and gets updated whenever that changes materially.
   [`FINAL_ARCHITECTURE_FREEZE.md`](FINAL_ARCHITECTURE_FREEZE.md),
   [`FINAL_REPRODUCIBILITY_MANIFEST.json`](FINAL_REPRODUCIBILITY_MANIFEST.json).
 
-_Last updated: 2026-08-25, after SS-04 was executed and killed on its
-preregistered fold-0 screen. Update this file whenever the production anchor,
+_Last updated: 2026-08-25, after the Causal Representation Frontier program
+was audited and preregistered (design only, no execution, no new score, no RT
+id) on `research/causal-representation-frontier-2026`; previously updated after
+SS-04 was executed and killed on its preregistered fold-0 screen. Update this file whenever the production anchor,
 external score, or active research conclusion changes — see
 `AGENTS.md` at the repo root for the update rule._
