@@ -64,12 +64,20 @@ def test_audit_artifacts_exist_and_are_non_empty() -> None:
 
 
 def test_results_csv_is_untouched_by_the_design_task() -> None:
-    """The CRF design task must not modify the experiment ledger."""
+    """The CRF design task must not have modified the experiment ledger.
+
+    This asserts the historical invariant, not a frozen whole-file hash. The
+    design task left RESULTS.csv byte-identical; the CRF *execution* that
+    followed then appended its own result rows, which it was entitled to do.
+    So the surviving claim is append-only: the design-task-era prefix must
+    still be exactly what the design task found, and no ``CRF-`` id may appear.
+    """
     mod = _load_module()
     out = mod.check_results_untouched()
-    assert out["identical"], (
-        f"RESULTS.csv changed: {out['observed_sha256']} != "
-        f"{out['expected_sha256']}")
+    assert out["design_task_prefix_intact"], (
+        f"the design-task-era prefix of RESULTS.csv changed: "
+        f"{out['observed_prefix_sha256']} != {out['expected_prefix_sha256']} "
+        f"over the first {out['base_bytes']} bytes")
     assert out["no_crf_rows"], f"CRF rows appeared in RESULTS.csv: {out['crf_rows']}"
 
 

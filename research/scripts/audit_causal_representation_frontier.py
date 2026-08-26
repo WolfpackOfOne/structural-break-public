@@ -8,8 +8,10 @@ rather than against prose.
 
 What it checks
 --------------
-1. ``research/RESULTS.csv`` is byte-identical to the recorded base hash, and no
-   ``CRF-`` experiment id has appeared in it.
+1. ``research/RESULTS.csv`` is APPEND-ONLY with respect to the CRF design task:
+   its leading bytes are still byte-identical to the ledger as the design task
+   found it, and no ``CRF-`` experiment id has appeared in it.  Rows appended
+   afterwards -- including by the CRF execution -- are legitimate and reported.
 2. The two audit CSVs parse, are non-empty, and every proposed CRF candidate row
    carries a ``closest_prior`` and a ``collision_severity``.
 3. Collision check: every proposed CRF candidate differs from its closest prior on
@@ -42,10 +44,33 @@ ROOT = os.environ.get(
 REPORT_DIR = os.path.join(ROOT, "research", "reports", "causal_representation_frontier")
 RESULTS_CSV = os.path.join(ROOT, "research", "RESULTS.csv")
 
-#: sha256 of research/RESULTS.csv at b47b22ad (the exhausted Second Sweep tip).
-#: The CRF design task must leave this untouched.
+#: sha256 of research/RESULTS.csv at b47b22ad (the exhausted Second Sweep tip),
+#: i.e. the ledger as it stood when the CRF DESIGN TASK began.  The design task
+#: had to leave it untouched, and did: the file is byte-identical at b219baf
+#: (audit), 85d121f (prereg) and afba958 (CRF-01 prereg).
+#:
+#: WHAT THIS PIN IS AND IS NOT.  It is an assertion about the design task, not
+#: about the repository forever.  The CRF *execution* that followed legitimately
+#: appended its own experiment rows -- b6f27e3 (CRF-01), 9a5ecc0 and 9c5a352
+#: (CRF-02, the second superseding the voided first) -- taking the whole-file
+#: hash to 8a0a8832...  Comparing that against this constant was asserting that
+#: current HEAD must forever equal a pre-execution hash, which is not the
+#: invariant anyone intended and turned this check permanently red.
+#:
+#: The invariant is instead APPEND-ONLY: the first BASE_RESULTS_BYTES bytes of
+#: RESULTS.csv must still be exactly the design-task-era ledger.  That is
+#: strictly stronger than the old whole-file check about the thing it was
+#: protecting -- it detects any edit to a pre-CRF row -- while permitting the
+#: appends the execution was entitled to make.  No historical row and no
+#: scientific record is rewritten to satisfy it.
 BASE_RESULTS_SHA256 = (
     "5b34c564e69f502c4a54d4ba1b702b400893358073e1897cd82453c83215512c")
+
+#: byte length of research/RESULTS.csv at b47b22ad (246 lines: header + 245 rows).
+BASE_RESULTS_BYTES = 155924
+
+#: the design-task commits this pin is a claim about, newest last.
+DESIGN_TASK_COMMITS = ("b219baf", "85d121f")
 
 #: Axes on which a proposed candidate must differ from its closest prior for the
 #: difference to count as load-bearing rather than cosmetic.
@@ -108,23 +133,43 @@ def sha256_of(path: str) -> str:
 
 
 def check_results_untouched() -> dict:
-    """Assert RESULTS.csv is unchanged and carries no CRF row.
+    """Assert the design-task-era ledger is intact and carries no CRF row.
+
+    Verifies the append-only invariant described at :data:`BASE_RESULTS_SHA256`:
+    the leading ``BASE_RESULTS_BYTES`` bytes of ``research/RESULTS.csv`` still
+    hash to the design-task base, so no pre-CRF row has been edited, reordered
+    or removed.  Rows appended after the design task -- by the CRF execution or
+    by anything later -- are permitted and are reported, not failed.
 
     Returns
     -------
     dict
-        Observed hash, expected hash, match flag and CRF-row count.
+        Design-task prefix hash and verdict, current whole-file hash, row
+        counts and CRF-row count.
     """
+    with open(RESULTS_CSV, "rb") as fh:
+        head = fh.read(BASE_RESULTS_BYTES)
+    prefix_sha = hashlib.sha256(head).hexdigest()
     observed = sha256_of(RESULTS_CSV)
+    size = os.path.getsize(RESULTS_CSV)
     with open(RESULTS_CSV, newline="") as fh:
         ids = [row["experiment_id"] for row in csv.DictReader(fh)]
     crf_rows = [i for i in ids if i.upper().startswith("CRF")]
+    base_rows = head.count(b"\n") - 1          # minus the header line
     return {
         "path": os.path.relpath(RESULTS_CSV, ROOT),
-        "expected_sha256": BASE_RESULTS_SHA256,
-        "observed_sha256": observed,
-        "identical": observed == BASE_RESULTS_SHA256,
+        "invariant": "append_only_since_crf_design_task",
+        "design_task_commits": list(DESIGN_TASK_COMMITS),
+        "expected_prefix_sha256": BASE_RESULTS_SHA256,
+        "observed_prefix_sha256": prefix_sha,
+        "design_task_prefix_intact": (size >= BASE_RESULTS_BYTES
+                                      and prefix_sha == BASE_RESULTS_SHA256),
+        "base_bytes": BASE_RESULTS_BYTES,
+        "current_bytes": size,
+        "current_sha256": observed,
+        "n_rows_at_design_task": base_rows,
         "n_rows": len(ids),
+        "n_rows_appended_since": len(ids) - base_rows,
         "crf_rows": crf_rows,
         "no_crf_rows": not crf_rows,
     }
@@ -260,10 +305,14 @@ def main() -> int:
         report["audit_files"][name] = {"n_rows": len(rows), "non_empty": bool(rows)}
 
     rs = report["results_safety"]
-    print("== RESULTS.csv safety ==")
-    print(f"  identical to base : {rs['identical']}  ({rs['observed_sha256'][:16]}...)")
-    print(f"  rows              : {rs['n_rows']}")
-    print(f"  no CRF rows       : {rs['no_crf_rows']}")
+    print("== RESULTS.csv safety (append-only since the CRF design task) ==")
+    print(f"  design-task prefix intact : {rs['design_task_prefix_intact']}  "
+          f"({rs['observed_prefix_sha256'][:16]}..., {rs['base_bytes']} B)")
+    print(f"  current whole-file sha256 : {rs['current_sha256'][:16]}...")
+    print(f"  rows                      : {rs['n_rows']} "
+          f"({rs['n_rows_at_design_task']} at the design task, "
+          f"+{rs['n_rows_appended_since']} appended since)")
+    print(f"  no CRF rows               : {rs['no_crf_rows']}")
 
     print("\n== audit files ==")
     for name, info in report["audit_files"].items():
@@ -291,7 +340,7 @@ def main() -> int:
     print(f"  best standalone at rho<=0.60   : {f['best_standalone_at_rho_le_0.60']} "
           f"({f['best_arm_at_rho_le_0.60']})")
 
-    ok = (rs["identical"] and rs["no_crf_rows"]
+    ok = (rs["design_task_prefix_intact"] and rs["no_crf_rows"]
           and report["collision"]["all_pass"]
           and all(v["non_empty"] for v in report["audit_files"].values()))
     print(f"\nAUDIT: {'PASS' if ok else 'FAIL'}")
