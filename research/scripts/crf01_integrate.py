@@ -199,6 +199,67 @@ def stage_abandon(c: Ctx, base: np.ndarray) -> dict:
     }
 
 
+def stage_report_fold0(c: Ctx, base: np.ndarray, arms: list[str]) -> dict:
+    """The CRF_PROGRAM_PREREG section 0.3 mandatory pack, from FOLD-0 MODELS ONLY.
+
+    Every quantity section 0.3 requires except `marginal_vs_clone` is computable
+    from the fold-0 raw score alone.  `marginal_vs_clone` is not, because the
+    cross-fitted calibration that produces the fold-0 blend fits fold 0's map on
+    folds 1-4 and therefore needs the candidate's fold-pure scores there.  When
+    the section 7 abandon gate has fired those folds are deliberately never
+    trained, so the marginal is reported as NOT COMPUTED rather than estimated.
+    """
+    clone_cal = c.crossfit_blend({SEEDCLONE: np.load(f"{OOFDIR}/{SEEDCLONE}.npy")},
+                                 [SEEDCLONE])
+    r = c.rows[0]
+    dom = r[(c.d.t[r] >= 200) & ((c.d.y[r] == 0) | (c.age[r] >= 100))]
+    out = {"stage": "fold0_report_no_ensemble", "arms": {}}
+    for arm in arms:
+        tag = f"{CACHE}/scores/{ARMS[arm]}_fold0"
+        if not os.path.exists(f"{tag}.scores.npy"):
+            continue
+        score = np.full(len(c.d.y), np.nan, dtype=np.float32)
+        score[np.load(f"{tag}.rows.npy")] = np.load(f"{tag}.scores.npy")
+        lockbox_check(ARMS[arm], score, c)
+        assert np.isfinite(score[r]).all()
+        pack = diagnostic_pack(c, score, base, fold=0, label=ARMS[arm])
+        out["arms"][arm] = {
+            "experiment_id": ARMS[arm],
+            "standalone_whole_fold_ts_auc": float(
+                ts_auc_flat(score[r], c.d.y[r], c.d.t[r])),
+            "standalone_dominant_cell_ts_auc": float(
+                ts_auc_flat(score[dom], c.d.y[dom], c.d.t[dom])),
+            "within_t_rho_vs_rt600": pack["within_t_rank_corr_rt600"],
+            "diagnostic_pack": pack,
+            "pair_flow": pair_flow_pack(c, base, score, fold=0),
+            "unique_repair": unique_repair_coverage(c, base, score, clone_cal, fold=0),
+            "prebreak_damage_rate_on_rt600_correct": prebreak_damage_rate(
+                c, base, score, fold=0),
+            "marginal_vs_clone": None,
+            "marginal_vs_clone_status": (
+                "NOT COMPUTED - the section 7 abandon gate fired, so folds 1-4 were "
+                "never trained and no fold-pure five-fold OOF exists to calibrate against"),
+            "fold_meta": {k: v for k, v in json.load(open(f"{tag}.json")).items()
+                          if k in ("state_sha256", "runtime_s", "n_train_series",
+                                   "n_val_series", "n_parameters", "empty_pair_steps",
+                                   "loss_history", "occupancy")},
+        }
+        a = out["arms"][arm]
+        print(f"  {arm} ({ARMS[arm]}): standalone {a['standalone_whole_fold_ts_auc']:.6f} "
+              f"dominant {a['standalone_dominant_cell_ts_auc']:.6f} "
+              f"rho {a['within_t_rho_vs_rt600']:+.4f}", flush=True)
+    if "candidate" in out["arms"] and "bce_control" in out["arms"]:
+        cc, bb = out["arms"]["candidate"], out["arms"]["bce_control"]
+        out["objective_effect_on_standalone"] = {
+            "whole_fold": cc["standalone_whole_fold_ts_auc"] - bb["standalone_whole_fold_ts_auc"],
+            "dominant_cell": cc["standalone_dominant_cell_ts_auc"] - bb["standalone_dominant_cell_ts_auc"],
+            "note": ("CRF_PROGRAM_PREREG section 1.10: if CRF-01 fails but C1 fails by "
+                     "more, that is a real finding about the objective. Measured on "
+                     "standalone TS-AUC because the ensemble marginal was not computed."),
+        }
+    return out
+
+
 def stage_evaluate(c: Ctx, base: np.ndarray, arms: list[str]) -> dict:
     n_rows = len(c.d.y)
     clone_cal = c.crossfit_blend({SEEDCLONE: np.load(f"{OOFDIR}/{SEEDCLONE}.npy")},
@@ -278,7 +339,8 @@ def stage_confirm(c: Ctx, base: np.ndarray, arms: list[str]) -> dict:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--stage", required=True,
-                    choices=("abandon", "evaluate", "confirm", "sentinel"))
+                    choices=("abandon", "report_fold0", "evaluate", "confirm",
+                             "sentinel"))
     ap.add_argument("--arms", default="candidate,bce_control")
     ap.add_argument("--out", default=None)
     a = ap.parse_args()
@@ -293,6 +355,8 @@ def main():
         res = {"stage": "sentinel", "rt600_sentinel": sent}
     elif a.stage == "abandon":
         res = stage_abandon(c, base)
+    elif a.stage == "report_fold0":
+        res = stage_report_fold0(c, base, a.arms.split(","))
     elif a.stage == "evaluate":
         res = stage_evaluate(c, base, a.arms.split(","))
     else:

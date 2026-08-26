@@ -291,6 +291,43 @@ pre-break RT600-correct damage rate `<= 0.0150`. The cheap abandon gate
 (standalone fold-0 whole TS-AUC `< 0.600` **and** within-`t` rho `<= 0.60`) is
 evaluated first and may not be relaxed.
 
+CRF-01 result filed 2026-08-26:
+`RT-1234` KILL, **abandoned at the cheap abandon gate**. Fold-0 standalone
+whole-fold TS-AUC `0.592762` with within-`t` rho `+0.4460`; both abandon
+conditions held, so the candidate stopped after fold 0 and
+`marginal_vs_clone` was never computed. Dominant-cell standalone `0.621422`;
+dominant pair net `-2,798`; mature-vs-never net `-2,962`; mature-vs-prebreak
+net `-2,820`; pre-break damage rate on RT600-correct pairs `0.2626` against
+the `0.0150` cap. `RT-1235` C1 BCE control: standalone `0.570543`,
+dominant-cell `0.584322`, dominant pair net `-5,019`.
+
+**Degrees of freedom actually consumed: two of the three reserved ids, one
+fold, one seed, one architecture, one objective pair, 0.497 h of compute.**
+`RT-1236` was reserved and **not** consumed -- C2 opens only on clearing the
+abandon gate, which did not happen -- and the id is not recycled. No
+hyperparameter search, no width or learning-rate sweep, no seed re-roll, no
+threshold relaxation, no `CRF-01b`, no architecture escalation to a
+Transformer / GRU / SSM / RF-255 / extra channel. No lockbox, test-data,
+production or submission access. The three preregistered gate thresholds
+used to read this result are byte-identical to the ones committed at
+`85d121f`, three commits before the number existed.
+
+**What the spend bought.** Because `RT-970` is the same shell on the same
+fold partition, the ladder `RT-970` (0.52618, location/scale channels +
+`elapsed`, BCE) -> `RT-1235` (0.57054, null-normalised channels, BCE) ->
+`RT-1234` (0.59276, null-normalised channels, same-`t` pairwise) isolates one
+factor at a time for the first time in this project: **representation effect
+`+0.0444`** at fixed objective, **objective effect `+0.0222`** whole-fold and
+`+0.0371` dominant-cell at fixed representation. Wave 6's report said
+`RT-970` could not distinguish "family wrong" from "objective wrong"; both
+were partly wrong, both are now measured, and their sum is still short of a
+gate deliberately set below the fitted `+0.0030` contour.
+
+`RT-1234` also sets a **new best standalone-at-low-redundancy point** for the
+project: `0.59276` at rho `0.446`, against the prior record of `RT-1201`'s
+`0.58358`. The `corr(standalone, rho) = +0.983` frontier moved and the answer
+did not change, which is the strongest available form of this negative.
+
 ---
 
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)

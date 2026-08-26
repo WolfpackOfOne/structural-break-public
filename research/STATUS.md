@@ -126,30 +126,33 @@ short and gets updated whenever that changes materially.
   Both preregistered New Avenues sweeps are closed with no confirmation
   candidate. Production `RT-600` (external **0.6268**) is unchanged.
 - **Current research program:** **CAUSAL REPRESENTATION FRONTIER (CRF)** —
-  `DESIGNED_NOT_EXECUTED`. An audit-and-preregistration program asking whether
-  the legal causal prefix contains break information that RT-600 and the
-  ~500-column representation fail to extract, and if so what representation and
-  objective could extract it as a genuinely new same-`t` ranking direction.
-  Design and evidence in
+  `CRF-01 KILL, CRF-02 IN PROGRESS`. Design and evidence in
   [`reports/causal_representation_frontier/`](reports/causal_representation_frontier/):
-  `CAUSAL_REPRESENTATION_FRONTIER.md` (audit),
-  `CRF_PROGRAM_PREREG.md` (program preregistration),
-  `prior_representation_audit.csv`, `representation_collision_matrix.csv`,
-  `crf_candidate_priority.csv`, `SOURCES.md`, plus the static checker
+  `CAUSAL_REPRESENTATION_FRONTIER.md` (audit), `CRF_PROGRAM_PREREG.md` (program
+  preregistration at `85d121f`), `CRF01_EXECUTION_PREREG.md`,
+  `crf01_nncsr.{md,json}`, plus the supporting CSVs and the static checker
   `scripts/audit_causal_representation_frontier.py`.
-  Three experiments are designed — `CRF-01` null-normalised causal sequence
-  ranker (primary, RT600-independent, the designated stop experiment),
-  `CRF-02` amortized conditional generative null, and `CRF-03` their integration
-  (conditional). **None has been executed.** No `RT` id was consumed, no
-  candidate score, OOF vector or TS-AUC exists, `RESULTS.csv` is byte-identical
-  (sha256 `5b34c564...5512c`), the lockbox was not opened and no production
-  artifact was touched. **Nothing in the CRF program is proven alpha; it is a
-  design, and its most likely outcome is closing a lane rather than finding
-  one.** The audit's binding new fact: across the 17 scored arms with both
-  numbers recorded, standalone AUC and within-`t` redundancy against RT-600
-  correlate at **+0.983** — nothing this project has built has ever been both
-  good and different — and the best standalone AUC ever reached at
-  rho <= 0.60 is `RT-1201`'s **0.58358**, which returned `+0.000301`.
+  **`CRF-01` NNCSR (`RT-1234`, control `RT-1235`) is KILL**, abandoned at the
+  preregistered cheap abandon gate: fold-0 standalone whole-fold TS-AUC
+  `0.592762` (below the `0.600` necessary condition) at within-`t` rho vs RT600
+  `+0.4460`, so no five-fold spend, no C2 (`RT-1236` reserved and **not**
+  consumed), and `marginal_vs_clone` deliberately never computed. Pair flow was
+  negative in every cell (dominant net `-2,798`, mature-vs-never `-2,962`) and
+  the pre-break damage rate on RT600-correct pairs was `0.2626` against a
+  `0.0150` cap. Because `RT-970` is the same shell on the same folds, the ladder
+  `RT-970` 0.52618 → `RT-1235` 0.57054 → `RT-1234` 0.59276 isolates both factors
+  for the first time: **representation effect `+0.0444`**, **objective effect
+  `+0.0222`** — Wave 6 could not tell "family wrong" from "objective wrong", both
+  were partly wrong, and their sum is still short. `RT-1234` sets a **new best
+  standalone-at-low-redundancy point** (0.59276 at rho 0.446, prior record
+  `RT-1201`'s 0.58358): the frontier moved and the answer did not change. The
+  representation × objective factorial is now **complete and empty**, which closes
+  learned causal-prefix representations as an ensemble alpha source and objective
+  mismatch as a live explanation for the W7-D3R gap. `CRF-02` ACGN is
+  unconditional and independent of this result and is next; `CRF-03` does not open
+  on `CRF-01`. The audit's standing fact remains: across the 17 scored arms with
+  both numbers recorded, standalone AUC and within-`t` redundancy against RT-600
+  correlate at **+0.983**.
 - **Final Wave reports:** [`reports/wave4/`](reports/wave4/),
   [`reports/wave5/`](reports/wave5/), [`reports/wave6/`](reports/wave6/),
   [`reports/wave7/`](reports/wave7/); Wave 8's report is on the
@@ -158,9 +161,10 @@ short and gets updated whenever that changes materially.
   [`FINAL_ARCHITECTURE_FREEZE.md`](FINAL_ARCHITECTURE_FREEZE.md),
   [`FINAL_REPRODUCIBILITY_MANIFEST.json`](FINAL_REPRODUCIBILITY_MANIFEST.json).
 
-_Last updated: 2026-08-25, after the Causal Representation Frontier program
-was audited and preregistered (design only, no execution, no new score, no RT
-id) on `research/causal-representation-frontier-2026`; previously updated after
-SS-04 was executed and killed on its preregistered fold-0 screen. Update this file whenever the production anchor,
+_Last updated: 2026-08-26, after `CRF-01` NNCSR was executed on its
+preregistered fold-0 screen and killed at the cheap abandon gate
+(`RT-1234`/`RT-1235`; `RT-1236` reserved, not run) on
+`research/causal-representation-frontier-2026`; previously updated when the
+Causal Representation Frontier program was audited and preregistered. Update this file whenever the production anchor,
 external score, or active research conclusion changes — see
 `AGENTS.md` at the repo root for the update rule._

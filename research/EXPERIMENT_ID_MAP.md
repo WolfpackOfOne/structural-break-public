@@ -615,3 +615,42 @@ in the `RT-12xx` band is `RT-1233`; `RT-1234`/`RT-1235`/`RT-1236` appear in no
 `RESULTS.csv` on any local or remote ref, in no tracked file, and in no commit
 reachable from any ref (`git log --all -S`). None is a recycled killed, void,
 abandoned, contaminated or reserved id.
+
+### CRF-01 result, filed 2026-08-26
+
+`research/reports/causal_representation_frontier/crf01_nncsr.{md,json}`.
+
+**`RT-1234` KILL — abandoned at the preregistered cheap abandon gate.** Fold-0
+standalone whole-fold TS-AUC `0.592762` (below the `0.600` necessary condition)
+with within-`t` ρ vs RT600 `+0.4460` (at or below the `0.60` ceiling), so
+`CRF_PROGRAM_PREREG.md` §0.2 fires and the candidate is abandoned before any
+five-fold spend. `marginal_vs_clone` was **never computed** — that is the gate's
+intended effect, not an omission, since the fold-0 marginal requires a fold-pure
+five-fold OOF and folds 1–4 were deliberately not trained. Dominant-cell standalone
+`0.621422`; dominant pair net `-2,798`; mature-vs-never net `-2,962`;
+mature-vs-pre-break net `-2,820`; pre-break damage rate on RT600-correct pairs
+`0.2626` against the `0.0150` cap.
+
+**`RT-1235` C1 mandatory BCE control** ran on fold 0 and is preserved: standalone
+`0.570543`, dominant-cell `0.584322`, ρ `+0.3631`, dominant pair net `-5,019`. The
+candidate beats it by `+0.02222` whole-fold and `+0.03710` dominant-cell, so the
+same-`t` pairwise objective is **materially better than BCE on a learned
+representation** — the first clean isolation of that factor in this project, and a
+real positive finding that does not resurrect the candidate
+(`CRF_PROGRAM_PREREG.md` §1.10).
+
+**`RT-1236` was NOT run and its id is NOT consumed.** `CRF_PROGRAM_PREREG.md` §1.7
+opens C2 only if the candidate clears the abandon gate; it did not. The id remains
+reserved to CRF-01's C2 arm and must not be recycled or reassigned to anything else.
+
+Ladder against `RT-970` (same shell, same folds): `RT-970` 0.52618 →
+`RT-1235` 0.57054 (**channel effect +0.0444** at fixed objective) →
+`RT-1234` 0.59276 (**objective effect +0.0222** at fixed channels). Both Wave-6
+hypotheses were partly right and their sum is still insufficient.
+
+`RT-1234` and `RT-1235` OOF vectors are fold-0 only by construction: finite on the
+806,334 fold-0 rows, NaN on folds 1–4, zero finite lockbox rows. Their
+`mean_oof_ts_auc` / `pooled_oof_ts_auc` / `per_fold_ts_auc` columns in
+`research/RESULTS.csv` hold the arm's **standalone** fold-0 TS-AUC, **not** an
+ensemble score — unlike the SS-0x rows, which hold `E2`. The `notes` column says so
+on both rows.

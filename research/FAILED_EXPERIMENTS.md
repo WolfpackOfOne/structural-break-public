@@ -1815,3 +1815,99 @@ lockbox/test/submission/production path was used. Final status:
 
 Report:
 `research/reports/new_avenues_2026/second_sweep/ss04_specialist_router.{md,json}`.
+
+## RT-1234 / RT-1235 -- CRF-01 NNCSR null-normalised causal sequence ranker -- KILL (2026-08-26)
+
+**Program preregistration** `research/reports/causal_representation_frontier/CRF_PROGRAM_PREREG.md` @ `85d121f`.
+**Execution preregistration** `research/reports/causal_representation_frontier/CRF01_EXECUTION_PREREG.md` @ `afba958`.
+**Preflight** `ed05902`. **Report** `research/reports/causal_representation_frontier/crf01_nncsr.{md,json}`.
+
+**Hypothesis.** The 500-column bank discards temporal order beyond lag-2 products
+and has no representation of excursion contiguity or excursion-growth rate. A
+causal sequence encoder reading a small, **null-normalised** channel set, trained
+under an objective that matches the metric's within-timestep comparison, can
+represent those functionals and produce a same-`t` ranking direction RT-600 does
+not already contain.
+
+**What was done.** Eight history-fitted null-normalised channels -- `pit` (256-knot
+history-ECDF normal score), `inn` (Yule-Walker AR(5) innovation, history-tail lag
+initialisation), `inn_pit`, `abs_inn_pit`, `vol_norm` (strictly lagged half-life-32
+EWMA, `0.25*mad_H` floor), `surp` (history `|innovation|` tail surprise), `exceed`
+(soft `q90_H` exceedance, slope 4), `lag1_pit` -- into the `RT-970` causal dilated
+TCN shell verbatim (hidden 32, kernel 3, dilations 1/2/4/8/16/32, six residual
+blocks, 35,649 parameters, measured receptive field 253), trained under the same-`t`
+pairwise logistic objective with `m_neg = 8` and uniform pair weighting. **No
+`elapsed` channel, no `t` channel, no 500-column bank, no RT-600, in any arm.**
+Seed 0, 20 epochs, AdamW 3e-3 / 1e-2, cosine, batch 32 series, fold 0.
+
+**The number.** Fold-0 standalone whole-fold TS-AUC **0.592762** at within-`t` rho
+vs RT600 **+0.4460**. The preregistered cheap abandon gate -- standalone `< 0.600`
+**and** rho `<= 0.60` -- **fired**, so the candidate was abandoned before any
+five-fold spend, before C2, and before any ensemble integration.
+`marginal_vs_clone` was **never computed**: it requires a fold-pure five-fold OOF
+because the cross-fitted SCDF fits fold 0's map on folds 1-4, and those folds were
+deliberately not trained. That is the gate working, not a missing measurement.
+
+Dominant-cell standalone `0.621422`. Pair flow negative in **every** cell:
+whole-fold net `-2,862`, dominant net `-2,798`, mature-vs-never net `-2,962`,
+mature-vs-pre-break net `-2,820`. Pre-break damage rate on RT600-correct pairs
+**0.2626 against a 0.0150 cap** -- seventeen times over.
+
+`RT-1235`, the mandatory matched BCE control (byte-identical channels,
+architecture, optimiser, schedule, epochs, batches and seeds; only the loss
+differs): standalone `0.570543`, dominant-cell `0.584322`, rho `+0.3631`, dominant
+pair net `-5,019`.
+
+**Why it failed.** Not detection. The candidate repairs 6,395 of RT-600's 16,193
+sampled dominant-cell mistakes -- a 39.5 % repair rate, with a repair Jaccard of
+only 0.174 against the seed clone, so the repairs really are its own -- while
+damaging 26.8 % of the pairs RT-600 already had right. This is
+`FIRST_SWEEP_SYNTHESIS.md` H1 recurring in a new representation: **the bottleneck is
+repair-versus-damage arbitration, not the detector.** CRF-01 is a much better
+detector than anything in the first sweep and arbitrates no better; SS-01, whose
+whole purpose was arbitration, was itself KILL.
+
+**What this closes.** The representation x objective factorial is now complete and
+empty. `RT-970` is the same shell on the same folds, so the ladder isolates one
+factor at a time:
+
+| arm | channels | objective | fold-0 whole TS-AUC |
+|---|---|---|---:|
+| `RT-970` | location/scale + `elapsed` | BCE | 0.52618 |
+| `RT-1235` | eight null-normalised, no `elapsed` | BCE | 0.57054 |
+| `RT-1234` | eight null-normalised, no `elapsed` | same-`t` pairwise | 0.59276 |
+
+**Representation effect `+0.0444`** at fixed objective. **Objective effect
+`+0.0222`** whole-fold, `+0.0371` dominant-cell, at fixed representation. Wave 6's
+own report said `RT-970` could not distinguish "family wrong" from "objective
+wrong". Both were partly wrong, both are now fixed and measured, **and their sum is
+still short of a threshold set deliberately below the fitted `+0.0030` contour.**
+
+Closed by this result: null-normalised temporal representation combined with the
+same-`t` ranking objective failed under the frozen `RT-970` shell, which closes the
+representation x objective lane defined by `CRF_PROGRAM_PREREG.md` §1; learned
+causal-prefix representations as an ensemble alpha source; and objective mismatch as
+a live explanation for the W7-D3R gap. The objective effect is real and now
+quantified -- it is simply an order of magnitude too small to matter.
+
+`RT-1234` additionally sets a **new best standalone-at-low-redundancy point** for
+this project -- `0.59276` at rho `0.446` against `RT-1201`'s prior `0.58358` -- so
+the `corr(standalone, rho) = +0.983` frontier moved and the answer did not change.
+That is the strongest available form of this negative: the gate was not cleared past
+by a weak attempt.
+
+**Retry warranted?** **No, and specifically not by escalation.** No `CRF-01b`. No
+Transformer, GRU, SSM, RF-255, longer receptive field, wider hidden layer, extra
+channel, alternative PIT, different `q90`, or different pair weighting -- all
+forbidden by `CRF_PROGRAM_PREREG.md` §0.8/§0.9 and §40 of the execution brief, and
+all unsupported by the evidence: the age profile (0.5205 at age 0-5 rising
+monotonically to 0.6225 at age 100+) is a detector whose problem is arbitration, not
+memory length. `RT-1236` (C2 temporal shuffle) was reserved and **not run**; the id
+is not recycled.
+
+**What is NOT closed.** `CRF-02` ACGN, which `CRF_PROGRAM_PREREG.md` §2 declares
+unconditional and independent. CRF-01 is a statement about extracting more break
+evidence from the legal prefix; CRF-02 asks the different question of whether the
+never-break false-positive mass is a conditional-**null misspecification** problem.
+`CRF-03` does not open on CRF-01, whose opening rule needs
+`marginal_vs_clone >= +0.0015` and which has no marginal at all.
