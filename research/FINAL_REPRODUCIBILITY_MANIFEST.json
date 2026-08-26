@@ -129,5 +129,88 @@
     "trained_on_n_series": 10000,
     "calibration_time_coord": "log_n_seen",
     "caveat": "the notebook and .py themselves are NOT bit-reproducible across builds: the boot cell embeds a build timestamp. The source and model zip hashes are the reproducible identities and are what to verify."
+  },
+  "clean_production_release": {
+    "id": "RT-600-CLEAN-RELEASE-2026",
+    "what": "the RT-600 artifact rebuilt on a branch that DESCENDS FROM production/rt600 and carries only the audited reliability fixes. Same experiment, same model, same calibration, same 500 features: no new experiment id, no new score, no model selection, no RT ID.",
+    "not_a_merge": "THIS IS NOT A MERGE OF THE RESEARCH LINEAGE. engineering/rt600-final-reliability-2026 is rooted on the CRF research tip and carries 152 commits production does not have. The fixes were transplanted path by path; the research lineage was not merged.",
+    "authorised_by": "repository owner, 2026-08-26, APPROVE RT-600 RELEASE (clean production-descended lineage)",
+    "production_base_sha": "9aaa9b046609eb94d9fdd09f7ae07d9249fe2f65",
+    "engineering_source_sha": "d47937718ba91c2327aafa4528bdba39ee06661f",
+    "release_branch": "release/rt600-reliability-2026",
+    "release_source_commit": "3333f57c3493e746b773bd920f7b38e63cdbb8d6",
+    "built_at": "2026-08-26T19:40:24Z",
+    "build_command": "python research/scripts/build_submission.py --model <models/final10k_ensemble> --out submissions/C_ensemble_deployable.ipynb --title \"Structural Break Real-Time: 7-stream deployable ensemble, all 10,000 series\"",
+    "builder": "research/scripts/build_submission.py AS IT EXISTS ON production/rt600 -- the P=4 / writable-payload builder. The engineering branch's copy is OLDER (P=1, ./_sbr_payload_<pid>) because the research lineage forked before LB-002..LB-004; using it would have regressed the cloud runner fix.",
+    "embedded_source_clean": true,
+    "hashes": {
+      "source_zip_sha256": "28b3f95f403dc40f5a1063a890dc714ba95c5d7b8ee994017b61c2c4647a3c9e",
+      "model_zip_sha256": "6c8960ddc7331afecfc6980974f2879401a1eb583f15f5cad34c2ea03299ea8c",
+      "model_manifest_sha256": "1483a59a268ded18b6af804a5f0eb0b191376a1dc86526f286751bf1613ec940",
+      "feature_manifest_sha256": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced",
+      "notebook_sha256": "5843458e15b0f4601f95f627432929ade77d3414b21d9703d977b908fdc2ba2c",
+      "python_entrypoint_sha256": "36d5e75e5bfcdaff0c8a2ad12a8a6d1dfea9816f02b2eeb78fdc4eec4ef2d0a9",
+      "notebook_bytes": 28056514,
+      "python_entrypoint_bytes": 28053435
+    },
+    "changed_vs_production_freeze": {
+      "source_zip_sha256": {
+        "from": "199db8c9f5db7e1429f6ae09fa018d43cc58c5eb47b5c623a017799537a413a0",
+        "to": "28b3f95f403dc40f5a1063a890dc714ba95c5d7b8ee994017b61c2c4647a3c9e"
+      },
+      "model_zip_sha256": {
+        "unchanged": "6c8960ddc7331afecfc6980974f2879401a1eb583f15f5cad34c2ea03299ea8c",
+        "note": "BYTE-IDENTICAL to the frozen record AND to the engineering release artifact. The model was not rebuilt, retrained or reselected; the packer re-emitted the same directory to the same bytes."
+      },
+      "feature_manifest_sha256": {
+        "unchanged": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced",
+        "note": "the RT-600 500-column manifest is unmoved, so ProductionModel.load still accepts this model."
+      },
+      "notebook_sha256": {
+        "from": "840a94f744e12d065854eb142e30cb01a0651436e603faa804eae7ae834e2d6d",
+        "to": "5843458e15b0f4601f95f627432929ade77d3414b21d9703d977b908fdc2ba2c",
+        "note": "the notebook and .py are not bit-reproducible across builds -- the boot cell embeds a build timestamp. The zip hashes are the reproducible identities."
+      }
+    },
+    "payload_contents": {
+      "n_files": 34,
+      "added_vs_production_freeze": [
+        "sbr/stream/_fp.py  -- the arm64 FMA emulation the parity fix needs"
+      ],
+      "changed_vs_production_freeze": [
+        "sbr/features/m07_bayes.py",
+        "sbr/production/model.py",
+        "sbr/stream/s_m01_seq.py",
+        "sbr/stream/s_m02_dist.py",
+        "sbr/stream/s_m04_resid.py",
+        "sbr/stream/s_m06_loc.py",
+        "sbr/stream/s_m07_bayes.py"
+      ],
+      "removed_vs_production_freeze": [],
+      "post_freeze_research_modules_present": [],
+      "note": "34 files, against the engineering artifact's 44. m10_persist, m11_focus, m12_rdep, m13_scale_survival, m14_spectral_impulse, m15_ordinal_irrev, m16_joint_rarity, m17_observers, m18_weighted_ctm and s_m12_rdep are absent because they never existed on this lineage -- nothing was hand-filtered out of the zip and no deletion commit was made. The canonical builder packed src/sbr whole; the clean tree defined the contents.",
+      "audited_absences": {
+        "crf_training_code": false,
+        "new_avenues_code": false,
+        "torch_import": false,
+        "research_caches_or_npy": false,
+        "pycache_or_pyc_or_numba_cache": false,
+        "unit_test_files_or_caches": false,
+        "experimental_checkpoints": false,
+        "user_local_paths": false
+      },
+      "known_non_finding": "sbr/store.py, sbr/pipeline.py and sbr/features/driver.py carry '/home/claude/sb' as an os.environ.get DEFAULT. Pre-existing on production/rt600, untouched by this release, overridden by SBR_STORE / SBR_ROOT / SBR_FEATURES, and not read on the inference path.",
+      "shipped_module_set": [
+        "m00_core",
+        "m01_seq",
+        "m02_dist",
+        "m03_dyn",
+        "m04_resid",
+        "m06_loc",
+        "m07_bayes"
+      ],
+      "shipped_module_set_note": "on this lineage MODULE_ORDER IS the frozen seven and StreamEngine defaults to it. The MODULE_ORDER / PRODUCTION_MODULES split exists only on the research lineage, where a module was appended; there is nothing to split here."
+    },
+    "caveat": "the notebook and .py themselves are NOT bit-reproducible across builds: the boot cell embeds a build timestamp. The source and model zip hashes are the reproducible identities and are what to verify."
   }
 }
