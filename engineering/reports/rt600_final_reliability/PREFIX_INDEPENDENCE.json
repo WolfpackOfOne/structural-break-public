@@ -1,0 +1,29 @@
+{
+  "prefix_invariance": {
+    "n_series": 14,
+    "prefixes": [
+      1,
+      2,
+      3,
+      5,
+      10,
+      16,
+      20,
+      32,
+      50,
+      64,
+      100,
+      128,
+      200,
+      256
+    ],
+    "cells": 7261000,
+    "mismatches": 0,
+    "detail": []
+  },
+  "series_independence_features": {
+    "cells": 1146000,
+    "mismatches": 0,
+    "n_series": 8
+  }
+}

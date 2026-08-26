@@ -19,8 +19,8 @@ this audit is not authorised to make them. They are stated in full at the bottom
 |---|---|---|---|
 | 1 | Scientific freeze | **PASS** | `CRF_PROGRAM_EXHAUSTED` at `8165876`. Model search stopped. RT-600 remains champion at external **0.6268**. The wider-learned-bottleneck hypothesis was **not** executed. |
 | 2 | Batch/stream parity | **PASS** | All 7 frozen modules, 201 series, **53,203,000 cells, 0 mismatches** at `atol=0`. Was 4/5 seeds failing. `STREAM_PARITY_REPRO.md`, `FULL_PARITY.json`. |
-| 3 | Prefix invariance | **PASS** | See §B below — streamed row `t` is unchanged by how much data follows, and a batch rebuild on the truncated online segment reproduces the surviving rows bitwise. |
-| 4 | Series independence | **PASS** | Feature level (§C) and prediction level: 2,964 predictions re-run under reordering plus foreign-series interleaving, **0 differ**. |
+| 3 | Prefix invariance | **PASS** | **7,261,000 cells, 0 mismatches** over 14 series x 14 boundary prefixes, in both modes (truncated stream, and batch rebuilt on the truncated online array). Plus 37 dedicated prefix/poison/`n_online` tests. |
+| 4 | Series independence | **PASS** | Feature level: **1,146,000 cells, 0 mismatches**. Prediction level: 2,964 predictions re-run under reordering plus foreign-series interleaving, **0 differ**. |
 | 5 | Deterministic replay | **PASS** | 5 repeats of the full inference path → 1 distinct output hash. Feature sweeps over 64 series give identical SHA-256 across 4 processes: idle ×2, `VECLIB_MAXIMUM_THREADS=1`, and under 8-way CPU load. BLAS is Accelerate; no thread-count sensitivity found. |
 | 6 | Artifact provenance | **PASS (hardened)** | `ProductionModel._check_provenance` now pins fit population, partition, fold SHA, booster count and calibration. Six wrong-provenance variants that pass the old feature-manifest check are refused. `VOID_RUN_CHECKLIST.md`. |
 | 7 | Environment reproducibility | **PASS** | Running environment matches `FINAL_REPRODUCIBILITY_MANIFEST.json` exactly: Python 3.11.6, numpy 2.4.6, pandas 3.0.5, scipy 1.17.1, sklearn 1.9.0, lightgbm 4.7.0, numba 0.67.0, macOS-26.5.2-arm64. |
@@ -91,21 +91,32 @@ have changed since:
 
 ## B. Prefix invariance
 
-Prefixes `1, 2, 3, 5, 10, 16, 20, 32, 50, 64, 100, 128, 200, 256, 500, 512, 1000`,
-in two modes: truncating the stream, and rebuilding the **batch** module on the
+Prefixes `1, 2, 3, 5, 10, 16, 20, 32, 50, 64, 100, 128, 200, 256` over 14 series,
+in two modes: truncating the stream, and rebuilding the **batch** modules on the
 truncated online array. Both must reproduce the surviving rows bitwise.
 
-Results in `FULL_PARITY.json` (`prefix_invariance`). The historical→online
-boundary is covered at `L = 1`, and every module's `t = 0` row is inside the
-53.2M-cell parity sweep. `test_future_poison_cannot_change_an_emitted_row` and
-`test_no_n_online_leakage` both pass.
+**7,261,000 cells checked, 0 mismatches.** (`PREFIX_INDEPENDENCE.json`.)
+
+The historical→online boundary is covered at `L = 1`, and every module's `t = 0`
+row is inside the 53.2M-cell parity sweep. 37 dedicated tests also pass:
+`test_future_poison_cannot_change_an_emitted_row`, `test_no_n_online_leakage`,
+and each module's `test_prefix_poison`.
+
+*Harness note.* An earlier run of this check reported a large mismatch count.
+That was a defect in the **check**, not the code: the reference row block was
+built as `StreamEngine().fit_historical(h).step(x) for x in o`, which constructs
+a fresh engine per observation and so compares against 300 independent
+first-steps rather than one streamed run. Corrected, it reports zero. Recorded
+because a scary intermediate number that turned out to be the measuring
+instrument is exactly the kind of thing this report should not quietly drop.
 
 ## C. Series independence
 
-Feature level: the same target series re-run under three orderings with foreign
-series interleaved before and after. Prediction level: 2,964 predictions, 0
-differ. `INFER_PARALLELISM = 1`, so no shared cross-series state exists in the
-deployed path; independence is nevertheless asserted rather than assumed.
+Feature level: 8 target series re-run in reverse order with 4 foreign series
+streamed in between — **1,146,000 cells, 0 mismatches**. Prediction level: 2,964
+predictions under reordering plus interleaving, **0 differ**.
+`INFER_PARALLELISM = 1`, so no shared cross-series state exists in the deployed
+path; independence is nevertheless asserted rather than assumed.
 
 ## D. Prediction impact — BUGFIX-PREDICTION-CHANGING
 
