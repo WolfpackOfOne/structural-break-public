@@ -332,7 +332,14 @@ class StreamM06Loc:
         elif ck[t + 1] - ck[t + 1 - w] >= w:
             s1 = c1[t + 1] - c1[t + 1 - w]
             s2 = c2[t + 1] - c2[t + 1 - w]
-            var = s2 / w - (s1 / w) ** 2
+            # `mw * mw`, never `mw ** 2`: numpy's `**2` on an array is a squaring
+            # multiply, but a Python scalar `**2` goes through libm `pow` and
+            # rounds differently (688/500000 random doubles).  This subtraction
+            # cancels to ~1e-14 on a near-constant window, so a single ULP there
+            # moves the emitted float32 -- see STREAM_PARITY_REPRO.md.
+            # (Do NOT name this `q`: that is the calibrated-max output below.)
+            mw = s1 / w
+            var = s2 / w - mw * mw
             # == np.sqrt(np.maximum(var, 0.0)); the NaN arm cannot fire here
             # (lm is bounded in [3, 9] and w == 16) but is kept faithful.
             stab = sqrt(var) if var > 0.0 else (0.0 if var == var else np.nan)

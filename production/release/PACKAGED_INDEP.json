@@ -1,0 +1,19 @@
+{
+  "features": {
+    "n_series": 8,
+    "cells": 1146000,
+    "mismatches": 0
+  },
+  "predictions": {
+    "n_predictions": 2292,
+    "mismatches": 0
+  },
+  "PASS": true,
+  "_meta": {
+    "phase": "indep",
+    "notebook": "/path/to/workspace/structural-break-rt600-release/submissions/C_ensemble_deployable.ipynb",
+    "notebook_sha256": "5843458e15b0f4601f95f627432929ade77d3414b21d9703d977b908fdc2ba2c",
+    "payload_dir": "/var/folders/g1/zkz92mc14jn1pk1yy20_6x740000gn/T/sbr_payload_kx980dxo/sbr",
+    "run_at": "2026-08-26T19:45:43Z"
+  }
+}

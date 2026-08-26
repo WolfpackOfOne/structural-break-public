@@ -1,0 +1,99 @@
+{
+  "schema": "rt600_clean_release/known_failure_status/1",
+  "classification": "RELEASE-VALIDATION PROVENANCE, NOT A RUNTIME REQUIREMENT.",
+  "what_this_is": "the production release does not run research/scripts/known_failure_gate.py and does not read research/known_failures.json at any point -- not at build, not at load, not at inference. Neither file has ever existed on this lineage. Importing them, or the CRF/torch test files whose libomp collision the gate's TORCH_TESTS fix is about, would add research infrastructure to production solely to carry an audit fix for infrastructure production does not have. They are therefore NOT transplanted. What IS carried forward is the evidence, recorded here.",
+  "ledger_lives_at": "research/known_failures.json on engineering/rt600-final-reliability-2026 and its research-lineage descendants",
+  "old_fingerprint": {
+    "sha256": "0bd576da7bb7dadb0e7ab10f29aa5de822838de4e1d014c82aabbc237f127a73",
+    "generated_at": "2026-08-22 19:43:40",
+    "generated_on_sha": "16d6d50b5eb42cbab41b1f7343aa2ff97fb25d1e",
+    "n_known_failures": 15,
+    "counts": {
+      "failed": 15,
+      "passed": 650,
+      "skipped": 1,
+      "processes": {
+        "non_torch": {
+          "failed": 15,
+          "passed": 632,
+          "skipped": 1
+        },
+        "torch_only": {
+          "failed": 0,
+          "passed": 18,
+          "skipped": 0
+        }
+      }
+    },
+    "archived_to": "research/archive/known_failures/known_failures_2026-08-22_0bd576da7bb7.json",
+    "archived_record_sha256": "0bd576da7bb7dadb0e7ab10f29aa5de822838de4e1d014c82aabbc237f127a73",
+    "archived_record_bytes": 4631,
+    "policy_at_the_time": "DO NOT modify production feature or streaming semantics to make these green. Any NEW failure, any DISAPPEARANCE, and any RENAME is a gate failure requiring a human decision.",
+    "node_ids": [
+      "tests/test_stream_engine_parity.py::test_engine_parity_real[0]",
+      "tests/test_stream_engine_parity.py::test_engine_parity_real[137]",
+      "tests/test_stream_engine_parity.py::test_engine_parity_real[4242]",
+      "tests/test_stream_engine_parity.py::test_engine_parity_real[7777]",
+      "tests/test_stream_parity_m01_seq.py::test_bitwise_parity_synthetic[39]",
+      "tests/test_stream_parity_m06_loc.py::test_real_store_bitwise",
+      "tests/test_stream_parity_m06_loc.py::test_synthetic_bitwise[22]",
+      "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[2546]",
+      "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[2649]",
+      "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[319]",
+      "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[4313]",
+      "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[4330]",
+      "tests/test_stream_parity_m07_bayes.py::test_parity_real_bitwise[7885]",
+      "tests/test_stream_parity_m07_bayes.py::test_parity_synthetic_bitwise[t3_2]",
+      "tests/test_stream_parity_m07_bayes.py::test_parity_synthetic_bitwise[var_shrink]"
+    ]
+  },
+  "regeneration": {
+    "reason": "the fifteen pinned failures were resolved by verified engineering corrections on engineering/rt600-final-reliability-2026 (b41da11 lgamma single-sourcing, 03e4637 arm64 FMA and scalar-square parity); no test was removed, xfailed or loosened and no tolerance or expected output was changed",
+    "authorised_by": "repository owner, 2026-08-26, engineering-only release authorisation (release action 1 of 2)",
+    "previous_sha256": "0bd576da7bb7dadb0e7ab10f29aa5de822838de4e1d014c82aabbc237f127a73",
+    "previous_n_known_failures": 15,
+    "new_n_known_failures": 0,
+    "regenerated_at": "2026-08-26 14:26:20",
+    "regenerated_on_sha": "a18ed733d74836509e734ba88cd1a7b78646db82"
+  },
+  "resolved_history": {
+    "m07_bayes_stream_parity": {
+      "resolved_by": "b41da11",
+      "resolved_how": "the BOCPD Student-t log-normalising constant table is now built once, by m07_bayes._bocpd_ct, and imported by _BocpdStream instead of recomputed. numba's math.lgamma and CPython's disagree by up to 512 ULP on this grid, so the two sides had been sitting on different constants since the streaming port was written."
+    },
+    "m06_loc_stream_parity": {
+      "resolved_by": "03e4637",
+      "resolved_how": "scalar-square parity: a Python `x ** 2` goes through libm pow, numpy's array `** 2` is a squaring multiply, and they differ on 688 of 500,000 doubles. m06's rolling variance is a cumsum difference that cancels to ~1e-14, so one ULP moved the emitted float32 by 15%."
+    },
+    "m01_seq_stream_parity": {
+      "resolved_by": "03e4637",
+      "resolved_how": "arm64 fused-multiply-add parity: scipy.signal.lfilter contracts b0*x + z into a single-rounding FMA, which sbr.stream._fp.fma now reproduces exactly (Dekker two-product/two-sum, since math.fma is 3.13+ and the frozen environment is 3.11.6)."
+    },
+    "engine_parity_real": {
+      "resolved_by": "b41da11 and 03e4637",
+      "resolved_how": "no independent defect: this is the assembled-engine view of the three above, and went green when they did."
+    }
+  },
+  "independently_verified_on_this_branch": {
+    "how": "the fifteen pinned node ids were re-run verbatim on release/rt600-reliability-2026. Every one of them lives in a test file that already exists on production/rt600, so no import was needed to check them.",
+    "command": "python -m pytest <the 15 node ids> -q -p no:randomly",
+    "result": "15 passed, 0 failed",
+    "full_suite_on_this_branch": {
+      "passed": 623,
+      "failed": 0,
+      "skipped": 1,
+      "skip_reason": "tests/test_visualization.py -- matplotlib is not installed; unrelated to the release"
+    },
+    "single_process": "this branch's suite needs no two-process split: it contains no test that imports torch, which is the whole reason the research gate splits at all."
+  },
+  "not_imported": [
+    "research/known_failures.json",
+    "research/scripts/known_failure_gate.py",
+    "research/archive/known_failures/known_failures_2026-08-22_0bd576da7bb7.json",
+    "tests/test_neural_causality.py",
+    "tests/test_crf01_causality.py",
+    "tests/test_crf02_causality.py"
+  ],
+  "no_test_was_removed_xfailed_or_loosened": true,
+  "no_tolerance_or_expected_output_changed": true
+}

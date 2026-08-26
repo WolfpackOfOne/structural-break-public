@@ -1,0 +1,44 @@
+{
+  "schema": "rt600_clean_release/prediction_change_rootcause/1",
+  "status": "OWNER_ACCEPTED_ENGINEERING_CORRECTION",
+  "authorised_by": "repository owner, 2026-08-26, RT-600 release approval section 5",
+  "context": "reproduced independently on release/rt600-reliability-2026, which descends from production/rt600 (9aaa9b04) and carries only the audited fixes. This is NOT a re-derivation of the engineering audit; it is confirmation that the clean transplant produces the same, and only the same, behavioural change.",
+  "changed_prediction": {
+    "series": 5509,
+    "n_online": 908,
+    "t": 42,
+    "production_artifact_199db8c9": 0.6489955357142857,
+    "clean_release_artifact_28b3f95f": 0.6484375,
+    "abs_delta": 0.0005580357142856984
+  },
+  "battery": {
+    "n_series": 67,
+    "n_predictions_compared": 38723,
+    "n_predictions_changed": 1,
+    "pct_changed": 0.0025824445420034605,
+    "max_abs_prediction_delta": 0.0005580357142856984,
+    "mean_abs_prediction_delta": 1.4410962846001045e-08,
+    "same_t_pairs_compared": 953123,
+    "same_t_pair_order_flips": 0
+  },
+  "feature_level_root_cause": {
+    "column": "m06_loc::loc_p_rsq_stab",
+    "series": 5509,
+    "row": 42,
+    "old_served_value": 4.2146848e-08,
+    "clean_stream_value": 0.0,
+    "batch_reference_value": 0.0,
+    "training_cache_value": 0.0,
+    "training_cache_path": "cache/features/m06_loc.npy (the array RT-600 was fitted on)",
+    "all_cells_compared": 454000,
+    "stream_vs_batch_mismatches_on_this_series": 0,
+    "mechanism": "a Python scalar x**2 goes through libm pow where numpy's array **2 is a squaring multiply. m06's rolling variance is a cumsum difference that very nearly cancels, so one ULP survives into the emitted float32. LightGBM bins at max_bin=127, so a 1-ULP float32 move almost never crosses a bin boundary -- 'almost never' is not 'never', and this is what it looks like when it does.",
+    "verdict": "the corrected value agrees with the batch reference AND with the feature cache the frozen model was trained on; the old served value agreed with neither. The change restores intended train/serve semantics."
+  },
+  "owner_directives_observed": [
+    "no TS-AUC computed",
+    "no leaderboard comparison",
+    "no tuning around this row",
+    "no attempt to preserve the old prediction"
+  ]
+}

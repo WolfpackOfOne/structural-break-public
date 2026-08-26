@@ -255,3 +255,60 @@ def test_timing_us_per_obs(capsys):
         print(f"[m07_bayes] StreamCtx.push {t_push / n * 1e6:8.1f} us/obs (shared)")
         print(f"[m07_bayes] step           {t_step / n * 1e6:8.1f} us/obs")
     assert t_step / n < 5e-3      # generous ceiling: must stay O(1)
+
+
+# ---------------------------------------------------------------------------
+# Regression guard for the batch/stream BOCPD constant-table divergence fixed on
+# engineering/rt600-final-reliability-2026.  See
+# engineering/reports/rt600_final_reliability/STREAM_PARITY_REPRO.md.
+def test_bocpd_ct_table_is_single_sourced():
+    """The Student-t constant table must come from one implementation.
+
+    ``math.lgamma`` is the one primitive in this module where numba and CPython
+    disagree (up to 512 ULP on this grid; log/exp/log1p agree bitwise).  It is
+    used only to build ``ct``, which enters every run length's predictive
+    likelihood, so two independently computed tables put the batch-trained and
+    stream-served features on permanently different constants -- a train/serve
+    skew, not float noise.  Both sides must read the same table.
+    """
+    import math
+
+    from sbr.features.m07_bayes import BO_AL0, BO_KAP0, R_MAX, _bocpd_ct
+    from sbr.stream.s_m07_bayes import _BocpdStream
+
+    shared = _bocpd_ct(BO_AL0, R_MAX)
+    stream = _BocpdStream(0.0, 1.0, BO_KAP0, BO_AL0,
+                          math.log(0.004), math.log1p(-0.004), R_MAX).ct
+    assert len(stream) == R_MAX
+    for r in range(R_MAX):
+        assert stream[r] == float(shared[r]), (
+            f"ct[{r}] diverged: stream {stream[r]!r} vs shared {shared[r]!r}; "
+            "the streaming kernel is recomputing the table instead of importing it")
+
+
+def test_bocpd_stream_matches_batch_kernel_bitwise():
+    """``_BocpdStream`` must reproduce ``_bocpd`` exactly, JIT or not.
+
+    Compares against the compiled kernel actually used to build the feature
+    cache, not against its Python source -- the two differ, and the compiled one
+    is what the frozen model was trained on.
+    """
+    import math
+
+    from sbr.features.m07_bayes import BO_AL0, BO_HAZ, BO_KAP0, R_MAX, _bocpd
+    from sbr.stream.s_m07_bayes import _BocpdStream
+
+    lbh, lb1 = math.log(BO_HAZ), math.log1p(-BO_HAZ)
+    rng = np.random.default_rng(20260826)
+    for tag, x in (("gauss", rng.standard_normal(400)),
+                   ("shift", np.r_[rng.standard_normal(200),
+                                   rng.standard_normal(200) + 3.0]),
+                   ("vol", np.r_[rng.standard_normal(200),
+                                 rng.standard_normal(200) * 5.0])):
+        batch = _bocpd(np.ascontiguousarray(x), 0.0, 24.0, BO_KAP0, BO_AL0,
+                       lbh, lb1, R_MAX)
+        bo = _BocpdStream(0.0, 24.0, BO_KAP0, BO_AL0, lbh, lb1, R_MAX)
+        stream = np.array([bo.step(v) for v in x.tolist()], dtype=np.float64)
+        bad = int((~((batch == stream)
+                     | (np.isnan(batch) & np.isnan(stream)))).sum())
+        assert bad == 0, f"{tag}: {bad}/{batch.size} float64 cells differ"
