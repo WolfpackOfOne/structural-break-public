@@ -1661,3 +1661,80 @@ lockbox/test/submission/production path was used. Final status:
 
 Report:
 `research/reports/new_avenues_2026/second_sweep/ss02_residual_ranker.{md,json}`.
+
+---
+
+## RT-1225 / RT-1226 / RT-1227 / RT-1228 / RT-1229 -- Second Sweep SS-03 negative-side null calibrator -- KILL (2026-08-25)
+
+**Hypothesis.** A fixed fold-pure null-state calibration of RT600 can reduce
+never-break false positives by conditioning the negative/null CDF on causal
+score state, specialist dispersion, maturity, and weighted CTM benign-tail
+suppression, without damaging pre-break ordering.
+
+**Variant.** Execution preregistered in
+`research/reports/new_avenues_2026/second_sweep/SS03_EXECUTION_PREREG.md` at
+`8a5f41a`, after SS-01 and SS-02 were killed. `RT-1225` is the candidate.
+`RT-1226` is the global RT600 null-SCDF calibration control. `RT-1227` is the
+deranged weighted-CTM null-state partition control. `RT-1228` is the
+unweighted CTM state partition control. `RT-1229` is the frozen Pilot-9 scalar
+difficulty state control.
+
+The candidate used one early state plus eight mature states with fixed bits:
+`rt600_cal >= 0.50`, outer-train median specialist dispersion, and outer-train
+median `(uctm_tail_log - wctm_tail_log)`. It fit negative-only
+`SCDF_NSEEN` maps on outer-training rows and applied a bounded correction
+`0.20 * clip(F_null_state - F_all, -0.25, +0.25)`, so the maximum absolute
+score movement was `0.05`.
+
+**Result.** Fold 0 integration:
+
+| arm | TS-AUC | marginal vs clone |
+|---|---:|---:|
+| RT600 | 0.638276 | |
+| RT600 + RT-401 seed clone | 0.638586 | |
+| RT600 + RT-1225 | 0.638287 | -0.000299 |
+| RT600 + RT-1226 | 0.638276 | -0.000310 |
+| RT600 + RT-1227 | 0.638238 | -0.000348 |
+| RT600 + RT-1228 | 0.638296 | -0.000290 |
+| RT600 + RT-1229 | 0.638251 | -0.000335 |
+
+Candidate pair-flow:
+
+| split | repairs | damage | net | RT600-right damage rate |
+|---|---:|---:|---:|---:|
+| whole fold | 722 | 866 | -144 | 0.0210 |
+| dominant cell | 659 | 773 | -114 | 0.0225 |
+| mature-vs-never | 678 | 727 | -49 | 0.0209 |
+| mature-vs-prebreak | 618 | 658 | -40 | 0.0199 |
+
+**Binding gate.** KILL because the candidate missed the mature-vs-never net
+pair-flow gate (`-49` versus `>0`), missed the `+0.0010` marginal-vs-clone
+gate (`-0.000299`), exceeded the prebreak RT600-right damage-rate cap
+(`0.0199` versus `0.0150`), failed to separate from the deranged partition by
+the required marginal gap (`+0.000049` versus `+0.000500`), and was slightly
+exceeded by the unweighted CTM state control (`RT-1228` marginal
+`-0.000290`).
+
+**What this falsifies.** The fixed null-state partition and bounded
+conditional-null SCDF correction are not useful production calibration under
+the current RT600 score state and Pilot-8 CTM suppression state. The result
+also says the weighted-vs-unweighted CTM distinction is not load-bearing in
+this calibration role.
+
+**What this does not falsify.** It does not falsify specialist-disagreement
+micro-routing, which is the next distinct Second Sweep mechanism. It also does
+not falsify future null models with materially different causal state
+representations or external data. It does not authorize SS-03b, partition
+search, threshold adjustment, correction-scale tuning, CTM retuning, or a new
+Pilot-9 scalar variant.
+
+**Causality and status.** Preflight reproduced the RT600 sentinel in the
+expected tolerance and reproduced the canonical dominant pair sample (`50540`
+pairs, `16193` RT600-wrong, `34347` RT600-right). Required frozen OOF scores
+and CTM feature caches were finite on all `4032524` dev rows and zero finite
+on lockbox rows. New OOF lockbox finite counts were `0` for `RT-1225` through
+`RT-1229`. No lockbox/test/submission/production path was used. Final status:
+**FINAL SCREEN RESULT**.
+
+Report:
+`research/reports/new_avenues_2026/second_sweep/ss03_null_calibrator.{md,json}`.

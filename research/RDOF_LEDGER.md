@@ -211,6 +211,23 @@ marginal_vs_clone was `-0.000203`, so the candidate-control gap was
 hyperparameter sweep, made no lockbox/test/submission access, and stopped
 SS-02 with no SS-02b because the mandatory screen gates failed.
 
+Second Sweep SS-03 preregistered for execution on 2026-08-25 before scoring:
+
+| pilot | scored IDs | variants | fold screen | notes |
+|---|---|---:|---|---|
+| Negative-side null calibrator | `RT-1225`, `RT-1226`, `RT-1227`, `RT-1228`, `RT-1229` | 1 weighted-CTM null-state conditional calibration candidate + 4 controls | fold 0 | Fixed one early state plus eight mature states; correction scale `0.20`, offset clip `0.25`, min state negatives `5,000`; controls are global null-SCDF, deranged partition, unweighted CTM state, and frozen Pilot-9 scalar state. |
+
+SS-03 result filed 2026-08-25:
+`RT-1225` candidate marginal_vs_clone `-0.000299`; dominant-cell pair-flow
+repairs `659`, damage `773`, net `-114`; mature-vs-never net `-49`;
+mature-vs-prebreak net `-40`; prebreak RT600-right damage rate `0.0199`.
+The deranged partition control `RT-1227` lost only by `+0.000049` marginal,
+below the required `+0.000500`; the unweighted CTM state control `RT-1228`
+slightly exceeded the candidate on marginal_vs_clone (`-0.000290` vs
+`-0.000299`). Consumed the five preregistered RT IDs, performed no threshold
+search, made no lockbox/test/submission access, and stopped SS-03 with no
+SS-03b because the mandatory screen gates failed.
+
 ---
 
 # WAVE 3 — CLAUDE ALPHA LANE (`RT-3xx`)

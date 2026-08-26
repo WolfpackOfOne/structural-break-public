@@ -537,3 +537,28 @@ damage `438`, net `-108`; mature-vs-never net `-77`; mature-vs-prebreak net
 control `RT-1224` had marginal_vs_clone `-0.000203`, so the candidate-control
 gap was `-0.000087` instead of the required `+0.000500`. SS-02 failed the
 mandatory gates and no SS-02b is authorized.
+
+Second Sweep SS-03 reserved prospectively on 2026-08-25 before any SS-03 score
+was produced. Program pre-registration:
+`research/reports/new_avenues_2026/SECOND_SWEEP_PREREG.md`. Execution
+pre-registration:
+`research/reports/new_avenues_2026/second_sweep/SS03_EXECUTION_PREREG.md`
+at `8a5f41a`.
+
+| ID | is |
+|---|---|
+| `RT-1225` | SS-03 weighted-CTM null-state conditional calibration of RT600, fold-0 screen candidate. |
+| `RT-1226` | SS-03 global RT600 null-SCDF calibration control. |
+| `RT-1227` | SS-03 deranged weighted-CTM null-state partition control. |
+| `RT-1228` | SS-03 unweighted CTM state partition control. |
+| `RT-1229` | SS-03 Pilot-9 scalar difficulty state partition control. |
+
+Result filed 2026-08-25:
+`research/reports/new_avenues_2026/second_sweep/ss03_null_calibrator.{md,json}`.
+`RT-1225` KILL: marginal_vs_clone `-0.000299`; dominant-cell repairs `659`,
+damage `773`, net `-114`; mature-vs-never net `-49`; mature-vs-prebreak net
+`-40`; prebreak RT600-right damage rate `0.0199`, above the preregistered
+`0.0150` cap. The deranged partition control `RT-1227` lost only by
+`+0.000049` marginal versus the required `+0.000500`, and the unweighted CTM
+state control `RT-1228` slightly exceeded the candidate. SS-03 failed the
+mandatory gates and no SS-03b is authorized.

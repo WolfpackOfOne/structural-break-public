@@ -21,17 +21,21 @@ short and gets updated whenever that changes materially.
   single-model alpha, but E2 (RT600 + T2 ensemble, ≈0.63882) beats E1
   (RT600 + seed clone, ≈0.63859) by only +0.00024 — essentially no marginal
   ensemble alpha. The first New Avenues sweep is now
-  **FIRST_SWEEP_EXHAUSTED**. Second Sweep `SS-01` repair-damage arbitration and
-  `SS-02` dominant-cell residual ranking are both **KILL**. SS-01 selected no
-  first-sweep sensor actions; SS-02 produced negative pair flow
-  (`dominant net=-108`) and negative marginal_vs_clone (`-0.000290`). The
-  dominant remaining hypothesis is negative-side/null-state calibration; next
-  authorized action is `SS-03`. Full detail: `reports/wave7/` and tag
+  **FIRST_SWEEP_EXHAUSTED**. Second Sweep `SS-01` repair-damage arbitration,
+  `SS-02` dominant-cell residual ranking, and `SS-03` negative-side null-state
+  calibration are all **KILL**. SS-01 selected no first-sweep sensor actions;
+  SS-02 produced negative pair flow (`dominant net=-108`) and negative
+  marginal_vs_clone (`-0.000290`); SS-03 produced negative mature-vs-never net
+  pair flow (`-49`), negative marginal_vs_clone (`-0.000299`), and failed the
+  prebreak damage-rate cap (`0.0199 > 0.0150`). The next authorized action is
+  `SS-04` specialist-disagreement micro-routing. Full detail:
+  `reports/wave7/` and tag
   `wave7-t2-promotion-mostly-redundant`, plus
   `reports/new_avenues_2026/FIRST_SWEEP_SYNTHESIS.md`,
   `reports/new_avenues_2026/SECOND_SWEEP_PREREG.md`,
   `reports/new_avenues_2026/second_sweep/ss01_repair_damage_arbiter.md`, and
-  `reports/new_avenues_2026/second_sweep/ss02_residual_ranker.md`.
+  `reports/new_avenues_2026/second_sweep/ss02_residual_ranker.md`, and
+  `reports/new_avenues_2026/second_sweep/ss03_null_calibrator.md`.
 - **Latest major negative result:** Wave 8 future-aware transfer family —
   five pilots (ORR, TGMC, SST, PCFB, CFEP), all KILL on the full population.
   Lives on the sibling branch `research/wave8-future-aware-distillation`
@@ -99,9 +103,15 @@ short and gets updated whenever that changes materially.
   families. `SS-02` Dominant-Cell Residual Ranker (`RT-1223` plus shuffled
   control `RT-1224`) is also **KILL**: marginal_vs_clone `-0.000290`,
   dominant repairs/damage/net `330/438/-108`, mature-vs-never net `-77`, and
-  shuffled-control gap `-0.000087`. First-sweep killed-arm arbitration and
-  incumbent-bank residual pair ranking are both closed under their frozen
-  screens. Proceed next to `SS-03`; production `RT-600` remains unchanged.
+  shuffled-control gap `-0.000087`. `SS-03` Negative-Side Null Calibrator
+  (`RT-1225` plus controls `RT-1226`/`RT-1227`/`RT-1228`/`RT-1229`) is
+  **KILL**: marginal_vs_clone `-0.000299`, dominant repairs/damage/net
+  `659/773/-114`, mature-vs-never net `-49`, mature-vs-prebreak net `-40`,
+  prebreak damage rate `0.0199`, deranged-control marginal gap `+0.000049`,
+  and unweighted-CTM control marginally exceeded the candidate. First-sweep
+  killed-arm arbitration, incumbent-bank residual pair ranking, and the fixed
+  null-state calibration are closed under their frozen screens. Proceed next
+  to `SS-04`; production `RT-600` remains unchanged.
 - **Final Wave reports:** [`reports/wave4/`](reports/wave4/),
   [`reports/wave5/`](reports/wave5/), [`reports/wave6/`](reports/wave6/),
   [`reports/wave7/`](reports/wave7/); Wave 8's report is on the
@@ -110,7 +120,7 @@ short and gets updated whenever that changes materially.
   [`FINAL_ARCHITECTURE_FREEZE.md`](FINAL_ARCHITECTURE_FREEZE.md),
   [`FINAL_REPRODUCIBILITY_MANIFEST.json`](FINAL_REPRODUCIBILITY_MANIFEST.json).
 
-_Last updated: 2026-08-25, after SS-02 was executed and killed on its
+_Last updated: 2026-08-25, after SS-03 was executed and killed on its
 preregistered fold-0 screen. Update this file whenever the production anchor,
 external score, or active research conclusion changes — see
 `AGENTS.md` at the repo root for the update rule._
