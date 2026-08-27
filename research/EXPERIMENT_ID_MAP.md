@@ -984,3 +984,29 @@ Execution preregistration:
 | `RT-1255` | CSA-02 conditional CAT-300. Opens only if CSA-01 reaches `marginal_vs_clone >= +0.0010`; fixed-slot replacement against `RT-401`. |
 | `RT-1256` | CSA-02 conditional CAT-410. Opens only if CSA-01 reaches `marginal_vs_clone >= +0.0010`; fixed-slot replacement against `RT-401`. |
 | `RT-1257` | CSA-03 conditional hybrid seven-member ensemble. Opens only if at least two CatBoost specialists reach `marginal_vs_clone >= +0.0010`. |
+
+### CatBoost Specialist Activation result, filed 2026-08-27
+
+Full report: `research/reports/catboost_specialist_2026/FINAL.md`; metrics:
+`results.{json,csv}`.
+
+CSA-00 zero-training 8th member was descriptive only: E2-E1
+`+0.000975838`, E2-E0 `+0.001002808`, dominant-cell net vs E0 `+70`.
+
+`RT-1254` CAT-413 is **INTERESTING**: standalone `0.620440244`, rho vs
+incumbent RT-413 `+0.714196`, fixed-slot `marginal_vs_clone = +0.001087151`,
+E2-E0 `+0.001244347`, `5/5` folds positive, dominant-cell net `+93`.
+
+`RT-1255` CAT-300 is **INTERESTING**: standalone `0.620242061`, rho vs
+incumbent RT-300 `+0.737786`, fixed-slot `marginal_vs_clone = +0.001029459`,
+E2-E0 `+0.001126876`, `5/5` folds positive, dominant-cell net `+75`.
+
+`RT-1256` CAT-410 is **KILL** despite standalone improvement: fixed-slot
+`marginal_vs_clone = +0.000753095`, below the `+0.0010` gate.
+
+`RT-1257` HYBRID replaces only RT-300 and RT-413 with their surviving CatBoost
+versions. It is **PROMOTION_WORTHY** but not SERIOUS/MAJOR:
+E0 `0.625811342`; matched clone control E1 `0.625430459`; CatBoost hybrid E2
+`0.627837664`; primary `marginal_vs_clone = +0.002407205`; E2-E0
+`+0.002026322`; `5/5` folds positive; dominant-cell net `+158`;
+mature-vs-never net `+73`.

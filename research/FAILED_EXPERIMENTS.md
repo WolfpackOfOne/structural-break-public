@@ -2016,6 +2016,28 @@ its own pushed pre-score commit.
 
 **CRF-03 does not open** and the CRF program is exhausted. See `CRF_FINAL.md`.
 
+## RT-1256 -- CAT-410 specialist reimplementation -- KILL (2026-08-27)
+
+**Program.** CatBoost Specialist Activation 2026. Full report:
+`research/reports/catboost_specialist_2026/FINAL.md`.
+
+**Hypothesis.** Reimplementing RT-410's evidence-recursion-heavy specialist setup
+with the frozen RT-1251 CatBoost learner would add more ensemble alpha than a
+matched exchangeable LightGBM seed clone.
+
+**The number.** Standalone CAT-410 improved on incumbent RT-410
+(`0.610328251` vs `0.605116528`, delta `+0.005211723`) and had rho
+`+0.680825`, but the binding fixed-slot ensemble marginal was only
+`+0.000753095` with `4/5` folds positive, below the preregistered `+0.0010`
+gate. E2-E0 was `+0.000929590`; dominant-cell net vs E0 was `+17`.
+
+**Why it failed.** Standalone CatBoost gain did not translate into enough
+replacement-vs-clone ensemble value. The actual target was CatBoost specialist
+ensemble alpha over matched LightGBM replacement, not standalone improvement.
+
+**Retry warranted?** No CatBoost tuning, loss search, seed search, row-cap
+change, or RT-410 variant is authorized by this program.
+
 
 ## RT-1250 / RT-1251 / RT-1252 -- Learner Diversity 2026 -- CLOSED, NO PROMOTION (2026-08-27)
 

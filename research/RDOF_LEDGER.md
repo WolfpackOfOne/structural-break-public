@@ -1441,3 +1441,18 @@ conditional `RT-1256` CAT-410, and conditional `RT-1257` hybrid. CSA-00 is
 ID-free because it uses existing OOF vectors only. If `RT-1254` misses
 `marginal_vs_clone >= +0.0010`, the program stops and `RT-1255`..`RT-1257`
 remain unused.
+
+**Result.** CSA-00 was positive but descriptive only: E2-E1 `+0.000975838`,
+E2-E0 `+0.001002808`, dominant-cell net vs E0 `+70`. `RT-1254` CAT-413 cleared
+the continuation gate as INTERESTING (`marginal_vs_clone = +0.001087151`,
+E2-E0 `+0.001244347`, `5/5` folds positive, dominant-cell net `+93`), so
+CSA-02 opened. `RT-1255` CAT-300 was also INTERESTING (`+0.001029459`,
+E2-E0 `+0.001126876`, `5/5`, dominant net `+75`). `RT-1256` CAT-410 was KILL:
+standalone beat RT-410 by `+0.005211723`, but the binding ensemble marginal was
+only `+0.000753095`, below the `+0.0010` gate. Because two specialists survived,
+CSA-03 opened. `RT-1257` replaced only RT-300 and RT-413 with CatBoost versions
+and is PROMOTION_WORTHY but not SERIOUS: hybrid `marginal_vs_clone =
++0.002407205`, E2-E0 `+0.002026322`, `5/5` folds positive, dominant-cell net
+`+158`, mature-vs-never net `+73`, mature-vs-prebreak net `+146`. Training
+runtime from the initial full run was `4867.3s` for the three CatBoost
+specialists; deployment inference cost still needs separate measurement.

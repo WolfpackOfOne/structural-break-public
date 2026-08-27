@@ -16,15 +16,14 @@ short and gets updated whenever that changes materially.
   (LB-001), confirmed in [`EXPERIMENT_ID_MAP.md`](EXPERIMENT_ID_MAP.md).
 - **Current best deployable internal result:** RT-600 seven specialists,
   pooled OOF ≈ 0.63828 (E0 in the Wave 7 T2 promotion battery).
-- **Current research conclusion:** **LEARNER DIVERSITY 2026** is complete on
-  `research/learner-diversity-2026`. TabM (`RT-1250`) and RealMLP (`RT-1252`)
-  are full-scale INFEASIBLE under the frozen official/default configurations.
-  CatBoost (`RT-1251`) is **INTERESTING** but not SERIOUS: standalone
-  `0.620407665`, rho vs matched `RT-401` `+0.736467811`,
-  `marginal_vs_clone = +0.001109800`, `5/5` positive folds, dominant-cell pair
-  net `+88`. Only one learner crossed the `+0.0010` combination threshold, so
-  `RT-1253` remains unused. Full report:
-  `reports/learner_diversity_2026/FINAL.md`. Production `RT-600` remains
+- **Current research conclusion:** **CATBOOST SPECIALIST ACTIVATION 2026** is
+  complete on `research/catboost-specialist-2026`. CAT-413 (`RT-1254`) and
+  CAT-300 (`RT-1255`) are INTERESTING, CAT-410 (`RT-1256`) is KILL, and the
+  two-slot hybrid (`RT-1257`, replacing RT-300 and RT-413 only) is
+  **PROMOTION_WORTHY** but not SERIOUS: `marginal_vs_clone = +0.002407205`,
+  E2-E0 `+0.002026322`, `5/5` positive folds, dominant-cell net `+158`,
+  mature-vs-never net `+73`. Full report:
+  `reports/catboost_specialist_2026/FINAL.md`. Production `RT-600` remains
   unchanged.
 - **Prior research conclusion:** T2/RT-995 promotion battery —
   **MOSTLY REDUNDANT**. T2 clears 3/4 promotion legs and has real
@@ -59,9 +58,9 @@ short and gets updated whenever that changes materially.
   future-information limit (CASE 2) that later Wave 7/8 work is measured
   against.
 - **Active research branch:** this worktree is
-  `research/learner-diversity-2026`, forked from
-  `research/leaderboard-alpha-2026@d92860d` for the final learner-family
-  diversity audit; the canonical chain remains
+  `research/catboost-specialist-2026`, forked from
+  `research/learner-diversity-2026@7e5ee4c` for the CatBoost specialist
+  activation audit; the canonical chain remains
   `research/current` (wave2 → wave3-integration → wave5-alpha → wave6-alpha →
   wave7-teacher-distillation → wave7-t2-promotion). Standalone sibling
   branches still worth checking: `research/wave8-future-aware-distillation`
@@ -136,16 +135,14 @@ short and gets updated whenever that changes materially.
 - **Sweep status:** `FIRST_SWEEP_EXHAUSTED` and `SECOND_SWEEP_EXHAUSTED`.
   Both preregistered New Avenues sweeps are closed with no confirmation
   candidate. Production `RT-600` (external **0.6268**) is unchanged.
-- **Current research program:** **LEARNER DIVERSITY 2026** —
-  **`LEARNER_DIVERSITY_2026_COMPLETE`** on
-  `research/learner-diversity-2026`. `RT-1251` CatBoost is the only scored
-  non-LightGBM learner and is **INTERESTING** at
-  `marginal_vs_clone = +0.001109800` with `5/5` positive folds and dominant-cell
-  net `+88`, but it is below the SERIOUS threshold and no combination opens.
-  `RT-1250` TabM and `RT-1252` RealMLP are INFEASIBLE at the frozen full scale;
-  `RT-1253` is unused. The strict LightGBM-only negative claim is no longer
-  supported, but no deployable learner-family promotion is made. Final report:
-  [`reports/learner_diversity_2026/FINAL.md`](reports/learner_diversity_2026/FINAL.md).
+- **Current research program:** **CATBOOST SPECIALIST ACTIVATION 2026** —
+  **`CATBOOST_SPECIALIST_ACTIVATION_2026_COMPLETE`** on
+  `research/catboost-specialist-2026`. `RT-1257` is the best measured arm:
+  hybrid `marginal_vs_clone = +0.002407205`, E2-E0 `+0.002026322`, `5/5`
+  positive folds, dominant-cell net `+158`, mature-vs-never net `+73`.
+  This is PROMOTION_WORTHY by the frozen gate but below the SERIOUS threshold
+  and requires separate deployment inference benchmarking. Final report:
+  [`reports/catboost_specialist_2026/FINAL.md`](reports/catboost_specialist_2026/FINAL.md).
   Production `RT-600` remains unchanged.
 - **Completed prior research program:** **LEADERBOARD ALPHA 2026** —
   **`LEADERBOARD_ALPHA_2026_EXHAUSTED`** on
