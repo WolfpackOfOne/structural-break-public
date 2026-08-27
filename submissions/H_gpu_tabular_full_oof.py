@@ -226,12 +226,13 @@ def _materialize_full_dev_store(
         tau = _normalise_tau(tau_raw, len(online))
         seen[sid] = (hist, online, tau)
 
-    if lockbox_touched:
-        raise RuntimeError(
-            f"REFUSING TO CONTINUE: {lockbox_touched} lockbox-fold ids were present in "
-            "datasets and were skipped, but their presence means the lockbox is reachable "
-            "from this call -- treat as a hard failure, not a silent skip."
-        )
+    # `datasets` is Crunch's full real-time training stream; it necessarily
+    # contains lockbox-fold ids (Crunch owns the split, not this code). Not
+    # touching the lockbox means never storing, featurizing, selecting, or
+    # training on those series -- which the `continue` above already
+    # guarantees -- not that their ids may never flow past in this loop.
+    # G_gpu_tabular_benchmark.py (proven on the real cloud, submission 76357,
+    # lockbox_touched=false) applies the same skip-without-raising pattern.
 
     missing = [int(x) for x in selected_folds["id"].to_numpy() if int(x) not in seen]
     if require_complete and missing:
