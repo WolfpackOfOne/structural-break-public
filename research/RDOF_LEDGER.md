@@ -1405,3 +1405,13 @@ conditional `RT-1253` combination. TabM and RealMLP are declared full-scale
 INFEASIBLE before scoring under the installed official defaults; shrinking
 rows, epochs, width, `k`, or patience would be a new experiment and is forbidden
 by this program. CatBoost is the only authorized full five-fold score path.
+
+**Result.** `RT-1251` CatBoost is INTERESTING but not SERIOUS:
+standalone `0.620407665`, rho vs matched `RT-401` `+0.736467811`,
+E2-E1 `marginal_vs_clone = +0.001109800`, positive folds `5/5`, dominant-cell
+pair net `+88`. `RT-1250` TabM and `RT-1252` RealMLP are INFEASIBLE under the
+frozen full-scale official/default configurations, so no shrunken neural run is
+charged or authorized here. `RT-1253` is unused because only one learner crossed
+the `+0.0010` combination-opening threshold. The strict LightGBM-only negative
+claim is closed by a weak CatBoost family signal, but there is no deployable
+promotion or production change.

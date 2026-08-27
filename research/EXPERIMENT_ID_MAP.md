@@ -952,3 +952,21 @@ preregistration:
 | `RT-1251` | LD-02 CatBoost. Authorized full five-fold CatBoost candidate using the same 500 causal columns, canonical folds, RT-401-matched row sampler, and fold-pure seven-member replacement protocol. |
 | `RT-1252` | LD-03 RealMLP. Authorized learner-family arm using the same 500 causal columns, canonical folds, RT-401-matched row sampler, and fold-pure SCDF replacement protocol. Recorded INFEASIBLE before scoring because the installed official default full-scale run is not feasible without shrinking or retuning. |
 | `RT-1253` | Conditional one-combination slot. Opens only if at least two learner-family candidates individually achieve `marginal_vs_clone >= +0.0010`; otherwise unused. |
+
+### Learner Diversity result, filed 2026-08-27
+
+Full report: `research/reports/learner_diversity_2026/FINAL.md`; metrics:
+`learner_results.{json,csv}`.
+
+`RT-1250` TabM and `RT-1252` RealMLP are **INFEASIBLE** under the frozen
+installed official/default full-scale configurations. Shrinking rows, epochs,
+width, `k`, or patience would be a new experiment and was not authorized.
+
+`RT-1251` CatBoost is **INTERESTING** but not SERIOUS. Standalone TS-AUC
+`0.620407665`; matched `RT-401` standalone `0.616609144`; within-`t` rho
+`+0.736467811`. Replacement test: E0 RT600 `0.625811342`; E1 six specialists
+plus `RT-401` `0.624980472`; E2 six specialists plus CatBoost `0.626090272`.
+Primary `marginal_vs_clone = +0.001109800`, positive folds `5/5`,
+dominant-cell pair net `+88`. This clears the INTERESTING threshold
+(`+0.0010`) but not the SERIOUS threshold (`+0.0030`). Only one learner cleared
+the combination-opening threshold, so `RT-1253` remains unused.

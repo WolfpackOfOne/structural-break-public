@@ -2016,6 +2016,43 @@ its own pushed pre-score commit.
 
 **CRF-03 does not open** and the CRF program is exhausted. See `CRF_FINAL.md`.
 
+
+## RT-1250 / RT-1251 / RT-1252 -- Learner Diversity 2026 -- CLOSED, NO PROMOTION (2026-08-27)
+
+**Program preregistration** `research/reports/learner_diversity_2026/PREREG.md`
+@ `c91950b`.
+**Final report** `research/reports/learner_diversity_2026/FINAL.md`.
+
+**Hypothesis.** A non-LightGBM tabular learner might produce useful same-`t`
+pair orderings beyond an exchangeable LightGBM `RT-401` replacement in the
+RT600 seven-member ensemble.
+
+**What was done.** Exactly three learner families were authorized: TabM
+(`RT-1250`), CatBoost (`RT-1251`), and RealMLP (`RT-1252`). All used the frozen
+500-column causal feature bank, canonical folds, `RT-401`-matched row sampler,
+and seven-member replacement protocol. No hyperparameter search, feature
+engineering, new data, router, stacker, lockbox/test access, or production
+change was made.
+
+**Result.** TabM and RealMLP were recorded INFEASIBLE before scoring under the
+installed official/default full-scale configurations. CatBoost scored
+standalone `0.620407665` with rho vs matched `RT-401` `+0.736467811`.
+Replacement integration: E0 RT600 `0.625811342`, E1 six specialists plus
+`RT-401` `0.624980472`, E2 six specialists plus CatBoost `0.626090272`.
+Primary `marginal_vs_clone = +0.001109800`, positive folds `5/5`, dominant-cell
+pair net `+88`.
+
+**Why it is closed.** CatBoost clears INTERESTING (`>= +0.0010`) and therefore
+falsifies the strict "LightGBM-only has no family-diversity residual" claim.
+It does not clear SERIOUS (`>= +0.0030`), and only one learner crossed the
+combination-opening threshold, so `RT-1253` remains unused. The result is a weak
+measured family signal, not a deployable promotion.
+
+**Retry warranted?** Not under this program. Any CatBoost HPO, shrunken TabM or
+RealMLP run, altered neural default, new feature preprocessing, stacker, router,
+or blend-weight tuning would be a new experiment outside the frozen final
+learner-diversity audit.
+
 ## RT-1243 / RT-1244 -- LA-01 specialist replacement salvage -- KILL (2026-08-26)
 
 **Program preregistration** `research/reports/leaderboard_alpha_2026/PROGRAM_PREREG.md`
