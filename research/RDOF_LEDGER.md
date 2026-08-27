@@ -1456,3 +1456,28 @@ and is PROMOTION_WORTHY but not SERIOUS: hybrid `marginal_vs_clone =
 `+158`, mature-vs-never net `+73`, mature-vs-prebreak net `+146`. Training
 runtime from the initial full run was `4867.3s` for the three CatBoost
 specialists; deployment inference cost still needs separate measurement.
+
+## GPU Tabular 2026 — Full 5-Fold OOF  (PRE-REGISTERED 2026-08-27)
+
+Program preregistration: `research/reports/gpu_tabular_2026/FULL_OOF_PREREG.md`.
+
+**Scientific question.** Can full-scale TabM or RealMLP trained on the same
+legal causal 500-feature bank and RT-401-matched training rows produce useful
+same-`t` ranking alpha beyond an exchangeable LightGBM replacement, now that
+an RTX 4090 hardware benchmark (Crunch submission `76357`, task
+`run-3e834e0f`) has shown the full, un-shrunk configurations fit the compute
+budget?
+
+| Item | Degrees of freedom | Frozen before score |
+|---|---:|---|
+| TabM learner configuration | 0 | exact RTX-4090-benchmarked `default_config()` (`k=32,d_block=512,n_blocks=3,dropout=0.1`; `lr=0.002,weight_decay=0.0003,grad_clip_norm=1.0`); no batch size, epoch cap, `k`, or `d_block` search |
+| RealMLP learner configuration | 0 | exact RTX-4090-benchmarked `default_config()` (`hidden_sizes=[256,256,256],lr=0.04`); no width/layer/epoch search |
+| rows/folds/features | 0 | canonical folds `0..4`, `1,000,000`-row/fold cap, RT-401 sequential sampler seed `1`, 500-column causal bank |
+| calibration/blending | 0 | equal-weight fold-pure `SCDF_NSEEN` only |
+| matched LightGBM controls | 0 | existing `RT-401` seed-clone OOF vectors, fixed before scoring |
+| combination slots | 0 | none authorized this program (no TabM+RealMLP, no RT-1257, no CatBoost) |
+| pair-flow diagnostic sample | 0 | 64 same-`t` pairs per time point, seed `20260827` (reused Learner Diversity / CatBoost convention) |
+
+Allocated IDs: `RT-1258` GPU-01 TabM, `RT-1259` GPU-02 RealMLP. Both must
+complete full 5-fold OOF before either is evaluated; neither may stop early
+except on unrecoverable technical failure. Result not yet filed.

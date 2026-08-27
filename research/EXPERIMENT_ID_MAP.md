@@ -1010,3 +1010,30 @@ E0 `0.625811342`; matched clone control E1 `0.625430459`; CatBoost hybrid E2
 `0.627837664`; primary `marginal_vs_clone = +0.002407205`; E2-E0
 `+0.002026322`; `5/5` folds positive; dominant-cell net `+158`;
 mature-vs-never net `+73`.
+
+## GPU Tabular 2026 — Full 5-Fold OOF
+
+Reserved prospectively on 2026-08-27 before any full-scale TabM or RealMLP
+score, OOF vector, replacement analysis, or pair-flow diagnostic existed on
+`research/gpu-tabular-2026`. Execution preregistration:
+`research/reports/gpu_tabular_2026/FULL_OOF_PREREG.md`. Frozen benchmark
+basis: `research/reports/gpu_tabular_2026/FROZEN_GPU_CONFIG.json`, RTX 4090
+cloud hardware benchmark (Crunch submission `76357`, task `run-3e834e0f`).
+
+| ID | arm |
+|---|---|
+| `RT-1258` | GPU-01 TabM full 5-fold OOF, official `tabm.TabM` package, frozen exactly as RTX-4090-benchmarked (`k=32,d_block=512,n_blocks=3`, no shrink). Fixed-slot nested replacement against `RT-401`. |
+| `RT-1259` | GPU-02 RealMLP full 5-fold OOF, `pytabkit.RealMLP_TD_Classifier`, frozen exactly as RTX-4090-benchmarked (`hidden_sizes=[256,256,256]`, no shrink). Fixed-slot nested replacement against `RT-401`. |
+
+These are **distinct** from `RT-1250` (TabM) and `RT-1252` (RealMLP) on
+`research/learner-diversity-2026`, which were ruled **INFEASIBLE**: the
+installed official/default full-scale configuration did not fit the compute
+budget there, and shrinking rows/epochs/width/`k`/patience was not
+authorized. The RTX 4090 hardware benchmark on this branch removed that
+blocker — the same default/official-scale configurations fit the 15-hour
+budget without any shrink (TabM `3.63606h`, RealMLP `0.90924h`, combined
+`4.545298927912005h` for both learners' five folds) — so `RT-1258`/`RT-1259`
+are freshly numbered rather than reopening `RT-1250`/`RT-1252`.
+
+Both candidates must complete full 5-fold OOF before either is evaluated.
+Result not yet filed; no score exists at allocation time.
