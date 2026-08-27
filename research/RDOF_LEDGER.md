@@ -1380,3 +1380,28 @@ fixed-null control remains the better representation. E2 vs E0 pair flow is
 negative: dominant-cell net `-37`, mature-vs-never net `-92`,
 mature-vs-prebreak net `-74`. No LA-03b; no combination opens because no
 Leaderboard Alpha mechanism survived.
+
+## Learner Diversity 2026  (PRE-REGISTERED 2026-08-26)
+
+Program preregistration:
+`research/reports/learner_diversity_2026/PREREG.md`.
+
+**Scientific question.** Can a non-LightGBM tabular learner produce same-`t`
+pair ordering value beyond an exchangeable LightGBM clone when inserted as a
+seven-member replacement in the RT-600 ensemble?
+
+| Item | Degrees of freedom | Frozen before score |
+|---|---:|---|
+| learner families | 3 | exactly TabM, CatBoost, RealMLP; no other models |
+| learner configurations | 3 | one fixed configuration per family; no hyperparameter search |
+| training rows | 0 | RT-401-matched CHAMP row sampler, seed `1`, 1,000,000 rows/fold |
+| features | 0 | existing 500-column legal causal bank only |
+| matched LightGBM control | 0 | existing `RT-401` OOF artifact |
+| replacement slots | 7 | RT600 specialists only, selected outer-fold-pure |
+| combination | 1 conditional | opens only if at least two learners reach `marginal_vs_clone >= +0.0010` |
+
+Allocated IDs: `RT-1250` TabM, `RT-1251` CatBoost, `RT-1252` RealMLP,
+conditional `RT-1253` combination. TabM and RealMLP are declared full-scale
+INFEASIBLE before scoring under the installed official defaults; shrinking
+rows, epochs, width, `k`, or patience would be a new experiment and is forbidden
+by this program. CatBoost is the only authorized full five-fold score path.

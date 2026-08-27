@@ -938,3 +938,17 @@ Pair flow for E2 vs E0 was also negative: dominant-cell net `-37`,
 mature-vs-never net `-92`, mature-vs-prebreak net `-74`.
 
 No Leaderboard Alpha mechanism survived; the combination rule does not open.
+
+## Learner Diversity 2026
+
+Reserved prospectively on 2026-08-26 before any Learner Diversity score, OOF
+vector, replacement analysis, or pair-flow diagnostic existed. Execution
+preregistration:
+`research/reports/learner_diversity_2026/PREREG.md`.
+
+| ID | arm |
+|---|---|
+| `RT-1250` | LD-01 TabM. Authorized learner-family arm using the same 500 causal columns, canonical folds, RT-401-matched row sampler, and fold-pure SCDF replacement protocol. Recorded INFEASIBLE before scoring because the installed official default full-scale run is not feasible without shrinking or retuning. |
+| `RT-1251` | LD-02 CatBoost. Authorized full five-fold CatBoost candidate using the same 500 causal columns, canonical folds, RT-401-matched row sampler, and fold-pure seven-member replacement protocol. |
+| `RT-1252` | LD-03 RealMLP. Authorized learner-family arm using the same 500 causal columns, canonical folds, RT-401-matched row sampler, and fold-pure SCDF replacement protocol. Recorded INFEASIBLE before scoring because the installed official default full-scale run is not feasible without shrinking or retuning. |
+| `RT-1253` | Conditional one-combination slot. Opens only if at least two learner-family candidates individually achieve `marginal_vs_clone >= +0.0010`; otherwise unused. |
