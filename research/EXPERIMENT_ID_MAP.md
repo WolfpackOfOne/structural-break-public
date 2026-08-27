@@ -904,3 +904,15 @@ pair-flow gates fail: dominant-cell repairs/damage/net `2853/3179/-326`, and
 mature-vs-never net `-366`. Candidate vs C0 is also negative at `-0.003302715`.
 
 Because LA-02 did not become SERIOUS under the full gate, LA-03 opens.
+
+### LA-03 · Per-series history adaptation
+
+Reserved prospectively on 2026-08-26 before any LA-03 score, OOF vector, or
+pair-flow diagnostic existed. Execution preregistration:
+`research/reports/leaderboard_alpha_2026/LA03_EXECUTION_PREREG.md`.
+
+| ID | arm |
+|---|---|
+| `RT-1247` | LA-03 C0 global no-adaptation predictive-null head. One outer-fold global AR(5), pooled residual ECDF, same ten residual/PIT features, same LightGBM pairwise head. Also the E1 RT600+head clone in the final marginal comparison. |
+| `RT-1248` | LA-03 C1 fixed per-series AR(5)+history-residual-ECDF null head. Mandatory isolation control and integrated diagnostic. |
+| `RT-1249` | LA-03 candidate global AR(5) plus per-series affine adapter (`a_i`, `b_i`) fitted only on `H_i`, same ten residual/PIT features, same LightGBM pairwise head. Also the E2 RT600+head candidate in the final marginal comparison. |

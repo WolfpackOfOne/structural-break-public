@@ -1354,3 +1354,19 @@ dominant-cell repairs/damage/net `2853/3179/-326` and mature-vs-never net
 `-366`. Candidate vs untouched RT600 is negative (`-0.003302715`). The
 synthetic-augmentation lane is closed with no ratio sweep or LA-02b. Because
 LA-02 did not become SERIOUS under the full gate, LA-03 opens.
+
+### LA-03 per-series history adaptation
+
+| Item | Degrees of freedom | Frozen before score |
+|---|---:|---|
+| predictive family | 1 | AR(5) only |
+| local adapter | 1 fixed form | affine `a_i * g_t + b_i`, ridge prior `lambda=32`, clip `[-3,3]` |
+| residual features | 10 fixed | residual z/PIT/surprise/running summaries listed in `LA03_EXECUTION_PREREG.md` |
+| model architecture | 0 | one LightGBM pairwise head, `wave2_train_ensemble.DEFAULT`, `600` rounds |
+| training rows | 0 | `1,000,000` uniform rows per outer fold and arm, seed `2026082603 + fold` |
+| controls | 2 fixed | global no-adaptation C0 and fixed per-series null C1 |
+| pair-flow diagnostic sample | 0 | 64 same-`t` pairs per time point, seed `20260826` |
+
+Allocated IDs: `RT-1247` global no-adaptation control, `RT-1248` fixed-null
+control, `RT-1249` per-series affine-adapted candidate. No adapter-size sweep,
+alternate architecture, loss variant, or RT600-score-conditioned head.
