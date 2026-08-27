@@ -1415,3 +1415,29 @@ charged or authorized here. `RT-1253` is unused because only one learner crossed
 the `+0.0010` combination-opening threshold. The strict LightGBM-only negative
 claim is closed by a weak CatBoost family signal, but there is no deployable
 promotion or production change.
+
+## CatBoost Specialist Activation 2026  (PRE-REGISTERED 2026-08-27)
+
+Program preregistration:
+`research/reports/catboost_specialist_2026/PREREG.md`.
+
+**Scientific question.** Does the non-LightGBM direction measured in `RT-1251`
+become stronger when CatBoost reimplements the RT600 specialist configurations
+that made the seven-stream ensemble useful?
+
+| Item | Degrees of freedom | Frozen before score |
+|---|---:|---|
+| CatBoost learner configuration | 0 | exact `RT-1251` parameters; no depth, learning-rate, iteration, loss, class-weight, feature-subset, or seed search |
+| primary specialist slot | 0 | exactly RT-413 first |
+| conditional specialist slots | 2 | exactly RT-300 and RT-410, only if CSA-01 clears `+0.0010` |
+| rows/folds/features | 0 | incumbent specialist modules, canonical folds, incumbent train-row caps and row sampler |
+| calibration/blending | 0 | equal-weight fold-pure `SCDF_NSEEN` only |
+| matched LightGBM controls | 0 | existing seed-clone OOF vectors, fixed before scoring |
+| hybrid | 1 conditional | one seven-member hybrid only if at least two specialists clear `+0.0010` |
+| pair-flow diagnostic sample | 0 | 64 same-`t` pairs per time point, seed `20260827` |
+
+Allocated IDs: `RT-1254` CAT-413 primary, conditional `RT-1255` CAT-300,
+conditional `RT-1256` CAT-410, and conditional `RT-1257` hybrid. CSA-00 is
+ID-free because it uses existing OOF vectors only. If `RT-1254` misses
+`marginal_vs_clone >= +0.0010`, the program stops and `RT-1255`..`RT-1257`
+remain unused.

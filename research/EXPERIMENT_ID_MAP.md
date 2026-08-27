@@ -970,3 +970,17 @@ Primary `marginal_vs_clone = +0.001109800`, positive folds `5/5`,
 dominant-cell pair net `+88`. This clears the INTERESTING threshold
 (`+0.0010`) but not the SERIOUS threshold (`+0.0030`). Only one learner cleared
 the combination-opening threshold, so `RT-1253` remains unused.
+
+## CatBoost Specialist Activation 2026
+
+Reserved prospectively on 2026-08-27 before any CatBoost specialist score, OOF
+vector, replacement analysis, or pair-flow diagnostic existed on this branch.
+Execution preregistration:
+`research/reports/catboost_specialist_2026/PREREG.md`.
+
+| ID | arm |
+|---|---|
+| `RT-1254` | CSA-01 primary CAT-413. RT-413 specialist training setup reimplemented with the frozen `RT-1251` CatBoost learner; fixed-slot replacement against `RT-401`. |
+| `RT-1255` | CSA-02 conditional CAT-300. Opens only if CSA-01 reaches `marginal_vs_clone >= +0.0010`; fixed-slot replacement against `RT-401`. |
+| `RT-1256` | CSA-02 conditional CAT-410. Opens only if CSA-01 reaches `marginal_vs_clone >= +0.0010`; fixed-slot replacement against `RT-401`. |
+| `RT-1257` | CSA-03 conditional hybrid seven-member ensemble. Opens only if at least two CatBoost specialists reach `marginal_vs_clone >= +0.0010`. |
