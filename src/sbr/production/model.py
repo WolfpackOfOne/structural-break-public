@@ -1,4 +1,4 @@
-"""The deployable model: shared streaming engine + one or more boosters.
+"""The deployable model: shared streaming engine + one or more model members.
 
 Everything here must run under the Crunch streaming contract:
 one series at a time, one observation at a time, no cross-series information,
@@ -6,6 +6,7 @@ no lookahead, no `n_online`.  See research/reports/runner_semantics.md.
 
 A saved model directory contains:
     model.txt[.k]     LightGBM booster(s), text format (portable, version-stable)
+    model.cbm[.k]     CatBoost classifier(s), native cbm format
     manifest.json     module list, ordered column names, feature-manifest SHA,
                       per-booster column slice, calibration payload, code SHA
 
@@ -23,44 +24,92 @@ import numpy as np
 from sbr.stream.engine import StreamEngine
 
 MODEL_FILE = "model.txt"
+CATBOOST_MODEL_FILE = "model.cbm"
 MANIFEST_FILE = "manifest.json"
+
+
+class _MemberModel:
+    def __init__(self, kind: str, model):
+        self.kind = kind
+        self.model = model
+
+    def predict_one(self, row) -> float:
+        if self.kind == "lightgbm":
+            return float(self.model.predict(row, validate_features=False, num_threads=1)[0])
+        if self.kind == "catboost":
+            return float(self.model.predict_proba(
+                row, thread_count=1, task_type="CPU")[:, 1][0])
+        raise ValueError(f"unknown model kind {self.kind!r}")
 
 
 class ProductionModel:
     """Loaded, ready-to-stream predictor."""
 
-    def __init__(self, boosters, manifest):
-        self.boosters = boosters
+    def __init__(self, members, manifest):
+        self.boosters = members
+        self.members = members
         self.manifest = manifest
         self.modules = tuple(manifest["modules"])
         self.columns = list(manifest["columns"])
         self.slices = [np.asarray(s, dtype=np.int32) for s in manifest["booster_columns"]]
+        if len(self.members) != len(self.slices):
+            raise RuntimeError(
+                f"model/member count mismatch: {len(self.members)} files, "
+                f"{len(self.slices)} column slices")
         self.calibration = manifest.get("calibration")
         self._cals = None
         if self.calibration and self.calibration.get("kind") == "scdf":
             from sbr.production.calibration import SmoothTimeCDFCal
             self._cals = [SmoothTimeCDFCal.from_json(x) for x in self.calibration["models"]]
+            if len(self._cals) != len(self.members):
+                raise RuntimeError(
+                    f"calibration/member count mismatch: {len(self._cals)} grids, "
+                    f"{len(self.members)} model files")
         self._engine = None
 
     # ------------------------------------------------------------------ io
     @classmethod
     def load(cls, model_directory_path: str) -> "ProductionModel":
-        import lightgbm as lgb
         man = json.load(open(os.path.join(model_directory_path, MANIFEST_FILE)))
+        members = cls._load_members(model_directory_path, man)
+        m = cls(members, man)
+        m._check_manifest()
+        m._check_provenance(len(members))
+        return m
+
+    @staticmethod
+    def _load_members(model_directory_path: str, manifest: dict):
+        specs = manifest.get("model_files")
+        if specs:
+            out = []
+            for spec in specs:
+                kind = spec.get("kind") or spec.get("type")
+                path = os.path.join(model_directory_path, spec["path"])
+                if kind == "lightgbm":
+                    import lightgbm as lgb
+                    out.append(_MemberModel(kind, lgb.Booster(model_file=path)))
+                elif kind == "catboost":
+                    from catboost import CatBoostClassifier
+                    model = CatBoostClassifier()
+                    model.load_model(path, format=spec.get("format", "cbm"))
+                    out.append(_MemberModel(kind, model))
+                else:
+                    raise ValueError(f"unknown model kind {kind!r} in manifest")
+            return out
+
+        import lightgbm as lgb
         boosters = []
         k = 0
         while True:
             p = os.path.join(model_directory_path, f"{MODEL_FILE}.{k}")
             if not os.path.exists(p):
                 break
-            boosters.append(lgb.Booster(model_file=p))
+            boosters.append(_MemberModel("lightgbm", lgb.Booster(model_file=p)))
             k += 1
         if not boosters:
-            boosters = [lgb.Booster(model_file=os.path.join(model_directory_path, MODEL_FILE))]
-        m = cls(boosters, man)
-        m._check_manifest()
-        m._check_provenance(len(boosters))
-        return m
+            boosters = [_MemberModel(
+                "lightgbm", lgb.Booster(model_file=os.path.join(model_directory_path, MODEL_FILE)))]
+        return boosters
 
     def _check_manifest(self):
         """Hard gate: the engine's columns must be exactly what was trained on."""
@@ -107,7 +156,8 @@ class ProductionModel:
         """
         if os.environ.get("SBR_ALLOW_UNPINNED_MODEL") == "1":
             return
-        exp = self.EXPECTED_PROVENANCE
+        exp = dict(self.EXPECTED_PROVENANCE)
+        exp.update(self.manifest.get("expected_provenance") or {})
         tr = self.manifest.get("trained_on") or {}
         cal = self.manifest.get("calibration") or {}
         got = {
@@ -125,7 +175,7 @@ class ProductionModel:
                 for k, (want, have) in sorted(bad.items()))
             raise RuntimeError(
                 "MODEL PROVENANCE MISMATCH -- the feature bank matches but this is "
-                "not the frozen RT-600 artifact.\n" + lines +
+                "not the frozen production artifact.\n" + lines +
                 "\nA valid checksum proves integrity, not provenance. Refusing to "
                 "run: see research/FINAL_ARCHITECTURE_FREEZE.md. If this model is "
                 "deliberately different, set SBR_ALLOW_UNPINNED_MODEL=1.")
@@ -141,8 +191,7 @@ class ProductionModel:
         # (1568 -> 41 us measured): the default path rebuilds a pandas-style
         # feature-name check and spins up a thread pool for a single row.
         # Verified to give bitwise-identical predictions.
-        ps = [float(b.predict(row[:, s], validate_features=False, num_threads=1)[0])
-              for b, s in zip(self.boosters, self.slices)]
+        ps = [m.predict_one(row[:, s]) for m, s in zip(self.members, self.slices)]
         return self._blend(ps, t)
 
     # ------------------------------------------------------------ blending

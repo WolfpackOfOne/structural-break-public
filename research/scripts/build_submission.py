@@ -142,9 +142,12 @@ def train(datasets, model_directory_path: str):
         shutil.copy2(os.path.join(MODEL_DIRECTORY, f), os.path.join(model_directory_path, f))
     with open(os.path.join(model_directory_path, "manifest.json"), "r", encoding="utf-8") as fh:
         manifest = json.load(fh)
-    n_models = len(manifest.get("streams") or manifest.get("modules") or [])
-    missing = [f"model.txt.{i}" for i in range(n_models)
-               if not os.path.exists(os.path.join(model_directory_path, f"model.txt.{i}"))]
+    model_files = [m["path"] for m in manifest.get("model_files") or []]
+    if not model_files:
+        n_models = len(manifest.get("streams") or manifest.get("modules") or [])
+        model_files = [f"model.txt.{i}" for i in range(n_models)]
+    missing = [f for f in model_files
+               if not os.path.exists(os.path.join(model_directory_path, f))]
     if missing:
         raise RuntimeError(f"missing copied model files: {missing}")
 
@@ -202,13 +205,12 @@ Structural Break Challenge -- Real-Time Edition.
 
 **Architecture.** One shared incremental feature engine (`sbr.stream.StreamEngine`)
 updates {man['n_features']} causal features per observation in O(1) amortised time, feeding
-{len(man['booster_columns'])} LightGBM booster(s).
+{len(man['booster_columns'])} frozen model member(s).
 
 **Causality.** Every feature module is bitwise-identical to a batch implementation
 that passes prefix-invariance at `atol=0`, and the full {man['n_features']}-column vector is
 bitwise-identical between the streaming and batch paths on real and adversarial
-series (`tests/test_stream_engine_parity.py`). Streaming predictions match batch
-predictions to 0.0 over 12,727 points end to end.
+series (`tests/test_stream_engine_parity.py`).
 
 **No cross-series information.** Scores depend only on this series' history and
 its online points up to the current index. The local harness asserts that
