@@ -889,3 +889,18 @@ pair-flow diagnostic existed. Execution preregistration:
 |---|---|
 | `RT-1245` | LA-02 C1 same-count synthetic fixed-null-only control. Seven RT600 stream configs trained on real rows plus synthetic null-only rows; validation remains real only. |
 | `RT-1246` | LA-02 candidate paired counterfactual augmentation. Seven RT600 stream configs trained on real rows plus paired persistent-positive/transient-hard-negative synthetic rows; validation remains real only. |
+
+### LA-02 result, filed 2026-08-26
+
+`RT-1246` is **KILL** under the preregistered survival gate. Full report:
+`research/reports/leaderboard_alpha_2026/LA02_COUNTERFACTUAL_AUGMENTATION.md`;
+metrics: `la02_counterfactual_augmentation.{json,csv}`.
+
+C0 RT600 mean TS-AUC `0.625811264`; `RT-1245` null-only synthetic control
+`0.617350841`; `RT-1246` paired counterfactual candidate `0.622508549`.
+Primary `marginal_vs_clone = +0.005157709`; positive folds `4/5`; metric class
+by magnitude **MAJOR**. The final verdict is still **KILL** because two binding
+pair-flow gates fail: dominant-cell repairs/damage/net `2853/3179/-326`, and
+mature-vs-never net `-366`. Candidate vs C0 is also negative at `-0.003302715`.
+
+Because LA-02 did not become SERIOUS under the full gate, LA-03 opens.

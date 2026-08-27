@@ -589,7 +589,8 @@ def append_result_rows(result):
             f"C1={result['arms']['c1']['scores']['mean_ts_auc']:.9f}; "
             f"candidate={result['arms']['candidate']['scores']['mean_ts_auc']:.9f}; "
             f"marginal_vs_clone={result['primary']['marginal_vs_clone']:+.9f}; "
-            f"delta_vs_c0={arm['mean_delta_vs_c0']:+.9f}."
+            f"delta_vs_c0={arm['mean_delta_vs_c0']:+.9f}; "
+            f"metric_class={result['metric_class']}; final_verdict={result['verdict']}."
         )
         if key == "candidate":
             notes += (
@@ -706,20 +707,22 @@ def main():
         "c1_vs_c0_dominant": within_t_rank_corr(c1_blend, rt600, c.d.t, cell_rows(c, c.dev, "dominant_cell")),
     }
 
+    gate = {
+        "marginal_vs_clone_ge_0_0025": bool(marginal >= 0.0025),
+        "positive_folds_ge_4": bool(positive >= 4),
+        "dominant_pair_net_positive": bool(pair_flow["dominant_cell"]["net_pair_lift"] > 0),
+        "mature_vs_never_net_positive": bool(pair_flow["mature_vs_never"]["net_pair_lift"] > 0),
+        "candidate_beats_c1_ge_0_0010": bool(marginal >= 0.0010),
+    }
     if marginal >= 0.0050 and positive >= 4:
-        verdict = "MAJOR"
+        metric_class = "MAJOR"
     elif marginal >= 0.0030 and positive >= 4:
-        verdict = "SERIOUS"
-    elif (
-        marginal >= 0.0025
-        and positive >= 4
-        and pair_flow["dominant_cell"]["net_pair_lift"] > 0
-        and pair_flow["mature_vs_never"]["net_pair_lift"] > 0
-        and marginal >= 0.0010
-    ):
-        verdict = "WEAK"
+        metric_class = "SERIOUS"
+    elif marginal >= 0.0025 and positive >= 4:
+        metric_class = "WEAK"
     else:
-        verdict = "KILL"
+        metric_class = "KILL"
+    verdict = metric_class if all(gate.values()) else "KILL"
 
     result = {
         "program": "LEADERBOARD ALPHA 2026",
@@ -750,13 +753,8 @@ def main():
         },
         "pair_flow": {"candidate_vs_c0": pair_flow},
         "within_t_rank_corr": corr,
-        "gate": {
-            "marginal_vs_clone_ge_0_0025": bool(marginal >= 0.0025),
-            "positive_folds_ge_4": bool(positive >= 4),
-            "dominant_pair_net_positive": bool(pair_flow["dominant_cell"]["net_pair_lift"] > 0),
-            "mature_vs_never_net_positive": bool(pair_flow["mature_vs_never"]["net_pair_lift"] > 0),
-            "candidate_beats_c1_ge_0_0010": bool(marginal >= 0.0010),
-        },
+        "gate": gate,
+        "metric_class": metric_class,
         "verdict": verdict,
         "oof_streams": {arm: [f"{ARM_LABEL[arm]}_{s}.npy" for s in SPECIALISTS] for arm in arms},
     }
@@ -784,6 +782,7 @@ def main():
         "json": str(json_path),
         "csv": str(csv_path),
         "verdict": verdict,
+        "metric_class": metric_class,
         "marginal_vs_clone": result["primary"]["marginal_vs_clone"],
         "candidate_mean_ts_auc": scores["candidate"]["mean_ts_auc"],
         "c1_mean_ts_auc": scores["c1"]["mean_ts_auc"],
@@ -794,4 +793,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

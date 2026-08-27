@@ -2053,6 +2053,45 @@ binding dimensions: marginal below `+0.0015`, fewer than 4/5 positive folds, and
 dominant-cell net not positive. Specialist-replacement salvage is closed.
 
 
+## RT-1245 / RT-1246 -- LA-02 counterfactual synthetic augmentation -- KILL (2026-08-26)
+
+**Program preregistration** `research/reports/leaderboard_alpha_2026/PROGRAM_PREREG.md`
+@ `ed84d00`.
+**Execution preregistration** `research/reports/leaderboard_alpha_2026/LA02_EXECUTION_PREREG.md`
+@ `8438d93`.
+
+**Hypothesis.** Fold-pure history-generated paired counterfactuals would teach
+the fixed RT600 architecture to separate persistent break trajectories from
+transient hard negatives, improving training data rather than changing the model.
+
+**What was done.** Full five-fold real-validation-only retraining of the seven
+RT600 specialist configurations. `RT-1245` added same-count fixed-null synthetic
+non-break rows. `RT-1246` added paired persistent-positive and transient-negative
+synthetic rows at the preregistered `0.33` ratio. Generator distributions were
+estimated from outer-training folds only.
+
+**Result.** C0 RT600 mean TS-AUC `0.625811264`; `RT-1245` C1 mean
+`0.617350841`; `RT-1246` candidate mean `0.622508549`. The primary
+candidate-vs-clone marginal is `+0.005157709` with `4/5` folds positive, which
+is a MAJOR-sized metric signal. But the candidate remains below untouched RT600
+by `-0.003302715`.
+
+**Pair flow.** Candidate vs C0, 64 same-`t` pairs per time point: whole dev net
+`-341`, dominant-cell repairs/damage/net `2853/3179/-326`,
+mature-vs-never net `-366`, mature-vs-prebreak net `-246`.
+
+**Why it failed.** Synthetic persistent/transient labels are informative relative
+to null-only synthetic rows, but the intervention shifts the RT600 architecture
+in the wrong residual direction: it sacrifices the dominant and mature-vs-never
+pairs that the preregistered gate required it to repair. This is not a deployable
+alpha claim; it is evidence that the counterfactual generator changes the learner
+but does not improve the incumbent decision surface.
+
+**Retry warranted?** No LA-02b. No ratio sweep, mechanism reweighting, synthetic
+validation, or learner swap is authorised by the frozen program. Because LA-02
+did not become SERIOUS under the full gate, LA-03 opens.
+
+
 ## RT-1240 / RT-1241 / RT-1242 -- CRF-02 ACGN amortized conditional generative null -- KILL (2026-08-26, CORRECTED RUN)
 
 **Supersedes the void `RT-1237`/`RT-1238`/`RT-1239` entry above.** Same frozen

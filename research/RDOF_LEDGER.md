@@ -1346,3 +1346,11 @@ no further degrees of freedom are allocated to LA-01.
 Allocated IDs: `RT-1245` C1 null-only control, `RT-1246` paired
 counterfactual candidate. No ratio sweep, no model-family change, no validation
 sampling adjustment.
+
+**Result.** `RT-1246` is KILL under the frozen survival gate. The candidate has
+a metric-class MAJOR primary marginal vs the same-count synthetic clone
+(`+0.005157709`, positive folds `4/5`) but fails the binding pair-flow gates:
+dominant-cell repairs/damage/net `2853/3179/-326` and mature-vs-never net
+`-366`. Candidate vs untouched RT600 is negative (`-0.003302715`). The
+synthetic-augmentation lane is closed with no ratio sweep or LA-02b. Because
+LA-02 did not become SERIOUS under the full gate, LA-03 opens.

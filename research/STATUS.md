@@ -125,7 +125,16 @@ short and gets updated whenever that changes materially.
 - **Sweep status:** `FIRST_SWEEP_EXHAUSTED` and `SECOND_SWEEP_EXHAUSTED`.
   Both preregistered New Avenues sweeps are closed with no confirmation
   candidate. Production `RT-600` (external **0.6268**) is unchanged.
-- **Current research program:** **CAUSAL REPRESENTATION FRONTIER (CRF)** —
+- **Current research program:** **LEADERBOARD ALPHA 2026** — active on
+  `research/leaderboard-alpha-2026`. LA-01 specialist replacement salvage
+  (`RT-1243`/`RT-1244`) is **KILL**. LA-02 counterfactual synthetic augmentation
+  (`RT-1245`/`RT-1246`) is **KILL** under the full preregistered gate: the
+  candidate has metric-class **MAJOR** marginal vs its synthetic clone
+  (`+0.005157709`, positive folds `4/5`) but fails dominant-cell pair flow
+  (`-326`) and mature-vs-never pair flow (`-366`) and remains below untouched
+  RT600 (`-0.003302715`). Production `RT-600` remains unchanged. Because LA-02
+  did not become SERIOUS under the full gate, proceed to LA-03.
+- **Completed prior research program:** **CAUSAL REPRESENTATION FRONTIER (CRF)** —
   **`CRF_PROGRAM_EXHAUSTED`**. Both primaries are KILL, `CRF-03` did not open, and
   model search under this program is stopped. Full account in
   [`reports/causal_representation_frontier/CRF_FINAL.md`](reports/causal_representation_frontier/CRF_FINAL.md);
@@ -185,10 +194,9 @@ short and gets updated whenever that changes materially.
   [`FINAL_REPRODUCIBILITY_MANIFEST.json`](FINAL_REPRODUCIBILITY_MANIFEST.json).
 
 _Last updated: 2026-08-26 on `research/leaderboard-alpha-2026`: Leaderboard
-Alpha 2026 is active. LA-01 specialist replacement salvage (`RT-1243`/`RT-1244`)
-is KILL (`marginal_vs_clone = -0.000005`, positive folds `2/5`, dominant net
-`-10`) and closed. Production `RT-600` remains unchanged; proceed to LA-02
-counterfactual synthetic augmentation under
-`reports/leaderboard_alpha_2026/PROGRAM_PREREG.md`. Update this file whenever
-the production anchor, external score, or active research conclusion changes —
-see `AGENTS.md` at the repo root for the update rule._
+Alpha 2026 is active. LA-01 is KILL and closed. LA-02 has metric-class MAJOR
+candidate-vs-clone signal (`+0.005157709`) but is final-gate KILL because
+dominant-cell and mature-vs-never pair-flow nets are negative; LA-03 opens.
+Production `RT-600` remains unchanged. Update this file whenever the production
+anchor, external score, or active research conclusion changes — see `AGENTS.md`
+at the repo root for the update rule._
