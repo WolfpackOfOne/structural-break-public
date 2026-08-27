@@ -368,14 +368,32 @@ def _verify_frozen_config_hash() -> str:
 
 
 def _git_purity_flags() -> tuple[list[str], str]:
-    """Strict git commit/push purity when .git is present; content-hash-only
-    fallback otherwise (the hash check in _verify_frozen_config_hash always
-    runs regardless of this branch)."""
-    if (_REPO_ROOT / ".git").exists():
+    """Strict git commit/push purity when a genuinely usable git checkout is
+    present; content-hash-only fallback otherwise (the hash check in
+    _verify_frozen_config_hash always runs regardless of this branch).
+
+    A bare `.git` path check is not enough: a git *worktree* checkout has a
+    `.git` file (not a directory) containing a `gitdir:` pointer to an
+    absolute path on the machine the worktree was created on. Crunch uploads
+    that file verbatim, so on the cloud `.git` "exists" but points nowhere,
+    and `git ls-files`/`rev-parse` inside `require_committed_and_pushed` then
+    fails -- the exact false-strict-mode bug that broke the first cloud run.
+    Actually invoke git and require it to work, not just check for a path.
+    """
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(_REPO_ROOT), "rev-parse", "--is-inside-work-tree"],
+            text=True,
+            capture_output=True,
+            timeout=10,
+        )
+    except Exception:
+        proc = None
+    if proc is not None and proc.returncode == 0 and proc.stdout.strip() == "true":
         return [], "git_purity_strict"
     return (
         ["--allow-uncommitted-config", "--allow-unpushed-config"],
-        "content_hash_only_no_git_tree",
+        "content_hash_only_no_usable_git_tree",
     )
 
 
