@@ -916,3 +916,25 @@ pair-flow diagnostic existed. Execution preregistration:
 | `RT-1247` | LA-03 C0 global no-adaptation predictive-null head. One outer-fold global AR(5), pooled residual ECDF, same ten residual/PIT features, same LightGBM pairwise head. Also the E1 RT600+head clone in the final marginal comparison. |
 | `RT-1248` | LA-03 C1 fixed per-series AR(5)+history-residual-ECDF null head. Mandatory isolation control and integrated diagnostic. |
 | `RT-1249` | LA-03 candidate global AR(5) plus per-series affine adapter (`a_i`, `b_i`) fitted only on `H_i`, same ten residual/PIT features, same LightGBM pairwise head. Also the E2 RT600+head candidate in the final marginal comparison. |
+
+### LA-03 result, filed 2026-08-26
+
+`RT-1249` is **KILL**. Full report:
+`research/reports/leaderboard_alpha_2026/LA03_PER_SERIES_ADAPTATION.md`;
+metrics: `la03_per_series_adaptation.{json,csv}`.
+
+Standalone heads: `RT-1247` global no-adaptation `0.528175061`; `RT-1248`
+fixed per-series null `0.564744385`; `RT-1249` affine-adapted candidate
+`0.543249095`. The adapted head beats the global clone by `+0.015074034` but
+fails the fixed-null isolation gate by `-0.021495290`.
+
+Integrated with RT600: E0 `0.625811264`; E1 `RT600+RT-1247` `0.624411329`;
+E2 `RT600+RT-1249` `0.626087395`; primary `marginal_vs_clone = +0.001676065`
+with `5/5` folds positive, i.e. WEAK by metric size. Final verdict remains
+KILL because the mandatory fixed-null isolation gate failed. The fixed-null
+diagnostic `RT600+RT-1248` was stronger than the candidate at `0.626869923`.
+
+Pair flow for E2 vs E0 was also negative: dominant-cell net `-37`,
+mature-vs-never net `-92`, mature-vs-prebreak net `-74`.
+
+No Leaderboard Alpha mechanism survived; the combination rule does not open.

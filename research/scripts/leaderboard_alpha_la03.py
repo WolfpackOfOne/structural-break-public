@@ -463,12 +463,11 @@ def cell_rows(c: Ctx, rows, split: str):
         return rows
     if split == "dominant_cell":
         return rows[dominant]
+    hb = c.has_break[c.d.sidx[rows]]
     if split == "mature_vs_never":
-        return rows[(y == 0) | ((y == 1) & (age >= 100))]
+        return rows[dominant & ((y == 1) | ((y == 0) & ~hb))]
     if split == "mature_vs_prebreak":
-        hb = c.has_break[c.d.sidx[rows]]
-        pre = hb & (y == 0)
-        return rows[pre | ((y == 1) & (age >= 100))]
+        return rows[dominant & ((y == 1) | ((y == 0) & hb))]
     raise ValueError(split)
 
 

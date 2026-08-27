@@ -1370,3 +1370,13 @@ LA-02 did not become SERIOUS under the full gate, LA-03 opens.
 Allocated IDs: `RT-1247` global no-adaptation control, `RT-1248` fixed-null
 control, `RT-1249` per-series affine-adapted candidate. No adapter-size sweep,
 alternate architecture, loss variant, or RT600-score-conditioned head.
+
+**Result.** `RT-1249` is KILL. The adapted standalone head beats the global
+no-adaptation clone by `+0.015074034`, but loses to the fixed per-series null by
+`-0.021495290`, failing the mandatory isolation gate. Integrated E2
+(`RT600+RT-1249`) beats E1 (`RT600+RT-1247`) by `+0.001676065` with `5/5`
+positive folds, but this WEAK-sized marginal is not actionable because the
+fixed-null control remains the better representation. E2 vs E0 pair flow is
+negative: dominant-cell net `-37`, mature-vs-never net `-92`,
+mature-vs-prebreak net `-74`. No LA-03b; no combination opens because no
+Leaderboard Alpha mechanism survived.

@@ -125,15 +125,20 @@ short and gets updated whenever that changes materially.
 - **Sweep status:** `FIRST_SWEEP_EXHAUSTED` and `SECOND_SWEEP_EXHAUSTED`.
   Both preregistered New Avenues sweeps are closed with no confirmation
   candidate. Production `RT-600` (external **0.6268**) is unchanged.
-- **Current research program:** **LEADERBOARD ALPHA 2026** — active on
-  `research/leaderboard-alpha-2026`. LA-01 specialist replacement salvage
-  (`RT-1243`/`RT-1244`) is **KILL**. LA-02 counterfactual synthetic augmentation
-  (`RT-1245`/`RT-1246`) is **KILL** under the full preregistered gate: the
-  candidate has metric-class **MAJOR** marginal vs its synthetic clone
-  (`+0.005157709`, positive folds `4/5`) but fails dominant-cell pair flow
-  (`-326`) and mature-vs-never pair flow (`-366`) and remains below untouched
-  RT600 (`-0.003302715`). Production `RT-600` remains unchanged. Because LA-02
-  did not become SERIOUS under the full gate, proceed to LA-03.
+- **Current research program:** **LEADERBOARD ALPHA 2026** —
+  **`LEADERBOARD_ALPHA_2026_EXHAUSTED`** on
+  `research/leaderboard-alpha-2026`. All three preregistered experiments are
+  **KILL** and no combination opens. LA-01 specialist replacement salvage
+  (`RT-1243`/`RT-1244`) failed at `-0.000005408` marginal vs clone. LA-02
+  counterfactual synthetic augmentation (`RT-1245`/`RT-1246`) had metric-class
+  **MAJOR** signal vs its synthetic clone (`+0.005157709`) but failed pair-flow
+  gates and remained below RT600. LA-03 per-series history adaptation
+  (`RT-1247`/`RT-1248`/`RT-1249`) had WEAK integrated marginal vs the global
+  clone (`+0.001676065`, `5/5` positive folds), but failed the mandatory
+  fixed-null isolation gate (`RT-1249 - RT-1248 = -0.021495290` standalone).
+  Final report:
+  [`reports/leaderboard_alpha_2026/LEADERBOARD_ALPHA_2026_FINAL.md`](reports/leaderboard_alpha_2026/LEADERBOARD_ALPHA_2026_FINAL.md).
+  Production `RT-600` remains unchanged.
 - **Completed prior research program:** **CAUSAL REPRESENTATION FRONTIER (CRF)** —
   **`CRF_PROGRAM_EXHAUSTED`**. Both primaries are KILL, `CRF-03` did not open, and
   model search under this program is stopped. Full account in
@@ -194,9 +199,7 @@ short and gets updated whenever that changes materially.
   [`FINAL_REPRODUCIBILITY_MANIFEST.json`](FINAL_REPRODUCIBILITY_MANIFEST.json).
 
 _Last updated: 2026-08-26 on `research/leaderboard-alpha-2026`: Leaderboard
-Alpha 2026 is active. LA-01 is KILL and closed. LA-02 has metric-class MAJOR
-candidate-vs-clone signal (`+0.005157709`) but is final-gate KILL because
-dominant-cell and mature-vs-never pair-flow nets are negative; LA-03 opens.
-Production `RT-600` remains unchanged. Update this file whenever the production
-anchor, external score, or active research conclusion changes — see `AGENTS.md`
-at the repo root for the update rule._
+Alpha 2026 is exhausted. LA-01, LA-02, and LA-03 are all KILL; no combination
+opens and production `RT-600` remains unchanged. Update this file whenever the
+production anchor, external score, or active research conclusion changes — see
+`AGENTS.md` at the repo root for the update rule._

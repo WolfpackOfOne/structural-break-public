@@ -2092,6 +2092,48 @@ validation, or learner swap is authorised by the frozen program. Because LA-02
 did not become SERIOUS under the full gate, LA-03 opens.
 
 
+## RT-1247 / RT-1248 / RT-1249 -- LA-03 per-series history adaptation -- KILL (2026-08-26)
+
+**Program preregistration** `research/reports/leaderboard_alpha_2026/PROGRAM_PREREG.md`
+@ `ed84d00`.
+**Execution preregistration** `research/reports/leaderboard_alpha_2026/LA03_EXECUTION_PREREG.md`
+@ `3d88512`.
+
+**Hypothesis.** A tiny per-series affine adapter fitted only on `H_i` would keep
+the useful global predictive-null structure while recovering local series
+calibration that the CRF amortized-null bottleneck lost.
+
+**What was done.** Full five-fold training of one 10-feature pairwise LightGBM
+head per arm. `RT-1247` used an outer-fold global AR(5) and pooled residual
+ECDF. `RT-1248` used the fixed per-series AR(5)+history-residual-ECDF null.
+`RT-1249` used the global AR(5) plus a two-parameter per-series affine adapter
+`a_i * g_t + b_i`, fitted on `H_i` with fixed ridge `lambda=32`.
+
+**Result.** Standalone heads: global `0.528175061`, fixed-null `0.564744385`,
+adapted `0.543249095`. The adapted head beats the global clone by
+`+0.015074034` but loses to the fixed-null control by `-0.021495290`, failing
+the mandatory isolation gate.
+
+**Integration.** E0 RT600 `0.625811264`; E1 `RT600+RT-1247` `0.624411329`;
+E2 `RT600+RT-1249` `0.626087395`. Primary `marginal_vs_clone = +0.001676065`
+with `5/5` folds positive, a WEAK-sized metric signal. The fixed-null diagnostic
+`RT600+RT-1248` was stronger than the candidate at `0.626869923`.
+
+**Pair flow.** E2 vs E0, 64 same-`t` pairs per time point: whole dev net `-69`,
+dominant-cell repairs/damage/net `1166/1203/-37`, mature-vs-never net `-92`,
+mature-vs-prebreak net `-74`.
+
+**Why it failed.** The affine adapter repairs the deliberately weak global
+control, but it still throws away information captured by the fixed per-series
+AR(5)+residual-ECDF null. The small positive integrated marginal is largely a
+comparison against a harmed clone, not evidence that the adapted representation
+beats the project's existing legal null.
+
+**Retry warranted?** No LA-03b. The frozen program forbids adapter-size, width,
+architecture, loss, and RT600-conditioned variants. No Leaderboard Alpha
+mechanism survived, so the combination rule does not open.
+
+
 ## RT-1240 / RT-1241 / RT-1242 -- CRF-02 ACGN amortized conditional generative null -- KILL (2026-08-26, CORRECTED RUN)
 
 **Supersedes the void `RT-1237`/`RT-1238`/`RT-1239` entry above.** Same frozen
