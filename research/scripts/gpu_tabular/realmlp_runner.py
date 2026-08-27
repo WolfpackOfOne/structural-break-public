@@ -32,6 +32,7 @@ from common import (
     load_data_and_features,
     load_frozen_learner_config,
     manifest_base,
+    peak_ram_gb,
     peak_vram_gb,
     preprocess_arrays,
     require_committed_and_pushed,
@@ -166,6 +167,7 @@ def fit_realmlp(
             len(X_train) / max(int(config["training"]["batch_size"]), 1) * epochs
         )
         / max(fit_seconds, 1e-9),
+        "rows_per_second": float(len(X_train) * epochs / max(fit_seconds, 1e-9)),
         "configured_epochs": epochs,
         "benchmark_mode": bool(benchmark),
         "score_computed": False,
@@ -192,23 +194,30 @@ def benchmark(args: argparse.Namespace) -> dict[str, Any]:
         )
         artifact_root = configure_roots(args.artifact_root)
         source = "synthetic_smoke"
+        feature_stack_seconds = 0.0
     else:
         artifact_root, d, mats, names, keep = load_data_and_features(args.artifact_root)
         tr_rows, _ = champ_fold_rows(d, int(args.fold), int(args.max_train_rows), SEED)
         t_load = time.time()
         X_train = stack_features(mats, names, tr_rows, keep)
+        feature_stack_seconds = float(time.time() - t_load)
         y_train = d.y[tr_rows].astype(np.int64)
         source = "canonical_fold"
         print(
-            f"loaded fold {args.fold} train matrix {X_train.shape} in {time.time() - t_load:.1f}s",
+            f"loaded fold {args.fold} train matrix {X_train.shape} in {feature_stack_seconds:.1f}s",
             flush=True,
         )
 
     raw_rss = rss_gb()
     prep_config = smoke_config() if args.synthetic_smoke else default_config()
-    X_proc, _, prep_seconds, prep_mode = preprocess_arrays(X_train, None, prep_config, SEED)
+    X_proc, _, array_preprocess_seconds, prep_mode = preprocess_arrays(
+        X_train, None, prep_config, SEED
+    )
+    prep_seconds = float(feature_stack_seconds + array_preprocess_seconds)
     print(
-        f"realmlp preprocessing mode={prep_mode} seconds={prep_seconds:.1f} rss_gb={rss_gb():.2f}",
+        f"realmlp preprocessing mode={prep_mode} feature_stack={feature_stack_seconds:.1f}s "
+        f"array_preprocess={array_preprocess_seconds:.1f}s total={prep_seconds:.1f}s "
+        f"rss_gb={rss_gb():.2f}",
         flush=True,
     )
     del X_train
@@ -276,6 +285,7 @@ def benchmark(args: argparse.Namespace) -> dict[str, Any]:
                 "benchmark": meta,
                 "projection": projection,
                 "peak_vram_gb": peak_vram_gb(torch_mod, device),
+                "peak_ram_gb": peak_ram_gb(),
                 "rss_gb_after_benchmark": rss_gb(),
             }
             attempts.append(attempt)
@@ -319,9 +329,12 @@ def benchmark(args: argparse.Namespace) -> dict[str, Any]:
         "fold_benchmarked": int(args.fold),
         "benchmark_epochs": int(args.benchmark_epochs),
         "preprocessing_seconds": prep_seconds,
+        "feature_stack_seconds": feature_stack_seconds,
+        "array_preprocess_seconds": array_preprocess_seconds,
         "preprocessing_mode": prep_mode,
         "raw_rss_gb_before_preprocessing": raw_rss,
         "rss_gb_after_preprocessing": rss_gb(),
+        "peak_ram_gb": peak_ram_gb(),
         "peak_vram_gb": peak_vram_gb(torch_mod, device),
         "device": device_report,
         "versions": env_versions(),

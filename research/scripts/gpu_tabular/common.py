@@ -167,6 +167,10 @@ def require_torch_device(require_gpu: bool, allow_cpu_smoke: bool):
     if has_cuda:
         torch.cuda.set_device(device)
         torch.cuda.reset_peak_memory_stats(device)
+        props = torch.cuda.get_device_properties(device)
+        total_vram_gb = float(props.total_memory / 1e9)
+    else:
+        total_vram_gb = 0.0
     report = {
         "cuda_available": has_cuda,
         "device": str(device),
@@ -174,6 +178,7 @@ def require_torch_device(require_gpu: bool, allow_cpu_smoke: bool):
         "cuda_device_capability": torch.cuda.get_device_capability(0) if has_cuda else None,
         "cuda_runtime_version": getattr(torch.version, "cuda", None),
         "torch_version": torch.__version__,
+        "total_vram_gb": total_vram_gb,
     }
     return torch, device, report
 
@@ -187,6 +192,12 @@ def rss_gb() -> float:
         ru = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
         scale = 1e9 if sys.platform == "darwin" else 1e6
         return float(ru / scale)
+
+
+def peak_ram_gb() -> float:
+    ru = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    scale = 1e9 if sys.platform == "darwin" else 1e6
+    return float(ru / scale)
 
 
 def peak_vram_gb(torch_mod: Any, device: Any) -> float:
@@ -568,7 +579,8 @@ def config_runtime_projection(
     per_learner_budget = (
         float(quota_hours) * 3600.0 * float(quota_fraction) / max(int(quota_learners), 1)
     )
-    projected = 5.0 * (float(preprocess_seconds) + float(seconds_per_epoch) * int(max_epochs))
+    projected_per_fold = float(preprocess_seconds) + float(seconds_per_epoch) * int(max_epochs)
+    projected = 5.0 * projected_per_fold
     max_epochs_fit = max(
         1,
         int(
@@ -583,6 +595,8 @@ def config_runtime_projection(
         "quota_learners": int(quota_learners),
         "quota_fraction_for_scored_training": float(quota_fraction),
         "per_learner_budget_seconds": per_learner_budget,
+        "projected_runtime_per_fold_seconds": projected_per_fold,
+        "projected_runtime_per_fold_hours": projected_per_fold / 3600.0,
         "projected_5fold_runtime_seconds": projected,
         "projected_5fold_runtime_hours": projected / 3600.0,
         "max_epochs_fit_under_budget": max_epochs_fit,
