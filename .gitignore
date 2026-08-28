@@ -74,3 +74,10 @@ submissions/*.ipynb
 # infer() with `could not convert string to float: 'value'`.
 .crunchdao/
 resources/
+
+# Control OOF arrays for the RT-1258/RT-1259 binding replacement test.
+# Re-included ONLY for the crunch-cli code push, which honours .gitignore when
+# selecting submission files. Git itself still ignores these: line 60 excludes
+# research/oof/ as a directory, and git cannot re-include a file whose parent
+# directory is excluded. Verified with git check-ignore below.
+!research/oof/RT-*.npy
