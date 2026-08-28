@@ -640,6 +640,8 @@ def write_report(result: dict) -> None:
         "",
         "The model-anchored examples make the same point as the numeric forensics: RT-1264's useful changes are not visually equivalent to a single raw threshold. Some large raw excursions are never-breaks; some true breaks are low-amplitude or delayed. The score overlays often separate regimes gradually rather than at an obvious point discontinuity.",
         "",
+        "A few extreme z-score examples are caused by very small historical scale in boundary-limited series. Treat those as calibration stress cases rather than representative break sizes.",
+        "",
         "## Raw Metric / Score Links",
         "",
         "| diagnostic | series | Pearson | Spearman |",
