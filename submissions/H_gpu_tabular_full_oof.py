@@ -351,144 +351,97 @@ def _build_feature_cache(artifact_root: Path, store_manifest: dict[str, Any]) ->
     return manifest
 
 
-_PREPARED_MANIFEST_NAME = "PREPARED_MANIFEST.json"
+_CHECKPOINT_STAMP_NAME = "CHECKPOINT_PROVENANCE.json"
 
 
-def _persist_root(model_directory_path: str) -> Path:
-    """Durable working root inside model_directory_path.
+def _persisted_output_root(model_directory_path: str) -> Path:
+    """Durable location for per-fold prediction checkpoints.
 
-    Crunch hands train() a model directory that (unlike a per-run temp dir)
-    can be carried between runs of the same submission, so putting the
-    materialized store, the 500-feature cache, and the per-fold prediction
-    checkpoints here lets a re-run skip work that already completed instead
-    of rebuilding features and retraining folds 0..k-1 from scratch.
+    Only the CHECKPOINTS live here -- deliberately not the feature cache.
+    Crunch persists/uploads model_directory_path as the submission's model,
+    and the 500-column matrix over the dev population is ~8 GB, versus ~72 MB
+    for all fold predictions plus both assembled OOF vectors. The feature
+    build is also the cheap half (~5-10 min) next to a ~44 min TabM fold, so
+    persisting predictions buys nearly all of the resume value at ~1/100th of
+    the footprint. The store and feature cache stay in an ephemeral temp root.
     """
-    return Path(model_directory_path).resolve() / "gpu_tabular_work"
+    return Path(model_directory_path).resolve() / "gpu_tabular_oof"
 
 
-def _preparation_fingerprint(store_manifest: dict[str, Any]) -> dict[str, Any]:
-    """Identity of a materialized store+feature cache. A cache is reusable
-    only if every field matches the run that would otherwise build it."""
+def _checkpoint_provenance(digest: str) -> dict[str, Any]:
     return {
-        "frozen_config_sha256": _FROZEN_CONFIG_SHA256,
+        "frozen_config_sha256": digest,
         "feature_modules": list(FULL_MODULE_NAMES),
-        "feature_count": 500,
         "dev_folds": list(DEV_FOLDS),
-        "series": store_manifest["selected_series"],
-        "online_rows": store_manifest["selected_online_rows"],
-        "total_values": store_manifest["selected_total_values"],
         "max_train_rows": MAX_TRAIN_ROWS,
         "seed": SEED,
     }
 
 
-def _valid_cached_preparation(
-    persist_root: Path, expected: dict[str, Any]
-) -> dict[str, Any] | None:
-    """Return the cached preparation manifest iff it is present, complete,
-    and describes exactly the population/config this run needs."""
-    manifest_path = persist_root / _PREPARED_MANIFEST_NAME
-    if not manifest_path.exists():
-        return None
+def _resolve_persisted_output_root(model_directory_path: str, digest: str) -> Path:
+    """Return the checkpoint root, quarantining any checkpoints written under
+    a different frozen config or data contract.
+
+    Spec section 10: a checkpoint is valid only if the config hash, row
+    counts, validation identifiers, and provenance all match -- stale
+    predictions must never be silently reused. Row/finiteness checks are
+    enforced per fold by common.completed_fold_valid; this is the
+    config/contract half of that gate.
+    """
+    expected = _checkpoint_provenance(digest)
     try:
-        cached = json.loads(manifest_path.read_text())
-    except Exception:
-        return None
-    if cached.get("fingerprint") != expected:
+        root = _persisted_output_root(model_directory_path)
+        root.mkdir(parents=True, exist_ok=True)
+        probe = root / ".writable"
+        probe.write_text("ok", encoding="utf-8")
+        probe.unlink()
+    except Exception as exc:
+        fallback = Path(tempfile.mkdtemp(prefix="sbr_gpu_tabular_oof_")).resolve()
         print(
-            "Cached feature/store manifest does not match this run's contract; rebuilding.",
+            f"Model directory not usable for durable checkpoints ({exc}); "
+            f"using ephemeral {fallback} -- this run will not be resumable.",
             flush=True,
         )
-        return None
-    store_dir = persist_root / "cache" / "store"
-    features_dir = persist_root / "cache" / "features"
-    required = [
-        store_dir / "values.npy",
-        store_dir / "meta.parquet",
-        persist_root / "research" / "folds" / "folds.parquet",
-    ]
-    required += [features_dir / f"{m}.npy" for m in FULL_MODULE_NAMES]
-    required += [features_dir / f"{m}.cols.json" for m in FULL_MODULE_NAMES]
-    missing = [str(p) for p in required if not p.exists()]
-    if missing:
-        print(
-            f"Cached preparation incomplete ({len(missing)} missing artifacts); rebuilding.",
-            flush=True,
-        )
-        return None
-    return cached
+        return fallback
+
+    stamp = root / _CHECKPOINT_STAMP_NAME
+    if stamp.exists():
+        try:
+            found = json.loads(stamp.read_text())
+        except Exception:
+            found = None
+        if found != expected:
+            quarantine = root.with_name(f"{root.name}_stale_{int(time.time())}")
+            print(
+                "REFUSING TO REUSE CHECKPOINTS: provenance mismatch against the current "
+                f"frozen contract. Quarantining {root} -> {quarantine}.",
+                flush=True,
+            )
+            root.rename(quarantine)
+            root.mkdir(parents=True, exist_ok=True)
+    stamp.write_text(json.dumps(expected, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return root
 
 
 def _prepare_artifact_root(
     datasets: Iterable[Tuple[int, List[float], List[float], Optional[int]]],
-    model_directory_path: str,
 ) -> tuple[Path, dict[str, Any]]:
-    """Materialize the store + 500-feature cache into a durable root, reusing
-    a valid cache from a previous run of this submission when one exists.
-
-    Falls back to a fresh temp dir if the model directory is not usable, so a
-    read-only/absent model dir degrades to the previous behaviour rather than
-    failing the run.
-    """
-    persist_root = _persist_root(model_directory_path)
-    try:
-        persist_root.mkdir(parents=True, exist_ok=True)
-        probe = persist_root / ".writable"
-        probe.write_text("ok", encoding="utf-8")
-        probe.unlink()
-        artifact_root = persist_root
-        durable = True
-    except Exception as exc:
-        artifact_root = Path(tempfile.mkdtemp(prefix="sbr_gpu_tabular_full_oof_")).resolve()
-        durable = False
-        print(
-            f"Model directory not usable as a durable work root ({exc}); "
-            f"falling back to ephemeral {artifact_root}.",
-            flush=True,
-        )
-
+    """Materialize the store and build the 500-feature cache in an ephemeral
+    temp root (see _persisted_output_root for why this is not persisted)."""
+    artifact_root = Path(tempfile.mkdtemp(prefix="sbr_gpu_tabular_full_oof_")).resolve()
     os.environ["SBR_ROOT"] = str(artifact_root)
     os.environ["SBR_STORE"] = str(artifact_root / "cache" / "store")
     os.environ["SBR_FEATURES"] = str(artifact_root / "cache" / "features")
 
     t0 = time.time()
-    # The store scan is cheap relative to the feature build, and it is what
-    # produces the fingerprint the cache is validated against, so it always
-    # runs; only the expensive feature build is skipped on a cache hit.
     store_manifest = _materialize_full_dev_store(datasets, artifact_root)
-    expected = _preparation_fingerprint(store_manifest)
-
-    cached = _valid_cached_preparation(artifact_root, expected) if durable else None
-    if cached is not None:
-        print(
-            "Reusing cached 500-feature matrix from a previous run "
-            f"({expected['series']} series, {expected['online_rows']} online rows); "
-            "skipping feature build.",
-            flush=True,
-        )
-        feature_manifest = cached["features"]
-        feature_manifest["reused_from_previous_run"] = True
-    else:
-        feature_manifest = _build_feature_cache(artifact_root, store_manifest)
-        feature_manifest["reused_from_previous_run"] = False
-
+    feature_manifest = _build_feature_cache(artifact_root, store_manifest)
     prepared = {
         "artifact_root": str(artifact_root),
-        "durable_work_root": durable,
         "store": store_manifest,
         "features": feature_manifest,
         "seconds": float(time.time() - t0),
     }
-    if durable:
-        (artifact_root / _PREPARED_MANIFEST_NAME).write_text(
-            json.dumps(
-                {"fingerprint": expected, "features": feature_manifest},
-                indent=2,
-                sort_keys=True,
-            )
-            + "\n",
-            encoding="utf-8",
-        )
     return artifact_root, prepared
 
 
@@ -977,16 +930,14 @@ def train(
     preflight = _torch_gpu_report_subprocess()
     _print_device_report("preflight", preflight)
 
+    # Checkpoints resolve BEFORE the (expensive) store/feature build so a
+    # provenance mismatch is caught immediately rather than after ~10 min.
+    output_root = _resolve_persisted_output_root(model_directory_path, digest)
+    _report_existing_checkpoints(output_root)
+
     artifact_root: Path | None = None
-    durable_root = False
     try:
-        artifact_root, preparation = _prepare_artifact_root(datasets, model_directory_path)
-        durable_root = bool(preparation.get("durable_work_root"))
-        # Fold checkpoints live under the same root, so on a durable root a
-        # re-run resumes: already-complete folds are skipped by --resume
-        # instead of retrained.
-        output_root = artifact_root / "research" / "oof" / "gpu_tabular_2026"
-        _report_existing_checkpoints(output_root)
+        artifact_root, preparation = _prepare_artifact_root(datasets)
 
         print("Running GPU-01 TabM full 5-fold OOF (RT-1258)", flush=True)
         tabm_summary = _run_all_folds("tabm", artifact_root, output_root, extra_flags)
@@ -1019,13 +970,10 @@ def train(
         _write_model_artifacts(model_directory_path, result)
         _print_result_block(result)
     finally:
-        # A durable root is the resume cache -- deleting it would defeat the
-        # point. Only an ephemeral temp root is cleaned up.
-        if (
-            artifact_root is not None
-            and not durable_root
-            and os.environ.get(KEEP_ARTIFACT_ENV) != "1"
-        ):
+        # artifact_root holds only the rebuildable store/feature cache; the
+        # checkpoints live in output_root under the model directory and are
+        # deliberately never deleted here.
+        if artifact_root is not None and os.environ.get(KEEP_ARTIFACT_ENV) != "1":
             shutil.rmtree(artifact_root, ignore_errors=True)
 
 
