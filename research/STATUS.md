@@ -16,18 +16,19 @@ short and gets updated whenever that changes materially.
   (LB-001), confirmed in [`EXPERIMENT_ID_MAP.md`](EXPERIMENT_ID_MAP.md).
 - **Current best deployable internal result:** RT-600 seven specialists,
   pooled OOF ≈ 0.63828 (E0 in the Wave 7 T2 promotion battery).
-- **Current research conclusion:** **DATA_FORENSICS_2026** is complete on
-  `research/data-forensics-2026`. It trained no model and consumed no RT ID.
-  The descriptive audit leaves the Deep Ensemble LOCAL result intact:
-  `RT-1264` best-`k=5` remains **MAJOR** internally (`marginal_vs_clone =
+- **Current research conclusion:** **RAW_DATA_ATLAS_2026** is complete on
+  `research/raw-data-atlas-2026`. It trained no model, consumed no RT ID,
+  appended no `RESULTS.csv` row, and summarized dev folds only. The atlas
+  looked at the stored raw time-series values behind the current scored
+  candidate: labelled breaks are heterogeneous (level, scale, tail, delayed,
+  subtle, and boundary-limited), large visual shocks are not reliably the
+  scored opportunity, and raw amplitude/tail metrics have only weak descriptive
+  links to `RT-1264`'s lift. The Deep Ensemble LOCAL result remains intact:
+  `RT-1264` best-`k=5` is still **MAJOR** internally (`marginal_vs_clone =
   +0.005934643`, E2-E0 `+0.002378478`, `5/5` positive folds) and still awaits
-  deployment/confirmation review. Forensics found the gain is positive on all
-  folds, strongest in mature-vs-prebreak and low-history/short-online slices,
-  weak in early relative position `rel_10_25`, and not explainable by a simple
-  raw-amplitude threshold. The frozen 500-column bank has low effective rank
-  (`21.282`), supporting mechanism/learner diversity over more same-family
-  columns. Production `RT-600` and external score remain unchanged. Full
-  report: `reports/data_forensics_2026/DATA_FORENSICS_REPORT.md`.
+  deployment/confirmation review. Production `RT-600` and external score
+  remain unchanged. Full report:
+  `reports/raw_data_atlas_2026/RAW_DATA_ATLAS_REPORT.md`.
 - **Prior research conclusion:** T2/RT-995 promotion battery —
   **MOSTLY REDUNDANT**. T2 clears 3/4 promotion legs and has real
   single-model alpha, but E2 (RT600 + T2 ensemble, ≈0.63882) beats E1
@@ -61,9 +62,9 @@ short and gets updated whenever that changes materially.
   future-information limit (CASE 2) that later Wave 7/8 work is measured
   against.
 - **Active research branch:** this worktree is
-  `research/data-forensics-2026`, forked from
-  `research/deep-ensemble-frontier-local-2026@21b2bae` for a no-training
-  dev-only data/OOF anatomy audit. The canonical chain remains
+  `research/raw-data-atlas-2026`, forked from
+  `research/data-forensics-2026@6786096` for a no-training, dev-only atlas of
+  actual raw time-series traces and model-score overlays. The canonical chain remains
   `research/current` (wave2 → wave3-integration → wave5-alpha → wave6-alpha →
   wave7-teacher-distillation → wave7-t2-promotion). Standalone sibling
   branches still worth checking: `research/wave8-future-aware-distillation`
@@ -138,10 +139,14 @@ short and gets updated whenever that changes materially.
 - **Sweep status:** `FIRST_SWEEP_EXHAUSTED` and `SECOND_SWEEP_EXHAUSTED`.
   Both preregistered New Avenues sweeps are closed with no confirmation
   candidate. Production `RT-600` (external **0.6268**) is unchanged.
-- **Current research program:** **DATA_FORENSICS_2026** --
-  **`DATA_FORENSICS_2026_COMPLETE`** on `research/data-forensics-2026`.
-  It is descriptive only: no training, no RT ID, no `RESULTS.csv` row, no
-  lockbox/test summary. Main takeaways are in
+- **Current research program:** **RAW_DATA_ATLAS_2026** --
+  **`RAW_DATA_ATLAS_2026_COMPLETE`** on
+  `research/raw-data-atlas-2026`. It is descriptive only: no training, no RT
+  ID, no `RESULTS.csv` row, no lockbox/test summary. Main takeaways are in
+  [`reports/raw_data_atlas_2026/RAW_DATA_ATLAS_REPORT.md`](reports/raw_data_atlas_2026/RAW_DATA_ATLAS_REPORT.md),
+  with compact artifacts under `reports/raw_data_atlas_2026/`. The immediately
+  prior no-training audit `DATA_FORENSICS_2026` remains complete on
+  `research/data-forensics-2026`; its report is
   [`reports/data_forensics_2026/DATA_FORENSICS_REPORT.md`](reports/data_forensics_2026/DATA_FORENSICS_REPORT.md).
   The current scored research candidate remains Deep Ensemble `RT-1264`;
   production `RT-600` remains unchanged.
