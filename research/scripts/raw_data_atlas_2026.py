@@ -164,6 +164,7 @@ def build_series_metrics(idx: dict, rt600: np.ndarray, rt1264: np.ndarray) -> pd
             "fold": int(r.fold),
             "has_break": bool(r.has_break),
             "tau_index": tau,
+            "off": int(r.off),
             "n_hist": int(r.n_hist),
             "n_online": int(r.n_online),
             "dev_start": lo,
@@ -507,7 +508,7 @@ def plot_phase_absz_box(idx: dict, path: Path) -> None:
     phase = idx["phase"][pos]
     data = [absz[phase == code] for code in range(5)]
     fig, ax = plt.subplots(figsize=(12, 6), constrained_layout=True)
-    ax.boxplot(data, labels=[PHASE_NAMES[c] for c in range(5)], showfliers=False)
+    ax.boxplot(data, tick_labels=[PHASE_NAMES[c] for c in range(5)], showfliers=False)
     ax.set_ylabel("abs(z), z standardized by historical segment")
     ax.set_title("Raw amplitude distributions by offline phase, deterministic dev-row sample")
     ax.tick_params(axis="x", rotation=20)
