@@ -397,11 +397,21 @@ def _git_purity_flags() -> tuple[list[str], str]:
     )
 
 
+# Exit codes subprocess.run reports as -N when the child was killed by signal
+# N (SIGSEGV=11, SIGABRT=6, SIGBUS=7, SIGKILL=9 -- the last typically an OS/
+# cgroup OOM kill, not a Python-catchable CUDA OOM). These are consistent
+# with transient GPU-driver/allocator crashes on cloud boxes rather than a
+# deterministic bug in the frozen model code; retry a few times before
+# treating as a genuine TECHNICAL_FAILURE (spec section 16).
+_SIGNAL_KILL_RETRY_LIMIT = 2
+
+
 def _run_runner(
     learner: str,
     artifact_root: Path,
     output_root: Path,
     extra_flags: list[str],
+    folds: list[int],
 ) -> dict[str, Any]:
     runner_path = _GPU_SCRIPTS_DIR / f"{learner}_runner.py"
     args = [
@@ -414,7 +424,7 @@ def _run_runner(
         "--artifact-root",
         str(artifact_root),
         "--folds",
-        ",".join(str(f) for f in DEV_FOLDS),
+        ",".join(str(f) for f in folds),
         "--resume",
         *extra_flags,
     ]
@@ -429,13 +439,27 @@ def _run_runner(
         pythonpath_parts.append(existing)
     env["PYTHONPATH"] = os.pathsep.join(pythonpath_parts)
 
-    print(f"Running {learner} full 5-fold OOF runner: {' '.join(args)}", flush=True)
-    proc = subprocess.run(args, env=env, text=True, capture_output=True, check=False)
-    for line in (proc.stdout or "").splitlines():
-        print(f"[{learner}] {line}", flush=True)
-    if proc.returncode != 0:
+    attempt = 0
+    while True:
+        attempt += 1
+        print(f"Running {learner} fold(s) {folds} (attempt {attempt}): {' '.join(args)}", flush=True)
+        proc = subprocess.run(args, env=env, text=True, capture_output=True, check=False)
+        for line in (proc.stdout or "").splitlines():
+            print(f"[{learner}] {line}", flush=True)
+        if proc.returncode == 0:
+            break
+        signal_killed = proc.returncode < 0
+        if signal_killed and attempt <= _SIGNAL_KILL_RETRY_LIMIT:
+            print(
+                f"[{learner}] fold(s) {folds} killed by signal {-proc.returncode} "
+                f"(attempt {attempt}/{_SIGNAL_KILL_RETRY_LIMIT + 1}); retrying -- "
+                "no hyperparameter or config change, same frozen invocation.",
+                flush=True,
+            )
+            continue
         raise RuntimeError(
-            f"{learner} runner failed (exit {proc.returncode}). stderr tail:\n"
+            f"{learner} runner failed on fold(s) {folds} (exit {proc.returncode}) after "
+            f"{attempt} attempt(s). stderr tail:\n"
             + "\n".join((proc.stderr or "").splitlines()[-40:])
         )
     # The runner's final line is a JSON summary: {"learner","folds","assembly","score_computed"}.
@@ -450,6 +474,37 @@ def _run_runner(
             break
     if summary is None:
         raise RuntimeError(f"{learner} runner produced no parseable summary JSON")
+    return summary
+
+
+def _run_all_folds(
+    learner: str,
+    artifact_root: Path,
+    output_root: Path,
+    extra_flags: list[str],
+) -> dict[str, Any]:
+    """Run each dev fold in its own subprocess rather than one process for
+    all five. A single long-lived process training TabM/RealMLP through five
+    sequential ~44min (TabM) / ~11min (RealMLP) fold runs risks accumulating
+    CUDA-context/allocator state across folds; per-fold process isolation
+    with --resume (each fold checkpoints to disk before the next starts, so a
+    crash mid-fold N only repeats fold N) is a standard, hyperparameter-free
+    mitigation for exactly this failure shape. `assemble_oof` (called at the
+    end of every runner invocation) reflects cumulative on-disk state across
+    all folds regardless of which fold(s) this particular call requested, so
+    the final fold's summary is the authoritative one to return.
+    """
+    all_fold_entries: list[Any] = []
+    summary: dict[str, Any] | None = None
+    for fold in DEV_FOLDS:
+        summary = _run_runner(learner, artifact_root, output_root, extra_flags, [fold])
+        all_fold_entries.extend(summary.get("folds") or [])
+    assert summary is not None
+    # `assembly` from the final call already reflects cumulative on-disk state
+    # across all folds; `folds` is per-invocation, so stitch the per-fold
+    # status entries back together for spec section 15's per-fold reporting.
+    summary = dict(summary)
+    summary["folds"] = all_fold_entries
     return summary
 
 
@@ -764,12 +819,12 @@ def train(
         output_root = artifact_root / "research" / "oof" / "gpu_tabular_2026"
 
         print("Running GPU-01 TabM full 5-fold OOF (RT-1258)", flush=True)
-        tabm_summary = _run_runner("tabm", artifact_root, output_root, extra_flags)
+        tabm_summary = _run_all_folds("tabm", artifact_root, output_root, extra_flags)
         if not tabm_summary.get("assembly", {}).get("all_folds_complete"):
             raise RuntimeError("TabM did not complete all 5 folds")
 
         print("Running GPU-02 RealMLP full 5-fold OOF (RT-1259)", flush=True)
-        realmlp_summary = _run_runner("realmlp", artifact_root, output_root, extra_flags)
+        realmlp_summary = _run_all_folds("realmlp", artifact_root, output_root, extra_flags)
         if not realmlp_summary.get("assembly", {}).get("all_folds_complete"):
             raise RuntimeError("RealMLP did not complete all 5 folds")
 
