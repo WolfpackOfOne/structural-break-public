@@ -1,0 +1,780 @@
+{
+  "best_by_dominant_net": "rt600_boundary_q30",
+  "candidate": "RT-1234",
+  "control": "RT-1235",
+  "coordinate": "within-t rank percentile for RT600, RT-1234, and RT-1235 on fold 0",
+  "date": "2026-08-28",
+  "fold": 0,
+  "fold0_rows": 806334,
+  "git_sha": "ac82624",
+  "input_checks": {
+    "RT-1234": {
+      "dtype": "float32",
+      "finite_dev_rows": 806334,
+      "finite_fold0_rows": 806334,
+      "finite_lockbox_rows": 0,
+      "shape": [
+        5036517
+      ]
+    },
+    "RT-1235": {
+      "dtype": "float32",
+      "finite_dev_rows": 806334,
+      "finite_fold0_rows": 806334,
+      "finite_lockbox_rows": 0,
+      "shape": [
+        5036517
+      ]
+    }
+  },
+  "limitation": "fold-0-only descriptive diagnostic; cannot promote any model.",
+  "program": "DEEP_ENSEMBLE_FRONTIER_2026_LOCAL_L3",
+  "rt600_fold0_ts_auc": 0.638276215299891,
+  "rules": {
+    "agreement_direction": {
+      "candidate_action_rows": 508120,
+      "candidate_fold0_ts_auc": 0.6355353786169042,
+      "control_action_rows": 499866,
+      "control_fold0_ts_auc": 0.6354865753799922,
+      "fold0_E2_minus_E1_descriptive": 4.88032369120317e-05,
+      "pair_flow_vs_rt600": {
+        "dominant_cell": {
+          "damage": 1651,
+          "damage_rate_of_rt600_right": 0.0501473134283024,
+          "net_pair_lift": -120,
+          "repair_rate_of_rt600_wrong": 0.1012700092604842,
+          "repairs": 1531,
+          "rt600_right_pairs": 32923,
+          "rt600_wrong_pairs": 15118,
+          "total_pairs_sampled": 48041
+        },
+        "mature_vs_never": {
+          "damage": 1633,
+          "damage_rate_of_rt600_right": 0.04992967651195499,
+          "net_pair_lift": -82,
+          "repair_rate_of_rt600_wrong": 0.10235596911502673,
+          "repairs": 1551,
+          "rt600_right_pairs": 32706,
+          "rt600_wrong_pairs": 15153,
+          "total_pairs_sampled": 47859
+        },
+        "mature_vs_prebreak": {
+          "damage": 1266,
+          "damage_rate_of_rt600_right": 0.05170512558709414,
+          "net_pair_lift": -89,
+          "repair_rate_of_rt600_wrong": 0.10582629023556914,
+          "repairs": 1177,
+          "rt600_right_pairs": 24485,
+          "rt600_wrong_pairs": 11122,
+          "total_pairs_sampled": 35607
+        },
+        "whole": {
+          "damage": 2186,
+          "damage_rate_of_rt600_right": 0.05588934625316391,
+          "net_pair_lift": -216,
+          "repair_rate_of_rt600_wrong": 0.09287195926833867,
+          "repairs": 1970,
+          "rt600_right_pairs": 39113,
+          "rt600_wrong_pairs": 21212,
+          "total_pairs_sampled": 60325
+        }
+      },
+      "q": null,
+      "retained_fraction_of_unconditional_dominant_repairs": 0.4513561320754717,
+      "rule": "agreement_direction",
+      "success": false
+    },
+    "confidence_q05": {
+      "candidate_action_rows": 80707,
+      "candidate_fold0_ts_auc": 0.6362002604334176,
+      "control_action_rows": 80707,
+      "control_fold0_ts_auc": 0.6325579561520943,
+      "fold0_E2_minus_E1_descriptive": 0.003642304281323283,
+      "pair_flow_vs_rt600": {
+        "dominant_cell": {
+          "damage": 405,
+          "damage_rate_of_rt600_right": 0.012301430610819184,
+          "net_pair_lift": -6,
+          "repair_rate_of_rt600_wrong": 0.026392379944437095,
+          "repairs": 399,
+          "rt600_right_pairs": 32923,
+          "rt600_wrong_pairs": 15118,
+          "total_pairs_sampled": 48041
+        },
+        "mature_vs_never": {
+          "damage": 433,
+          "damage_rate_of_rt600_right": 0.013239161010212193,
+          "net_pair_lift": -57,
+          "repair_rate_of_rt600_wrong": 0.02481356827030951,
+          "repairs": 376,
+          "rt600_right_pairs": 32706,
+          "rt600_wrong_pairs": 15153,
+          "total_pairs_sampled": 47859
+        },
+        "mature_vs_prebreak": {
+          "damage": 272,
+          "damage_rate_of_rt600_right": 0.011108842148254033,
+          "net_pair_lift": 36,
+          "repair_rate_of_rt600_wrong": 0.0276928609962237,
+          "repairs": 308,
+          "rt600_right_pairs": 24485,
+          "rt600_wrong_pairs": 11122,
+          "total_pairs_sampled": 35607
+        },
+        "whole": {
+          "damage": 616,
+          "damage_rate_of_rt600_right": 0.015749239383325238,
+          "net_pair_lift": -54,
+          "repair_rate_of_rt600_wrong": 0.026494437111069205,
+          "repairs": 562,
+          "rt600_right_pairs": 39113,
+          "rt600_wrong_pairs": 21212,
+          "total_pairs_sampled": 60325
+        }
+      },
+      "q": 0.05,
+      "retained_fraction_of_unconditional_dominant_repairs": 0.11762971698113207,
+      "rule": "confidence",
+      "success": false
+    },
+    "confidence_q10": {
+      "candidate_action_rows": 161373,
+      "candidate_fold0_ts_auc": 0.6361905181055686,
+      "control_action_rows": 161372,
+      "control_fold0_ts_auc": 0.628590329933184,
+      "fold0_E2_minus_E1_descriptive": 0.007600188172384614,
+      "pair_flow_vs_rt600": {
+        "dominant_cell": {
+          "damage": 834,
+          "damage_rate_of_rt600_right": 0.02533183488746469,
+          "net_pair_lift": 16,
+          "repair_rate_of_rt600_wrong": 0.05622436830268554,
+          "repairs": 850,
+          "rt600_right_pairs": 32923,
+          "rt600_wrong_pairs": 15118,
+          "total_pairs_sampled": 48041
+        },
+        "mature_vs_never": {
+          "damage": 884,
+          "damage_rate_of_rt600_right": 0.027028679752950528,
+          "net_pair_lift": -101,
+          "repair_rate_of_rt600_wrong": 0.05167293605226688,
+          "repairs": 783,
+          "rt600_right_pairs": 32706,
+          "rt600_wrong_pairs": 15153,
+          "total_pairs_sampled": 47859
+        },
+        "mature_vs_prebreak": {
+          "damage": 541,
+          "damage_rate_of_rt600_right": 0.02209516030222585,
+          "net_pair_lift": 79,
+          "repair_rate_of_rt600_wrong": 0.055745369537852904,
+          "repairs": 620,
+          "rt600_right_pairs": 24485,
+          "rt600_wrong_pairs": 11122,
+          "total_pairs_sampled": 35607
+        },
+        "whole": {
+          "damage": 1269,
+          "damage_rate_of_rt600_right": 0.032444455807532024,
+          "net_pair_lift": -73,
+          "repair_rate_of_rt600_wrong": 0.05638317933245333,
+          "repairs": 1196,
+          "rt600_right_pairs": 39113,
+          "rt600_wrong_pairs": 21212,
+          "total_pairs_sampled": 60325
+        }
+      },
+      "q": 0.1,
+      "retained_fraction_of_unconditional_dominant_repairs": 0.2505896226415094,
+      "rule": "confidence",
+      "success": false
+    },
+    "confidence_q20": {
+      "candidate_action_rows": 322725,
+      "candidate_fold0_ts_auc": 0.6345456548345784,
+      "control_action_rows": 322725,
+      "control_fold0_ts_auc": 0.6248686947445319,
+      "fold0_E2_minus_E1_descriptive": 0.009676960090046482,
+      "pair_flow_vs_rt600": {
+        "dominant_cell": {
+          "damage": 1606,
+          "damage_rate_of_rt600_right": 0.04878048780487805,
+          "net_pair_lift": -65,
+          "repair_rate_of_rt600_wrong": 0.10193147241698637,
+          "repairs": 1541,
+          "rt600_right_pairs": 32923,
+          "rt600_wrong_pairs": 15118,
+          "total_pairs_sampled": 48041
+        },
+        "mature_vs_never": {
+          "damage": 1629,
+          "damage_rate_of_rt600_right": 0.04980737479361585,
+          "net_pair_lift": -97,
+          "repair_rate_of_rt600_wrong": 0.10110209199498449,
+          "repairs": 1532,
+          "rt600_right_pairs": 32706,
+          "rt600_wrong_pairs": 15153,
+          "total_pairs_sampled": 47859
+        },
+        "mature_vs_prebreak": {
+          "damage": 1186,
+          "damage_rate_of_rt600_right": 0.048437819072901775,
+          "net_pair_lift": -66,
+          "repair_rate_of_rt600_wrong": 0.10070131271354073,
+          "repairs": 1120,
+          "rt600_right_pairs": 24485,
+          "rt600_wrong_pairs": 11122,
+          "total_pairs_sampled": 35607
+        },
+        "whole": {
+          "damage": 2330,
+          "damage_rate_of_rt600_right": 0.05957098662848669,
+          "net_pair_lift": -158,
+          "repair_rate_of_rt600_wrong": 0.1023948708278333,
+          "repairs": 2172,
+          "rt600_right_pairs": 39113,
+          "rt600_wrong_pairs": 21212,
+          "total_pairs_sampled": 60325
+        }
+      },
+      "q": 0.2,
+      "retained_fraction_of_unconditional_dominant_repairs": 0.4543042452830189,
+      "rule": "confidence",
+      "success": false
+    },
+    "confidence_q30": {
+      "candidate_action_rows": 483931,
+      "candidate_fold0_ts_auc": 0.633176544507768,
+      "control_action_rows": 483931,
+      "control_fold0_ts_auc": 0.6222964820384523,
+      "fold0_E2_minus_E1_descriptive": 0.01088006246931561,
+      "pair_flow_vs_rt600": {
+        "dominant_cell": {
+          "damage": 2434,
+          "damage_rate_of_rt600_right": 0.07393007927588616,
+          "net_pair_lift": -208,
+          "repair_rate_of_rt600_wrong": 0.1472416986373859,
+          "repairs": 2226,
+          "rt600_right_pairs": 32923,
+          "rt600_wrong_pairs": 15118,
+          "total_pairs_sampled": 48041
+        },
+        "mature_vs_never": {
+          "damage": 2427,
+          "damage_rate_of_rt600_right": 0.07420656760227481,
+          "net_pair_lift": -182,
+          "repair_rate_of_rt600_wrong": 0.14815548076288523,
+          "repairs": 2245,
+          "rt600_right_pairs": 32706,
+          "rt600_wrong_pairs": 15153,
+          "total_pairs_sampled": 47859
+        },
+        "mature_vs_prebreak": {
+          "damage": 1839,
+          "damage_rate_of_rt600_right": 0.07510720849499694,
+          "net_pair_lift": -234,
+          "repair_rate_of_rt600_wrong": 0.14430857759395793,
+          "repairs": 1605,
+          "rt600_right_pairs": 24485,
+          "rt600_wrong_pairs": 11122,
+          "total_pairs_sampled": 35607
+        },
+        "whole": {
+          "damage": 3356,
+          "damage_rate_of_rt600_right": 0.08580267430266152,
+          "net_pair_lift": -244,
+          "repair_rate_of_rt600_wrong": 0.14670940976805583,
+          "repairs": 3112,
+          "rt600_right_pairs": 39113,
+          "rt600_wrong_pairs": 21212,
+          "total_pairs_sampled": 60325
+        }
+      },
+      "q": 0.3,
+      "retained_fraction_of_unconditional_dominant_repairs": 0.65625,
+      "rule": "confidence",
+      "success": false
+    },
+    "dominant_cell_only": {
+      "candidate_action_rows": 477025,
+      "candidate_fold0_ts_auc": 0.6329384345407679,
+      "control_action_rows": 477025,
+      "control_fold0_ts_auc": 0.6233402081412622,
+      "fold0_E2_minus_E1_descriptive": 0.009598226399505694,
+      "pair_flow_vs_rt600": {
+        "dominant_cell": {
+          "damage": 3819,
+          "damage_rate_of_rt600_right": 0.11599793457461349,
+          "net_pair_lift": -427,
+          "repair_rate_of_rt600_wrong": 0.22436830268554042,
+          "repairs": 3392,
+          "rt600_right_pairs": 32923,
+          "rt600_wrong_pairs": 15118,
+          "total_pairs_sampled": 48041
+        },
+        "mature_vs_never": {
+          "damage": 3807,
+          "damage_rate_of_rt600_right": 0.11640066042927903,
+          "net_pair_lift": -411,
+          "repair_rate_of_rt600_wrong": 0.2241140368243912,
+          "repairs": 3396,
+          "rt600_right_pairs": 32706,
+          "rt600_wrong_pairs": 15153,
+          "total_pairs_sampled": 47859
+        },
+        "mature_vs_prebreak": {
+          "damage": 2864,
+          "damage_rate_of_rt600_right": 0.11696957320808658,
+          "net_pair_lift": -388,
+          "repair_rate_of_rt600_wrong": 0.22262183060600613,
+          "repairs": 2476,
+          "rt600_right_pairs": 24485,
+          "rt600_wrong_pairs": 11122,
+          "total_pairs_sampled": 35607
+        },
+        "whole": {
+          "damage": 3702,
+          "damage_rate_of_rt600_right": 0.09464883798225654,
+          "net_pair_lift": -397,
+          "repair_rate_of_rt600_wrong": 0.15580803318876107,
+          "repairs": 3305,
+          "rt600_right_pairs": 39113,
+          "rt600_wrong_pairs": 21212,
+          "total_pairs_sampled": 60325
+        }
+      },
+      "q": null,
+      "retained_fraction_of_unconditional_dominant_repairs": 1.0,
+      "rule": "dominant_cell_only",
+      "success": false
+    },
+    "dominant_confidence_q10": {
+      "candidate_action_rows": 95741,
+      "candidate_fold0_ts_auc": 0.6382877089751307,
+      "control_action_rows": 95462,
+      "control_fold0_ts_auc": 0.6329752897780125,
+      "fold0_E2_minus_E1_descriptive": 0.005312419197118112,
+      "pair_flow_vs_rt600": {
+        "dominant_cell": {
+          "damage": 834,
+          "damage_rate_of_rt600_right": 0.02533183488746469,
+          "net_pair_lift": 16,
+          "repair_rate_of_rt600_wrong": 0.05622436830268554,
+          "repairs": 850,
+          "rt600_right_pairs": 32923,
+          "rt600_wrong_pairs": 15118,
+          "total_pairs_sampled": 48041
+        },
+        "mature_vs_never": {
+          "damage": 884,
+          "damage_rate_of_rt600_right": 0.027028679752950528,
+          "net_pair_lift": -101,
+          "repair_rate_of_rt600_wrong": 0.05167293605226688,
+          "repairs": 783,
+          "rt600_right_pairs": 32706,
+          "rt600_wrong_pairs": 15153,
+          "total_pairs_sampled": 47859
+        },
+        "mature_vs_prebreak": {
+          "damage": 541,
+          "damage_rate_of_rt600_right": 0.02209516030222585,
+          "net_pair_lift": 79,
+          "repair_rate_of_rt600_wrong": 0.055745369537852904,
+          "repairs": 620,
+          "rt600_right_pairs": 24485,
+          "rt600_wrong_pairs": 11122,
+          "total_pairs_sampled": 35607
+        },
+        "whole": {
+          "damage": 824,
+          "damage_rate_of_rt600_right": 0.02106716436990259,
+          "net_pair_lift": 50,
+          "repair_rate_of_rt600_wrong": 0.04120309258910051,
+          "repairs": 874,
+          "rt600_right_pairs": 39113,
+          "rt600_wrong_pairs": 21212,
+          "total_pairs_sampled": 60325
+        }
+      },
+      "q": 0.1,
+      "retained_fraction_of_unconditional_dominant_repairs": 0.2505896226415094,
+      "rule": "dominant_confidence",
+      "success": false
+    },
+    "dominant_confidence_q20": {
+      "candidate_action_rows": 190944,
+      "candidate_fold0_ts_auc": 0.6378689720729559,
+      "control_action_rows": 190721,
+      "control_fold0_ts_auc": 0.6307289888984947,
+      "fold0_E2_minus_E1_descriptive": 0.007139983174461184,
+      "pair_flow_vs_rt600": {
+        "dominant_cell": {
+          "damage": 1606,
+          "damage_rate_of_rt600_right": 0.04878048780487805,
+          "net_pair_lift": -65,
+          "repair_rate_of_rt600_wrong": 0.10193147241698637,
+          "repairs": 1541,
+          "rt600_right_pairs": 32923,
+          "rt600_wrong_pairs": 15118,
+          "total_pairs_sampled": 48041
+        },
+        "mature_vs_never": {
+          "damage": 1629,
+          "damage_rate_of_rt600_right": 0.04980737479361585,
+          "net_pair_lift": -97,
+          "repair_rate_of_rt600_wrong": 0.10110209199498449,
+          "repairs": 1532,
+          "rt600_right_pairs": 32706,
+          "rt600_wrong_pairs": 15153,
+          "total_pairs_sampled": 47859
+        },
+        "mature_vs_prebreak": {
+          "damage": 1186,
+          "damage_rate_of_rt600_right": 0.048437819072901775,
+          "net_pair_lift": -66,
+          "repair_rate_of_rt600_wrong": 0.10070131271354073,
+          "repairs": 1120,
+          "rt600_right_pairs": 24485,
+          "rt600_wrong_pairs": 11122,
+          "total_pairs_sampled": 35607
+        },
+        "whole": {
+          "damage": 1512,
+          "damage_rate_of_rt600_right": 0.03865722394088922,
+          "net_pair_lift": 47,
+          "repair_rate_of_rt600_wrong": 0.07349613426362436,
+          "repairs": 1559,
+          "rt600_right_pairs": 39113,
+          "rt600_wrong_pairs": 21212,
+          "total_pairs_sampled": 60325
+        }
+      },
+      "q": 0.2,
+      "retained_fraction_of_unconditional_dominant_repairs": 0.4543042452830189,
+      "rule": "dominant_confidence",
+      "success": false
+    },
+    "rt600_boundary_q10": {
+      "candidate_action_rows": 80641,
+      "candidate_fold0_ts_auc": 0.6379216187479702,
+      "control_action_rows": 80641,
+      "control_fold0_ts_auc": 0.6375487063265804,
+      "fold0_E2_minus_E1_descriptive": 0.00037291242138970393,
+      "pair_flow_vs_rt600": {
+        "dominant_cell": {
+          "damage": 372,
+          "damage_rate_of_rt600_right": 0.01129909182030799,
+          "net_pair_lift": 44,
+          "repair_rate_of_rt600_wrong": 0.027516867310490807,
+          "repairs": 416,
+          "rt600_right_pairs": 32923,
+          "rt600_wrong_pairs": 15118,
+          "total_pairs_sampled": 48041
+        },
+        "mature_vs_never": {
+          "damage": 360,
+          "damage_rate_of_rt600_right": 0.01100715465052284,
+          "net_pair_lift": 27,
+          "repair_rate_of_rt600_wrong": 0.02553949712928133,
+          "repairs": 387,
+          "rt600_right_pairs": 32706,
+          "rt600_wrong_pairs": 15153,
+          "total_pairs_sampled": 47859
+        },
+        "mature_vs_prebreak": {
+          "damage": 324,
+          "damage_rate_of_rt600_right": 0.01323259138247907,
+          "net_pair_lift": -81,
+          "repair_rate_of_rt600_wrong": 0.021848588383384285,
+          "repairs": 243,
+          "rt600_right_pairs": 24485,
+          "rt600_wrong_pairs": 11122,
+          "total_pairs_sampled": 35607
+        },
+        "whole": {
+          "damage": 589,
+          "damage_rate_of_rt600_right": 0.015058931812952215,
+          "net_pair_lift": -65,
+          "repair_rate_of_rt600_wrong": 0.024702998302847445,
+          "repairs": 524,
+          "rt600_right_pairs": 39113,
+          "rt600_wrong_pairs": 21212,
+          "total_pairs_sampled": 60325
+        }
+      },
+      "q": 0.1,
+      "retained_fraction_of_unconditional_dominant_repairs": 0.12264150943396226,
+      "rule": "rt600_boundary",
+      "success": false
+    },
+    "rt600_boundary_q20": {
+      "candidate_action_rows": 161464,
+      "candidate_fold0_ts_auc": 0.6381296150660077,
+      "control_action_rows": 161464,
+      "control_fold0_ts_auc": 0.6372173169595395,
+      "fold0_E2_minus_E1_descriptive": 0.0009122981064682012,
+      "pair_flow_vs_rt600": {
+        "dominant_cell": {
+          "damage": 617,
+          "damage_rate_of_rt600_right": 0.01874069799228503,
+          "net_pair_lift": 128,
+          "repair_rate_of_rt600_wrong": 0.04927900515941262,
+          "repairs": 745,
+          "rt600_right_pairs": 32923,
+          "rt600_wrong_pairs": 15118,
+          "total_pairs_sampled": 48041
+        },
+        "mature_vs_never": {
+          "damage": 602,
+          "damage_rate_of_rt600_right": 0.01840640861004097,
+          "net_pair_lift": 95,
+          "repair_rate_of_rt600_wrong": 0.04599749224575991,
+          "repairs": 697,
+          "rt600_right_pairs": 32706,
+          "rt600_wrong_pairs": 15153,
+          "total_pairs_sampled": 47859
+        },
+        "mature_vs_prebreak": {
+          "damage": 509,
+          "damage_rate_of_rt600_right": 0.020788237696548906,
+          "net_pair_lift": -48,
+          "repair_rate_of_rt600_wrong": 0.04144937960798418,
+          "repairs": 461,
+          "rt600_right_pairs": 24485,
+          "rt600_wrong_pairs": 11122,
+          "total_pairs_sampled": 35607
+        },
+        "whole": {
+          "damage": 926,
+          "damage_rate_of_rt600_right": 0.02367499296908956,
+          "net_pair_lift": -6,
+          "repair_rate_of_rt600_wrong": 0.043371676409579486,
+          "repairs": 920,
+          "rt600_right_pairs": 39113,
+          "rt600_wrong_pairs": 21212,
+          "total_pairs_sampled": 60325
+        }
+      },
+      "q": 0.2,
+      "retained_fraction_of_unconditional_dominant_repairs": 0.21963443396226415,
+      "rule": "rt600_boundary",
+      "success": false
+    },
+    "rt600_boundary_q30": {
+      "candidate_action_rows": 241846,
+      "candidate_fold0_ts_auc": 0.6384700542825361,
+      "control_action_rows": 241846,
+      "control_fold0_ts_auc": 0.6371419577270465,
+      "fold0_E2_minus_E1_descriptive": 0.0013280965554895996,
+      "pair_flow_vs_rt600": {
+        "dominant_cell": {
+          "damage": 879,
+          "damage_rate_of_rt600_right": 0.026698660510889045,
+          "net_pair_lift": 170,
+          "repair_rate_of_rt600_wrong": 0.06938748511707898,
+          "repairs": 1049,
+          "rt600_right_pairs": 32923,
+          "rt600_wrong_pairs": 15118,
+          "total_pairs_sampled": 48041
+        },
+        "mature_vs_never": {
+          "damage": 837,
+          "damage_rate_of_rt600_right": 0.025591634562465604,
+          "net_pair_lift": 163,
+          "repair_rate_of_rt600_wrong": 0.0659935326338019,
+          "repairs": 1000,
+          "rt600_right_pairs": 32706,
+          "rt600_wrong_pairs": 15153,
+          "total_pairs_sampled": 47859
+        },
+        "mature_vs_prebreak": {
+          "damage": 684,
+          "damage_rate_of_rt600_right": 0.0279354706963447,
+          "net_pair_lift": 24,
+          "repair_rate_of_rt600_wrong": 0.06365761553677396,
+          "repairs": 708,
+          "rt600_right_pairs": 24485,
+          "rt600_wrong_pairs": 11122,
+          "total_pairs_sampled": 35607
+        },
+        "whole": {
+          "damage": 1299,
+          "damage_rate_of_rt600_right": 0.0332114642190576,
+          "net_pair_lift": 44,
+          "repair_rate_of_rt600_wrong": 0.06331321893267962,
+          "repairs": 1343,
+          "rt600_right_pairs": 39113,
+          "rt600_wrong_pairs": 21212,
+          "total_pairs_sampled": 60325
+        }
+      },
+      "q": 0.3,
+      "retained_fraction_of_unconditional_dominant_repairs": 0.3092570754716981,
+      "rule": "rt600_boundary",
+      "success": false
+    },
+    "three_way_abstain_q10": {
+      "candidate_action_rows": 423871,
+      "candidate_fold0_ts_auc": 0.6259259699742262,
+      "control_action_rows": 422777,
+      "control_fold0_ts_auc": 0.6143759072107721,
+      "fold0_E2_minus_E1_descriptive": 0.01155006276345416,
+      "pair_flow_vs_rt600": {
+        "dominant_cell": {
+          "damage": 5187,
+          "damage_rate_of_rt600_right": 0.15754943352671386,
+          "net_pair_lift": -2923,
+          "repair_rate_of_rt600_wrong": 0.14975525863209418,
+          "repairs": 2264,
+          "rt600_right_pairs": 32923,
+          "rt600_wrong_pairs": 15118,
+          "total_pairs_sampled": 48041
+        },
+        "mature_vs_never": {
+          "damage": 5178,
+          "damage_rate_of_rt600_right": 0.15831957439002017,
+          "net_pair_lift": -2948,
+          "repair_rate_of_rt600_wrong": 0.14716557777337821,
+          "repairs": 2230,
+          "rt600_right_pairs": 32706,
+          "rt600_wrong_pairs": 15153,
+          "total_pairs_sampled": 47859
+        },
+        "mature_vs_prebreak": {
+          "damage": 3683,
+          "damage_rate_of_rt600_right": 0.1504186236471309,
+          "net_pair_lift": -1976,
+          "repair_rate_of_rt600_wrong": 0.15347959000179823,
+          "repairs": 1707,
+          "rt600_right_pairs": 24485,
+          "rt600_wrong_pairs": 11122,
+          "total_pairs_sampled": 35607
+        },
+        "whole": {
+          "damage": 6766,
+          "damage_rate_of_rt600_right": 0.1729859637460691,
+          "net_pair_lift": -3520,
+          "repair_rate_of_rt600_wrong": 0.15302658872336414,
+          "repairs": 3246,
+          "rt600_right_pairs": 39113,
+          "rt600_wrong_pairs": 21212,
+          "total_pairs_sampled": 60325
+        }
+      },
+      "q": 0.1,
+      "retained_fraction_of_unconditional_dominant_repairs": 0.6674528301886793,
+      "rule": "three_way_abstain",
+      "success": false
+    },
+    "three_way_abstain_q20": {
+      "candidate_action_rows": 536696,
+      "candidate_fold0_ts_auc": 0.6263418929960746,
+      "control_action_rows": 532737,
+      "control_fold0_ts_auc": 0.6154535757450199,
+      "fold0_E2_minus_E1_descriptive": 0.010888317251054658,
+      "pair_flow_vs_rt600": {
+        "dominant_cell": {
+          "damage": 5048,
+          "damage_rate_of_rt600_right": 0.15332746104546974,
+          "net_pair_lift": -2246,
+          "repair_rate_of_rt600_wrong": 0.18534197645191164,
+          "repairs": 2802,
+          "rt600_right_pairs": 32923,
+          "rt600_wrong_pairs": 15118,
+          "total_pairs_sampled": 48041
+        },
+        "mature_vs_never": {
+          "damage": 5008,
+          "damage_rate_of_rt600_right": 0.15312175136060663,
+          "net_pair_lift": -2186,
+          "repair_rate_of_rt600_wrong": 0.1862337490925889,
+          "repairs": 2822,
+          "rt600_right_pairs": 32706,
+          "rt600_wrong_pairs": 15153,
+          "total_pairs_sampled": 47859
+        },
+        "mature_vs_prebreak": {
+          "damage": 3577,
+          "damage_rate_of_rt600_right": 0.146089442515826,
+          "net_pair_lift": -1513,
+          "repair_rate_of_rt600_wrong": 0.18557813342923934,
+          "repairs": 2064,
+          "rt600_right_pairs": 24485,
+          "rt600_wrong_pairs": 11122,
+          "total_pairs_sampled": 35607
+        },
+        "whole": {
+          "damage": 6610,
+          "damage_rate_of_rt600_right": 0.16899752000613608,
+          "net_pair_lift": -2639,
+          "repair_rate_of_rt600_wrong": 0.18720535545917405,
+          "repairs": 3971,
+          "rt600_right_pairs": 39113,
+          "rt600_wrong_pairs": 21212,
+          "total_pairs_sampled": 60325
+        }
+      },
+      "q": 0.2,
+      "retained_fraction_of_unconditional_dominant_repairs": 0.8260613207547169,
+      "rule": "three_way_abstain",
+      "success": false
+    },
+    "unconditional_equal": {
+      "candidate_action_rows": 806334,
+      "candidate_fold0_ts_auc": 0.6306802589397161,
+      "control_action_rows": 806334,
+      "control_fold0_ts_auc": 0.619759673662574,
+      "fold0_E2_minus_E1_descriptive": 0.010920585277142125,
+      "pair_flow_vs_rt600": {
+        "dominant_cell": {
+          "damage": 3819,
+          "damage_rate_of_rt600_right": 0.11599793457461349,
+          "net_pair_lift": -427,
+          "repair_rate_of_rt600_wrong": 0.22436830268554042,
+          "repairs": 3392,
+          "rt600_right_pairs": 32923,
+          "rt600_wrong_pairs": 15118,
+          "total_pairs_sampled": 48041
+        },
+        "mature_vs_never": {
+          "damage": 3807,
+          "damage_rate_of_rt600_right": 0.11640066042927903,
+          "net_pair_lift": -411,
+          "repair_rate_of_rt600_wrong": 0.2241140368243912,
+          "repairs": 3396,
+          "rt600_right_pairs": 32706,
+          "rt600_wrong_pairs": 15153,
+          "total_pairs_sampled": 47859
+        },
+        "mature_vs_prebreak": {
+          "damage": 2864,
+          "damage_rate_of_rt600_right": 0.11696957320808658,
+          "net_pair_lift": -388,
+          "repair_rate_of_rt600_wrong": 0.22262183060600613,
+          "repairs": 2476,
+          "rt600_right_pairs": 24485,
+          "rt600_wrong_pairs": 11122,
+          "total_pairs_sampled": 35607
+        },
+        "whole": {
+          "damage": 5151,
+          "damage_rate_of_rt600_right": 0.13169534425894203,
+          "net_pair_lift": -489,
+          "repair_rate_of_rt600_wrong": 0.21978125589289083,
+          "repairs": 4662,
+          "rt600_right_pairs": 39113,
+          "rt600_wrong_pairs": 21212,
+          "total_pairs_sampled": 60325
+        }
+      },
+      "q": null,
+      "retained_fraction_of_unconditional_dominant_repairs": 1.0,
+      "rule": "unconditional_equal",
+      "success": false
+    }
+  },
+  "success_criterion": "retain >=50% of unconditional dominant-cell repairs and keep mature-vs-prebreak damage_rate_of_rt600_right < 0.05",
+  "successful_rules": [],
+  "verdict": "FAIL_NO_RETENTION_MECHANISM"
+}
