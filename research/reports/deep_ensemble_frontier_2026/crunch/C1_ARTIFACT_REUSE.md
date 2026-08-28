@@ -513,7 +513,34 @@ both found by auditing rather than by the run failing, and both recorded in `b3a
 
 ---
 
-## 11. Status
+## 11. Outcome — the run completed, both learners KILL
+
+Task `run-d0890cc5` finished in **14,255.80 s (3.96 h)**, under the 4.545 h projection.
+Every fold completed on attempt 1; no signal-death retry was needed. Determinism check
+passed. Frozen config hash gate passed unweakened.
+
+| | `RT-1258` TabM | `RT-1259` RealMLP |
+|---|---|---|
+| `marginal_vs_clone` | **+0.0000409470** | **−0.0032237435** |
+| folds positive | 3 / 5 | 0 / 5 |
+| standalone | 0.6006475014 | 0.5599057458 |
+| verdict | **KILL** | **KILL** |
+
+**The binding test computed in-session, on the first attempt.** That was the whole point of
+this report: the previous run stopped at `PENDING_LOCAL_BINDING_EVALUATION` because the
+controls were absent, and the fix in §4 plus the alignment fix in `b3a16bc` closed both
+gaps. Full detail in `H4_GPU_TABULAR_RESULT.md`.
+
+**Independent confirmation that the controls were correctly aligned:** `E0` — the original
+seven-specialist RT-600 assembled *entirely* from the eight shipped control arrays, with no
+neural input — came out at **0.6258113**, within 0.001 of RT-600's known external score of
+0.6268. Misaligned controls would have collapsed `E0` toward 0.5. The run also confirmed
+the row-space diagnosis directly: the cloud store materialized `(4032524, ...)` blocks
+against control arrays of length 5,036,517, exactly the mismatch the shim projects away.
+
+---
+
+## 12. Status
 
 - **C1.1: complete.** Branch A closed, Branch B authorized at 4.545 GPU-hours.
 - **H1: received and independently verified. PASS.** C1 is unblocked.

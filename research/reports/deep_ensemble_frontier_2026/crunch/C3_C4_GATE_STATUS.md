@@ -20,7 +20,10 @@ evaluated.
 
 ### Condition 2 — a non-LightGBM, non-CatBoost family has a measured single-slot `marginal_vs_clone` ≥ +0.0010
 
-**Fails now, and no in-flight work would satisfy it except C1.**
+**FAILS — and this is now a measurement, not an absence.** C1 has reported: TabM
+`+0.0000409`, RealMLP `−0.0032237`, both KILL, both far below `+0.0010`
+(`H4_GPU_TABULAR_RESULT.md`). These are the first actual measurements of condition 2 for
+any non-LightGBM, non-CatBoost family, and both fail.
 
 Searched `research/RESULTS.csv`, all ledgers, and all reports. Exactly one XGBoost result
 exists in the entire repository:
@@ -37,7 +40,7 @@ evaluated as an ensemble slot replacement in this repository**, so there is no s
 marginal for it, let alone one ≥ +0.0010. It also ran on a different feature bank from the
 500-column matched contract, so it is not comparable even as a prior.
 
-The only live route to condition 2 is **C1** (TabM / RealMLP), which has not run.
+The only live route to condition 2 was **C1**, and it has now run and failed.
 
 ### The open question I was assigned: is `research/xgb-gpu-2026` live or a stub?
 
@@ -106,25 +109,31 @@ Trigger table, current state:
 | Trigger | State |
 |---|---|
 | **H3 succeeds** — the main path | **FAILED.** `FAIL_NO_RETENTION_MECHANISM`, 0/14 rules. **Main path closed.** |
-| **C1 returns TabM ≥ +0.0010** | **Pending** — submitted, result not yet in. Explicitly *"not sufficient alone"* regardless. |
+| **C1 returns TabM ≥ +0.0010** | **FAILED.** TabM returned **+0.0000409**, ~24× short. RealMLP **−0.0032237**. Both KILL. |
 | **CSA-04 KILL across all four slots and `k* = 2`** — opens C4 by elimination | **Not returned.** CSA-04 is mid-training (`CSA04_TRAIN_LOG.json`, CAT-411 arm). |
-| **C1 KILL and H3 fails** → **C4 should not be funded** | **Half-satisfied. H3 has now failed.** If C1 also returns KILL, this condition is met in full and the brief's instruction is explicit: **do not fund C4; redirect to deployment robustness.** |
+| **C1 KILL and H3 fails** → **C4 should not be funded** | **SATISFIED IN FULL.** H3 failed; C1 returned KILL on both learners. The brief's instruction for this state: **do not fund C4; redirect to deployment robustness.** |
 
 **C4 does not open.** Nothing neural started, no prereg written, `RT-1290`–`RT-1319`
 untouched.
 
-**What this means for the decision that is now pending.** Before H3 returned, C4's fate
-hung on two independent results. It now hangs on one: **C1.** If C1 returns KILL for both
-TabM and RealMLP, then two independent lines — a tabular-neural family test and a
-retention probe — both say that new architectures over this information do not retain, and
-the brief's own rule says C4 should not be funded at all. If C1 clears +0.0010, that
-*raises the prior* but is explicitly insufficient on its own, and C4 would still be opening
-without any demonstrated retention mechanism, which is the thing H3 was supposed to supply.
+**RESOLVED 2026-08-28: C4 should not be funded.** Both independent lines have now
+reported and both are negative — a tabular-neural family test at the binding endpoint
+(`H4_GPU_TABULAR_RESULT.md`) and a fourteen-rule retention probe. This is the exact state
+the brief names, and its instruction is explicit: **redirect to deployment robustness.**
 
-Worth stating plainly for whoever reads this next: **the only remaining route to C4 is
-opening it by elimination** — CSA-04 returning KILL across all four slots with `k* = 2`.
-Per the brief, if C4 is opened that way, that must be **said explicitly**: it would be
-opened *by elimination, not by evidence.*
+**The sharpest single finding is TabM's.** `LANE_CRUNCH` §C4.1(1) records the prior neural
+program reaching **0.59276**, *"still below the `0.600` necessary condition"* — which left
+open the reading that clearing 0.600 was the blocker. **TabM cleared it at 0.60065 and
+returned `marginal_vs_clone = +0.00004`**, 1/59th of `RT-1257`. It also had ρ 0.585 against
+the clone, genuinely more decorrelated than the standalone/ρ regression predicts. It was
+both good enough and different enough, and it still contributed nothing. "Raise standalone
+past 0.600" is therefore closed as a live hypothesis, not merely unproven.
+
+The remaining theoretical route — CSA-04 returning KILL on all four slots with `k* = 2`,
+opening C4 *by elimination* — is now **outweighed by an explicit instruction not to fund
+it**. If anyone reopens C4 on that basis, they are overriding a satisfied stop condition,
+and the brief requires that be **said explicitly**: opened by elimination, against
+evidence, not by it.
 
 I have started nothing neural, allocated nothing from `RT-1290`–`RT-1319`, and written no
 neural preregistration — consistent with §8's *"do not start a neural model until H3 opens
@@ -145,10 +154,10 @@ because it is the cheaper thing to be wrong about.
 - **C3: declined.** Condition 2 fails outright (no non-LGBM/non-CatBoost single-slot
   marginal exists anywhere); condition 1 undetermined pending H2. `research/xgb-gpu-2026`
   does not exist.
-- **C4: declined, and its main path is now falsified rather than pending.** H3 returned
-  `FAIL_NO_RETENTION_MECHANISM` (0 of 14 rules clear ≥50% retention at <0.05 damage).
-  C4's fate now rests entirely on C1: a KILL there satisfies the brief's
-  "should not be funded" condition in full.
+- **C4: DO NOT FUND.** Decided, not pending. H3 returned `FAIL_NO_RETENTION_MECHANISM`
+  (0 of 14 rules) and C1 returned KILL on both learners (TabM +0.0000409, RealMLP
+  −0.0032237). The brief's "C1 both KILL and H3 fails" stop condition is satisfied in
+  full: redirect to deployment robustness.
 - Both remain re-openable — this records the gate state on 2026-08-28, not a permanent
   verdict.
 - **`RT-1270`–`RT-1289` and `RT-1290`–`RT-1319`: unallocated.**
