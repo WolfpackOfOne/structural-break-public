@@ -1555,3 +1555,28 @@ surface look like without training another model?
 All conclusions are descriptive and cannot authorize promotion, routing,
 thresholding, feature engineering, or deployment without a separate
 preregistered experiment.
+
+## RAW_DATA_ATLAS_2026 -- Dev-Only Raw Trace Atlas  (PRE-REGISTERED 2026-08-28)
+
+Program preregistration: `research/reports/raw_data_atlas_2026/PREREG.md`.
+
+**Scientific question.** What do the actual stored development time-series
+values look like in representative raw regimes and in already-measured
+RT600/RT-1264 repair/damage regions?
+
+| Item | Degrees of freedom | Frozen before inspection |
+|---|---:|---|
+| model training | 0 | none; no learner is fit, no feature module is created, no OOF is written |
+| RT IDs / RESULTS rows | 0 | none consumed; no `RESULTS.csv` row is written |
+| folds/data | 0 | canonical dev folds `0..4` only; no lockbox/test summaries |
+| raw normalization | 0 | per-series historical mean/std; last 300 history rows plus full online segment |
+| tau usage | 0 | offline plot annotation and post-hoc phase labels only; never an online feature |
+| score context | 0 | existing fold-pure RT600 and `RT-1264` OOF blends only |
+| raw archetype examples | 8 fixed rules | preregistered deterministic selection rules, ties by ascending `series_id` |
+| model-anchored examples | 8 fixed rules | preregistered deterministic selection rules over existing score deltas |
+| shape-family taxonomy | 0 | fixed pre/post-100 metrics and fixed thresholds |
+| figures | 0 | five fixed PNG panels |
+
+All conclusions are descriptive and cannot authorize promotion, routing,
+thresholding, feature engineering, or deployment without a separate
+preregistered experiment.
