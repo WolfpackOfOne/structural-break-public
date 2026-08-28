@@ -475,7 +475,45 @@ It does not. Confirmed in `push.py`. The optimistic assumption would have been w
 
 ---
 
-## 10. Status
+## 10. Submission record
+
+**Crunch submission `#14`** (project `8776/treaming-detector-v1`, competition
+`structural-break-real-time`), pushed 2026-08-28.
+
+```
+total code size : 202.41 MB
+total model size: 0 bytes          <- resources/ correctly empty, per SS5
+research/oof/RT-*.npy : 8 of 8 uploaded at 20.15 MB each
+submissions/H_gpu_tabular_full_oof.py : 43.9 KB
+```
+
+https://hub.crunchdao.com/competitions/structural-break-real-time/projects/8776/treaming-detector-v1/submissions/14
+
+**The §6 size question is resolved: 202.41 MB was accepted.** The server cap, whatever it
+is, is above that. No shrink of the code side was needed.
+
+Two prior push attempts created **no** submission and cost no GPU time: the first was
+killed by a client-side 10-minute timeout after uploading but before
+`submissions.create()`; the second was killed deliberately when the control-alignment bug
+was found (see `SUBMISSION_AUDIT` in the commit log, `b3a16bc`).
+
+**Before this submission could produce a correct number, two defects had to be fixed** —
+both found by auditing rather than by the run failing, and both recorded in `b3a16bc`:
+
+1. **Silent control misalignment.** Controls are indexed over the full 10,000-series row
+   space (5,036,517 rows); a cloud run's store is dev-only and compacted (4,032,524). Every
+   cloud index is *valid* in the longer array, so this raised nothing and would have
+   produced a plausible, wrong `marginal_vs_clone`. `ensure_complete_oof` shape-checks the
+   candidate; `load_control_oof` shape-checked the controls against nothing. **This path had
+   never executed in the cloud** — shipping the controls is what would have armed it.
+2. **An evaluation failure would have destroyed the training.** The binding test runs after
+   both learners finish, and crunch's `Runner.start()` calls `finalize()` — which uploads
+   `model_directory_path` — only on the success path, with no `try/finally`. Any exception
+   there would have discarded ~4.5 GPU-hours of completed checkpoints.
+
+---
+
+## 11. Status
 
 - **C1.1: complete.** Branch A closed, Branch B authorized at 4.545 GPU-hours.
 - **H1: received and independently verified. PASS.** C1 is unblocked.
