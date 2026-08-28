@@ -1531,3 +1531,27 @@ dominant-cell repairs while reducing mature-vs-prebreak damage rate below `0.05`
 No RT ID is consumed because this is a descriptive diagnostic over frozen OOF
 vectors. A negative result is still filed as H3 because it gates the CRUNCH neural
 lane.
+
+## DATA_FORENSICS_2026 -- Dev-Only Data / OOF Anatomy  (PRE-REGISTERED 2026-08-28)
+
+Program preregistration: `research/reports/data_forensics_2026/PREREG.md`.
+
+**Scientific question.** What does the development data and existing OOF result
+surface look like without training another model?
+
+| Item | Degrees of freedom | Frozen before score |
+|---|---:|---|
+| model training | 0 | none; no learner is fit, no feature module is created, no OOF is written |
+| RT IDs | 0 | none consumed; no `RESULTS.csv` row is written |
+| folds/data | 0 | canonical dev folds `0..4` only; no lockbox/test summaries |
+| calibrated prediction vectors | 0 | RT600 streams and `RT-1264` streams fixed from existing OOF artifacts |
+| calibration | 0 | fold-pure `SCDF_NSEEN`, fit on other dev folds only |
+| slice families | 0 | fold, fixed `t` bins, fixed relative-position bins, dev-only length tertiles, and preregistered composite cells |
+| high-score thresholds | 0 | within-`t` top 1%, 5%, and 10% only |
+| raw-process summaries | 0 | per-series historical mean/std standardization only |
+| pair-flow diagnostic sample | 0 | 128 same-`t` pairs per time point, seed `20260828` |
+| feature-bank audit sample | 0 | frozen 500-column bank, deterministic `dev_rows[::50]` |
+
+All conclusions are descriptive and cannot authorize promotion, routing,
+thresholding, feature engineering, or deployment without a separate
+preregistered experiment.
