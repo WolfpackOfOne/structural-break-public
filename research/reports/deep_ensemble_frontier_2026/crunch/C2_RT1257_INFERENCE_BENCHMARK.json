@@ -1,0 +1,397 @@
+{
+  "task": "C2",
+  "kind": "engineering_inference_benchmark",
+  "note": "Paired design: one shared series sample, arm order alternated across repeats. Supersedes the confounded per-arm sampling in engineering/reports/rt1257_deployment/RT1257_BENCHMARK.json.",
+  "allocates_rt_id": false,
+  "appends_results_csv": false,
+  "touched_test_or_lockbox": false,
+  "host": {
+    "platform": "darwin",
+    "python": "3.11.6",
+    "note": "LOCAL machine, NOT the Crunch platform runtime."
+  },
+  "sample": {
+    "n_series": 40,
+    "total_online_points": 17716,
+    "seed": 20260828,
+    "shared_across_arms": true,
+    "mean_online_horizon": 503.6517
+  },
+  "repeats": [
+    {
+      "repeat": 0,
+      "order": [
+        "rt600",
+        "rt1257"
+      ],
+      "rt600": {
+        "fixed_ms_per_series": 176.84442095342092,
+        "fixed_cpu_ms_per_series": 176.0518499999997,
+        "ms_per_online_point": 2.0772582599752325,
+        "cpu_ms_per_online_point": 2.067711334386995,
+        "n_points": 17716,
+        "score_sum_guard": 7424.444385139303
+      },
+      "rt1257": {
+        "fixed_ms_per_series": 174.0227468952071,
+        "fixed_cpu_ms_per_series": 173.65454999999983,
+        "ms_per_online_point": 2.347389810099747,
+        "cpu_ms_per_online_point": 2.3421001919169098,
+        "n_points": 17716,
+        "score_sum_guard": 7430.724134534125
+      },
+      "paired_ratio_rt1257_over_rt600": 1.130042352137637,
+      "paired_cpu_ratio_rt1257_over_rt600": 1.1327017233821284
+    },
+    {
+      "repeat": 1,
+      "order": [
+        "rt1257",
+        "rt600"
+      ],
+      "rt1257": {
+        "fixed_ms_per_series": 175.14609792269766,
+        "fixed_cpu_ms_per_series": 174.56572500000078,
+        "ms_per_online_point": 2.289724994449651,
+        "cpu_ms_per_online_point": 2.2686594039286554,
+        "n_points": 17716,
+        "score_sum_guard": 7430.724134534125
+      },
+      "rt600": {
+        "fixed_ms_per_series": 175.2472135995049,
+        "fixed_cpu_ms_per_series": 174.99652499999883,
+        "ms_per_online_point": 1.6259135008726726,
+        "cpu_ms_per_online_point": 1.621329589072024,
+        "n_points": 17716,
+        "score_sum_guard": 7424.444385139303
+      },
+      "paired_ratio_rt1257_over_rt600": 1.4082698699658331,
+      "paired_cpu_ratio_rt1257_over_rt600": 1.3992586203445123
+    },
+    {
+      "repeat": 2,
+      "order": [
+        "rt600",
+        "rt1257"
+      ],
+      "rt600": {
+        "fixed_ms_per_series": 174.29046347970143,
+        "fixed_cpu_ms_per_series": 174.12129999999664,
+        "ms_per_online_point": 1.555970241108013,
+        "cpu_ms_per_online_point": 1.5542594829532541,
+        "n_points": 17716,
+        "score_sum_guard": 7424.444385139303
+      },
+      "rt1257": {
+        "fixed_ms_per_series": 173.45158031093888,
+        "fixed_cpu_ms_per_series": 173.20032499999343,
+        "ms_per_online_point": 2.0832095775440154,
+        "cpu_ms_per_online_point": 2.0792065364642074,
+        "n_points": 17716,
+        "score_sum_guard": 7430.724134534125
+      },
+      "paired_ratio_rt1257_over_rt600": 1.3388492417827689,
+      "paired_cpu_ratio_rt1257_over_rt600": 1.3377473705442668
+    },
+    {
+      "repeat": 3,
+      "order": [
+        "rt1257",
+        "rt600"
+      ],
+      "rt1257": {
+        "fixed_ms_per_series": 176.0217792354524,
+        "fixed_cpu_ms_per_series": 174.93632499999876,
+        "ms_per_online_point": 2.1603824440928183,
+        "cpu_ms_per_online_point": 2.151854594716656,
+        "n_points": 17716,
+        "score_sum_guard": 7430.724134534125
+      },
+      "rt600": {
+        "fixed_ms_per_series": 174.58967075799592,
+        "fixed_cpu_ms_per_series": 174.36512500000276,
+        "ms_per_online_point": 1.5881451773960846,
+        "cpu_ms_per_online_point": 1.5860081282456493,
+        "n_points": 17716,
+        "score_sum_guard": 7424.444385139303
+      },
+      "paired_ratio_rt1257_over_rt600": 1.3603179827898173,
+      "paired_cpu_ratio_rt1257_over_rt600": 1.3567740015916019
+    },
+    {
+      "repeat": 4,
+      "order": [
+        "rt600",
+        "rt1257"
+      ],
+      "rt600": {
+        "fixed_ms_per_series": 174.63899477152154,
+        "fixed_cpu_ms_per_series": 174.4296499999976,
+        "ms_per_online_point": 1.5404753542948262,
+        "cpu_ms_per_online_point": 1.536368932038843,
+        "n_points": 17716,
+        "score_sum_guard": 7424.444385139303
+      },
+      "rt1257": {
+        "fixed_ms_per_series": 179.75961781921797,
+        "fixed_cpu_ms_per_series": 177.4891249999996,
+        "ms_per_online_point": 2.1949180236504073,
+        "cpu_ms_per_online_point": 2.152187175434623,
+        "n_points": 17716,
+        "score_sum_guard": 7430.724134534125
+      },
+      "paired_ratio_rt1257_over_rt600": 1.4248316388386242,
+      "paired_cpu_ratio_rt1257_over_rt600": 1.4008270608404951
+    }
+  ],
+  "summary": {
+    "rt600": {
+      "ms_per_online_point": {
+        "values": [
+          2.0772582599752325,
+          1.6259135008726726,
+          1.555970241108013,
+          1.5881451773960846,
+          1.5404753542948262
+        ],
+        "median": 1.5881451773960846,
+        "mean": 1.6775525067293657,
+        "stdev": 0.22583032329351072,
+        "spread_pct": 31.99797940911806
+      },
+      "cpu_ms_per_online_point": {
+        "values": [
+          2.067711334386995,
+          1.621329589072024,
+          1.5542594829532541,
+          1.5860081282456493,
+          1.536368932038843
+        ],
+        "median": 1.5860081282456493,
+        "mean": 1.6731354933393532,
+        "stdev": 0.22293593358791633,
+        "spread_pct": 31.75728471862516
+      },
+      "fixed_ms_per_series": {
+        "values": [
+          176.84442095342092,
+          175.2472135995049,
+          174.29046347970143,
+          174.58967075799592,
+          174.63899477152154
+        ],
+        "median": 174.63899477152154,
+        "mean": 175.12215271242894,
+        "stdev": 1.0235396581104477,
+        "spread_pct": 1.4583862944589252
+      },
+      "projected_10000_series_h_wall": 2.70697503670517,
+      "projected_10000_series_h_cpu": 2.70340372223538,
+      "quota_h": 15.0,
+      "pass_quota_wall": true,
+      "pass_quota_cpu": true,
+      "headroom_x_cpu": 5.548560829677655,
+      "score_sum_guard": 7424.444385139303
+    },
+    "rt1257": {
+      "ms_per_online_point": {
+        "values": [
+          2.347389810099747,
+          2.289724994449651,
+          2.0832095775440154,
+          2.1603824440928183,
+          2.1949180236504073
+        ],
+        "median": 2.1949180236504073,
+        "mean": 2.215124969967328,
+        "stdev": 0.10472092336872132,
+        "spread_pct": 11.926199927204475
+      },
+      "cpu_ms_per_online_point": {
+        "values": [
+          2.3421001919169098,
+          2.2686594039286554,
+          2.0792065364642074,
+          2.151854594716656,
+          2.152187175434623
+        ],
+        "median": 2.152187175434623,
+        "mean": 2.1988015804922103,
+        "stdev": 0.10499345731981044,
+        "spread_pct": 11.956224599122427
+      },
+      "fixed_ms_per_series": {
+        "values": [
+          174.0227468952071,
+          175.14609792269766,
+          173.45158031093888,
+          176.0217792354524,
+          179.75961781921797
+        ],
+        "median": 175.14609792269766,
+        "mean": 175.6803644367028,
+        "stdev": 2.4878448265861244,
+        "spread_pct": 3.590633209639006
+      },
+      "projected_10000_series_h_wall": 3.5572785885968488,
+      "projected_10000_series_h_cpu": 3.4958845961829077,
+      "quota_h": 15.0,
+      "pass_quota_wall": true,
+      "pass_quota_cpu": true,
+      "headroom_x_cpu": 4.290759487992889,
+      "score_sum_guard": 7430.724134534125
+    }
+  },
+  "paired_ratio_rt1257_over_rt600": {
+    "values": [
+      1.130042352137637,
+      1.4082698699658331,
+      1.3388492417827689,
+      1.3603179827898173,
+      1.4248316388386242
+    ],
+    "median": 1.3603179827898173,
+    "mean": 1.332462217102936,
+    "stdev": 0.11839494267408557
+  },
+  "paired_cpu_ratio_rt1257_over_rt600": {
+    "values": [
+      1.1327017233821284,
+      1.3992586203445123,
+      1.3377473705442668,
+      1.3567740015916019,
+      1.4008270608404951
+    ],
+    "median": 1.3567740015916019,
+    "mean": 1.325461755340601,
+    "stdev": 0.11114599586168764
+  },
+  "step_decomposition": {
+    "rt600": {
+      "n_points": 1664,
+      "timer": "process_time (CPU), contention-robust",
+      "engine_cpu_ms_per_point": 0.8036382211534542,
+      "blend_cpu_ms_per_point": 0.0399176682695982,
+      "member_kinds": [
+        "lightgbm",
+        "lightgbm",
+        "lightgbm",
+        "lightgbm",
+        "lightgbm",
+        "lightgbm",
+        "lightgbm"
+      ],
+      "member_cpu_ms_per_point": [
+        0.10413521634682173,
+        0.12515685096112442,
+        0.06519230769151353,
+        0.1650456730772909,
+        0.09700600961584435,
+        0.08979146634532278,
+        0.10012499999989544
+      ],
+      "total_member_cpu_ms_per_point": 0.7464525240378131,
+      "mean_cpu_ms_per_point_by_kind": {
+        "lightgbm": 0.10663607486254474
+      }
+    },
+    "rt1257": {
+      "n_points": 1664,
+      "timer": "process_time (CPU), contention-robust",
+      "engine_cpu_ms_per_point": 0.7915943509618345,
+      "blend_cpu_ms_per_point": 0.03916406250052791,
+      "member_kinds": [
+        "catboost",
+        "lightgbm",
+        "lightgbm",
+        "lightgbm",
+        "catboost",
+        "lightgbm",
+        "lightgbm"
+      ],
+      "member_cpu_ms_per_point": [
+        0.35235937499941056,
+        0.1176856971155916,
+        0.06289122596163484,
+        0.15012980769262102,
+        0.3449290865378434,
+        0.090862379807676,
+        0.09234795673079405
+      ],
+      "total_member_cpu_ms_per_point": 1.2112055288455714,
+      "mean_cpu_ms_per_point_by_kind": {
+        "catboost": 0.34864423076862694,
+        "lightgbm": 0.1027834134616635
+      }
+    }
+  },
+  "k_projection": {
+    "model": "member_cost(k) = (7-k)*lgb_slot + k*cat_slot, + shared engine/blend",
+    "lgb_slot_cpu_ms_per_point": 0.10663607486254474,
+    "cat_slot_cpu_ms_per_point": 0.34864423076862694,
+    "cat_over_lgb_slot_cost_x": 3.2694773435540814,
+    "shared_engine_plus_blend_cpu_ms_per_point": 0.8435558894230524,
+    "fixed_ms_per_series_used": 174.63899477152154,
+    "mean_online_horizon": 503.6517,
+    "quota_h": 15.0,
+    "by_k": {
+      "k=0": {
+        "n_catboost_slots": 0,
+        "cpu_ms_per_point": 1.5900084134608656,
+        "projected_10000_series_h": 2.70958176451497,
+        "pass_quota": true,
+        "headroom_x": 5.535909709919783
+      },
+      "k=1": {
+        "n_catboost_slots": 1,
+        "cpu_ms_per_point": 1.8320165693669477,
+        "projected_10000_series_h": 3.048159039892646,
+        "pass_quota": true,
+        "headroom_x": 4.921003072243989
+      },
+      "k=2": {
+        "n_catboost_slots": 2,
+        "cpu_ms_per_point": 2.0740247252730297,
+        "projected_10000_series_h": 3.3867363152703223,
+        "pass_quota": true,
+        "headroom_x": 4.429042772644298
+      },
+      "k=3": {
+        "n_catboost_slots": 3,
+        "cpu_ms_per_point": 2.3160328811791118,
+        "projected_10000_series_h": 3.725313590647998,
+        "pass_quota": true,
+        "headroom_x": 4.026506664474073
+      },
+      "k=4": {
+        "n_catboost_slots": 4,
+        "cpu_ms_per_point": 2.5580410370851943,
+        "projected_10000_series_h": 4.063890866025674,
+        "pass_quota": true,
+        "headroom_x": 3.691044000566239
+      },
+      "k=5": {
+        "n_catboost_slots": 5,
+        "cpu_ms_per_point": 2.8000491929912767,
+        "projected_10000_series_h": 4.402468141403351,
+        "pass_quota": true,
+        "headroom_x": 3.4071796815362143
+      },
+      "k=6": {
+        "n_catboost_slots": 6,
+        "cpu_ms_per_point": 3.042057348897359,
+        "projected_10000_series_h": 4.741045416781027,
+        "pass_quota": true,
+        "headroom_x": 3.163859166357528
+      },
+      "k=7": {
+        "n_catboost_slots": 7,
+        "cpu_ms_per_point": 3.284065504803441,
+        "projected_10000_series_h": 5.079622692158702,
+        "pass_quota": true,
+        "headroom_x": 2.9529752324232974
+      }
+    }
+  },
+  "peak_rss_mb": 643.984375
+}
