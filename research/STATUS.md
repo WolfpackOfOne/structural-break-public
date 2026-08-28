@@ -16,15 +16,21 @@ short and gets updated whenever that changes materially.
   (LB-001), confirmed in [`EXPERIMENT_ID_MAP.md`](EXPERIMENT_ID_MAP.md).
 - **Current best deployable internal result:** RT-600 seven specialists,
   pooled OOF ≈ 0.63828 (E0 in the Wave 7 T2 promotion battery).
-- **Current research conclusion:** **CATBOOST SPECIALIST ACTIVATION 2026** is
-  complete on `research/catboost-specialist-2026`. CAT-413 (`RT-1254`) and
-  CAT-300 (`RT-1255`) are INTERESTING, CAT-410 (`RT-1256`) is KILL, and the
-  two-slot hybrid (`RT-1257`, replacing RT-300 and RT-413 only) is
-  **PROMOTION_WORTHY** but not SERIOUS: `marginal_vs_clone = +0.002407205`,
-  E2-E0 `+0.002026322`, `5/5` positive folds, dominant-cell net `+158`,
-  mature-vs-never net `+73`. Full report:
-  `reports/catboost_specialist_2026/FINAL.md`. Production `RT-600` remains
-  unchanged.
+- **Current research conclusion:** **DEEP ENSEMBLE FRONTIER 2026 LOCAL lane**
+  is complete on `research/deep-ensemble-frontier-local-2026`. CSA-04 extended
+  CatBoost replacement to the remaining RT-600 specialist slots and found a
+  best-`k=5` hybrid (`RT-1264`) with **MAJOR** internal marginal:
+  `marginal_vs_clone = +0.005934643`, E2-E0 `+0.002378478`, `5/5` positive
+  folds, dominant-cell net `+104`, mature-vs-never net `+33`,
+  mature-vs-prebreak net `+138`. The mandatory `RT-1257` `k=2` regression
+  reproduced exactly (`+0.002407205`, diff `0`). Single-slot results:
+  `RT-1260`/`RT-1261`/`RT-1262` are PROMOTION_WORTHY and `RT-1263` is
+  INTERESTING. L3 arbitration over CRF-01 fold-0 vectors is negative
+  (`FAIL_NO_RETENTION_MECHANISM`), so it does not open a neural lane without a
+  new retention mechanism. Full LOCAL reports:
+  `reports/deep_ensemble_frontier_2026/local/CSA04_FINAL.md` and
+  `reports/deep_ensemble_frontier_2026/local/L3_ARBITRATION_PROBE.md`.
+  Production `RT-600` and external score remain unchanged.
 - **Prior research conclusion:** T2/RT-995 promotion battery —
   **MOSTLY REDUNDANT**. T2 clears 3/4 promotion legs and has real
   single-model alpha, but E2 (RT600 + T2 ensemble, ≈0.63882) beats E1
@@ -58,9 +64,10 @@ short and gets updated whenever that changes materially.
   future-information limit (CASE 2) that later Wave 7/8 work is measured
   against.
 - **Active research branch:** this worktree is
-  `research/catboost-specialist-2026`, forked from
-  `research/learner-diversity-2026@7e5ee4c` for the CatBoost specialist
-  activation audit; the canonical chain remains
+  `research/deep-ensemble-frontier-local-2026`, forked from
+  `research/deep-ensemble-frontier-2026` for the LOCAL lane; the shared program
+  plan lives in `reports/deep_ensemble_frontier_2026/`. The canonical chain
+  remains
   `research/current` (wave2 → wave3-integration → wave5-alpha → wave6-alpha →
   wave7-teacher-distillation → wave7-t2-promotion). Standalone sibling
   branches still worth checking: `research/wave8-future-aware-distillation`
@@ -135,14 +142,17 @@ short and gets updated whenever that changes materially.
 - **Sweep status:** `FIRST_SWEEP_EXHAUSTED` and `SECOND_SWEEP_EXHAUSTED`.
   Both preregistered New Avenues sweeps are closed with no confirmation
   candidate. Production `RT-600` (external **0.6268**) is unchanged.
-- **Current research program:** **CATBOOST SPECIALIST ACTIVATION 2026** —
-  **`CATBOOST_SPECIALIST_ACTIVATION_2026_COMPLETE`** on
-  `research/catboost-specialist-2026`. `RT-1257` is the best measured arm:
-  hybrid `marginal_vs_clone = +0.002407205`, E2-E0 `+0.002026322`, `5/5`
-  positive folds, dominant-cell net `+158`, mature-vs-never net `+73`.
-  This is PROMOTION_WORTHY by the frozen gate but below the SERIOUS threshold
-  and requires separate deployment inference benchmarking. Final report:
-  [`reports/catboost_specialist_2026/FINAL.md`](reports/catboost_specialist_2026/FINAL.md).
+- **Current research program:** **DEEP ENSEMBLE FRONTIER 2026** --
+  **`LOCAL_LANE_COMPLETE_CRUNCH_PENDING`** on
+  `research/deep-ensemble-frontier-local-2026`. `RT-1264` is the best measured
+  LOCAL result: best-`k=5` hybrid
+  `marginal_vs_clone = +0.005934643`, E2-E0 `+0.002378478`, `5/5` positive
+  folds, dominant-cell net `+104`, mature-vs-never net `+33`. This is MAJOR by
+  the frozen internal gate and has been handed off as H2 for deployment
+  feasibility / confirmation review. L3 arbitration is negative and gates
+  against opening the neural lane without a new retention mechanism. LOCAL
+  final report:
+  [`reports/deep_ensemble_frontier_2026/local/CSA04_FINAL.md`](reports/deep_ensemble_frontier_2026/local/CSA04_FINAL.md).
   Production `RT-600` remains unchanged.
 - **Completed prior research program:** **LEADERBOARD ALPHA 2026** —
   **`LEADERBOARD_ALPHA_2026_EXHAUSTED`** on
@@ -217,9 +227,9 @@ short and gets updated whenever that changes materially.
   [`FINAL_ARCHITECTURE_FREEZE.md`](FINAL_ARCHITECTURE_FREEZE.md),
   [`FINAL_REPRODUCIBILITY_MANIFEST.json`](FINAL_REPRODUCIBILITY_MANIFEST.json).
 
-_Last updated: 2026-08-27 on `research/learner-diversity-2026`: Learner
-Diversity 2026 is complete. CatBoost is INTERESTING but not SERIOUS; TabM and
-RealMLP are INFEASIBLE; no combination opens and production `RT-600` remains
-unchanged. Update this file whenever the production anchor, external score, or
-active research conclusion changes — see `AGENTS.md` at the repo root for the
-update rule._
+_Last updated: 2026-08-28 on `research/deep-ensemble-frontier-local-2026`:
+Deep Ensemble Frontier LOCAL lane is complete. CSA-04 produced MAJOR internal
+best-`k=5` hybrid `RT-1264`; L3 arbitration was negative; production `RT-600`
+and the external score remain unchanged. Update this file whenever the
+production anchor, external score, or active research conclusion changes -- see
+`AGENTS.md` at the repo root for the update rule._

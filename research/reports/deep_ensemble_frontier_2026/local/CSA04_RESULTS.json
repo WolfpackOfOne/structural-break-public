@@ -1,0 +1,2534 @@
+{
+  "artifact_root": "/path/to/workspace/structural-break-learner-diversity-2026",
+  "best_hybrid": {
+    "cat_streams": [
+      "RT-1255",
+      "RT-410",
+      "RT-1260",
+      "RT-1261",
+      "RT-1254",
+      "RT-1262",
+      "RT-415"
+    ],
+    "clone_streams": [
+      "RT-401",
+      "RT-410",
+      "RT-402",
+      "RT-403",
+      "RT-404",
+      "RT-405",
+      "RT-415"
+    ],
+    "ensemble": {
+      "E0_original_rt600": {
+        "mean_ts_auc": 0.6258113418832281,
+        "per_fold_ts_auc": [
+          0.638276215299891,
+          0.6204019581662752,
+          0.6339304299070194,
+          0.6175075878311903,
+          0.6189405182117643
+        ]
+      },
+      "E1_clone_replacement": {
+        "mean_ts_auc": 0.6222551763577293,
+        "per_fold_ts_auc": [
+          0.6367784139150251,
+          0.6183791823037488,
+          0.6305156135727213,
+          0.6141168597751862,
+          0.6114858122219646
+        ]
+      },
+      "E2_cat_hybrid": {
+        "mean_ts_auc": 0.6281898196553959,
+        "per_fold_ts_auc": [
+          0.6394467528766321,
+          0.6228348184783002,
+          0.6360507534864052,
+          0.6222796835105673,
+          0.6203370899250747
+        ]
+      },
+      "E2_minus_E0": 0.0023784777721678196,
+      "fold_deltas_vs_clone": [
+        0.0026683389616070086,
+        0.004455636174551469,
+        0.0055351399136838175,
+        0.00816282373538113,
+        0.008851277703110116
+      ],
+      "marginal_vs_clone": 0.005934643297666575,
+      "positive_folds_vs_clone": 5
+    },
+    "id": "RT-1264",
+    "k": 5,
+    "name": "HYBRID",
+    "pair_flow_vs_E0": {
+      "dominant_cell": {
+        "damage": 2033,
+        "damage_rate": 0.040290935035078676,
+        "net_pair_lift": 104,
+        "repairs": 2137,
+        "total_pairs_sampled": 50458
+      },
+      "mature_vs_never": {
+        "damage": 2118,
+        "damage_rate": 0.041980496313327516,
+        "net_pair_lift": 33,
+        "repairs": 2151,
+        "total_pairs_sampled": 50452
+      },
+      "mature_vs_prebreak": {
+        "damage": 1703,
+        "damage_rate": 0.03867553880044512,
+        "net_pair_lift": 138,
+        "repairs": 1841,
+        "total_pairs_sampled": 44033
+      },
+      "whole": {
+        "damage": 2933,
+        "damage_rate": 0.04641263411083331,
+        "net_pair_lift": 220,
+        "repairs": 3153,
+        "total_pairs_sampled": 63194
+      }
+    },
+    "pair_flow_vs_clone": {
+      "dominant_cell": {
+        "damage": 2174,
+        "damage_rate": 0.04308533830116136,
+        "net_pair_lift": 290,
+        "repairs": 2464,
+        "total_pairs_sampled": 50458
+      },
+      "mature_vs_never": {
+        "damage": 2214,
+        "damage_rate": 0.04388329501308174,
+        "net_pair_lift": 192,
+        "repairs": 2406,
+        "total_pairs_sampled": 50452
+      },
+      "mature_vs_prebreak": {
+        "damage": 1816,
+        "damage_rate": 0.041241795925782934,
+        "net_pair_lift": 266,
+        "repairs": 2082,
+        "total_pairs_sampled": 44033
+      },
+      "whole": {
+        "damage": 2963,
+        "damage_rate": 0.04688736272430927,
+        "net_pair_lift": 536,
+        "repairs": 3499,
+        "total_pairs_sampled": 63194
+      }
+    },
+    "runtime_s": 0.0,
+    "survivors": [
+      "CAT-412",
+      "CAT-414",
+      "CAT-411",
+      "CAT-413",
+      "CAT-300"
+    ],
+    "survivors_ordered": [
+      "CAT-412",
+      "CAT-414",
+      "CAT-411",
+      "CAT-413",
+      "CAT-300"
+    ],
+    "verdict": "MAJOR"
+  },
+  "calibration": "SCDF_NSEEN",
+  "git_sha": "766ecf0",
+  "hybrid_curve": [
+    {
+      "cat_streams": [
+        "RT-300",
+        "RT-410",
+        "RT-411",
+        "RT-1261",
+        "RT-413",
+        "RT-1262",
+        "RT-415"
+      ],
+      "clone_streams": [
+        "RT-300",
+        "RT-410",
+        "RT-411",
+        "RT-401",
+        "RT-413",
+        "RT-402",
+        "RT-415"
+      ],
+      "ensemble": {
+        "E0_original_rt600": {
+          "mean_ts_auc": 0.6258113418832281,
+          "per_fold_ts_auc": [
+            0.638276215299891,
+            0.6204019581662752,
+            0.6339304299070194,
+            0.6175075878311903,
+            0.6189405182117643
+          ]
+        },
+        "E1_clone_replacement": {
+          "mean_ts_auc": 0.6236492297405337,
+          "per_fold_ts_auc": [
+            0.6376321737845455,
+            0.6196769018888814,
+            0.6327804385824597,
+            0.6162123821670484,
+            0.6119442522797339
+          ]
+        },
+        "E2_cat_hybrid": {
+          "mean_ts_auc": 0.6272509113412527,
+          "per_fold_ts_auc": [
+            0.6389994851331784,
+            0.6235683066874586,
+            0.6360367573621715,
+            0.6204446252333187,
+            0.6172053822901364
+          ]
+        },
+        "E2_minus_E0": 0.0014395694580245921,
+        "fold_deltas_vs_clone": [
+          0.0013673113486328825,
+          0.0038914047985771916,
+          0.0032563187797117754,
+          0.004232243066270236,
+          0.005261130010402515
+        ],
+        "marginal_vs_clone": 0.0036016816007189423,
+        "positive_folds_vs_clone": 5
+      },
+      "id": null,
+      "k": 2,
+      "name": "HYBRID",
+      "pair_flow_vs_E0": {
+        "dominant_cell": {
+          "damage": 1100,
+          "damage_rate": 0.021800309168020927,
+          "net_pair_lift": 76,
+          "repairs": 1176,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 1119,
+          "damage_rate": 0.02217949734401015,
+          "net_pair_lift": 113,
+          "repairs": 1232,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 918,
+          "damage_rate": 0.02084800036336384,
+          "net_pair_lift": 3,
+          "repairs": 921,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 1554,
+          "damage_rate": 0.024590942178054877,
+          "net_pair_lift": 103,
+          "repairs": 1657,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "pair_flow_vs_clone": {
+        "dominant_cell": {
+          "damage": 1194,
+          "damage_rate": 0.023663244678742718,
+          "net_pair_lift": 180,
+          "repairs": 1374,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 1195,
+          "damage_rate": 0.02368587964798224,
+          "net_pair_lift": 180,
+          "repairs": 1375,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 1053,
+          "damage_rate": 0.023913882769740876,
+          "net_pair_lift": -15,
+          "repairs": 1038,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 1660,
+          "damage_rate": 0.026268316612336615,
+          "net_pair_lift": 175,
+          "repairs": 1835,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "runtime_s": 0.0,
+      "survivors": [
+        "CAT-412",
+        "CAT-414"
+      ],
+      "survivors_ordered": [
+        "CAT-412",
+        "CAT-414"
+      ],
+      "verdict": "SERIOUS"
+    },
+    {
+      "cat_streams": [
+        "RT-300",
+        "RT-410",
+        "RT-1260",
+        "RT-1261",
+        "RT-413",
+        "RT-1262",
+        "RT-415"
+      ],
+      "clone_streams": [
+        "RT-300",
+        "RT-410",
+        "RT-401",
+        "RT-402",
+        "RT-413",
+        "RT-403",
+        "RT-415"
+      ],
+      "ensemble": {
+        "E0_original_rt600": {
+          "mean_ts_auc": 0.6258113418832281,
+          "per_fold_ts_auc": [
+            0.638276215299891,
+            0.6204019581662752,
+            0.6339304299070194,
+            0.6175075878311903,
+            0.6189405182117643
+          ]
+        },
+        "E1_clone_replacement": {
+          "mean_ts_auc": 0.6226554931139353,
+          "per_fold_ts_auc": [
+            0.6368967361171901,
+            0.6186277194228915,
+            0.6311576950679881,
+            0.6144322124710379,
+            0.612163102490569
+          ]
+        },
+        "E2_cat_hybrid": {
+          "mean_ts_auc": 0.6274830550139832,
+          "per_fold_ts_auc": [
+            0.6388060125412008,
+            0.6236247028687524,
+            0.636267581859497,
+            0.6204696903943072,
+            0.6182472874061582
+          ]
+        },
+        "E2_minus_E0": 0.0016717131307550925,
+        "fold_deltas_vs_clone": [
+          0.0019092764240107307,
+          0.004996983445860859,
+          0.005109886791508811,
+          0.006037477923269363,
+          0.0060841849155891525
+        ],
+        "marginal_vs_clone": 0.00482756190004785,
+        "positive_folds_vs_clone": 5
+      },
+      "id": null,
+      "k": 3,
+      "name": "HYBRID",
+      "pair_flow_vs_E0": {
+        "dominant_cell": {
+          "damage": 1275,
+          "damage_rate": 0.02526854017202426,
+          "net_pair_lift": 117,
+          "repairs": 1392,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 1345,
+          "damage_rate": 0.026659002616348213,
+          "net_pair_lift": 115,
+          "repairs": 1460,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 1065,
+          "damage_rate": 0.024186405650307725,
+          "net_pair_lift": 79,
+          "repairs": 1144,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 1806,
+          "damage_rate": 0.028578662531252966,
+          "net_pair_lift": 208,
+          "repairs": 2014,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "pair_flow_vs_clone": {
+        "dominant_cell": {
+          "damage": 1432,
+          "damage_rate": 0.028380038844187244,
+          "net_pair_lift": 296,
+          "repairs": 1728,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 1500,
+          "damage_rate": 0.029731229683659717,
+          "net_pair_lift": 211,
+          "repairs": 1711,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 1268,
+          "damage_rate": 0.028796584379896895,
+          "net_pair_lift": 132,
+          "repairs": 1400,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 1929,
+          "damage_rate": 0.030525049846504414,
+          "net_pair_lift": 478,
+          "repairs": 2407,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "runtime_s": 0.0,
+      "survivors": [
+        "CAT-412",
+        "CAT-414",
+        "CAT-411"
+      ],
+      "survivors_ordered": [
+        "CAT-412",
+        "CAT-414",
+        "CAT-411"
+      ],
+      "verdict": "SERIOUS"
+    },
+    {
+      "cat_streams": [
+        "RT-300",
+        "RT-410",
+        "RT-1260",
+        "RT-1261",
+        "RT-1254",
+        "RT-1262",
+        "RT-415"
+      ],
+      "clone_streams": [
+        "RT-300",
+        "RT-410",
+        "RT-401",
+        "RT-402",
+        "RT-403",
+        "RT-404",
+        "RT-415"
+      ],
+      "ensemble": {
+        "E0_original_rt600": {
+          "mean_ts_auc": 0.6258113418832281,
+          "per_fold_ts_auc": [
+            0.638276215299891,
+            0.6204019581662752,
+            0.6339304299070194,
+            0.6175075878311903,
+            0.6189405182117643
+          ]
+        },
+        "E1_clone_replacement": {
+          "mean_ts_auc": 0.6224271338817587,
+          "per_fold_ts_auc": [
+            0.6368304926845048,
+            0.6181312741650233,
+            0.6305719550377558,
+            0.6151641526385129,
+            0.6114377948829965
+          ]
+        },
+        "E2_cat_hybrid": {
+          "mean_ts_auc": 0.6280510402601281,
+          "per_fold_ts_auc": [
+            0.6384250908198195,
+            0.6229110544990398,
+            0.6366455032427317,
+            0.622640093549625,
+            0.6196334591894248
+          ]
+        },
+        "E2_minus_E0": 0.002239698376900079,
+        "fold_deltas_vs_clone": [
+          0.0015945981353147065,
+          0.004779780334016492,
+          0.006073548204975965,
+          0.007475940911112144,
+          0.008195664306428263
+        ],
+        "marginal_vs_clone": 0.005623906378369403,
+        "positive_folds_vs_clone": 5
+      },
+      "id": null,
+      "k": 4,
+      "name": "HYBRID",
+      "pair_flow_vs_E0": {
+        "dominant_cell": {
+          "damage": 1666,
+          "damage_rate": 0.0330175591581117,
+          "net_pair_lift": 114,
+          "repairs": 1780,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 1733,
+          "damage_rate": 0.034349480694521525,
+          "net_pair_lift": 76,
+          "repairs": 1809,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 1402,
+          "damage_rate": 0.03183975654622669,
+          "net_pair_lift": 93,
+          "repairs": 1495,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 2416,
+          "damage_rate": 0.03823147767193088,
+          "net_pair_lift": 198,
+          "repairs": 2614,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "pair_flow_vs_clone": {
+        "dominant_cell": {
+          "damage": 1794,
+          "damage_rate": 0.03555432240675413,
+          "net_pair_lift": 325,
+          "repairs": 2119,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 1878,
+          "damage_rate": 0.03722349956394196,
+          "net_pair_lift": 221,
+          "repairs": 2099,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 1570,
+          "damage_rate": 0.03565507687416256,
+          "net_pair_lift": 160,
+          "repairs": 1730,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 2431,
+          "damage_rate": 0.03846884197866886,
+          "net_pair_lift": 540,
+          "repairs": 2971,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "runtime_s": 0.0,
+      "survivors": [
+        "CAT-412",
+        "CAT-414",
+        "CAT-411",
+        "CAT-413"
+      ],
+      "survivors_ordered": [
+        "CAT-412",
+        "CAT-414",
+        "CAT-411",
+        "CAT-413"
+      ],
+      "verdict": "MAJOR"
+    },
+    {
+      "cat_streams": [
+        "RT-1255",
+        "RT-410",
+        "RT-1260",
+        "RT-1261",
+        "RT-1254",
+        "RT-1262",
+        "RT-415"
+      ],
+      "clone_streams": [
+        "RT-401",
+        "RT-410",
+        "RT-402",
+        "RT-403",
+        "RT-404",
+        "RT-405",
+        "RT-415"
+      ],
+      "ensemble": {
+        "E0_original_rt600": {
+          "mean_ts_auc": 0.6258113418832281,
+          "per_fold_ts_auc": [
+            0.638276215299891,
+            0.6204019581662752,
+            0.6339304299070194,
+            0.6175075878311903,
+            0.6189405182117643
+          ]
+        },
+        "E1_clone_replacement": {
+          "mean_ts_auc": 0.6222551763577293,
+          "per_fold_ts_auc": [
+            0.6367784139150251,
+            0.6183791823037488,
+            0.6305156135727213,
+            0.6141168597751862,
+            0.6114858122219646
+          ]
+        },
+        "E2_cat_hybrid": {
+          "mean_ts_auc": 0.6281898196553959,
+          "per_fold_ts_auc": [
+            0.6394467528766321,
+            0.6228348184783002,
+            0.6360507534864052,
+            0.6222796835105673,
+            0.6203370899250747
+          ]
+        },
+        "E2_minus_E0": 0.0023784777721678196,
+        "fold_deltas_vs_clone": [
+          0.0026683389616070086,
+          0.004455636174551469,
+          0.0055351399136838175,
+          0.00816282373538113,
+          0.008851277703110116
+        ],
+        "marginal_vs_clone": 0.005934643297666575,
+        "positive_folds_vs_clone": 5
+      },
+      "id": "RT-1264",
+      "k": 5,
+      "name": "HYBRID",
+      "pair_flow_vs_E0": {
+        "dominant_cell": {
+          "damage": 2033,
+          "damage_rate": 0.040290935035078676,
+          "net_pair_lift": 104,
+          "repairs": 2137,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 2118,
+          "damage_rate": 0.041980496313327516,
+          "net_pair_lift": 33,
+          "repairs": 2151,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 1703,
+          "damage_rate": 0.03867553880044512,
+          "net_pair_lift": 138,
+          "repairs": 1841,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 2933,
+          "damage_rate": 0.04641263411083331,
+          "net_pair_lift": 220,
+          "repairs": 3153,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "pair_flow_vs_clone": {
+        "dominant_cell": {
+          "damage": 2174,
+          "damage_rate": 0.04308533830116136,
+          "net_pair_lift": 290,
+          "repairs": 2464,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 2214,
+          "damage_rate": 0.04388329501308174,
+          "net_pair_lift": 192,
+          "repairs": 2406,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 1816,
+          "damage_rate": 0.041241795925782934,
+          "net_pair_lift": 266,
+          "repairs": 2082,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 2963,
+          "damage_rate": 0.04688736272430927,
+          "net_pair_lift": 536,
+          "repairs": 3499,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "runtime_s": 0.0,
+      "survivors": [
+        "CAT-412",
+        "CAT-414",
+        "CAT-411",
+        "CAT-413",
+        "CAT-300"
+      ],
+      "survivors_ordered": [
+        "CAT-412",
+        "CAT-414",
+        "CAT-411",
+        "CAT-413",
+        "CAT-300"
+      ],
+      "verdict": "MAJOR"
+    },
+    {
+      "cat_streams": [
+        "RT-1255",
+        "RT-410",
+        "RT-1260",
+        "RT-1261",
+        "RT-1254",
+        "RT-1262",
+        "RT-1263"
+      ],
+      "clone_streams": [
+        "RT-401",
+        "RT-410",
+        "RT-402",
+        "RT-403",
+        "RT-404",
+        "RT-405",
+        "RT-406"
+      ],
+      "ensemble": {
+        "E0_original_rt600": {
+          "mean_ts_auc": 0.6258113418832281,
+          "per_fold_ts_auc": [
+            0.638276215299891,
+            0.6204019581662752,
+            0.6339304299070194,
+            0.6175075878311903,
+            0.6189405182117643
+          ]
+        },
+        "E1_clone_replacement": {
+          "mean_ts_auc": 0.6217785914881644,
+          "per_fold_ts_auc": [
+            0.6368031233016419,
+            0.6176875051185527,
+            0.6294837712522539,
+            0.6129992645679446,
+            0.6119192932004286
+          ]
+        },
+        "E2_cat_hybrid": {
+          "mean_ts_auc": 0.627675484415377,
+          "per_fold_ts_auc": [
+            0.6390322074836935,
+            0.622892138362264,
+            0.6360439562188442,
+            0.6212361597880409,
+            0.6191729602240429
+          ]
+        },
+        "E2_minus_E0": 0.001864142532148949,
+        "fold_deltas_vs_clone": [
+          0.0022290841820515883,
+          0.005204633243711232,
+          0.006560184966590388,
+          0.008236895220096296,
+          0.007253667023614296
+        ],
+        "marginal_vs_clone": 0.005896892927212627,
+        "positive_folds_vs_clone": 5
+      },
+      "id": null,
+      "k": 6,
+      "name": "HYBRID",
+      "pair_flow_vs_E0": {
+        "dominant_cell": {
+          "damage": 2449,
+          "damage_rate": 0.04853541559316659,
+          "net_pair_lift": 100,
+          "repairs": 2549,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 2479,
+          "damage_rate": 0.04913581225719496,
+          "net_pair_lift": 41,
+          "repairs": 2520,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 2010,
+          "damage_rate": 0.04564758249494697,
+          "net_pair_lift": 152,
+          "repairs": 2162,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 3532,
+          "damage_rate": 0.0558913820932367,
+          "net_pair_lift": 228,
+          "repairs": 3760,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "pair_flow_vs_clone": {
+        "dominant_cell": {
+          "damage": 2548,
+          "damage_rate": 0.050497443418288476,
+          "net_pair_lift": 304,
+          "repairs": 2852,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 2602,
+          "damage_rate": 0.051573773091255055,
+          "net_pair_lift": 172,
+          "repairs": 2774,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 2116,
+          "damage_rate": 0.04805486793995412,
+          "net_pair_lift": 335,
+          "repairs": 2451,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 3502,
+          "damage_rate": 0.055416653479760734,
+          "net_pair_lift": 533,
+          "repairs": 4035,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "runtime_s": 0.0,
+      "survivors": [
+        "CAT-412",
+        "CAT-414",
+        "CAT-411",
+        "CAT-413",
+        "CAT-300",
+        "CAT-415"
+      ],
+      "survivors_ordered": [
+        "CAT-412",
+        "CAT-414",
+        "CAT-411",
+        "CAT-413",
+        "CAT-300",
+        "CAT-415"
+      ],
+      "verdict": "MAJOR"
+    }
+  ],
+  "local_oof_dir": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof",
+  "pair_seed": 20260827,
+  "pairs_per_t": 64,
+  "prediction_adjudication": {
+    "P1": "P1 breadth: not supported. CAT-412/CAT-415 margins were +0.001630380/+0.001001378; CAT-411/CAT-414 margins were +0.001567468/+0.001588999.",
+    "P2": "P2 idiosyncrasy: not supported. The wide idiosyncratic slots CAT-412 and CAT-415 did not both fail the +0.0010 gate.",
+    "P3": "P3 interior maximum: supported. Best k was 5; largest evaluated k was 6."
+  },
+  "program": "DEEP_ENSEMBLE_FRONTIER_2026_LOCAL_CSA04",
+  "rt1257_regression_check": {
+    "diff": 0.0,
+    "expected": 0.002407204670070273,
+    "observed": 0.002407204670070273,
+    "passed": true
+  },
+  "specialists": {
+    "CAT-300": {
+      "catboost_params": {
+        "allow_writing_files": false,
+        "bootstrap_type": "Bernoulli",
+        "border_count": 127,
+        "depth": 6,
+        "eval_metric": "Logloss",
+        "iterations": 600,
+        "l2_leaf_reg": 5.0,
+        "learning_rate": 0.05,
+        "loss_function": "Logloss",
+        "random_seed": 0,
+        "rsm": 0.7,
+        "subsample": 0.7,
+        "thread_count": 2,
+        "verbose": false
+      },
+      "ensemble": {
+        "E0_original_rt600": {
+          "mean_ts_auc": 0.6258113418832281,
+          "per_fold_ts_auc": [
+            0.638276215299891,
+            0.6204019581662752,
+            0.6339304299070194,
+            0.6175075878311903,
+            0.6189405182117643
+          ]
+        },
+        "E1_clone_replacement": {
+          "mean_ts_auc": 0.6259087588552168,
+          "per_fold_ts_auc": [
+            0.6384178399485095,
+            0.6208292479258148,
+            0.6335605588981115,
+            0.6170046248406685,
+            0.6197315226629795
+          ]
+        },
+        "E2_cat_replacement": {
+          "mean_ts_auc": 0.6269382179271005,
+          "per_fold_ts_auc": [
+            0.6405017638120012,
+            0.621084969798409,
+            0.634427292317317,
+            0.618181844408444,
+            0.6204952192993313
+          ]
+        },
+        "E2_minus_E0": 0.0011268760438724046,
+        "fold_deltas_vs_clone": [
+          0.0020839238634916546,
+          0.00025572187259415013,
+          0.0008667334192055121,
+          0.0011772195677755004,
+          0.000763696636351785
+        ],
+        "marginal_vs_clone": 0.001029459071883676,
+        "positive_folds_vs_clone": 5
+      },
+      "fold_runtime_s": [],
+      "id": "RT-1255",
+      "incumbent_standalone": {
+        "fold_std": 0.010400920167712557,
+        "mean_ts_auc": 0.6160536457985584,
+        "per_fold_ts_auc": [
+          0.629028155789136,
+          0.6106107062717593,
+          0.6268789006620026,
+          0.6122259125582563,
+          0.6015245537116376
+        ],
+        "pooled_ts_auc": 0.6159307259036215
+      },
+      "name": "CAT-300",
+      "pair_flow_vs_E0": {
+        "dominant_cell": {
+          "damage": 656,
+          "damage_rate": 0.013000911649292481,
+          "net_pair_lift": 75,
+          "repairs": 731,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 664,
+          "damage_rate": 0.013161024339966701,
+          "net_pair_lift": 80,
+          "repairs": 744,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 563,
+          "damage_rate": 0.0127858651465946,
+          "net_pair_lift": 82,
+          "repairs": 645,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 931,
+          "damage_rate": 0.014732411304870716,
+          "net_pair_lift": 92,
+          "repairs": 1023,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "pair_flow_vs_clone": {
+        "dominant_cell": {
+          "damage": 698,
+          "damage_rate": 0.01383328709025328,
+          "net_pair_lift": 15,
+          "repairs": 713,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 686,
+          "damage_rate": 0.013597082375327044,
+          "net_pair_lift": 62,
+          "repairs": 748,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 555,
+          "damage_rate": 0.012604183226216701,
+          "net_pair_lift": 102,
+          "repairs": 657,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 992,
+          "damage_rate": 0.015697692818938506,
+          "net_pair_lift": 56,
+          "repairs": 1048,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "replaced": "RT-300",
+      "rho_vs_incumbent": 0.7377860606191275,
+      "runtime_s": 0.0,
+      "standalone": {
+        "fold_std": 0.011655690711060186,
+        "mean_ts_auc": 0.6202420610687559,
+        "per_fold_ts_auc": [
+          0.6392125559619609,
+          0.6131722128470595,
+          0.6277300464741975,
+          0.6141103106120459,
+          0.6069851794485157
+        ],
+        "pooled_ts_auc": 0.6200772484978174
+      },
+      "standalone_delta_vs_incumbent": 0.004188415270197532,
+      "status": "SCORED",
+      "training_spec": {
+        "incumbent_objective": "binary",
+        "max_train_rows": 1000000,
+        "modules": [
+          "m00_core",
+          "m01_seq",
+          "m02_dist",
+          "m03_dyn",
+          "m04_resid",
+          "m06_loc",
+          "m07_bayes"
+        ],
+        "replaced": "RT-300",
+        "sample_mode": "uniform",
+        "seed": 0
+      },
+      "verdict": "INTERESTING"
+    },
+    "CAT-410": {
+      "catboost_params": {
+        "allow_writing_files": false,
+        "bootstrap_type": "Bernoulli",
+        "border_count": 127,
+        "depth": 6,
+        "eval_metric": "Logloss",
+        "iterations": 600,
+        "l2_leaf_reg": 5.0,
+        "learning_rate": 0.05,
+        "loss_function": "Logloss",
+        "random_seed": 0,
+        "rsm": 0.7,
+        "subsample": 0.7,
+        "thread_count": 2,
+        "verbose": false
+      },
+      "ensemble": {
+        "E0_original_rt600": {
+          "mean_ts_auc": 0.6258113418832281,
+          "per_fold_ts_auc": [
+            0.638276215299891,
+            0.6204019581662752,
+            0.6339304299070194,
+            0.6175075878311903,
+            0.6189405182117643
+          ]
+        },
+        "E1_clone_replacement": {
+          "mean_ts_auc": 0.6259878363120857,
+          "per_fold_ts_auc": [
+            0.6401254879242839,
+            0.6201218318534933,
+            0.6346854397479234,
+            0.6186326314001724,
+            0.6163737906345554
+          ]
+        },
+        "E2_cat_replacement": {
+          "mean_ts_auc": 0.6267409316267892,
+          "per_fold_ts_auc": [
+            0.6400172854323555,
+            0.6203688845788515,
+            0.6353808210425437,
+            0.6205195247300784,
+            0.617418142350117
+          ]
+        },
+        "E2_minus_E0": 0.0009295897435611655,
+        "fold_deltas_vs_clone": [
+          -0.00010820249192844411,
+          0.0002470527253581878,
+          0.000695381294620323,
+          0.001886893329905992,
+          0.0010443517155616089
+        ],
+        "marginal_vs_clone": 0.0007530953147035779,
+        "positive_folds_vs_clone": 4
+      },
+      "fold_runtime_s": [],
+      "id": "RT-1256",
+      "incumbent_standalone": {
+        "fold_std": 0.006774004669267466,
+        "mean_ts_auc": 0.6051165280089322,
+        "per_fold_ts_auc": [
+          0.6086781036539423,
+          0.6051837554068684,
+          0.6097378540061009,
+          0.592009331583343,
+          0.6099735953944067
+        ],
+        "pooled_ts_auc": 0.6048208395204936
+      },
+      "name": "CAT-410",
+      "pair_flow_vs_E0": {
+        "dominant_cell": {
+          "damage": 768,
+          "damage_rate": 0.015220579491854612,
+          "net_pair_lift": 17,
+          "repairs": 785,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 749,
+          "damage_rate": 0.014845794022040752,
+          "net_pair_lift": 76,
+          "repairs": 825,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 588,
+          "damage_rate": 0.013353621147775533,
+          "net_pair_lift": 80,
+          "repairs": 668,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 1046,
+          "damage_rate": 0.01655220432319524,
+          "net_pair_lift": 107,
+          "repairs": 1153,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "pair_flow_vs_clone": {
+        "dominant_cell": {
+          "damage": 835,
+          "damage_rate": 0.016548416504815887,
+          "net_pair_lift": -29,
+          "repairs": 806,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 845,
+          "damage_rate": 0.016748592721794974,
+          "net_pair_lift": 62,
+          "repairs": 907,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 721,
+          "damage_rate": 0.016374083074058094,
+          "net_pair_lift": 26,
+          "repairs": 747,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 1146,
+          "damage_rate": 0.018134633034781782,
+          "net_pair_lift": 71,
+          "repairs": 1217,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "replaced": "RT-410",
+      "rho_vs_incumbent": 0.6808253010142363,
+      "runtime_s": 0.0,
+      "standalone": {
+        "fold_std": 0.006117737521037012,
+        "mean_ts_auc": 0.6103282509291912,
+        "per_fold_ts_auc": [
+          0.6177521275976311,
+          0.6049781686647865,
+          0.6166772692389575,
+          0.6098326430298078,
+          0.6024010461147729
+        ],
+        "pooled_ts_auc": 0.6100022060568281
+      },
+      "standalone_delta_vs_incumbent": 0.005211722920258954,
+      "status": "SCORED",
+      "training_spec": {
+        "incumbent_objective": "binary",
+        "max_train_rows": 900000,
+        "modules": [
+          "m00_core",
+          "m01_seq",
+          "m07_bayes"
+        ],
+        "replaced": "RT-410",
+        "sample_mode": "uniform",
+        "seed": 0
+      },
+      "verdict": "KILL"
+    },
+    "CAT-411": {
+      "catboost_params": {
+        "allow_writing_files": false,
+        "bootstrap_type": "Bernoulli",
+        "border_count": 127,
+        "depth": 6,
+        "eval_metric": "Logloss",
+        "iterations": 600,
+        "l2_leaf_reg": 5.0,
+        "learning_rate": 0.05,
+        "loss_function": "Logloss",
+        "random_seed": 1,
+        "rsm": 0.7,
+        "subsample": 0.7,
+        "thread_count": 2,
+        "verbose": false
+      },
+      "ensemble": {
+        "E0_original_rt600": {
+          "mean_ts_auc": 0.6258113418832281,
+          "per_fold_ts_auc": [
+            0.638276215299891,
+            0.6204019581662752,
+            0.6339304299070194,
+            0.6175075878311903,
+            0.6189405182117643
+          ]
+        },
+        "E1_clone_replacement": {
+          "mean_ts_auc": 0.6246068129420357,
+          "per_fold_ts_auc": [
+            0.6362900188191437,
+            0.6197563079709236,
+            0.6328993535805987,
+            0.6150290667820938,
+            0.6190593175574186
+          ]
+        },
+        "E2_cat_replacement": {
+          "mean_ts_auc": 0.6261742809402148,
+          "per_fold_ts_auc": [
+            0.6382314753354816,
+            0.6205992926852834,
+            0.6342683299605177,
+            0.6176630742558579,
+            0.6201092324639338
+          ]
+        },
+        "E2_minus_E0": 0.0003629390569866997,
+        "fold_deltas_vs_clone": [
+          0.001941456516337925,
+          0.0008429847143597291,
+          0.0013689763799190624,
+          0.0026340074737640773,
+          0.0010499149065151814
+        ],
+        "marginal_vs_clone": 0.001567467998179084,
+        "positive_folds_vs_clone": 5
+      },
+      "fold_runtime_s": [
+        205.77828311920166,
+        216.6768970489502,
+        207.23553109169006,
+        201.61310720443726,
+        206.01629185676575
+      ],
+      "id": "RT-1260",
+      "incumbent_standalone": {
+        "fold_std": 0.011790708686995584,
+        "mean_ts_auc": 0.6078119814488463,
+        "per_fold_ts_auc": [
+          0.6240788627186783,
+          0.6035144449737704,
+          0.6133128820855462,
+          0.6097810440167831,
+          0.5883726734494537
+        ],
+        "pooled_ts_auc": 0.6076509427043426
+      },
+      "name": "CAT-411",
+      "pair_flow_vs_E0": {
+        "dominant_cell": {
+          "damage": 598,
+          "damage_rate": 0.011851440802251378,
+          "net_pair_lift": 36,
+          "repairs": 634,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 655,
+          "damage_rate": 0.012982636961864743,
+          "net_pair_lift": -9,
+          "repairs": 646,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 490,
+          "damage_rate": 0.011128017623146276,
+          "net_pair_lift": 36,
+          "repairs": 526,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 817,
+          "damage_rate": 0.012928442573662057,
+          "net_pair_lift": 58,
+          "repairs": 875,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "pair_flow_vs_clone": {
+        "dominant_cell": {
+          "damage": 815,
+          "damage_rate": 0.016152047247215504,
+          "net_pair_lift": 83,
+          "repairs": 898,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 910,
+          "damage_rate": 0.018036946008086894,
+          "net_pair_lift": 22,
+          "repairs": 932,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 684,
+          "damage_rate": 0.015533804192310314,
+          "net_pair_lift": 89,
+          "repairs": 773,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 1145,
+          "damage_rate": 0.01811880874766592,
+          "net_pair_lift": 158,
+          "repairs": 1303,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "replaced": "RT-411",
+      "rho_vs_incumbent": 0.8011339401444495,
+      "runtime_s": 1037.465772151947,
+      "standalone": {
+        "fold_std": 0.00959252210944205,
+        "mean_ts_auc": 0.6093784358323114,
+        "per_fold_ts_auc": [
+          0.622580423814051,
+          0.6049423958528295,
+          0.6156199892229843,
+          0.6094424432904479,
+          0.5943069269812442
+        ],
+        "pooled_ts_auc": 0.6092370957925254
+      },
+      "standalone_delta_vs_incumbent": 0.0015664543834651434,
+      "status": "SCORED",
+      "training_spec": {
+        "incumbent_objective": "binary",
+        "max_train_rows": 900000,
+        "modules": [
+          "m02_dist",
+          "m03_dyn",
+          "m04_resid",
+          "m06_loc"
+        ],
+        "replaced": "RT-411",
+        "sample_mode": "uniform",
+        "seed": 1
+      },
+      "verdict": "PROMOTION_WORTHY"
+    },
+    "CAT-412": {
+      "catboost_params": {
+        "allow_writing_files": false,
+        "bootstrap_type": "Bernoulli",
+        "border_count": 127,
+        "depth": 6,
+        "eval_metric": "Logloss",
+        "iterations": 600,
+        "l2_leaf_reg": 5.0,
+        "learning_rate": 0.05,
+        "loss_function": "Logloss",
+        "random_seed": 7,
+        "rsm": 0.7,
+        "subsample": 0.7,
+        "thread_count": 2,
+        "verbose": false
+      },
+      "ensemble": {
+        "E0_original_rt600": {
+          "mean_ts_auc": 0.6258113418832281,
+          "per_fold_ts_auc": [
+            0.638276215299891,
+            0.6204019581662752,
+            0.6339304299070194,
+            0.6175075878311903,
+            0.6189405182117643
+          ]
+        },
+        "E1_clone_replacement": {
+          "mean_ts_auc": 0.6252105549438124,
+          "per_fold_ts_auc": [
+            0.6372920166888311,
+            0.6213396493605976,
+            0.6337961578437675,
+            0.6170711205771746,
+            0.6165538302486907
+          ]
+        },
+        "E2_cat_replacement": {
+          "mean_ts_auc": 0.6268409344546824,
+          "per_fold_ts_auc": [
+            0.6384048587271597,
+            0.6229560607435214,
+            0.6351917320655155,
+            0.6193166068156332,
+            0.618335413921582
+          ]
+        },
+        "E2_minus_E0": 0.0010295925714542964,
+        "fold_deltas_vs_clone": [
+          0.0011128420383286208,
+          0.001616411382923788,
+          0.0013955742217479639,
+          0.0022454862384585494,
+          0.0017815836728912737
+        ],
+        "marginal_vs_clone": 0.0016303795108699726,
+        "positive_folds_vs_clone": 5
+      },
+      "fold_runtime_s": [
+        376.32373309135437,
+        372.0573990345001,
+        372.77779364585876,
+        376.6429178714752,
+        372.68605613708496
+      ],
+      "id": "RT-1261",
+      "incumbent_standalone": {
+        "fold_std": 0.009467607437973998,
+        "mean_ts_auc": 0.6139359753979305,
+        "per_fold_ts_auc": [
+          0.6287384763356841,
+          0.6023381473625496,
+          0.6198609524472606,
+          0.6063900686811637,
+          0.6123522321629945
+        ],
+        "pooled_ts_auc": 0.6138752530171063
+      },
+      "name": "CAT-412",
+      "pair_flow_vs_E0": {
+        "dominant_cell": {
+          "damage": 778,
+          "damage_rate": 0.015418764120654802,
+          "net_pair_lift": 92,
+          "repairs": 870,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 813,
+          "damage_rate": 0.016114326488543565,
+          "net_pair_lift": 54,
+          "repairs": 867,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 631,
+          "damage_rate": 0.014330161469806736,
+          "net_pair_lift": 41,
+          "repairs": 672,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 1153,
+          "damage_rate": 0.01824540304459284,
+          "net_pair_lift": 50,
+          "repairs": 1203,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "pair_flow_vs_clone": {
+        "dominant_cell": {
+          "damage": 683,
+          "damage_rate": 0.013536010147052994,
+          "net_pair_lift": 122,
+          "repairs": 805,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 740,
+          "damage_rate": 0.014667406643938794,
+          "net_pair_lift": 39,
+          "repairs": 779,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 571,
+          "damage_rate": 0.012967547066972498,
+          "net_pair_lift": 82,
+          "repairs": 653,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 1033,
+          "damage_rate": 0.01634648859068899,
+          "net_pair_lift": 63,
+          "repairs": 1096,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "replaced": "RT-412",
+      "rho_vs_incumbent": 0.687396635133629,
+      "runtime_s": 1870.6156160831451,
+      "standalone": {
+        "fold_std": 0.007302372887073689,
+        "mean_ts_auc": 0.6235112755826302,
+        "per_fold_ts_auc": [
+          0.6332425571143329,
+          0.6211166847881316,
+          0.6301998827255677,
+          0.6198971106988036,
+          0.6131001425863156
+        ],
+        "pooled_ts_auc": 0.6233490009640642
+      },
+      "standalone_delta_vs_incumbent": 0.009575300184699653,
+      "status": "SCORED",
+      "training_spec": {
+        "incumbent_objective": "binary_extra_trees_per_series",
+        "max_train_rows": 900000,
+        "modules": [
+          "m00_core",
+          "m01_seq",
+          "m02_dist",
+          "m03_dyn",
+          "m04_resid",
+          "m06_loc",
+          "m07_bayes"
+        ],
+        "replaced": "RT-412",
+        "sample_mode": "per_series",
+        "seed": 7
+      },
+      "verdict": "PROMOTION_WORTHY"
+    },
+    "CAT-413": {
+      "catboost_params": {
+        "allow_writing_files": false,
+        "bootstrap_type": "Bernoulli",
+        "border_count": 127,
+        "depth": 6,
+        "eval_metric": "Logloss",
+        "iterations": 600,
+        "l2_leaf_reg": 5.0,
+        "learning_rate": 0.05,
+        "loss_function": "Logloss",
+        "random_seed": 0,
+        "rsm": 0.7,
+        "subsample": 0.7,
+        "thread_count": 2,
+        "verbose": false
+      },
+      "ensemble": {
+        "E0_original_rt600": {
+          "mean_ts_auc": 0.6258113418832281,
+          "per_fold_ts_auc": [
+            0.638276215299891,
+            0.6204019581662752,
+            0.6339304299070194,
+            0.6175075878311903,
+            0.6189405182117643
+          ]
+        },
+        "E1_clone_replacement": {
+          "mean_ts_auc": 0.625968537932223,
+          "per_fold_ts_auc": [
+            0.6378415513953996,
+            0.6200700254321583,
+            0.6338685517180254,
+            0.6188560335458028,
+            0.6192065275697289
+          ]
+        },
+        "E2_cat_replacement": {
+          "mean_ts_auc": 0.6270556887649625,
+          "per_fold_ts_auc": [
+            0.6386239713380495,
+            0.6202619111836665,
+            0.6350096485874397,
+            0.6204282935387373,
+            0.62095461917692
+          ]
+        },
+        "E2_minus_E0": 0.0012443468817344705,
+        "fold_deltas_vs_clone": [
+          0.0007824199426499368,
+          0.00019188575150819176,
+          0.0011410968694143264,
+          0.0015722599929345327,
+          0.0017480916071910269
+        ],
+        "marginal_vs_clone": 0.0010871508327395807,
+        "positive_folds_vs_clone": 5
+      },
+      "fold_runtime_s": [],
+      "id": "RT-1254",
+      "incumbent_standalone": {
+        "fold_std": 0.01194077626689197,
+        "mean_ts_auc": 0.614809747839776,
+        "per_fold_ts_auc": [
+          0.6318499098510418,
+          0.613260474973376,
+          0.6245466793313991,
+          0.6003098338644413,
+          0.604081841178622
+        ],
+        "pooled_ts_auc": 0.6147771197268335
+      },
+      "name": "CAT-413",
+      "pair_flow_vs_E0": {
+        "dominant_cell": {
+          "damage": 716,
+          "damage_rate": 0.014190019422093622,
+          "net_pair_lift": 93,
+          "repairs": 809,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 739,
+          "damage_rate": 0.014647585824149687,
+          "net_pair_lift": 80,
+          "repairs": 819,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 616,
+          "damage_rate": 0.013989507869098177,
+          "net_pair_lift": 71,
+          "repairs": 687,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 1100,
+          "damage_rate": 0.017406715827451975,
+          "net_pair_lift": 9,
+          "repairs": 1109,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "pair_flow_vs_clone": {
+        "dominant_cell": {
+          "damage": 696,
+          "damage_rate": 0.013793650164493241,
+          "net_pair_lift": 20,
+          "repairs": 716,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 744,
+          "damage_rate": 0.014746689923095219,
+          "net_pair_lift": 17,
+          "repairs": 761,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 571,
+          "damage_rate": 0.012967547066972498,
+          "net_pair_lift": 67,
+          "repairs": 638,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 1035,
+          "damage_rate": 0.01637813716492072,
+          "net_pair_lift": -16,
+          "repairs": 1019,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "replaced": "RT-413",
+      "rho_vs_incumbent": 0.7141956533581161,
+      "runtime_s": 0.0,
+      "standalone": {
+        "fold_std": 0.007909158721957778,
+        "mean_ts_auc": 0.6204402439437672,
+        "per_fold_ts_auc": [
+          0.6318118565163144,
+          0.6136774063239876,
+          0.6281032231564433,
+          0.615665467098267,
+          0.6129432666238234
+        ],
+        "pooled_ts_auc": 0.6200951192580461
+      },
+      "standalone_delta_vs_incumbent": 0.005630496103991134,
+      "status": "SCORED",
+      "training_spec": {
+        "incumbent_objective": "pairwise_t",
+        "max_train_rows": 700000,
+        "modules": [
+          "m00_core",
+          "m01_seq",
+          "m02_dist",
+          "m03_dyn",
+          "m04_resid",
+          "m06_loc",
+          "m07_bayes"
+        ],
+        "replaced": "RT-413",
+        "sample_mode": "uniform",
+        "seed": 0
+      },
+      "verdict": "INTERESTING"
+    },
+    "CAT-414": {
+      "catboost_params": {
+        "allow_writing_files": false,
+        "bootstrap_type": "Bernoulli",
+        "border_count": 127,
+        "depth": 6,
+        "eval_metric": "Logloss",
+        "iterations": 600,
+        "l2_leaf_reg": 5.0,
+        "learning_rate": 0.05,
+        "loss_function": "Logloss",
+        "random_seed": 3,
+        "rsm": 0.7,
+        "subsample": 0.7,
+        "thread_count": 2,
+        "verbose": false
+      },
+      "ensemble": {
+        "E0_original_rt600": {
+          "mean_ts_auc": 0.6258113418832281,
+          "per_fold_ts_auc": [
+            0.638276215299891,
+            0.6204019581662752,
+            0.6339304299070194,
+            0.6175075878311903,
+            0.6189405182117643
+          ]
+        },
+        "E1_clone_replacement": {
+          "mean_ts_auc": 0.6247744615397639,
+          "per_fold_ts_auc": [
+            0.6392833463028302,
+            0.618855661926088,
+            0.6338254478200133,
+            0.6169573232476221,
+            0.6149505284022654
+          ]
+        },
+        "E2_cat_replacement": {
+          "mean_ts_auc": 0.6263634609005545,
+          "per_fold_ts_auc": [
+            0.6390477571036226,
+            0.6211074944856927,
+            0.6350196399758073,
+            0.6187719921966047,
+            0.6178704207410454
+          ]
+        },
+        "E2_minus_E0": 0.0005521190173264356,
+        "fold_deltas_vs_clone": [
+          -0.00023558919920763088,
+          0.002251832559604705,
+          0.0011941921557940827,
+          0.001814668948982634,
+          0.0029198923387799836
+        ],
+        "marginal_vs_clone": 0.0015889993607905994,
+        "positive_folds_vs_clone": 4
+      },
+      "fold_runtime_s": [
+        131.18853497505188,
+        131.25474619865417,
+        131.17136693000793,
+        129.34734082221985,
+        125.85257124900818
+      ],
+      "id": "RT-1262",
+      "incumbent_standalone": {
+        "fold_std": 0.005678521975034218,
+        "mean_ts_auc": 0.6110448436752867,
+        "per_fold_ts_auc": [
+          0.6120702693626513,
+          0.6122070837298516,
+          0.6124617176812629,
+          0.6005730330414647,
+          0.6179121145612029
+        ],
+        "pooled_ts_auc": 0.6107717342243957
+      },
+      "name": "CAT-414",
+      "pair_flow_vs_E0": {
+        "dominant_cell": {
+          "damage": 655,
+          "damage_rate": 0.012981093186412463,
+          "net_pair_lift": 41,
+          "repairs": 696,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 688,
+          "damage_rate": 0.013636724014905257,
+          "net_pair_lift": 49,
+          "repairs": 737,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 608,
+          "damage_rate": 0.013807825948720279,
+          "net_pair_lift": -62,
+          "repairs": 546,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 909,
+          "damage_rate": 0.014384276988321676,
+          "net_pair_lift": 91,
+          "repairs": 1000,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "pair_flow_vs_clone": {
+        "dominant_cell": {
+          "damage": 828,
+          "damage_rate": 0.016409687264655755,
+          "net_pair_lift": 75,
+          "repairs": 903,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 876,
+          "damage_rate": 0.017363038135257275,
+          "net_pair_lift": 78,
+          "repairs": 954,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 793,
+          "damage_rate": 0.01800922035745918,
+          "net_pair_lift": -69,
+          "repairs": 724,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 1180,
+          "damage_rate": 0.018672658796721208,
+          "net_pair_lift": 105,
+          "repairs": 1285,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "replaced": "RT-414",
+      "rho_vs_incumbent": 0.7416281510131915,
+      "runtime_s": 648.93217420578,
+      "standalone": {
+        "fold_std": 0.0033549711412864127,
+        "mean_ts_auc": 0.6153268233320311,
+        "per_fold_ts_auc": [
+          0.6168588231833666,
+          0.6179321785008469,
+          0.6188021776273709,
+          0.6097755476653376,
+          0.6132653896832333
+        ],
+        "pooled_ts_auc": 0.6150334539197383
+      },
+      "standalone_delta_vs_incumbent": 0.0042819796567444834,
+      "status": "SCORED",
+      "training_spec": {
+        "incumbent_objective": "binary",
+        "max_train_rows": 700000,
+        "modules": [
+          "m07_bayes",
+          "m06_loc",
+          "m01_seq"
+        ],
+        "replaced": "RT-414",
+        "sample_mode": "uniform",
+        "seed": 3
+      },
+      "verdict": "PROMOTION_WORTHY"
+    },
+    "CAT-415": {
+      "catboost_params": {
+        "allow_writing_files": false,
+        "bootstrap_type": "Bernoulli",
+        "border_count": 127,
+        "depth": 6,
+        "eval_metric": "Logloss",
+        "iterations": 600,
+        "l2_leaf_reg": 5.0,
+        "learning_rate": 0.05,
+        "loss_function": "Logloss",
+        "random_seed": 11,
+        "rsm": 0.7,
+        "subsample": 0.7,
+        "thread_count": 2,
+        "verbose": false
+      },
+      "ensemble": {
+        "E0_original_rt600": {
+          "mean_ts_auc": 0.6258113418832281,
+          "per_fold_ts_auc": [
+            0.638276215299891,
+            0.6204019581662752,
+            0.6339304299070194,
+            0.6175075878311903,
+            0.6189405182117643
+          ]
+        },
+        "E1_clone_replacement": {
+          "mean_ts_auc": 0.6257172877526955,
+          "per_fold_ts_auc": [
+            0.6381225363983114,
+            0.6202619327487093,
+            0.6336373181947526,
+            0.6174944295583366,
+            0.6190702218633676
+          ]
+        },
+        "E2_cat_replacement": {
+          "mean_ts_auc": 0.6267186662004548,
+          "per_fold_ts_auc": [
+            0.6394296534241795,
+            0.621551612167023,
+            0.6354035442931261,
+            0.6179816378400456,
+            0.6192268832779002
+          ]
+        },
+        "E2_minus_E0": 0.000907324317226732,
+        "fold_deltas_vs_clone": [
+          0.0013071170258680542,
+          0.001289679418313705,
+          0.0017662260983735134,
+          0.0004872082817090062,
+          0.00015666141453263283
+        ],
+        "marginal_vs_clone": 0.0010013784477592713,
+        "positive_folds_vs_clone": 5
+      },
+      "fold_runtime_s": [
+        312.6629910469055,
+        308.3112440109253,
+        308.6354179382324,
+        303.1396780014038,
+        305.8561370372772
+      ],
+      "id": "RT-1263",
+      "incumbent_standalone": {
+        "fold_std": 0.00987142737666118,
+        "mean_ts_auc": 0.6170844293688152,
+        "per_fold_ts_auc": [
+          0.6305177097200763,
+          0.6139336565401323,
+          0.6266685311804607,
+          0.6091067462262602,
+          0.6051955031771467
+        ],
+        "pooled_ts_auc": 0.6170677150454902
+      },
+      "name": "CAT-415",
+      "pair_flow_vs_E0": {
+        "dominant_cell": {
+          "damage": 708,
+          "damage_rate": 0.01403147171905347,
+          "net_pair_lift": 81,
+          "repairs": 789,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 702,
+          "damage_rate": 0.013914215491952747,
+          "net_pair_lift": 50,
+          "repairs": 752,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 582,
+          "damage_rate": 0.013217359707492108,
+          "net_pair_lift": 84,
+          "repairs": 666,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 1000,
+          "damage_rate": 0.01582428711586543,
+          "net_pair_lift": 82,
+          "repairs": 1082,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "pair_flow_vs_clone": {
+        "dominant_cell": {
+          "damage": 669,
+          "damage_rate": 0.013258551666732728,
+          "net_pair_lift": 74,
+          "repairs": 743,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 742,
+          "damage_rate": 0.014707048283517007,
+          "net_pair_lift": -51,
+          "repairs": 691,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 560,
+          "damage_rate": 0.012717734426452888,
+          "net_pair_lift": 97,
+          "repairs": 657,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 1029,
+          "damage_rate": 0.01628319144222553,
+          "net_pair_lift": 32,
+          "repairs": 1061,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "replaced": "RT-415",
+      "rho_vs_incumbent": 0.7191747230739166,
+      "runtime_s": 1538.6993069648743,
+      "standalone": {
+        "fold_std": 0.01264581756004531,
+        "mean_ts_auc": 0.6198318156115358,
+        "per_fold_ts_auc": [
+          0.6349649852896345,
+          0.618867706002534,
+          0.6329418736870314,
+          0.6097764168906514,
+          0.6026080961878275
+        ],
+        "pooled_ts_auc": 0.619727542225447
+      },
+      "standalone_delta_vs_incumbent": 0.0027473862427205287,
+      "status": "SCORED",
+      "training_spec": {
+        "caveat": "GOSS has no CatBoost analogue; frozen Bernoulli bootstrap is used.",
+        "incumbent_objective": "binary_goss",
+        "max_train_rows": 700000,
+        "modules": [
+          "m00_core",
+          "m01_seq",
+          "m02_dist",
+          "m03_dyn",
+          "m04_resid",
+          "m06_loc",
+          "m07_bayes"
+        ],
+        "replaced": "RT-415",
+        "sample_mode": "uniform",
+        "seed": 11
+      },
+      "verdict": "INTERESTING"
+    }
+  },
+  "survivors_ordered_by_single_slot_marginal": [
+    "CAT-412",
+    "CAT-414",
+    "CAT-411",
+    "CAT-413",
+    "CAT-300",
+    "CAT-415"
+  ],
+  "training_log": {
+    "arms": {
+      "CAT-411": {
+        "catboost_params": {
+          "allow_writing_files": false,
+          "bootstrap_type": "Bernoulli",
+          "border_count": 127,
+          "depth": 6,
+          "eval_metric": "Logloss",
+          "iterations": 600,
+          "l2_leaf_reg": 5.0,
+          "learning_rate": 0.05,
+          "loss_function": "Logloss",
+          "random_seed": 1,
+          "rsm": 0.7,
+          "subsample": 0.7,
+          "thread_count": 2,
+          "verbose": false
+        },
+        "folds": [
+          {
+            "fold": 0,
+            "runtime_s": 205.77828311920166,
+            "train_rows": 900000,
+            "valid_rows": 806334
+          },
+          {
+            "fold": 1,
+            "runtime_s": 216.6768970489502,
+            "train_rows": 900000,
+            "valid_rows": 812939
+          },
+          {
+            "fold": 2,
+            "runtime_s": 207.23553109169006,
+            "train_rows": 900000,
+            "valid_rows": 806691
+          },
+          {
+            "fold": 3,
+            "runtime_s": 201.61310720443726,
+            "train_rows": 900000,
+            "valid_rows": 802506
+          },
+          {
+            "fold": 4,
+            "runtime_s": 206.01629185676575,
+            "train_rows": 900000,
+            "valid_rows": 804054
+          }
+        ],
+        "id": "RT-1260",
+        "name": "CAT-411",
+        "oof_path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1260.npy",
+        "runtime_s": 1037.465772151947,
+        "status": "TRAINED_NOT_SCORED",
+        "training_spec": {
+          "incumbent_objective": "binary",
+          "max_train_rows": 900000,
+          "modules": [
+            "m02_dist",
+            "m03_dyn",
+            "m04_resid",
+            "m06_loc"
+          ],
+          "replaced": "RT-411",
+          "sample_mode": "uniform",
+          "seed": 1
+        }
+      },
+      "CAT-412": {
+        "catboost_params": {
+          "allow_writing_files": false,
+          "bootstrap_type": "Bernoulli",
+          "border_count": 127,
+          "depth": 6,
+          "eval_metric": "Logloss",
+          "iterations": 600,
+          "l2_leaf_reg": 5.0,
+          "learning_rate": 0.05,
+          "loss_function": "Logloss",
+          "random_seed": 7,
+          "rsm": 0.7,
+          "subsample": 0.7,
+          "thread_count": 2,
+          "verbose": false
+        },
+        "folds": [
+          {
+            "fold": 0,
+            "runtime_s": 376.32373309135437,
+            "train_rows": 838053,
+            "valid_rows": 806334
+          },
+          {
+            "fold": 1,
+            "runtime_s": 372.0573990345001,
+            "train_rows": 837521,
+            "valid_rows": 812939
+          },
+          {
+            "fold": 2,
+            "runtime_s": 372.77779364585876,
+            "train_rows": 838748,
+            "valid_rows": 806691
+          },
+          {
+            "fold": 3,
+            "runtime_s": 376.6429178714752,
+            "train_rows": 840757,
+            "valid_rows": 802506
+          },
+          {
+            "fold": 4,
+            "runtime_s": 372.68605613708496,
+            "train_rows": 839877,
+            "valid_rows": 804054
+          }
+        ],
+        "id": "RT-1261",
+        "name": "CAT-412",
+        "oof_path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1261.npy",
+        "runtime_s": 1870.6156160831451,
+        "status": "TRAINED_NOT_SCORED",
+        "training_spec": {
+          "incumbent_objective": "binary_extra_trees_per_series",
+          "max_train_rows": 900000,
+          "modules": [
+            "m00_core",
+            "m01_seq",
+            "m02_dist",
+            "m03_dyn",
+            "m04_resid",
+            "m06_loc",
+            "m07_bayes"
+          ],
+          "replaced": "RT-412",
+          "sample_mode": "per_series",
+          "seed": 7
+        }
+      },
+      "CAT-414": {
+        "catboost_params": {
+          "allow_writing_files": false,
+          "bootstrap_type": "Bernoulli",
+          "border_count": 127,
+          "depth": 6,
+          "eval_metric": "Logloss",
+          "iterations": 600,
+          "l2_leaf_reg": 5.0,
+          "learning_rate": 0.05,
+          "loss_function": "Logloss",
+          "random_seed": 3,
+          "rsm": 0.7,
+          "subsample": 0.7,
+          "thread_count": 2,
+          "verbose": false
+        },
+        "folds": [
+          {
+            "fold": 0,
+            "runtime_s": 131.18853497505188,
+            "train_rows": 700000,
+            "valid_rows": 806334
+          },
+          {
+            "fold": 1,
+            "runtime_s": 131.25474619865417,
+            "train_rows": 700000,
+            "valid_rows": 812939
+          },
+          {
+            "fold": 2,
+            "runtime_s": 131.17136693000793,
+            "train_rows": 700000,
+            "valid_rows": 806691
+          },
+          {
+            "fold": 3,
+            "runtime_s": 129.34734082221985,
+            "train_rows": 700000,
+            "valid_rows": 802506
+          },
+          {
+            "fold": 4,
+            "runtime_s": 125.85257124900818,
+            "train_rows": 700000,
+            "valid_rows": 804054
+          }
+        ],
+        "id": "RT-1262",
+        "name": "CAT-414",
+        "oof_path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1262.npy",
+        "runtime_s": 648.93217420578,
+        "status": "TRAINED_NOT_SCORED",
+        "training_spec": {
+          "incumbent_objective": "binary",
+          "max_train_rows": 700000,
+          "modules": [
+            "m07_bayes",
+            "m06_loc",
+            "m01_seq"
+          ],
+          "replaced": "RT-414",
+          "sample_mode": "uniform",
+          "seed": 3
+        }
+      },
+      "CAT-415": {
+        "catboost_params": {
+          "allow_writing_files": false,
+          "bootstrap_type": "Bernoulli",
+          "border_count": 127,
+          "depth": 6,
+          "eval_metric": "Logloss",
+          "iterations": 600,
+          "l2_leaf_reg": 5.0,
+          "learning_rate": 0.05,
+          "loss_function": "Logloss",
+          "random_seed": 11,
+          "rsm": 0.7,
+          "subsample": 0.7,
+          "thread_count": 2,
+          "verbose": false
+        },
+        "folds": [
+          {
+            "fold": 0,
+            "runtime_s": 312.6629910469055,
+            "train_rows": 700000,
+            "valid_rows": 806334
+          },
+          {
+            "fold": 1,
+            "runtime_s": 308.3112440109253,
+            "train_rows": 700000,
+            "valid_rows": 812939
+          },
+          {
+            "fold": 2,
+            "runtime_s": 308.6354179382324,
+            "train_rows": 700000,
+            "valid_rows": 806691
+          },
+          {
+            "fold": 3,
+            "runtime_s": 303.1396780014038,
+            "train_rows": 700000,
+            "valid_rows": 802506
+          },
+          {
+            "fold": 4,
+            "runtime_s": 305.8561370372772,
+            "train_rows": 700000,
+            "valid_rows": 804054
+          }
+        ],
+        "id": "RT-1263",
+        "name": "CAT-415",
+        "oof_path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1263.npy",
+        "runtime_s": 1538.6993069648743,
+        "status": "TRAINED_NOT_SCORED",
+        "training_spec": {
+          "caveat": "GOSS has no CatBoost analogue; frozen Bernoulli bootstrap is used.",
+          "incumbent_objective": "binary_goss",
+          "max_train_rows": 700000,
+          "modules": [
+            "m00_core",
+            "m01_seq",
+            "m02_dist",
+            "m03_dyn",
+            "m04_resid",
+            "m06_loc",
+            "m07_bayes"
+          ],
+          "replaced": "RT-415",
+          "sample_mode": "uniform",
+          "seed": 11
+        }
+      }
+    },
+    "git_sha": "5a116d9",
+    "note": "No TS-AUC, pair-flow, replacement gain, or rank correlation is computed during training.",
+    "program": "DEEP_ENSEMBLE_FRONTIER_2026",
+    "score_free_log": true,
+    "stage": "CSA-04 train"
+  },
+  "validation": {
+    "RT-1254": {
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0,
+      "path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1254.npy",
+      "shape": [
+        5036517
+      ]
+    },
+    "RT-1255": {
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0,
+      "path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1255.npy",
+      "shape": [
+        5036517
+      ]
+    },
+    "RT-1256": {
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0,
+      "path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1256.npy",
+      "shape": [
+        5036517
+      ]
+    },
+    "RT-1260": {
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0,
+      "path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1260.npy",
+      "shape": [
+        5036517
+      ]
+    },
+    "RT-1261": {
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0,
+      "path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1261.npy",
+      "shape": [
+        5036517
+      ]
+    },
+    "RT-1262": {
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0,
+      "path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1262.npy",
+      "shape": [
+        5036517
+      ]
+    },
+    "RT-1263": {
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0,
+      "path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1263.npy",
+      "shape": [
+        5036517
+      ]
+    },
+    "RT-300": {
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0,
+      "path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-300.npy",
+      "shape": [
+        5036517
+      ]
+    },
+    "RT-401": {
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0,
+      "path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-401.npy",
+      "shape": [
+        5036517
+      ]
+    },
+    "RT-402": {
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0,
+      "path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-402.npy",
+      "shape": [
+        5036517
+      ]
+    },
+    "RT-403": {
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0,
+      "path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-403.npy",
+      "shape": [
+        5036517
+      ]
+    },
+    "RT-404": {
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0,
+      "path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-404.npy",
+      "shape": [
+        5036517
+      ]
+    },
+    "RT-405": {
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0,
+      "path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-405.npy",
+      "shape": [
+        5036517
+      ]
+    },
+    "RT-406": {
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0,
+      "path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-406.npy",
+      "shape": [
+        5036517
+      ]
+    },
+    "RT-410": {
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0,
+      "path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-410.npy",
+      "shape": [
+        5036517
+      ]
+    },
+    "RT-411": {
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0,
+      "path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-411.npy",
+      "shape": [
+        5036517
+      ]
+    },
+    "RT-412": {
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0,
+      "path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-412.npy",
+      "shape": [
+        5036517
+      ]
+    },
+    "RT-413": {
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0,
+      "path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-413.npy",
+      "shape": [
+        5036517
+      ]
+    },
+    "RT-414": {
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0,
+      "path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-414.npy",
+      "shape": [
+        5036517
+      ]
+    },
+    "RT-415": {
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0,
+      "path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-415.npy",
+      "shape": [
+        5036517
+      ]
+    }
+  }
+}

@@ -2015,7 +2015,6 @@ regression test for that exact case. Nothing frozen changed and the correction i
 its own pushed pre-score commit.
 
 **CRF-03 does not open** and the CRF program is exhausted. See `CRF_FINAL.md`.
-
 ## RT-1256 -- CAT-410 specialist reimplementation -- KILL (2026-08-27)
 
 **Program.** CatBoost Specialist Activation 2026. Full report:
@@ -2267,3 +2266,42 @@ motivates, and it is a **different experiment** that this program does not
 authorise. It is recorded as a hypothesis in `CRF_FINAL.md`, not run.
 
 **CRF-03 does not open** and the CRF program is exhausted. See `CRF_FINAL.md`.
+
+
+## No RT ID -- Deep Ensemble Frontier L3 CRF-01 arbitration probe -- KILL (2026-08-28)
+
+**Program preregistration** `research/reports/deep_ensemble_frontier_2026/PROGRAM_PLAN.md`
+@ `22d6633`.
+**Execution preregistration** `research/reports/deep_ensemble_frontier_2026/local/L3_ARBITRATION_PREREG.md`
+@ `328daee`.
+**Report** `research/reports/deep_ensemble_frontier_2026/local/L3_ARBITRATION_PROBE.md`
+@ `5a116d9`.
+
+**Hypothesis.** The fold-0 CRF-01 candidate vector (`RT-1234`) contains real,
+low-correlation representation signal, but its unconditional pair flow is too
+damaging. A fixed gating or abstention rule over frozen prediction vectors might
+retain at least half of the dominant-cell repairs while reducing
+mature-vs-prebreak damage rate below `0.05`.
+
+**What was done.** No model was trained and no RT ID was consumed. Fourteen
+rules were frozen before scoring: unconditional replacement, fixed confidence
+quantiles, RT600-boundary quantiles, agreement-direction gating,
+dominant-cell-only variants, and fixed three-way abstention rules. The probe
+used fold 0 only because `RT-1234` and matched control `RT-1235` each have only
+806,334 finite rows.
+
+**Result.** Verdict `FAIL_NO_RETENTION_MECHANISM`. No rule simultaneously kept
+at least 50% of unconditional dominant-cell repairs and brought
+mature-vs-prebreak damage rate below `0.05`. The best dominant-net rule,
+`rt600_boundary_q30`, had dominant repairs/damage/net `1049/879/+170` and low
+mature-vs-prebreak damage rate `0.0279`, but retained only `0.309` of the
+unconditional dominant repairs. The unconditional rule retained all repairs but
+had mature-vs-prebreak damage rate `0.1170`.
+
+**Why it failed.** The neural representation can find some repair pockets, but
+the fixed observable rules that suppress prebreak damage also discard too many
+repairs. This is an arbitration failure, not a training failure.
+
+**Retry warranted?** Not inside Deep Ensemble Frontier as preregistered. The
+negative H3 result gates against opening another neural detector lane unless a
+new retention mechanism is proposed and preregistered.
