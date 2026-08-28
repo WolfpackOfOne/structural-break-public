@@ -1037,3 +1037,20 @@ are freshly numbered rather than reopening `RT-1250`/`RT-1252`.
 
 Both candidates must complete full 5-fold OOF before either is evaluated.
 Result not yet filed; no score exists at allocation time.
+
+## Deep Ensemble Frontier 2026 -- LOCAL Lane CSA-04
+
+Reserved prospectively on 2026-08-28 before any CSA-04 score, OOF vector,
+replacement analysis, hybrid-curve result, or pair-flow diagnostic existed on
+`research/deep-ensemble-frontier-local-2026`. Execution preregistration:
+`research/reports/deep_ensemble_frontier_2026/local/CSA04_PREREG.md`.
+
+| ID | arm |
+|---|---|
+| `RT-1260` | CSA-04 CAT-411. Reimplement `RT-411` with the frozen `RT-1251` CatBoost learner; fixed-slot replacement against `RT-401`. |
+| `RT-1261` | CSA-04 CAT-412. Reimplement `RT-412` with the frozen `RT-1251` CatBoost learner, preserving `sample_mode="per_series"`; fixed-slot replacement against `RT-401`. |
+| `RT-1262` | CSA-04 CAT-414. Reimplement `RT-414` with the frozen `RT-1251` CatBoost learner; fixed-slot replacement against `RT-401`. |
+| `RT-1263` | CSA-04 CAT-415. Reimplement `RT-415` with the frozen `RT-1251` CatBoost learner under the preregistered GOSS caveat; fixed-slot replacement against `RT-401`. |
+| `RT-1264` | CSA-04 best-`k` hybrid over all CatBoost specialist survivors from CAT-413, CAT-300, CAT-410, CAT-411, CAT-412, CAT-414, and CAT-415, ordered by descending single-slot `marginal_vs_clone`. |
+
+`RT-1265` through `RT-1269` remain unallocated LOCAL-lane contingency IDs.

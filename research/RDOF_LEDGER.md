@@ -1481,3 +1481,53 @@ budget?
 Allocated IDs: `RT-1258` GPU-01 TabM, `RT-1259` GPU-02 RealMLP. Both must
 complete full 5-fold OOF before either is evaluated; neither may stop early
 except on unrecoverable technical failure. Result not yet filed.
+
+## Deep Ensemble Frontier 2026 -- LOCAL Lane CSA-04  (PRE-REGISTERED 2026-08-28)
+
+Execution preregistration:
+`research/reports/deep_ensemble_frontier_2026/local/CSA04_PREREG.md`.
+
+**Scientific question.** Does the non-LightGBM CatBoost direction measured in
+CatBoost Specialist Activation 2026 extend to the four untested RT-600 specialist
+slots, and where is the best `k`-slot mixed-family hybrid maximum?
+
+| Item | Degrees of freedom | Frozen before score |
+|---|---:|---|
+| CatBoost learner configuration | 0 | exact `RT-1251` parameters; no depth, learning-rate, iteration, loss, class-weight, feature-subset, or seed search |
+| new specialist slots | 4 | exactly `RT-411`, `RT-412`, `RT-414`, and `RT-415` |
+| rows/folds/features | 0 | incumbent specialist modules, canonical folds, incumbent train-row caps, and incumbent row sampler |
+| CAT-412 sampling | 0 | preserve `sample_mode="per_series"`; runner support verified before scoring |
+| CAT-415 GOSS handling | 0 | no CatBoost analogue; report under caveat and include if it clears the fixed survivor gate |
+| calibration/blending | 0 | equal-weight fold-pure `SCDF_NSEEN` only |
+| matched LightGBM controls | 0 | existing seed-clone OOF vectors, fixed before scoring |
+| hybrid ordering | 0 | descending measured single-slot `marginal_vs_clone`; dominant pair net is diagnostic only |
+| hybrid curve | 1 conditional family | evaluate every `k` from 2 through the number of `+0.0010` single-slot survivors |
+| pair-flow diagnostic sample | 0 | 64 same-`t` pairs per time point, seed `20260827` |
+
+Allocated IDs: `RT-1260` CAT-411, `RT-1261` CAT-412, `RT-1262` CAT-414,
+`RT-1263` CAT-415, and `RT-1264` best-`k` hybrid. All four single-slot arms must
+complete training on all five folds before any of the four is scored. The `k=2`
+hybrid must reproduce `RT-1257`'s `marginal_vs_clone = +0.002407205` exactly if
+CAT-413 and CAT-300 are first in the frozen ordering; otherwise CSA-04 evaluation
+halts as harness drift.
+
+## Deep Ensemble Frontier 2026 -- LOCAL Lane L3 Arbitration Probe  (PRE-REGISTERED 2026-08-28)
+
+Execution preregistration:
+`research/reports/deep_ensemble_frontier_2026/local/L3_ARBITRATION_PREREG.md`.
+
+**Scientific question.** Can any fixed gating or abstention rule over the existing
+fold-0 `RT-1234` CRF-01 OOF vector retain at least half of the unconditional
+dominant-cell repairs while reducing mature-vs-prebreak damage rate below `0.05`?
+
+| Item | Degrees of freedom | Frozen before score |
+|---|---:|---|
+| candidate/control vectors | 0 | existing `RT-1234` candidate and `RT-1235` matched BCE control; no training |
+| coverage | 0 | fold 0 only, because `RT-1234` and `RT-1235` have only 806,334 finite rows |
+| rule family | 12 fixed rules | unconditional, fixed confidence quantiles, RT600-boundary quantiles, agreement, dominant-cell restriction, dominant confidence gates, and fixed three-way abstention |
+| thresholds | 0 | quantiles fixed at preregistration; no threshold chosen from observed damage |
+| pair-flow diagnostic sample | 0 | 64 same-`t` pairs per time point, seed `20260827` |
+
+No RT ID is consumed because this is a descriptive diagnostic over frozen OOF
+vectors. A negative result is still filed as H3 because it gates the CRUNCH neural
+lane.
