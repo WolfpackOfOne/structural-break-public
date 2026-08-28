@@ -1524,7 +1524,7 @@ dominant-cell repairs while reducing mature-vs-prebreak damage rate below `0.05`
 |---|---:|---|
 | candidate/control vectors | 0 | existing `RT-1234` candidate and `RT-1235` matched BCE control; no training |
 | coverage | 0 | fold 0 only, because `RT-1234` and `RT-1235` have only 806,334 finite rows |
-| rule family | 12 fixed rules | unconditional, fixed confidence quantiles, RT600-boundary quantiles, agreement, dominant-cell restriction, dominant confidence gates, and fixed three-way abstention |
+| rule family | 14 fixed rules | unconditional, fixed confidence quantiles, RT600-boundary quantiles, agreement, dominant-cell restriction, dominant confidence gates, and fixed three-way abstention |
 | thresholds | 0 | quantiles fixed at preregistration; no threshold chosen from observed damage |
 | pair-flow diagnostic sample | 0 | 64 same-`t` pairs per time point, seed `20260827` |
 
