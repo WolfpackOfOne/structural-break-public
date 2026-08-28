@@ -1,0 +1,6 @@
+slice,series,rows,positive_rows,negative_rows,positive_row_rate
+never_break,4025,2015775,0,2015775,0.0
+prebreak_far,2652,661307,0,661307,0.0
+prebreak_near,3950,322200,0,322200,0.0
+postbreak_early,3975,327383,327383,0,1.0
+postbreak_mature,2723,705859,705859,0,1.0

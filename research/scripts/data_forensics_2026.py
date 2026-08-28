@@ -695,6 +695,8 @@ def write_report(result: dict) -> None:
         f"Reconstructed RT600 mean TS-AUC: `{overall['rt600_mean_ts_auc']:.9f}`. Reconstructed RT-1264 mean TS-AUC: `{overall['rt1264_mean_ts_auc']:.9f}`. Delta: `{overall['delta_mean_ts_auc']:+.9f}`.",
         f"Fold deltas RT-1264 minus RT600: `{', '.join(f'{x:+.9f}' for x in overall['fold_deltas'])}`.",
         "",
+        "The fold-mean delta is positive on all five folds, so the `RT-1264` gain is not a single-fold artifact. The largest fold contribution is fold 3, but the sign is stable. Slice tables below use pooled TS-AUC inside each slice, so `whole_dev` does not numerically equal the fold-mean headline.",
+        "",
         "## Largest Slice Deltas",
         "",
         "| slice | rows | positives | RT600 | RT-1264 | delta |",
@@ -722,6 +724,8 @@ def write_report(result: dict) -> None:
         )
     lines += [
         "",
+        "The strongest interpretable cell is `mature_vs_prebreak`: `RT-1264` gains `+0.005154009` pooled TS-AUC and `+291` sampled pair net. That is the part of the problem previous arbitration attempts kept damaging. The weak spot is early relative time: `rel_10_25` loses `-0.003631996`, and pair flow there is `-114`. Deployment review should check whether the live stream distribution over early relative positions matches dev.",
+        "",
         "## High-Score Mass",
         "",
         "| model | threshold | rows | positive capture | negative share | never-break share | prebreak share |",
@@ -735,6 +739,8 @@ def write_report(result: dict) -> None:
         )
     lines += [
         "",
+        "At the top 10% within each `t`, `RT-1264` captures 1,198 more positive rows than RT600 while reducing negative share from `0.495378` to `0.492400`. Prebreak share is essentially unchanged at top 10 and lower at top 1/top 5. Never-break share is mixed: slightly higher at top 1/top 5, lower at top 10. This does not look like a broad false-positive explosion, but never-break top-score mass remains the production-risk cell to watch.",
+        "",
         "## Raw Process",
         "",
         "| slice | rows | z mean | abs(z) mean | abs(z) p95 | abs(z)>3 |",
@@ -746,6 +752,10 @@ def write_report(result: dict) -> None:
                 f"| `{row['slice']}` | {row['rows']} | {row['z_mean']:.6f} | "
                 f"{row['abs_z_mean']:.6f} | {row['abs_z_p95']:.6f} | {row['tail_abs_gt_3_rate']:.6f} |"
             )
+    lines += [
+        "",
+        "The raw series itself says why simple thresholding has been hard. Never-break, far-prebreak, and near-prebreak rows have nearly identical historical-z summaries. Early postbreak rows move only modestly. Mature postbreak rows show a clearer mean/absolute-z shift, but the tail-rate separation is still small (`abs(z)>3` is `0.013109` for mature postbreak versus `0.006302` for never-break). The remaining signal is not a one-dimensional amplitude anomaly.",
+    ]
     if feature:
         all500 = next(r for r in feature["module_summary"] if r["module"] == "ALL_500")
         lines += [
@@ -765,6 +775,10 @@ def write_report(result: dict) -> None:
                 f"{row['near_constant_columns']} | {row['effective_rank_participation']:.3f} | "
                 f"{row['top_eigenvalue_share']:.6f} | {row['mean_abs_within_corr']:.6f} |"
             )
+        lines += [
+            "",
+            "The frozen 500-column bank has participation-ratio effective rank `21.282`, not anything close to 500. `m03_dyn` and `m06_loc` are the most internally diverse modules by this audit; `m01_seq`, `m04_resid`, and `m07_bayes` are much more compressed. This supports the recent empirical pattern: more learner or mechanism diversity is likelier to matter than adding near-duplicate columns inside the same transform family.",
+        ]
     lines += [
         "",
         "## Interpretation",
@@ -772,6 +786,7 @@ def write_report(result: dict) -> None:
         "- This report is descriptive only. It does not authorize a model, threshold, router, feature, or production change.",
         "- Any future experiment motivated by these slices needs its own preregistration before scoring.",
         "- `RT-1264` remains an internal OOF result pending separate deployment feasibility and confirmation work.",
+        "- For deployment review, the concrete checks are early-relative-position behavior and never-break top-score mass, not global mean AUC.",
     ]
     (OUT_DIR / "DATA_FORENSICS_REPORT.md").write_text("\n".join(lines) + "\n")
 
