@@ -49,6 +49,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import traceback
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, List, Optional, Tuple
@@ -659,12 +660,119 @@ def _standalone_and_diagnostics(
     }
 
 
+def _align_controls_to_store(
+    controls: dict[str, Any], c: Any
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Project the control OOF vectors onto THIS run's store row space.
+
+    THE BUG THIS EXISTS TO PREVENT (found before the first run that would have
+    hit it; this path had never executed in the cloud because load_control_oof
+    always raised first):
+
+    The control arrays are indexed over the FULL 10,000-series row space --
+    every online row of every series, dev and lockbox together, in ascending id
+    order -- with the 2,000 lockbox series left as NaN. That is 5,036,517 rows,
+    of which 4,032,524 are finite.
+
+    `_materialize_full_dev_store` deliberately materializes ONLY the five dev
+    folds (`fold != -1`), so this run's store row space is the 8,000 dev series
+    COMPACTED: 4,032,524 rows, with different offsets.
+
+    Every cloud row index (0..4,032,523) is therefore a *valid* index into a
+    5,036,517-long control array. Indexing without projecting raises NOTHING --
+    it silently reads the wrong rows and yields a plausible, wrong
+    `marginal_vs_clone`. `evaluate_gpu_oof.ensure_complete_oof` shape-checks the
+    CANDIDATE against `len(c.d.y)`; `common.load_control_oof` shape-checks the
+    CONTROLS against nothing.
+
+    The projection is derived purely from `research/folds/folds.parquet`, which
+    is part of the submitted tree, so it needs nothing that is not already here.
+    It is then CROSS-CHECKED against an independent derivation (the finite
+    subset of the array, since lockbox rows are exactly the NaN rows). Both must
+    agree, and the result must be entirely finite and exactly `len(c.d.y)` long,
+    or this raises rather than returning a misaligned control.
+
+    A control that is already in the store's row space (the local evaluation
+    path, where the store IS the full 10,000-series store) is returned
+    unchanged.
+    """
+    import numpy as np
+    import pandas as pd
+
+    n_store = int(len(c.d.y))
+    folds_df = pd.read_parquet(
+        _REPO_ROOT / "research" / "folds" / "folds.parquet"
+    ).sort_values("id").reset_index(drop=True)
+    n_online = folds_df["n_online"].to_numpy().astype(np.int64)
+    n_full = int(n_online.sum())
+
+    if n_store == n_full:
+        return controls, {
+            "projection": "none_required",
+            "reason": "store row space is already the full 10,000-series row space",
+            "store_rows": n_store,
+        }
+
+    offsets = np.concatenate([[0], np.cumsum(n_online)])[:-1]
+    dev_series = np.where(folds_df["fold"].to_numpy() != -1)[0]
+    dev_index = np.concatenate(
+        [np.arange(offsets[i], offsets[i] + n_online[i]) for i in dev_series]
+    )
+
+    if len(dev_index) != n_store:
+        raise RuntimeError(
+            "CONTROL ALIGNMENT FAILED: dev row space derived from folds.parquet is "
+            f"{len(dev_index)} rows but this run's store has {n_store}. Refusing to "
+            "evaluate rather than emit a misaligned marginal_vs_clone."
+        )
+
+    aligned: dict[str, Any] = {}
+    for name, vec in controls.items():
+        if len(vec) == n_store:
+            aligned[name] = vec
+            continue
+        if len(vec) != n_full:
+            raise RuntimeError(
+                f"CONTROL ALIGNMENT FAILED: {name} has {len(vec)} rows, which is neither "
+                f"this run's store row space ({n_store}) nor the full row space ({n_full})."
+            )
+        projected = vec[dev_index]
+        # Independent cross-check: lockbox rows are exactly the NaN rows, so the
+        # positional projection must equal the finite subset. Two derivations,
+        # one from folds.parquet and one from the data itself.
+        if not np.array_equal(projected, vec[np.isfinite(vec)]):
+            raise RuntimeError(
+                f"CONTROL ALIGNMENT FAILED: {name} positional dev projection disagrees "
+                "with its finite subset. The control's NaN mask is not the lockbox."
+            )
+        if not np.isfinite(projected).all():
+            raise RuntimeError(
+                f"CONTROL ALIGNMENT FAILED: {name} still contains non-finite values after "
+                "projection onto the dev row space."
+            )
+        aligned[name] = projected
+
+    return aligned, {
+        "projection": "full_10000_series_row_space -> dev_only_store_row_space",
+        "full_rows": n_full,
+        "store_rows": n_store,
+        "dev_series": int(len(dev_series)),
+        "cross_check": "positional projection == finite subset, for every control",
+    }
+
+
 def _try_binding_replacement_test(artifact_root: Path, output_root: Path) -> dict[str, Any]:
     """Attempt the full E0/E1/E2 nested replacement test. Requires
-    research/oof/*.npy RT600 specialist + RT-401 clone control artifacts,
-    which are .gitignore'd and normally absent from a cold Crunch checkout.
-    Returns {"computed": False, "reason": ...} when unavailable rather than
-    failing the whole run."""
+    research/oof/*.npy RT600 specialist + RT-401 clone control artifacts.
+
+    Returns {"computed": False, "reason": ...} rather than failing the whole run
+    if anything here goes wrong. That matters: this runs AFTER both learners have
+    trained, so raising would destroy ~4.5 GPU-hours of completed work -- the
+    fold checkpoints only reach durable storage when the run finishes and the
+    platform uploads model_directory_path. An evaluation problem must cost the
+    evaluation, not the training. The alignment guarantees live in
+    _align_controls_to_store and RAISE on violation, so the two outcomes are a
+    correct result or an honest "not computed" -- never a wrong number."""
     import evaluate_gpu_oof
     from common import configure_roots, load_control_oof, load_eval_context
 
@@ -683,14 +791,31 @@ def _try_binding_replacement_test(artifact_root: Path, output_root: Path) -> dic
             ),
         }
 
-    configure_roots(artifact_root)
-    c = load_eval_context(artifact_root)
-    out: dict[str, Any] = {"computed": True, "learners": {}}
-    for learner in ("tabm", "realmlp"):
-        out["learners"][learner] = evaluate_gpu_oof.evaluate_learner(
-            learner, c, controls, output_root
-        )
-    return out
+    try:
+        configure_roots(artifact_root)
+        c = load_eval_context(artifact_root)
+        controls, alignment = _align_controls_to_store(controls, c)
+        print(f"control alignment: {json.dumps(alignment, sort_keys=True)}", flush=True)
+        out: dict[str, Any] = {
+            "computed": True,
+            "control_alignment": alignment,
+            "learners": {},
+        }
+        for learner in ("tabm", "realmlp"):
+            out["learners"][learner] = evaluate_gpu_oof.evaluate_learner(
+                learner, c, controls, output_root
+            )
+        return out
+    except BaseException as exc:  # noqa: BLE001 -- see docstring
+        traceback.print_exc()
+        return {
+            "computed": False,
+            "reason": (
+                f"binding replacement test failed: {type(exc).__name__}: {exc}. The "
+                "fold checkpoints and both OOF vectors are unaffected and are still "
+                "persisted by this run; re-run the evaluation rather than retraining."
+            ),
+        }
 
 
 def _finalize_result(
