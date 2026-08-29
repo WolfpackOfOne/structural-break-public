@@ -40,3 +40,12 @@ P2 idiosyncrasy: not supported. The wide idiosyncratic slots CAT-412 and CAT-415
 P3 interior maximum: supported. Best k was 5; largest evaluated k was 6.
 
 No lockbox, test, production, feature, router, stacker, hyperparameter, seed, or blend-weight change was made.
+
+## CSA-04R Reanalysis Pointer
+
+CSA-04R is filed in
+`research/reports/deep_ensemble_frontier_2026/local/CSA04R_REANALYSIS.md`.
+It does not rewrite any CSA-04 numbers or verdicts. It reanalyzes the same OOF
+vectors under the fixed `E2-E0` endpoint, selects `k*=2`
+(`CAT-413, CAT-300`), and returns
+verdict `NOT_DISTINGUISHABLE` with `delta_noise=0.001100000`.

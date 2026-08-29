@@ -1053,4 +1053,16 @@ replacement analysis, hybrid-curve result, or pair-flow diagnostic existed on
 | `RT-1263` | CSA-04 CAT-415. Reimplement `RT-415` with the frozen `RT-1251` CatBoost learner under the preregistered GOSS caveat; fixed-slot replacement against `RT-401`. |
 | `RT-1264` | CSA-04 best-`k` hybrid over all CatBoost specialist survivors from CAT-413, CAT-300, CAT-410, CAT-411, CAT-412, CAT-414, and CAT-415, ordered by descending single-slot `marginal_vs_clone`. |
 
-`RT-1265` through `RT-1269` remain unallocated LOCAL-lane contingency IDs.
+`RT-1266` through `RT-1269` remain unallocated LOCAL-lane contingency IDs.
+
+## Deep Ensemble Frontier 2026 -- LOCAL Lane CSA-04R Reanalysis
+
+Registered as a separate post-CSA-04 reanalysis on 2026-08-28 because the
+CSA-04 `E2-E1` endpoint was discovered to inflate as `k` grew. This consumes no
+new model and writes no OOF vector; it reorders the already-admitted CSA-04
+survivors by fixed single-slot `E2-E0` and selects `k` by the deployment
+endpoint `E2-E0`.
+
+| ID | arm |
+|---|---|
+| `RT-1265` | CSA-04R selected `k*` hybrid under the fixed `E2-E0` endpoint. The selected composition is the two-slot CAT-413 + CAT-300 hybrid, identical to `RT-1257`; no new OOF vector is written. |

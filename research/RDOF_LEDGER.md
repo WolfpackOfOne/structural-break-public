@@ -1531,3 +1531,26 @@ dominant-cell repairs while reducing mature-vs-prebreak damage rate below `0.05`
 No RT ID is consumed because this is a descriptive diagnostic over frozen OOF
 vectors. A negative result is still filed as H3 because it gates the CRUNCH neural
 lane.
+
+## Deep Ensemble Frontier 2026 -- LOCAL Lane CSA-04R Reanalysis  (PRE-REGISTERED 2026-08-28; EXECUTED 2026-08-28)
+
+Execution preregistration:
+`research/reports/deep_ensemble_frontier_2026/CSA04R_REANALYSIS_PREREG.md`.
+
+**Scientific question.** CSA-04 selected hybrid size by `E2-E1`, but that control
+collapses as `k` grows. CSA-04R asks which already-admitted CatBoost survivor
+composition is selected when the curve is ordered and judged by fixed
+deployment endpoint `E2-E0`.
+
+| Item | Degrees of freedom | Frozen before CSA-04R execution |
+|---|---:|---|
+| endpoint change | 1 | `E2-E0` replaces `E2-E1` for selecting `k*`; `E1` retained only for continuity |
+| ordering change | 1 | fixed order CAT-413, CAT-300, CAT-412, CAT-415, CAT-414, CAT-411 |
+| per-slot admission | 0 | unchanged CSA-04 `marginal_vs_clone >= +0.0010` at `k=1`; CAT-410 not re-admitted |
+| model training | 0 | no training, no retuning, no new OOF vector |
+| bootstrap | 0 | series bootstrap seed `20260828`, B = 2000, fixed in preregistration |
+| descriptive subsets | 63 non-selecting looks | all non-empty subsets enumerated and explicitly barred from selecting `k*` or supporting promotion |
+
+Result: `k*=2` (`CAT-413, CAT-300`),
+`E2-E0=+0.002026322`,
+`delta_noise=0.001100000`, verdict `NOT_DISTINGUISHABLE`.
