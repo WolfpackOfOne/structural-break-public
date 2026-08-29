@@ -1,0 +1,12 @@
+# Optional extras for the weekend model-search harness (experiments/, scripts/run_experiments.py).
+# Not required to run the core baseline/detectors — only the gradient-boosting
+# and (once implemented) HMM/deep-learning experiments in
+# src/structural_break/experiment_registry.py need these. Install what you use;
+# a missing package here makes the corresponding experiment log as "skipped",
+# not crash the run.
+-r requirements.txt
+xgboost>=2.0
+lightgbm>=4.0
+# Uncomment as the stub experiments in experiment_registry.py are implemented:
+# hmmlearn>=0.3
+# torch>=2.0

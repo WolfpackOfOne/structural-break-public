@@ -7,3 +7,5 @@ joblib>=1.1
 # Change-point detection and visualization.
 ruptures>=1.1
 matplotlib>=3.4
+# Parquet support, for the real competition data format (src/structural_break/competition_data.py).
+pyarrow>=10.0

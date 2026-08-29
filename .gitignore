@@ -49,3 +49,8 @@ models/
 # Local environment
 .env
 .env.*
+
+# Weekend model-search harness: keep the leaderboard, progress log, and
+# best-model config tracked; the model binary itself is reproducible from
+# best_config.json and already covered by *.joblib above.
+experiments/models/

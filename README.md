@@ -265,6 +265,20 @@ dataset the mean-based detectors miss the volatility shift that the rolling
 z-score still flags. Results against the official ADIA Lab challenge data are
 **pending** and will be reported only when reproducible.
 
+## Weekend model-search harness
+
+`scripts/run_experiments.py` drives an unattended, resumable search across
+model families (statistical features, the existing detectors, gradient
+boosting, and stubbed-out HMM/Bayesian/deep-learning families) against the
+real competition data, tracking every attempt in `experiments/leaderboard.csv`
+and checkpointing progress to git as it runs. See
+[`experiments/README.md`](experiments/README.md) for how it works and how to
+extend it.
+
+```bash
+python scripts/run_experiments.py --synthetic   # smoke test, no data required
+```
+
 ## Roadmap
 
 **Done**
