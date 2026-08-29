@@ -1,0 +1,33 @@
+{
+  "phase": "benchmark",
+  "rt1257": {
+    "artifact": "/path/to/workspace/structural-break-rt1257-deployment/models/rt1257_final",
+    "n_series": 40,
+    "n_points": 22418,
+    "load_s": 0.6827909171115607,
+    "fixed_ms_per_series": 180.79893430694938,
+    "ms_per_online_point": 2.2775417428532827,
+    "peak_rss_mb": 699.6875,
+    "mean_online_horizon": 503.6517,
+    "projected_10000_series_s": 13278.867049159682,
+    "projected_10000_series_h": 3.688574180322134,
+    "score_sum_guard": 11170.88391577259,
+    "pass_15h_quota": true
+  },
+  "rt600": {
+    "artifact": "/path/to/workspace/structural-break-claude-wave3/models/final10k_ensemble",
+    "n_series": 40,
+    "n_points": 21283,
+    "load_s": 0.6752160000614822,
+    "fixed_ms_per_series": 197.6369884214364,
+    "ms_per_online_point": 2.4984933459152923,
+    "peak_rss_mb": 636.484375,
+    "mean_online_horizon": 503.6517,
+    "projected_10000_series_s": 14560.074095303613,
+    "projected_10000_series_h": 4.044465026473226,
+    "score_sum_guard": 9654.109917685853,
+    "pass_15h_quota": true
+  },
+  "quota_h": 15.0,
+  "ratio_vs_rt600": 0.9120054583680184
+}
