@@ -1,0 +1,185 @@
+{
+  "handoff": "H4",
+  "program": "DEEP_ENSEMBLE_FRONTIER_2026",
+  "lane": "CRUNCH",
+  "date": "2026-08-28",
+  "provenance": {
+    "crunch_submission_number": 14,
+    "crunch_submission_id": 76588,
+    "task_id": "run-d0890cc5",
+    "frozen_config_sha256": "1d28f1acfb8f524e1dcb8967a4605c19f48e99d152b4c57f01256cf90f17bb45",
+    "frozen_config_gate": "PASSED_UNWEAKENED",
+    "git_purity_mode": "content_hash_only_no_usable_git_tree",
+    "submission_git_sha": "b3a16bc",
+    "timestamp_utc": "2026-08-28T22:41:37Z"
+  },
+  "SOURCE_WARNING": {
+    "status": "RECONSTRUCTED_FROM_TRUNCATED_CONSOLE_OUTPUT",
+    "detail": "The cloud runner emitted '[runner warning] output limit exceeded - head=1000 tail=500', eliding the middle of the result JSON. Every value below marked observed=true was read directly from the surviving output. Values marked derived=true are computed from observed values via an identity stated inline. Fields listed in missing_fields were in the elided region and are NOT reproduced here.",
+    "authoritative_source": "model artifact GPU_TABULAR_OOF_RESULTS.json (18154 bytes) on submission 76588, downloadable from the dashboard",
+    "why_not_fetched": "the credential in .crunchdao/token is a push-scoped token; submissions.get/list return 403 AuthorizationDeniedException. Retrieving the artifact requires dashboard access, not this token.",
+    "missing_fields": [
+      "control_alignment (the direct record that _align_controls_to_store ran and which projection it applied)",
+      "learners.realmlp.dominant_cell_auc",
+      "learners.realmlp.ensemble.E0/E1/E2 mean_ts_auc (observed only for tabm)",
+      "learners.realmlp.ensemble.candidate_choices folds 0-3 (fold 4 observed)",
+      "feature_preparation",
+      "crunch_provenance block",
+      "benchmark_submission_git_sha"
+    ]
+  },
+  "run": {
+    "total_runtime_seconds": 14255.795304775238,
+    "total_runtime_hours": 3.9599431402153438,
+    "projected_hours": 4.545298927912005,
+    "under_budget": true,
+    "quota_hours": 15.0,
+    "signal_death_retries": 0,
+    "determinism_check": "passed",
+    "gpu": "NVIDIA GeForce RTX 4090",
+    "cuda": "12.8",
+    "torch": "2.10.0",
+    "vram_gb": 25.250627584,
+    "no_combination_this_program": true,
+    "rt_ids_allocated_by_crunch_lane": 0
+  },
+  "control_alignment_evidence": {
+    "direct_field_observed": false,
+    "note": "The control_alignment field itself was elided. Alignment is nonetheless established by two independent observations below.",
+    "indirect_1_E0_sanity": {
+      "E0_observed": 0.6258113418832281,
+      "rt600_known_external_crunch_score": 0.6268,
+      "abs_difference": 0.0009886581167719,
+      "argument": "E0 is the original seven-specialist RT-600 assembled ENTIRELY from the eight shipped control arrays with no neural input. Misaligned controls would collapse it toward 0.5. It did not collapse."
+    },
+    "indirect_2_row_space_confirmed": {
+      "cloud_feature_block_rows": 4032524,
+      "control_array_length": 5036517,
+      "argument": "The run's own feature-build log reported (4032524, ...) blocks -- dev folds only -- against control arrays of length 5036517. That is exactly the mismatch _align_controls_to_store projects away, confirming the diagnosis in commit b3a16bc."
+    }
+  },
+  "learners": {
+    "tabm": {
+      "rt_id": "RT-1258",
+      "label": "GPU-01 TabM",
+      "verdict": "KILL",
+      "observed": true,
+      "marginal_vs_clone": 4.094699451118178e-05,
+      "positive_folds_vs_clone": 3,
+      "fold_deltas_vs_clone": [
+        0.0021308585079995446,
+        -0.001840899885086289,
+        0.0006958349415799869,
+        0.00016481561014769497,
+        -0.0009458742020848065
+      ],
+      "ensemble": {
+        "E0_original_RT600": 0.6258113418832281,
+        "E1_six_RT600_plus_RT401_clone": 0.6249804715244457,
+        "E2_six_RT600_plus_candidate": 0.6250214185189569,
+        "E2_minus_E0": -0.0007899233642711945
+      },
+      "standalone": {
+        "mean_ts_auc": 0.6006475013889048,
+        "pooled_ts_auc": 0.6004878082843967,
+        "fold_std": 0.013447413977150602,
+        "per_fold_ts_auc": [
+          0.6226829985453265,
+          0.5906242317228839,
+          0.6082060518333893,
+          0.5967568679009442,
+          0.58496735694198
+        ]
+      },
+      "dominant_cell_auc": 0.6351805000426152,
+      "rho_vs_rt401": 0.5854232402003443,
+      "replaced_specialist_per_fold": {
+        "0": "RT-413",
+        "1": "RT-413",
+        "2": "RT-413",
+        "3": "RT-300",
+        "4": "RT-410"
+      },
+      "pair_flow_vs_E1_clone": {
+        "whole": {"repairs": 1526, "damage": 1567, "damage_rate": 0.02479665791056113, "net_pair_lift": -41},
+        "dominant_cell": {"repairs": 1104, "damage": 1068, "damage_rate": 0.021166118355860318, "net_pair_lift": 36},
+        "mature_vs_never": {"repairs": 1187, "damage": 1093, "damage_rate": 0.02166415602949338, "net_pair_lift": 94},
+        "mature_vs_prebreak": {"repairs": 934, "damage": 939, "damage_rate": 0.021324915404355823, "net_pair_lift": -5}
+      },
+      "fold_runtime_seconds": [2463.60684299469, 2610.0363256931305, 2615.830427646637, 2614.5764286518097, 2142.6065199375153]
+    },
+    "realmlp": {
+      "rt_id": "RT-1259",
+      "label": "GPU-02 RealMLP",
+      "verdict": "KILL",
+      "observed": true,
+      "marginal_vs_clone": -0.003223743533063206,
+      "positive_folds_vs_clone": 0,
+      "fold_deltas_vs_clone": [
+        -0.0026519979378359926,
+        -0.006113887334827983,
+        -0.004747259260286074,
+        -0.002226749187620891,
+        -0.000378823944744644
+      ],
+      "ensemble": {
+        "E0_original_RT600": {
+          "value": 0.6258113418832281,
+          "derived": true,
+          "identity": "E0 depends only on the seven control specialists, not on the candidate, so it is identical to the tabm block's observed E0. The two runs share one control set."
+        },
+        "E1_six_RT600_plus_RT401_clone": {
+          "value": 0.6249804715244457,
+          "derived": true,
+          "identity": "E1 depends only on the controls and the RT-401 clone. The observed realmlp clone_choices are identical to tabm's on all five folds (RT-413, RT-410, RT-300, RT-300, RT-410, with matching inner_mean_ts_auc), so E1 is identical."
+        },
+        "E2_six_RT600_plus_candidate": {
+          "value": 0.6217567279913825,
+          "derived": true,
+          "identity": "E2 = E1 + marginal_vs_clone = 0.6249804715244457 + (-0.003223743533063206)"
+        }
+      },
+      "standalone": {
+        "mean_ts_auc": 0.5599057457666973,
+        "pooled_ts_auc": 0.5599067780304849,
+        "fold_std": 0.011708092374323823,
+        "per_fold_ts_auc": [
+          0.57114629673051,
+          0.5383307890536331,
+          0.5571457848124755,
+          0.5667844317100438,
+          0.5661214265268242
+        ]
+      },
+      "dominant_cell_auc": null,
+      "rho_vs_rt401": 0.3695122143406528,
+      "replaced_specialist_per_fold": {
+        "0": null,
+        "1": null,
+        "2": null,
+        "3": null,
+        "4": "RT-410"
+      },
+      "pair_flow_vs_E1_clone": {
+        "whole": {"repairs": 1641, "damage": 1820, "damage_rate": 0.028800202550875082, "net_pair_lift": -179},
+        "dominant_cell": {"repairs": 1179, "damage": 1326, "damage_rate": 0.026279281778905227, "net_pair_lift": -147},
+        "mature_vs_never": {"repairs": 1217, "damage": 1349, "damage_rate": 0.02673828589550464, "net_pair_lift": -132},
+        "mature_vs_prebreak": {"repairs": 947, "damage": 1141, "damage_rate": 0.02591238389389776, "net_pair_lift": -194}
+      },
+      "fold_runtime_seconds": [189.7998971939087, 189.65706825256348, 356.7497880458832, 189.63838481903076, 192.26158475875854]
+    }
+  },
+  "gate_ladder_frozen_before_result": {
+    "KILL": "marginal_vs_clone < +0.0010",
+    "INTERESTING": ">= +0.0010",
+    "PROMOTION_WORTHY": ">= +0.0015, >=4/5 folds positive, dominant pair net > 0",
+    "SERIOUS": ">= +0.0030, >=4/5 positive, dominant pair net > 0, mature-vs-never pair net > 0",
+    "MAJOR": ">= +0.0050"
+  },
+  "ledger_action": {
+    "owner": "LOCAL lane",
+    "instruction": "File RT-1258 and RT-1259 in RESULTS.csv, EXPERIMENT_ID_MAP.md and RDOF_LEDGER.md as a TECHNICAL RECOVERY of the existing FULL_OOF_PREREG.md arms, not as new arms.",
+    "crunch_lane_touched_ledgers": false,
+    "crunch_lane_allocated_ids": false
+  }
+}
