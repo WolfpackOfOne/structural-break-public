@@ -73,7 +73,7 @@ CELL_BOOT = '''\
 #   code git sha      : {git_sha}
 #   built at          : {built}
 # ---------------------------------------------------------------------------
-import base64, hashlib, io, os, sys, zipfile
+import base64, hashlib, io, os, sys, tempfile, zipfile
 
 for _k in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS",
            "VECLIB_MAXIMUM_THREADS", "NUMEXPR_NUM_THREADS"):
@@ -82,8 +82,13 @@ for _k in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS",
 _SRC_B64 = "{src_b64}"
 _MDL_B64 = "{mdl_b64}"
 
-_WORK = os.path.abspath(f"./_sbr_payload_{{os.getpid()}}")
-os.makedirs(_WORK, exist_ok=True)
+# Unpack into a guaranteed-writable temp directory, NEVER into the code tree.
+# The cloud runner mounts /context/code read-only, so the previous
+# os.path.abspath("./_sbr_payload_<pid>") raised PermissionError at import
+# time -- and a local `crunch test` cannot reproduce it, because the local
+# working directory is writable.  tempfile honours TMPDIR and falls back to
+# /tmp, both writable in the runner.
+_WORK = tempfile.mkdtemp(prefix=f"_sbr_payload_{{os.getpid()}}_")
 
 
 def _unpack(b64, expect_sha, name):
