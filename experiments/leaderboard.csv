@@ -1,1 +1,13 @@
 timestamp,experiment_id,family,status,auc,runtime_seconds,config,notes
+2026-08-29T14:30:36+00:00,logistic_stat_features,linear_baseline,ok,0.995238,0.04,{},Logistic regression on before/after statistical features. Cheap floor.
+2026-08-29T14:30:36+00:00,"rf_stat_features__max_depth=None,n_estimators=200",ml_baseline,ok,1.0,0.34,"{""max_depth"": null, ""n_estimators"": 200}","n_estimators=200, max_depth=None"
+2026-08-29T14:30:36+00:00,"rf_stat_features__max_depth=8,n_estimators=500",ml_baseline,ok,1.0,0.84,"{""max_depth"": 8, ""n_estimators"": 500}","n_estimators=500, max_depth=8"
+2026-08-29T14:30:37+00:00,"rf_stat_features__max_depth=None,n_estimators=800",ml_baseline,ok,1.0,1.36,"{""max_depth"": null, ""n_estimators"": 800}","n_estimators=800, max_depth=None"
+2026-08-29T14:30:38+00:00,rf_detector_ensemble,detector_ensemble,ok,1.0,0.84,{},RandomForest on statistical features + CUSUM/rolling-z/PELT detector scores.
+2026-08-29T14:30:39+00:00,"xgboost_combined_features__learning_rate=0.05,max_depth=4,n_estimators=300",gradient_boosting,skipped,,0.0,"{""learning_rate"": 0.05, ""max_depth"": 4, ""n_estimators"": 300}",pip install xgboost to run this experiment.
+2026-08-29T14:30:39+00:00,"xgboost_combined_features__learning_rate=0.03,max_depth=3,n_estimators=600",gradient_boosting,skipped,,0.0,"{""learning_rate"": 0.03, ""max_depth"": 3, ""n_estimators"": 600}",pip install xgboost to run this experiment.
+2026-08-29T14:30:39+00:00,lightgbm_combined_features,gradient_boosting,skipped,,0.0,{},pip install lightgbm to run this experiment.
+2026-08-29T14:30:39+00:00,hmm_regime,hmm_regime,skipped,,0.0,{},hmm_regime is a stub — implement a per-series HMM regime-shift score (see the TODO in experiment_registry.py).
+2026-08-29T14:30:39+00:00,bayesian_changepoint,bayesian_changepoint,skipped,,0.0,{},bayesian_changepoint is a stub — implement Bayesian change-point scoring (see the TODO in experiment_registry.py).
+2026-08-29T14:30:39+00:00,deep_learning_sequence_model,deep_learning,skipped,,0.0,{},deep_learning_sequence_model is a stub — implement a sequence model over the raw series (see the TODO in experiment_registry.py).
+2026-08-29T14:30:39+00:00,stacking_ensemble,stacking_ensemble,skipped,,0.0,{},stacking_ensemble is a stub — implement OOF stacking across the other families (see the TODO in experiment_registry.py).

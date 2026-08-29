@@ -1,0 +1,7 @@
+{
+  "experiment_id": "rf_stat_features__max_depth=None,n_estimators=200",
+  "family": "ml_baseline",
+  "auc": 1.0,
+  "config": "{\"max_depth\": null, \"n_estimators\": 200}",
+  "timestamp": "2026-08-29T14:30:36+00:00"
+}
