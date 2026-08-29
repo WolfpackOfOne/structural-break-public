@@ -7,3 +7,10 @@ joblib>=1.1
 # Change-point detection and visualization.
 ruptures>=1.1
 matplotlib>=3.4
+# Inference dependencies of the deployed ensemble. The RT-1257 artifact loads
+# five LightGBM boosters and two CatBoost boosters at predict time; neither was
+# declared here before, and catboost is not known to be present in the runner
+# image. Versions match requirements-rt1257.txt, the environment the artifact
+# was built and benchmarked against.
+lightgbm==4.7.0
+catboost==1.2.10
