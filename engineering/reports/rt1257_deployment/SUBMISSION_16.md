@@ -1,15 +1,14 @@
-# Submission #16 — RT-1257 first clean cloud run — RAN, SCORE PENDING
+# Submission #16 — RT-1257 first clean cloud run — SCORED 0.6290
 
 Successor to submission #15, which never reached scoring
 (`research/FAILED_EXPERIMENTS.md`, "Submission #15"). #16 is the first RT-1257
-artifact to execute end to end on the Crunch runner. **No score yet:** the run
-ended `result submitted` and the task moved to `CLEANING`. This record covers
-execution and artifact identity only; the leaderboard number is a separate line
-to fill in below when it lands.
+artifact to execute end to end on the Crunch runner, and it **scored
+TS-AUC 0.6290**, against the `RT-600` anchor of 0.6268.
 
-**This is a deployment record, not a research result.** No RT ID is consumed, no
-model was refit, and nothing in RT-1257 may be selected on whatever score
-returns. Production anchor remains `RT-600` = 0.6268 until a number exists.
+**This is a deployment record, not a research result.** No RT ID is consumed and
+no model was refit. The score is a calibration point: nothing inside RT-1257 may
+be selected on it, and promoting RT-1257 to production anchor is an owner
+decision that this record does not make — see §5.
 
 ## 1. Identity
 
@@ -117,8 +116,60 @@ composition to the downloaded set.
 
 | field | value |
 | --- | --- |
-| external score | **PENDING** — fill in when `CLEANING` resolves |
-| status at time of writing | submitted, awaiting scoring |
+| external score | **0.6290** TS-AUC (62.90%) |
+| prior anchor | 0.6268 TS-AUC, `RT-600`, labelled LB-001 in `STATUS.md` |
+| external delta | **+0.0022** |
 
-Until that cell holds a number, `STATUS.md` is unchanged and `RT-600` = 0.6268
-remains the external anchor.
+### 5.1 The delta landed where the promotion battery said it would
+
+RT-1257 was promoted on internal evidence alone. Those numbers, from
+`reports/catboost_specialist_2026/FINAL.md` via `STATUS.md`:
+
+| internal estimate | value |
+| --- | --- |
+| `marginal_vs_clone` | +0.002407205 |
+| E2−E0 (ensemble vs base) | +0.002026322 |
+| positive folds | 5/5 |
+
+The realised external delta of **+0.0022 sits between the two**. That is a
+closer agreement than this program has any right to expect from a single read,
+and it is the first external movement since 0.6268 was set — Wave 5 ran ten
+experiments and moved the score by zero.
+
+### 5.2 What this does and does not license
+
+It does **not** establish an internal-to-external transfer law. This is one
+observation, from one pair of leaderboard reads, with no error bar on either.
+The honest statement is that the internal battery did not mislead on this
+artifact, not that it is calibrated.
+
+Three specific limits on the comparison:
+
+1. **Neither score has a confidence interval.** Both are single reads on the
+   same held-out test set. The pairing helps — same data, same metric — but a
+   +0.0022 move is not a significance test, and the battery classified RT-1257
+   as PROMOTION_WORTHY *but not SERIOUS* precisely because the internal effect
+   was small.
+2. **Both figures are rounded.** 0.6290 and 0.6268 are given to four
+   significant figures, so the delta carries roughly ±0.0001 of rounding slack.
+   It does not change the sign or the order of magnitude.
+3. **The comparison is not a perfectly controlled A/B.** The model function
+   differs in exactly the two swapped slots (RT-300 and RT-413 → CatBoost), but
+   the deployment around it also changed between the RT-600 uploads and #16:
+   payload unpack location, declared requirements, and the entrypoint build. None of those
+   should touch predictions — the determinism check passed at 1e-8 — but they
+   were not held fixed, so "the two slots caused +0.0022" is an inference, not a
+   measurement.
+
+### 5.3 Promotion status
+
+`RT-1257` now beats the anchor on the only measurement that is not internal.
+Promotion is nonetheless **not taken here**: `RT-600` is frozen on
+`production/rt600` under tag `rt600-production-0.6268`, and moving the anchor
+means a production merge and a new tag, which is an owner-authorised action.
+`STATUS.md` records the new external best and leaves the anchor where it is.
+
+Before any promotion, close open items 1 and 2 in §4 — the stale
+`CRUNCH_TEST.json` and the unverified `manifest_matches_build_sha: false` split.
+An anchor whose local test record describes a different artifact is not an
+anchor.

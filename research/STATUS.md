@@ -12,8 +12,18 @@ short and gets updated whenever that changes materially.
   branch (tag `rt600-production-0.6268`). Seven-stream deployable ensemble,
   all 10,000 labelled series. Environment build, LB-002/003/004 verification
   runs, and submission #5 record are on that branch.
-- **Current external score:** **0.6268** on the official Crunch leaderboard
-  (LB-001), confirmed in [`EXPERIMENT_ID_MAP.md`](EXPERIMENT_ID_MAP.md).
+- **Current external score:** **0.6290** on the official Crunch leaderboard —
+  `RT-1257`, submission #16, 2026-08-29. Beats the prior external best of
+  **0.6268** (`RT-600`, LB-001, confirmed in
+  [`EXPERIMENT_ID_MAP.md`](EXPERIMENT_ID_MAP.md)) by **+0.0022**, the first
+  external movement in this program since 0.6268 was set. The realised delta
+  sits between the two internal estimates that licensed the promotion
+  (`marginal_vs_clone` +0.002407, E2−E0 +0.002026). Full record:
+  [`engineering/reports/rt1257_deployment/SUBMISSION_16.md`](../engineering/reports/rt1257_deployment/SUBMISSION_16.md).
+  **This is a calibration point, not an oracle** — no parameter may be selected
+  on it, and the anchor has not moved (see above): promotion of `RT-1257` to
+  production is an owner decision, and two deployment-hygiene items are open
+  against the artifact first (§4 of that record).
 - **Current best deployable internal result:** RT-600 seven specialists,
   pooled OOF ≈ 0.63828 (E0 in the Wave 7 T2 promotion battery).
 - **Current research conclusion:** **CATBOOST SPECIALIST ACTIVATION 2026** is
@@ -24,7 +34,9 @@ short and gets updated whenever that changes materially.
   E2-E0 `+0.002026322`, `5/5` positive folds, dominant-cell net `+158`,
   mature-vs-never net `+73`. Full report:
   `reports/catboost_specialist_2026/FINAL.md`. Production `RT-600` remains
-  unchanged.
+  unchanged. **Externally confirmed 2026-08-29:** submission #16 scored 0.6290,
+  +0.0022 over the RT-600 anchor — the internal battery did not mislead on this
+  artifact. One observation, no error bar; not a transfer law.
 - **Prior research conclusion:** T2/RT-995 promotion battery —
   **MOSTLY REDUNDANT**. T2 clears 3/4 promotion legs and has real
   single-model alpha, but E2 (RT600 + T2 ensemble, ≈0.63882) beats E1
