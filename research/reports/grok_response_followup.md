@@ -148,11 +148,29 @@ residualization puts the endpoint-orthogonal Arm-C dominant-cell lift at
 pre-break lift is an artifact. That agreement across two unrelated methods is
 the strongest result on either branch.
 
-They should not both be carried forward as separate lanes. The decisive
-comparison is blend marginal on matched folds, which requires all five RT-1258
-outer folds; standalone AUC is not the right comparison, because this branch's
-student targets a *residual* and is additive by construction while RT-1258
-predicts the target directly.
+That comparison has now been run. The Kimi candidate (since renamed
+`W7EPOD-01`; its `RT-1258` label was never allocated) was trained on all five
+outer folds and scored through an identical gate — cross-fitted `SCDF_NSEEN`
+per stream, equal-weight mean, E1 = seven specialists + seed clone, E2 = seven
+specialists + candidate — resolving against the same E0, `0.625811`:
+
+| candidate | standalone whole-dev | marginal vs clone | positive folds | pre-break pair net | verdict |
+|---|---:|---:|---:|---:|---|
+| `W7EPOD-01` (Kimi branch) | `0.619053` | `+0.000514` | 4/5 | `-46` | KILL |
+| Arm-C residual student (this branch) | `0.615486` | `+0.001938` | 5/5 | `+16` | PROMOTE for confirmation |
+
+The ordering **inverts** between standalone and ensemble: `W7EPOD-01` is the
+better standalone model by `+0.003567` whole-dev and the worse ensemble
+contribution by `-0.001424`, falling below the `+0.0010` kill threshold. Only
+this branch's residual student goes forward.
+
+The reason is the point of the whole lane: EPOD purges the endpoint component
+from the teacher and distils what remains, which leaves a model that still
+ranks much like the incumbents; the residual student distils the *orthogonal
+residual*, which is weaker alone but carries what the blend does not already
+have. Orthogonality to the incumbent beats standalone strength here — the same
+pattern as Wave 7 T2 (`+0.00943` standalone, `+0.00024` at ensemble). Full
+record: `agent_02_kimi_audit.md` §D on the sibling branch.
 
 ## Remaining Grok Mechanisms
 
