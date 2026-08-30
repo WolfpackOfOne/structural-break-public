@@ -1456,3 +1456,101 @@ and is PROMOTION_WORTHY but not SERIOUS: hybrid `marginal_vs_clone =
 `+158`, mature-vs-never net `+73`, mature-vs-prebreak net `+146`. Training
 runtime from the initial full run was `4867.3s` for the three CatBoost
 specialists; deployment inference cost still needs separate measurement.
+
+## GPU Tabular 2026 — Full 5-Fold OOF  (PRE-REGISTERED 2026-08-27)
+
+Program preregistration: `research/reports/gpu_tabular_2026/FULL_OOF_PREREG.md`.
+
+**Scientific question.** Can full-scale TabM or RealMLP trained on the same
+legal causal 500-feature bank and RT-401-matched training rows produce useful
+same-`t` ranking alpha beyond an exchangeable LightGBM replacement, now that
+an RTX 4090 hardware benchmark (Crunch submission `76357`, task
+`run-3e834e0f`) has shown the full, un-shrunk configurations fit the compute
+budget?
+
+| Item | Degrees of freedom | Frozen before score |
+|---|---:|---|
+| TabM learner configuration | 0 | exact RTX-4090-benchmarked `default_config()` (`k=32,d_block=512,n_blocks=3,dropout=0.1`; `lr=0.002,weight_decay=0.0003,grad_clip_norm=1.0`); no batch size, epoch cap, `k`, or `d_block` search |
+| RealMLP learner configuration | 0 | exact RTX-4090-benchmarked `default_config()` (`hidden_sizes=[256,256,256],lr=0.04`); no width/layer/epoch search |
+| rows/folds/features | 0 | canonical folds `0..4`, `1,000,000`-row/fold cap, RT-401 sequential sampler seed `1`, 500-column causal bank |
+| calibration/blending | 0 | equal-weight fold-pure `SCDF_NSEEN` only |
+| matched LightGBM controls | 0 | existing `RT-401` seed-clone OOF vectors, fixed before scoring |
+| combination slots | 0 | none authorized this program (no TabM+RealMLP, no RT-1257, no CatBoost) |
+| pair-flow diagnostic sample | 0 | 64 same-`t` pairs per time point, seed `20260827` (reused Learner Diversity / CatBoost convention) |
+
+Allocated IDs: `RT-1258` GPU-01 TabM, `RT-1259` GPU-02 RealMLP. Both must
+complete full 5-fold OOF before either is evaluated; neither may stop early
+except on unrecoverable technical failure. Result not yet filed.
+
+## Deep Ensemble Frontier 2026 -- LOCAL Lane CSA-04  (PRE-REGISTERED 2026-08-28)
+
+Execution preregistration:
+`research/reports/deep_ensemble_frontier_2026/local/CSA04_PREREG.md`.
+
+**Scientific question.** Does the non-LightGBM CatBoost direction measured in
+CatBoost Specialist Activation 2026 extend to the four untested RT-600 specialist
+slots, and where is the best `k`-slot mixed-family hybrid maximum?
+
+| Item | Degrees of freedom | Frozen before score |
+|---|---:|---|
+| CatBoost learner configuration | 0 | exact `RT-1251` parameters; no depth, learning-rate, iteration, loss, class-weight, feature-subset, or seed search |
+| new specialist slots | 4 | exactly `RT-411`, `RT-412`, `RT-414`, and `RT-415` |
+| rows/folds/features | 0 | incumbent specialist modules, canonical folds, incumbent train-row caps, and incumbent row sampler |
+| CAT-412 sampling | 0 | preserve `sample_mode="per_series"`; runner support verified before scoring |
+| CAT-415 GOSS handling | 0 | no CatBoost analogue; report under caveat and include if it clears the fixed survivor gate |
+| calibration/blending | 0 | equal-weight fold-pure `SCDF_NSEEN` only |
+| matched LightGBM controls | 0 | existing seed-clone OOF vectors, fixed before scoring |
+| hybrid ordering | 0 | descending measured single-slot `marginal_vs_clone`; dominant pair net is diagnostic only |
+| hybrid curve | 1 conditional family | evaluate every `k` from 2 through the number of `+0.0010` single-slot survivors |
+| pair-flow diagnostic sample | 0 | 64 same-`t` pairs per time point, seed `20260827` |
+
+Allocated IDs: `RT-1260` CAT-411, `RT-1261` CAT-412, `RT-1262` CAT-414,
+`RT-1263` CAT-415, and `RT-1264` best-`k` hybrid. All four single-slot arms must
+complete training on all five folds before any of the four is scored. The `k=2`
+hybrid must reproduce `RT-1257`'s `marginal_vs_clone = +0.002407205` exactly if
+CAT-413 and CAT-300 are first in the frozen ordering; otherwise CSA-04 evaluation
+halts as harness drift.
+
+## Deep Ensemble Frontier 2026 -- LOCAL Lane L3 Arbitration Probe  (PRE-REGISTERED 2026-08-28)
+
+Execution preregistration:
+`research/reports/deep_ensemble_frontier_2026/local/L3_ARBITRATION_PREREG.md`.
+
+**Scientific question.** Can any fixed gating or abstention rule over the existing
+fold-0 `RT-1234` CRF-01 OOF vector retain at least half of the unconditional
+dominant-cell repairs while reducing mature-vs-prebreak damage rate below `0.05`?
+
+| Item | Degrees of freedom | Frozen before score |
+|---|---:|---|
+| candidate/control vectors | 0 | existing `RT-1234` candidate and `RT-1235` matched BCE control; no training |
+| coverage | 0 | fold 0 only, because `RT-1234` and `RT-1235` have only 806,334 finite rows |
+| rule family | 14 fixed rules | unconditional, fixed confidence quantiles, RT600-boundary quantiles, agreement, dominant-cell restriction, dominant confidence gates, and fixed three-way abstention |
+| thresholds | 0 | quantiles fixed at preregistration; no threshold chosen from observed damage |
+| pair-flow diagnostic sample | 0 | 64 same-`t` pairs per time point, seed `20260827` |
+
+No RT ID is consumed because this is a descriptive diagnostic over frozen OOF
+vectors. A negative result is still filed as H3 because it gates the CRUNCH neural
+lane.
+
+## Deep Ensemble Frontier 2026 -- LOCAL Lane CSA-04R Reanalysis  (PRE-REGISTERED 2026-08-28; EXECUTED 2026-08-28)
+
+Execution preregistration:
+`research/reports/deep_ensemble_frontier_2026/CSA04R_REANALYSIS_PREREG.md`.
+
+**Scientific question.** CSA-04 selected hybrid size by `E2-E1`, but that control
+collapses as `k` grows. CSA-04R asks which already-admitted CatBoost survivor
+composition is selected when the curve is ordered and judged by fixed
+deployment endpoint `E2-E0`.
+
+| Item | Degrees of freedom | Frozen before CSA-04R execution |
+|---|---:|---|
+| endpoint change | 1 | `E2-E0` replaces `E2-E1` for selecting `k*`; `E1` retained only for continuity |
+| ordering change | 1 | fixed order CAT-413, CAT-300, CAT-412, CAT-415, CAT-414, CAT-411 |
+| per-slot admission | 0 | unchanged CSA-04 `marginal_vs_clone >= +0.0010` at `k=1`; CAT-410 not re-admitted |
+| model training | 0 | no training, no retuning, no new OOF vector |
+| bootstrap | 0 | series bootstrap seed `20260828`, B = 2000, fixed in preregistration |
+| descriptive subsets | 63 non-selecting looks | all non-empty subsets enumerated and explicitly barred from selecting `k*` or supporting promotion |
+
+Result: `k*=2` (`CAT-413, CAT-300`),
+`E2-E0=+0.002026322`,
+`delta_noise=0.001100000`, verdict `NOT_DISTINGUISHABLE`.
