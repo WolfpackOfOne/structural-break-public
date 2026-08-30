@@ -1,237 +1,82 @@
 # STATUS
 
-Concise pointer to current state. For the full picture (per-fold scores,
-lockbox confirmation, what won/failed in detail) see
-[`STATE_OF_RESEARCH.md`](STATE_OF_RESEARCH.md) — this file is deliberately
-short and gets updated whenever that changes materially.
+Concise canonical pointer to the current state of the 2026 ADIA Lab / CrunchDAO Structural Break Challenge — Real-Time Edition research program.
 
-- **Competition:** ADIA Lab / CrunchDAO Structural Break Challenge —
-  **Real-Time Edition** (causal/streaming inference; break location unknown,
-  scored one prediction per online time step with Time-Stratified AUC).
-- **Current production anchor:** `RT-600`, frozen on the `production/rt600`
-  branch (tag `rt600-production-0.6268`). Seven-stream deployable ensemble,
-  all 10,000 labelled series. Environment build, LB-002/003/004 verification
-  runs, and submission #5 record are on that branch.
-- **Current external score:** **0.6290** on the official Crunch leaderboard —
-  `RT-1257`, submission #16, 2026-08-29. Beats the prior external best of
-  **0.6268** (`RT-600`, LB-001, confirmed in
-  [`EXPERIMENT_ID_MAP.md`](EXPERIMENT_ID_MAP.md)) by **+0.0022**, the first
-  external movement in this program since 0.6268 was set. The realised delta
-  sits between the two internal estimates that licensed the promotion
-  (`marginal_vs_clone` +0.002407, E2−E0 +0.002026). Full record:
-  [`engineering/reports/rt1257_deployment/SUBMISSION_16.md`](../engineering/reports/rt1257_deployment/SUBMISSION_16.md).
-  **This is a calibration point, not an oracle** — no parameter may be selected
-  on it, and the anchor has not moved (see above): promotion of `RT-1257` to
-  production is an owner decision, and two deployment-hygiene items are open
-  against the artifact first (§4 of that record).
-- **Current best deployable internal result:** RT-600 seven specialists,
-  pooled OOF ≈ 0.63828 (E0 in the Wave 7 T2 promotion battery).
-- **Current research conclusion:** **CATBOOST SPECIALIST ACTIVATION 2026** is
-  complete on `research/catboost-specialist-2026`. CAT-413 (`RT-1254`) and
-  CAT-300 (`RT-1255`) are INTERESTING, CAT-410 (`RT-1256`) is KILL, and the
-  two-slot hybrid (`RT-1257`, replacing RT-300 and RT-413 only) is
-  **PROMOTION_WORTHY** but not SERIOUS: `marginal_vs_clone = +0.002407205`,
-  E2-E0 `+0.002026322`, `5/5` positive folds, dominant-cell net `+158`,
-  mature-vs-never net `+73`. Full report:
-  `reports/catboost_specialist_2026/FINAL.md`. Production `RT-600` remains
-  unchanged. **Externally confirmed 2026-08-29:** submission #16 scored 0.6290,
-  +0.0022 over the RT-600 anchor — the internal battery did not mislead on this
-  artifact. One observation, no error bar; not a transfer law.
-- **Prior research conclusion:** T2/RT-995 promotion battery —
-  **MOSTLY REDUNDANT**. T2 clears 3/4 promotion legs and has real
-  single-model alpha, but E2 (RT600 + T2 ensemble, ≈0.63882) beats E1
-  (RT600 + seed clone, ≈0.63859) by only +0.00024 — essentially no marginal
-  ensemble alpha. The first New Avenues sweep is now
-  **FIRST_SWEEP_EXHAUSTED**. Second Sweep `SS-01` repair-damage arbitration,
-  `SS-02` dominant-cell residual ranking, `SS-03` negative-side null-state
-  calibration, and `SS-04` specialist-disagreement micro-routing are all
-  **KILL**. SS-01 selected no first-sweep sensor actions; SS-02 produced
-  negative pair flow (`dominant net=-108`) and negative marginal_vs_clone
-  (`-0.000290`); SS-03 produced negative mature-vs-never net pair flow (`-49`),
-  negative marginal_vs_clone (`-0.000299`), and failed the prebreak damage-rate
-  cap (`0.0199 > 0.0150`); SS-04 produced no dominant or targeted
-  specialist-disagreement repairs on the canonical sample and negative
-  marginal_vs_clone (`-0.000312`). The preregistered Second Sweep is
-  **EXHAUSTED** with no confirmation candidate. Full detail:
-  `reports/wave7/` and tag
-  `wave7-t2-promotion-mostly-redundant`, plus
-  `reports/new_avenues_2026/FIRST_SWEEP_SYNTHESIS.md`,
-  `reports/new_avenues_2026/SECOND_SWEEP_PREREG.md`,
-  `reports/new_avenues_2026/second_sweep/ss01_repair_damage_arbiter.md`, and
-  `reports/new_avenues_2026/second_sweep/ss02_residual_ranker.md`, and
-  `reports/new_avenues_2026/second_sweep/ss03_null_calibrator.md`, and
-  `reports/new_avenues_2026/second_sweep/ss04_specialist_router.md`.
-- **Latest major negative result:** Wave 8 future-aware transfer family —
-  five pilots (ORR, TGMC, SST, PCFB, CFEP), all KILL on the full population.
-  Lives on the sibling branch `research/wave8-future-aware-distillation`
-  (tag `wave8-future-aware-final`); not merged into this lineage.
-- **Latest major positive result:** W7-D3R same-prefix-vs-full-sequence
-  diagnostic (tag `wave7-d3r-information-frontier`) established the
-  future-information limit (CASE 2) that later Wave 7/8 work is measured
-  against.
-- **Active research branch:** this worktree is
-  `research/catboost-specialist-2026`, forked from
-  `research/learner-diversity-2026@7e5ee4c` for the CatBoost specialist
-  activation audit; the canonical chain remains
-  `research/current` (wave2 → wave3-integration → wave5-alpha → wave6-alpha →
-  wave7-teacher-distillation → wave7-t2-promotion). Standalone sibling
-  branches still worth checking: `research/wave8-future-aware-distillation`
-  (killed transfer family), `research/multi-agent-2026` and
-  `codex/wave3-engineering` (an earlier, parallel RT-000..RT-213-numbered
-  track predating the Wave 5 restart), `codex/oracle-information-frontier-2026`
-  and `codex/reproduce-2025-public-solution` (standalone studies that
-  motivated the Wave 5 restart), `claude/project-setup-github-20g6pt` (an
-  abandoned early Wave 7 opening attempt).
-- **Experiment ledger:** [`RESULTS.csv`](RESULTS.csv), IDs explained in
-  [`EXPERIMENT_ID_MAP.md`](EXPERIMENT_ID_MAP.md), degrees-of-freedom
-  accounting in [`RDOF_LEDGER.md`](RDOF_LEDGER.md).
-- **Failed experiments:** [`FAILED_EXPERIMENTS.md`](FAILED_EXPERIMENTS.md) —
-  read before proposing anything that resembles a killed idea.
-- **Next-wave research direction:**
-  [`NEW_AVENUES_2026.md`](NEW_AVENUES_2026.md) — broad-exploration survey
-  written 2026-08-24 after the Wave-7/8 dead end: nine functional classes
-  absent from the 500-column bank, 79 source-backed mechanisms in 15
-  families ([`new_avenues_2026.csv`](new_avenues_2026.csv)), six descriptive
-  diagnostics `D1`–`D6`
-  ([`reports/new_avenues_2026_diagnostics.json`](reports/new_avenues_2026_diagnostics.json)),
-  and an 11-experiment queue. Reusable plugin harness in
-  [`scripts/novel_streams/`](scripts/novel_streams/) — imports with no
-  environment set up; the shared ensemble/pair-flow helpers it reuses are
-  already on this branch at `scripts/wave8_common.py`, so no sibling branch
-  or worktree is needed. Regression-tested by
-  `tests/test_novel_streams_harness.py`. The cleanup completed on
-  `research/current` at `aca2c4f` and is infrastructure-only: no pilot run,
-  no new score, no promotion, and RT-600 still the production anchor.
-- **First New Avenues execution branch:**
-  `research/new-avenues-pilots-2026` has completed the planned first sweep:
-  Pilots 1-8, 10, 9(i), and the Pilot 3 / IM3 observer arms. Pilot 1
-  specialist/failure-manifold diagnostics are **WEAK**. Every scored
-  first-sweep candidate is **KILL** or a negative/control result: `RT-1200`
-  relay score-state, `RT-1201` IM2+dwell scalar, `RT-1202` trajectory
-  geometry, `RT-1204` scale survival, `RT-1206` spectral impulsiveness,
-  `RT-1208` ordinal transition/irreversibility, `RT-1210` joint
-  size-duration rarity, `RT-1212` scalar historical-difficulty gate,
-  `RT-1214` Kalman/NIS observer, `RT-1215` Hankel-DMD observer, `RT-1216`
-  weighted conformal test martingale, and `RT-1218` parameter-free e-value
-  aggregation all failed the primary continuation gate. `RT-1216` was the
-  closest miss at marginal_vs_clone `+0.000937` after beating its unweighted
-  CTM control on mature-vs-never AUC by `+0.002135`; `RT-1218` was negative
-  at `-0.002214`. `RT-1215` also failed the preregistered Hankel redundancy
-  guard (`rho=+0.8859 > 0.85`). No 5-fold confirmation is warranted from the
-  first sweep; the remaining planned first-sweep mechanisms are exhausted.
-  Post-hoc descriptive synthesis is complete in
-  `reports/new_avenues_2026/FIRST_SWEEP_SYNTHESIS.md`, with normalized matrix
-  `reports/new_avenues_2026/first_sweep_matrix.csv`, repair/overlap
-  diagnostics, and a source manifest. The second sweep is preregistered in
-  `reports/new_avenues_2026/SECOND_SWEEP_PREREG.md`. `SS-01`
-  Repair-Damage Arbiter (`RT-1219` plus controls `RT-1220`/`RT-1221`/`RT-1222`)
-  is **KILL**: marginal_vs_clone `-0.000310`, dominant repairs/damage/net
-  `0/0/0`, repair-reservoir retention `0.0000`, and `0` contributing sensor
-  families. `SS-02` Dominant-Cell Residual Ranker (`RT-1223` plus shuffled
-  control `RT-1224`) is also **KILL**: marginal_vs_clone `-0.000290`,
-  dominant repairs/damage/net `330/438/-108`, mature-vs-never net `-77`, and
-  shuffled-control gap `-0.000087`. `SS-03` Negative-Side Null Calibrator
-  (`RT-1225` plus controls `RT-1226`/`RT-1227`/`RT-1228`/`RT-1229`) is
-  **KILL**: marginal_vs_clone `-0.000299`, dominant repairs/damage/net
-  `659/773/-114`, mature-vs-never net `-49`, mature-vs-prebreak net `-40`,
-  prebreak damage rate `0.0199`, deranged-control marginal gap `+0.000049`,
-  and unweighted-CTM control marginally exceeded the candidate. First-sweep
-  killed-arm arbitration, incumbent-bank residual pair ranking, and the fixed
-  null-state calibration are closed under their frozen screens. `SS-04`
-  Specialist Disagreement Micro-Router (`RT-1230` plus controls
-  `RT-1231`/`RT-1232`/`RT-1233`) is **KILL**: marginal_vs_clone `-0.000312`,
-  dominant repairs/damage/net `0/0/0`, majority-correct net `0`, near-split
-  net `0`, and all three controls failed the `+0.0005` gap requirement. The
-  preregistered Second Sweep is exhausted with no 5-fold confirmation
-  candidate; production `RT-600` remains unchanged.
-- **Sweep status:** `FIRST_SWEEP_EXHAUSTED` and `SECOND_SWEEP_EXHAUSTED`.
-  Both preregistered New Avenues sweeps are closed with no confirmation
-  candidate. Production `RT-600` (external **0.6268**) is unchanged.
-- **Current research program:** **CATBOOST SPECIALIST ACTIVATION 2026** —
-  **`CATBOOST_SPECIALIST_ACTIVATION_2026_COMPLETE`** on
-  `research/catboost-specialist-2026`. `RT-1257` is the best measured arm:
-  hybrid `marginal_vs_clone = +0.002407205`, E2-E0 `+0.002026322`, `5/5`
-  positive folds, dominant-cell net `+158`, mature-vs-never net `+73`.
-  This is PROMOTION_WORTHY by the frozen gate but below the SERIOUS threshold
-  and requires separate deployment inference benchmarking. Final report:
-  [`reports/catboost_specialist_2026/FINAL.md`](reports/catboost_specialist_2026/FINAL.md).
-  Production `RT-600` remains unchanged.
-- **Completed prior research program:** **LEADERBOARD ALPHA 2026** —
-  **`LEADERBOARD_ALPHA_2026_EXHAUSTED`** on
-  `research/leaderboard-alpha-2026`. All three preregistered experiments are
-  **KILL** and no combination opens. LA-01 specialist replacement salvage
-  (`RT-1243`/`RT-1244`) failed at `-0.000005408` marginal vs clone. LA-02
-  counterfactual synthetic augmentation (`RT-1245`/`RT-1246`) had metric-class
-  **MAJOR** signal vs its synthetic clone (`+0.005157709`) but failed pair-flow
-  gates and remained below RT600. LA-03 per-series history adaptation
-  (`RT-1247`/`RT-1248`/`RT-1249`) had WEAK integrated marginal vs the global
-  clone (`+0.001676065`, `5/5` positive folds), but failed the mandatory
-  fixed-null isolation gate (`RT-1249 - RT-1248 = -0.021495290` standalone).
-  Final report:
-  [`reports/leaderboard_alpha_2026/LEADERBOARD_ALPHA_2026_FINAL.md`](reports/leaderboard_alpha_2026/LEADERBOARD_ALPHA_2026_FINAL.md).
-  Production `RT-600` remains unchanged.
-- **Completed prior research program:** **CAUSAL REPRESENTATION FRONTIER (CRF)** —
-  **`CRF_PROGRAM_EXHAUSTED`**. Both primaries are KILL, `CRF-03` did not open, and
-  model search under this program is stopped. Full account in
-  [`reports/causal_representation_frontier/CRF_FINAL.md`](reports/causal_representation_frontier/CRF_FINAL.md);
-  design and evidence in
-  [`reports/causal_representation_frontier/`](reports/causal_representation_frontier/).
-  - **`CRF-01` NNCSR** (`RT-1234`, control `RT-1235`; `RT-1236` reserved and **not**
-    consumed) — **KILL**, abandoned at the cheap abandon gate: fold-0 standalone
-    whole-fold TS-AUC `0.592762` (below the `0.600` necessary condition) at
-    within-`t` ρ `+0.4460`. Pair flow negative in every cell (dominant net
-    `-2,798`, mature-vs-never `-2,962`); pre-break damage rate on RT600-correct
-    pairs `0.2626` against a `0.0150` cap. Because `RT-970` is the same shell on
-    the same folds, the ladder `RT-970` 0.52618 → `RT-1235` 0.57054 → `RT-1234`
-    0.59276 isolates both factors for the first time: **representation effect
-    `+0.0444`**, **objective effect `+0.0222`**. Wave 6 could not tell "family
-    wrong" from "objective wrong"; both were partly wrong and their sum is still
-    short. `RT-1234` set a **new best standalone-at-low-redundancy point**
-    (0.59276 at ρ 0.446, prior record `RT-1201`'s 0.58358) — the frontier moved
-    and the answer did not change.
-  - **`CRF-02` ACGN** (`RT-1240`, controls `RT-1241`/`RT-1242`) — **KILL**. The
-    abandon gate fired (`0.559140` at ρ `+0.2887`) and the **learned-null isolation
-    gate failed at `-0.021446`**: the **fixed** per-series null (AR(5) + 256-knot
-    history residual ECDF), through identical downstream statistics and an identical
-    ranking head, reached `0.580586` and beat the learned null. The **derangement
-    control PASSED** (`+0.003377` whole, `+0.008391` dominant), so the 8-dimensional
-    history bottleneck does carry real series information and the model is not
-    memorising a series identifier — which makes the negative sharp rather than
-    ambiguous: **the learned null conditions correctly and loses anyway.** The
-    failure is **amortization**. The fixed null holds five AR coefficients plus a
-    256-knot empirical residual distribution *per series*, paid for by that series'
-    own break-free history at zero generalisation cost; the learned null compresses
-    all of it into 8 floats shared across a population whose heterogeneity is the
-    reason per-series historical calibration is this project's foundation. The null
-    the project already ships **is** the right null — now measured against a matched,
-    correctly-conditioned learned alternative rather than assumed.
-  - **One void run, recorded.** `RT-1237`/`RT-1238`/`RT-1239` are **VOID and
-    retired**: that run silently loaded a 24-series, 1-epoch null written by a unit
-    test instead of the preregistered one. Caught by compute accounting
-    (`pretrain_runtime_s = 0.2` against a real 1,284.6 s). It mattered
-    scientifically, not just procedurally — the toy null made the derangement
-    control *tie*, which would have supported the wrong mechanism. Fixed with a
-    checkpoint **provenance fingerprint** that stops the run on mismatch, and
-    test-isolated caches. `CRF-01` was verified unaffected. Detail in
-    `EXPERIMENT_ID_MAP.md` and `crf02_acgn.md` §7.
-  - **Reading.** The representation × objective factorial is complete and empty, and
-    learned generative nulls are closed. **H-A** (representation saturation),
-    **H-B** (objective mismatch) and **H-E** (null misspecification) are all closed,
-    leaving **H-D**: the practical limit is the legal prefix itself and the residual
-    W7-D3R gap is predominantly **post-`t`** information. The remaining budget
-    belongs to deployment robustness rather than model search. Production `RT-600`
-    (external **0.6268**) is unchanged.
-- **Final Wave reports:** [`reports/wave4/`](reports/wave4/),
-  [`reports/wave5/`](reports/wave5/), [`reports/wave6/`](reports/wave6/),
-  [`reports/wave7/`](reports/wave7/); Wave 8's report is on the
-  `research/wave8-future-aware-distillation` branch, not here.
-- **Frozen architecture record:**
-  [`FINAL_ARCHITECTURE_FREEZE.md`](FINAL_ARCHITECTURE_FREEZE.md),
-  [`FINAL_REPRODUCIBILITY_MANIFEST.json`](FINAL_REPRODUCIBILITY_MANIFEST.json).
+## External champion
 
-_Last updated: 2026-08-27 on `research/learner-diversity-2026`: Learner
-Diversity 2026 is complete. CatBoost is INTERESTING but not SERIOUS; TabM and
-RealMLP are INFEASIBLE; no combination opens and production `RT-600` remains
-unchanged. Update this file whenever the production anchor, external score, or
-active research conclusion changes — see `AGENTS.md` at the repo root for the
-update rule._
+**RT-1257 — official TS-AUC 0.6290 (submission #16, 2026-08-29).**
+
+This is the best external score currently recorded in the repository. It improves on RT-600's 0.6268 by **+0.0022**.
+
+RT-1257 preserves the seven RT-600 specialist slots and replaces exactly two learners:
+
+- RT-300 LightGBM -> **RT-1255 / CAT-300**
+- RT-410 LightGBM
+- RT-411 LightGBM
+- RT-412 LightGBM
+- RT-413 LightGBM -> **RT-1254 / CAT-413**
+- RT-414 LightGBM
+- RT-415 LightGBM
+
+The internal evidence that licensed RT-1257 was E2-E0 **+0.002026322**, marginal_vs_clone **+0.002407205**, and 5/5 positive folds. The realized external +0.0022 landed between those two internal estimates. This is one useful external calibration point, not a license to tune on the leaderboard.
+
+## Formal production anchor
+
+**RT-600 — official TS-AUC 0.6268.**
+
+RT-600 remains the formal production anchor during consolidation. RT-1257's build/manifest SHA split has been checked and the intervening tracked changes are packaging, dependency-declaration, and engineering-evidence changes rather than `src/sbr` model/feature changes. However, the tracked `CRUNCH_TEST.json` predates the shipped/post-packaging build. A fresh Crunch test against the exact current RT-1257 build is still required before formal production promotion.
+
+See `engineering/reports/rt1257_deployment/CONSOLIDATION_HYGIENE_REVIEW.md`.
+
+## Current research-alive models
+
+1. **RT-1261 / CAT-412** — strongest remaining additional CatBoost slot question. The corrected k=3 composition (CAT-413 + CAT-300 + CAT-412) is nominally +0.000338234 over RT-1257, below the 0.0011 paired-bootstrap noise floor, so it is not a new champion.
+2. **RT-1263 / CAT-415** — research-alive individual specialist; no corrected evidence that it improves RT-1257 in a larger equal-replacement hybrid.
+3. **RT-1262 / CAT-414** — research-alive individual specialist; same caveat.
+4. **RT-1260 / CAT-411** — research-alive by the original individual gate, but weaker corrected E2-E0 / mature-vs-never evidence.
+
+## Parked model
+
+**RT-995 / T2** — causal teacher-distilled LightGBM. It demonstrated substantial standalone teacher signal but only small marginal ensemble alpha over a matched seed clone. Preserve it as a scientific success about privileged-information transfer, but do not fund ordinary additive promotion work without a new complementarity mechanism.
+
+## Important corrected classifications
+
+- **RT-1264** — **SUPERSEDED**, not research-alive. Its original five-slot best-k conclusion used an E2-E1 selection endpoint whose clone control worsened with k.
+- **RT-1265 / CSA-04R** — corrected reanalysis. Fixed E2-E0 + preregistered parsimony selects k*=2, CAT-413 + CAT-300, exactly RT-1257; verdict NOT_DISTINGUISHABLE; no new OOF vector.
+- **RT-1250 TabM / RT-1252 RealMLP** — INFEASIBLE original Learner Diversity arms; no binding predictive verdict.
+- **RT-1258 TabM / RT-1259 RealMLP** — distinct fresh GPU-authorized arms after hardware removed the feasibility blocker; both completed five folds and are KILL.
+- **RT-1256 / CAT-410** — KILL.
+
+## Canonical research records
+
+Read these first:
+
+- `MODEL_REGISTRY.md` — current model set and classifications.
+- `INDEX.md` — navigation across the research program.
+- `RESULTS.csv` — quantitative ledger.
+- `EXPERIMENT_ID_MAP.md` — RT-ID mapping and provenance.
+- `NEGATIVE_RESULTS_INDEX.md` — concise failed-idea lookup.
+- `FAILED_EXPERIMENTS.md` — detailed negative evidence.
+- `LESSONS_LEARNED.md` — cross-program synthesis.
+- `RDOF_LEDGER.md` — degrees-of-freedom accounting.
+- `PROTOCOL.md` — historical binding protocol.
+
+## Ledger consolidation finding
+
+The pre-consolidation `research/current` branch was not a complete canonical ledger: its `RESULTS.csv` omitted the later RT-1250+ champion lineage. The consolidation imported the later CatBoost / Deep Ensemble generation containing RT-1250..RT-1257 and RT-1260..RT-1265. The binding RT-1258/RT-1259 H4 results exist in the canonical imported report but were not found as rows in the inspected branch-head ledgers; this remains an explicit ledger-reconciliation item until filed into `RESULTS.csv` without inventing missing metadata.
+
+The exact pre-consolidation `research/current` ledger is preserved at `archive/2026-08-30/RESULTS_SNAPSHOT.csv`.
+
+## Current research standard
+
+A serious new candidate must ultimately answer:
+
+**Does it add complementary information to RT-1257?**
+
+Use RT-1257 as the primary ensemble baseline and RT-600 as the permanent homogeneous LightGBM reference. Prefer matched-control ensemble marginal tests over standalone AUC, and inspect fold consistency, pair flow, dominant-cell repair, mature-vs-never behavior, causality, runtime, and deployment complexity before promotion.
+
+## Consolidation state
+
+Work is occurring on `release/2026-research-consolidation`; `main` has not been moved. No historical branch should be deleted until the final consolidation gate passes and its unique history is proven reachable or tagged.
+
+_Last updated: 2026-08-30 during research-to-production consolidation._

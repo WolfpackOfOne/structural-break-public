@@ -1,294 +1,190 @@
-# Structural Break Detection
+# Structural Break Detection — 2026 Real-Time Edition
 
 [![CI](https://github.com/WolfpackOfOne/structural-break/actions/workflows/ci.yml/badge.svg)](https://github.com/WolfpackOfOne/structural-break/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 
-> Detecting regime shifts and structural breaks in time-series data using
-> statistical change-point methods and machine-learning baselines.
+Research and deployment repository for the **2026 ADIA Lab / CrunchDAO Structural Break Challenge — Real-Time Edition**.
 
-Structural breaks are abrupt changes in the data-generating process of a time
-series. In finance and economics they show up as **regime shifts, market-stress
-periods, volatility transitions, model instability, and changing relationships
-between variables** — exactly the moments risk and quant teams most need to catch.
+The system must emit a continuous structural-break score at each online time step using only information available at that prefix. Inference is causal, streaming, and independent across series.
 
-This repository contains a machine-learning baseline plus a set of classical and
-modern change-point detectors (CUSUM, rolling z-score, PELT), all behind a small,
-tested Python package. It was built around the ADIA Lab Structural Break Challenge
-hosted by CrunchDAO.
+## Current result
 
-![PELT change-point detection on a synthetic multi-regime series](docs/images/example_break_detection.png)
+| System | Role | Official TS-AUC |
+| --- | --- | ---: |
+| **RT-1257** | **Current external champion** | **0.6290** |
+| RT-600 | Formal production anchor / pure-LightGBM reference | 0.6268 |
+| Difference | RT-1257 vs RT-600 | **+0.0022** |
 
-*PELT recovering both break points on a synthetic three-regime series. Green lines
-mark the true breaks; red dashes mark the predicted breaks. Reproduce with
-`python scripts/compare_methods.py --dataset multiple --figure out.png`.*
+RT-1257 is the first recorded external improvement beyond the RT-600 anchor in this research program. It was selected using internal evidence before the external score was known; the leaderboard result is treated as validation, not as a tuning oracle.
 
-### Why structural breaks matter
+**Production-status nuance:** RT-1257 is the best externally measured deployable system, but RT-600 remains the formal production anchor during consolidation because the tracked RT-1257 local Crunch-test record predates the final packaging build. The build/manifest source gap has been verified as packaging/dependency/report-only at the tracked-code level, but a fresh post-build Crunch test is still required before formal anchor promotion.
 
-When a market regime changes, models trained on the old regime quietly degrade,
-risk estimates drift, and relationships that held for years stop holding. Detecting
-*where* and *when* the data-generating process changes is foundational to risk
-management, macro-regime analysis, and robust financial machine learning. This
-project is a compact, reproducible reference for how to approach that problem — from
-a competition baseline to a maintainable research workflow.
+## RT-1257 architecture
 
-### Documentation
+RT-1257 preserves the seven-slot RT-600 specialist architecture and changes exactly two learner implementations:
 
-- [Methodology](docs/methodology.md) — what a structural break is and how each detector works.
-- [Data note](docs/data.md) — challenge context, schema, and what is / isn't included.
-- [Contributing](CONTRIBUTING.md) — setup, checks, and conventions.
+```text
+500 causal streaming features
+        |
+        +-- RT-1255 / CAT-300     (replaces RT-300 LightGBM)
+        +-- RT-410 LightGBM
+        +-- RT-411 LightGBM
+        +-- RT-412 LightGBM
+        +-- RT-1254 / CAT-413     (replaces RT-413 LightGBM)
+        +-- RT-414 LightGBM
+        +-- RT-415 LightGBM
+        |
+fold-pure smooth time-conditional CDF calibration
+        |
+      equal blend
+        |
+      RT-1257
+        |
+official Crunch TS-AUC 0.6290
+```
 
-## Current status
+CAT-300 and CAT-413 are replacement slots inside the seven-member system; they are not extra eighth/ninth members.
 
-This is an active research project. Implemented today:
+The mature causal feature bank contains 500 columns across the core historical-null, sequential-memory, distributional, dynamic/dependence, residual, location-related, and Bayesian modules under `src/sbr/features/`.
 
-- A supervised baseline: engineered time-series features + a Random Forest classifier.
-- Statistical / change-point detectors on a shared interface: **CUSUM**, **rolling z-score**, and **PELT** (via `ruptures`).
-- Synthetic data generators with known break points, a method-comparison workflow, and a plotting helper.
-- An importable package under `src/structural_break/`, a pytest suite, and GitHub Actions CI.
+## Research survivors
 
-Planned upgrades (see [Roadmap](#roadmap)):
+The corrected current-state model set is maintained in [`research/MODEL_REGISTRY.md`](research/MODEL_REGISTRY.md).
 
-- HMM regime detection and Bai-Perron-style multiple-break tests.
-- Experiment tracking and richer visual diagnostics.
-- A notebook walkthrough on the official challenge data.
+The main research-alive candidates beyond RT-1257 are:
+
+- **RT-1261 / CAT-412** — strongest residual single-slot candidate. A three-slot CAT-413 + CAT-300 + CAT-412 composition is nominally only +0.000338 over RT-1257, below the 0.0011 paired-bootstrap noise floor.
+- **RT-1263 / CAT-415** — positive individual evidence, no demonstrated corrected multi-slot improvement over RT-1257.
+- **RT-1262 / CAT-414** — same status.
+- **RT-1260 / CAT-411** — survives the original individual gate, with weaker corrected evidence.
+- **RT-995 / T2** — parked rather than killed: strong standalone teacher-distillation signal, but mostly redundant when integrated with the ensemble.
+
+### Important correction: RT-1264 is not live
+
+RT-1264 was the original five-slot CatBoost best-k hybrid. The later CSA-04R reanalysis found that its selection endpoint was inflated by deterioration in the matched clone control as k grew. The corrected fixed E2-E0 analysis is registered as **RT-1265** and selects k=2: CAT-413 + CAT-300, exactly RT-1257.
+
+RT-1264 remains immutable historical evidence but is classified **SUPERSEDED**, not as a current upside candidate.
+
+## What did not work
+
+This repository deliberately preserves negative results. Start with:
+
+- [`research/NEGATIVE_RESULTS_INDEX.md`](research/NEGATIVE_RESULTS_INDEX.md) — fast searchable summary.
+- [`research/FAILED_EXPERIMENTS.md`](research/FAILED_EXPERIMENTS.md) — detailed hypothesis, result, why-it-failed, and retry guidance.
+- [`research/LESSONS_LEARNED.md`](research/LESSONS_LEARNED.md) — cross-program synthesis.
+
+Major completed negative directions include:
+
+- TabM and RealMLP full five-fold GPU arms: **KILL** at the binding ensemble-marginal endpoint.
+- CAT-410 replacement: **KILL**.
+- Causal Representation Frontier: no surviving model.
+- Leaderboard Alpha: no surviving mechanism.
+- Wave 8 future-aware transfer: all five mechanisms killed.
+- New Avenues executed pilot sweeps: no confirmation candidate.
+- Many intuitive sequential/trend/threshold summaries: redundant or harmful conditional on the mature bank.
+
+### TabM / RealMLP experiment IDs
+
+The repository contains two ID generations that must not be misread as two independent KILL tests:
+
+- **RT-1250 TabM / RT-1252 RealMLP** — original Learner Diversity arms, recorded **INFEASIBLE** under their frozen original compute contract; they did not produce binding predictive scores.
+- **RT-1258 TabM / RT-1259 RealMLP** — distinct fresh GPU-authorized arms after RTX 4090 benchmarking removed the compute blocker without shrinking the intended full-scale configurations. These completed five folds and are the binding **KILL** results.
+
+## Research navigation
+
+Start here:
+
+- [`research/STATUS.md`](research/STATUS.md) — concise current state.
+- [`research/MODEL_REGISTRY.md`](research/MODEL_REGISTRY.md) — models that matter now.
+- [`research/INDEX.md`](research/INDEX.md) — research-program table of contents.
+- [`research/RESULTS.csv`](research/RESULTS.csv) — quantitative experiment ledger.
+- [`research/EXPERIMENT_ID_MAP.md`](research/EXPERIMENT_ID_MAP.md) — ID/provenance map.
+- [`research/RDOF_LEDGER.md`](research/RDOF_LEDGER.md) — degrees-of-freedom accounting.
+- [`research/NEGATIVE_RESULTS_INDEX.md`](research/NEGATIVE_RESULTS_INDEX.md) — failed-idea lookup.
+- [`research/LESSONS_LEARNED.md`](research/LESSONS_LEARNED.md) — synthesis.
+
+The exact pre-consolidation branch and model state is preserved under [`research/archive/2026-08-30/`](research/archive/2026-08-30/).
+
+## Research standard going forward
+
+The primary question is no longer simply “does this model have good standalone TS-AUC?”
+
+It is:
+
+> **Does this candidate add complementary information to RT-1257?**
+
+For serious candidates, prefer a matched ensemble test:
+
+```text
+C0 = candidate standalone
+C1 = matched control standalone
+
+E0 = RT-1257
+E1 = RT-1257 with an exchangeable matched control
+E2 = RT-1257 with the candidate
+
+primary endpoint: E2 - E1
+secondary:        E2 - E0
+```
+
+Also examine fold consistency, pair-flow repair/damage, dominant-cell behavior, mature-vs-never behavior, within-t correlation, causality, runtime, memory, and deployment complexity.
+
+RT-600 remains a permanent homogeneous-LightGBM reference because it isolates the value of learner-family diversity.
 
 ## Repository layout
 
 ```text
 structural-break/
 ├── src/
-│   └── structural_break/   # Importable package
-│       ├── data.py         # CSV loading + column validation
-│       ├── features.py     # Baseline feature engineering
-│       ├── models.py       # scikit-learn pipeline builder
-│       ├── detectors.py    # CUSUM / rolling z-score / PELT detectors
-│       ├── synthetic.py    # Synthetic series with known break points
-│       ├── evaluation.py   # Per-row + point-based metrics
-│       ├── visualization.py# Optional plotting helper
-│       └── predict.py      # Submission/prediction helpers
-├── scripts/
-│   ├── baseline.py         # Thin argparse CLI around the package
-│   └── compare_methods.py  # Detector comparison workflow (synthetic data)
-├── data/                   # Small synthetic sample data (see data/README.md); raw files stay untracked
-│   ├── train.csv
-│   ├── test.csv
-│   └── README.md
-├── outputs/                # Generated predictions; created at runtime and git-ignored
-├── baseline.ipynb          # Competition quickstarter notebook (requires crunch-cli)
-├── pyproject.toml          # Package metadata / build configuration
-├── requirements.txt        # Python dependencies
-├── LICENSE                 # MIT license
-└── README.md
+│   ├── sbr/                         # 2026 causal research/production pipeline
+│   └── structural_break/            # original compact baseline package
+├── research/
+│   ├── STATUS.md
+│   ├── MODEL_REGISTRY.md
+│   ├── INDEX.md
+│   ├── RESULTS.csv
+│   ├── EXPERIMENT_ID_MAP.md
+│   ├── NEGATIVE_RESULTS_INDEX.md
+│   ├── FAILED_EXPERIMENTS.md
+│   ├── LESSONS_LEARNED.md
+│   ├── RDOF_LEDGER.md
+│   ├── reports/
+│   ├── scripts/
+│   └── archive/
+├── engineering/
+│   └── reports/                     # production/deployment evidence
+├── submissions/                     # reproducible submission builders/artifact metadata
+├── tests/
+├── docs/
+└── .github/workflows/
 ```
 
-> Note: The repository previously included local virtual environment files. New virtual environments should be created locally and left untracked.
+The original Random Forest / CUSUM / rolling-z / PELT package remains in the repository as an accessible baseline and general change-point example. It is no longer the headline competition architecture.
 
-## Architecture
+## Reproducibility and artifact policy
 
-The package separates data handling, modelling, and evaluation; two thin CLI
-scripts wire them into runnable workflows.
+Raw competition data, large feature caches, OOF arrays, trained-model directories, and rebuildable generated payloads are not intended to be committed merely for convenience. Reproducibility is based on versioned code/configuration, permanent fold assignments, manifests/hashes, final reports, and explicit experiment provenance.
 
-```mermaid
-flowchart LR
-    A[CSV / synthetic series<br/>timestamp, value] --> B[data.py<br/>load + validate]
-    B --> C[features.py<br/>engineered features]
-    B --> D[detectors.py<br/>CUSUM · z-score · PELT]
-    C --> E[models.py<br/>Random Forest baseline]
-    E --> F[predict.py<br/>submission]
-    D --> G[evaluation.py<br/>point-based metrics]
-    E --> G
-    F --> H[(outputs/)]
-    G --> H
-    D --> I[visualization.py<br/>plots]
+Historical experiment rows are not rewritten when a later analysis changes their interpretation. Corrections are recorded in the ID map, model registry, reports, and later ledger entries while the original measurement remains intact.
 
-    subgraph CLI
-        J[scripts/baseline.py]
-        K[scripts/compare_methods.py]
-    end
-    J -.-> C
-    J -.-> E
-    K -.-> D
-    K -.-> G
-```
+## Consolidation status
 
-## Setup
-
-Clone the repository:
-
-```bash
-git clone https://github.com/WolfpackOfOne/structural-break.git
-cd structural-break
-```
-
-Create and activate a virtual environment:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate  # macOS/Linux
-# .venv\Scripts\activate   # Windows PowerShell
-```
-
-Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-Optionally, install the package itself (editable) so you can `import structural_break`
-from anywhere:
-
-```bash
-pip install -e .
-```
-
-## Data
-
-The repository ships with **small synthetic sample data** under `data/` so the
-baseline runs immediately after cloning — no downloads required. These samples
-each contain one ordered series with a single injected structural break and are
-**not** the official challenge data. See [`data/README.md`](data/README.md) for
-the schema and details.
-
-The baseline expects the following columns:
-
-- `timestamp`
-- `value`
-- `has_structural_break` in the training data
-
-This project was built around the ADIA Lab Structural Break Challenge hosted by
-CrunchDAO. The official competition data is **not redistributed** here. To run
-against it, place the real files at `data/train.csv` / `data/test.csv`
-(replacing the samples) or keep large raw files under the git-ignored
-`data/raw/`.
-
-## Run the baseline
-
-The baseline is a thin CLI around the `structural_break` package. Run it from the
-repository root:
-
-```bash
-python scripts/baseline.py \
-  --train data/train.csv \
-  --test data/test.csv \
-  --output outputs/submission.csv
-```
-
-All three paths default to the values shown above, so `python scripts/baseline.py`
-works out of the box against the bundled synthetic samples. The command engineers
-baseline features, trains a Random Forest classifier, prints training metrics, and
-writes a submission CSV with `timestamp` and `has_structural_break` columns. Missing
-files or missing columns are reported with a clear error message and a non-zero exit
-code.
-
-To use the package directly:
-
-```python
-from structural_break import (
-    create_baseline_features,
-    build_random_forest_baseline,
-    build_submission,
-)
-```
+The research-to-production consolidation is being validated on `release/2026-research-consolidation`. `main` must not move until the consolidation report's merge gates are satisfied. See [`docs/MAIN_CONSOLIDATION_REPORT_2026.md`](docs/MAIN_CONSOLIDATION_REPORT_2026.md).
 
 ## Development
 
-Install the development dependencies (runtime requirements plus `pytest` and `ruff`)
-and run the checks locally:
+Create an environment and install the core/development dependencies:
 
 ```bash
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements-dev.txt
 pip install -e .
-
-ruff check .   # lint
-pytest         # tests (synthetic data only — no competition data required)
 ```
 
-The same two commands run in [GitHub Actions](.github/workflows/ci.yml) on every
-push to `main` and every pull request.
-
-## Methods
-
-The project pairs a supervised ML baseline with classical/modern change-point
-detectors. Every detector shares one interface — `detector.detect(df)` returns a
-DataFrame with `timestamp`, `break_score`, `has_structural_break`, and `method`:
-
-```python
-from structural_break import CusumDetector, PeltDetector, RollingZScoreDetector
-
-result = PeltDetector().detect(df)   # df has 'timestamp' and 'value' columns
-```
-
-| Method | Detects | Strength | Limitation |
-| ------ | ------- | -------- | ---------- |
-| ML baseline (Random Forest) | Per-row break label from engineered features | Learns from labelled data | Needs labels; not a true change-point model |
-| CUSUM | A single dominant mean shift | Simple, interpretable, parameter-light | Finds only the strongest break; mean-only |
-| Rolling z-score | Local deviations / transitions / outliers | Transparent, no training | Flags transition points, not whole regimes |
-| PELT (`ruptures`) | One or more mean shifts (penalised segmentation) | Handles multiple breaks well | Penalty tuning; mean-shift focused (`l2`) |
-
-The **ML baseline** engineers `rolling_mean_3`, `rolling_std_3`, `lag_1`, `lag_2`,
-`diff_1`, and `diff_2` from the `value` column and fits a `StandardScaler` +
-`RandomForestClassifier` pipeline. Each detector documents its scoring and break
-semantics in its class docstring in `src/structural_break/detectors.py`.
-
-### Compare methods
-
-`scripts/compare_methods.py` runs all detectors on a synthetic series with known
-break points and scores each with windowed point-based precision/recall/F1:
+Optional GPU-tabular dependencies for reproducing the completed RT-1258/RT-1259 research are isolated in:
 
 ```bash
-python scripts/compare_methods.py \
-  --dataset mean_shift \
-  --output outputs/method_comparison.csv \
-  --figure outputs/figures/example_break_detection.png
+pip install -r research/requirements-gpu-tabular.txt
 ```
 
-`--dataset` accepts `mean_shift`, `multiple`, or `variance`.
-
-### Results (synthetic)
-
-The numbers below are computed by the command above on the **synthetic**
-`mean_shift` dataset (single mean shift at index 60, tolerance ±5). They are not
-official competition results — they demonstrate detector behaviour on data with a
-known ground truth.
-
-| Method | Precision | Recall | F1 | Notes |
-| ------ | --------: | -----: | -: | ----- |
-| CUSUM | 1.00 | 1.00 | 1.00 | Single dominant mean shift |
-| Rolling z-score | 1.00 | 1.00 | 1.00 | Flags the transition |
-| PELT | 1.00 | 1.00 | 1.00 | Penalised segmentation |
-| ML baseline | 1.00 | 1.00 | 1.00 | Trained on an independent series |
-
-On harder cases the tradeoffs show: on the `multiple` dataset CUSUM recovers only
-the dominant break (recall 0.5) while PELT recovers both; on the `variance`
-dataset the mean-based detectors miss the volatility shift that the rolling
-z-score still flags. Results against the official ADIA Lab challenge data are
-**pending** and will be reported only when reproducible.
-
-## Roadmap
-
-**Done**
-
-- [x] Repository hygiene and a reproducible baseline (Phase 1).
-- [x] Refactor into an importable `src/structural_break/` package (Phase 2).
-- [x] pytest suite + Ruff + GitHub Actions CI (Phase 3).
-- [x] Change-point detectors — CUSUM, rolling z-score, PELT — with synthetic
-      datasets, a comparison workflow, and visualization (Phase 4).
-
-**Planned**
-
-- [ ] HMM regime detection.
-- [ ] Bai-Perron-style multiple-break test (or a `statsmodels` approximation).
-- [ ] Bayesian / online change-point detection.
-- [ ] Experiment tracking and a results dashboard.
-- [ ] Richer visual diagnostics (score overlays, multi-method comparison plots).
-- [ ] A notebook walkthrough on the official challenge data.
-
-## Suggested GitHub topics
-
-`time-series` · `structural-breaks` · `change-point-detection` · `quant-finance` ·
-`machine-learning` · `python` · `scikit-learn`
-
-## License
-
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+Run repository checks with the commands defined in `.github/workflows/ci.yml`. Research that requires the official competition store/caches must not silently substitute synthetic data for the binding result; such tests should explicitly skip or report missing external data.
