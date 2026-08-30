@@ -1,0 +1,45 @@
+{
+  "schema": "rt600_release_candidate/crunch_test/1",
+  "purpose": "DEPLOYMENT TEST of the rebuilt artifact only. One release candidate, one run. Not a research evaluation, no variant submissions, no model comparison, no tuning against any result.",
+  "cli_version": "11.11.0",
+  "result": "PASSED",
+  "run_at": "2026-08-26T14:40:21 local (macOS 26.5.2, arm64)",
+  "command": "cd <structural-break-claude-wave3>  # the worktree holding .crunchdao, data/ and the correct project.json\nenv SBR_ROOT=\"$PWD\" <.venv>/bin/crunch test --main-file <rt600-reliability>/submissions/C_ensemble_deployable.py --model-directory <scratch>/crunch_resources",
+  "main_file_sha256": "42668f521ebcd7df0f05423dbeba5617e2217a39ee2f9dbabf23cbb92ea35ac2",
+  "infer_parallelism": 1,
+  "duration": "00:01:47",
+  "infer_wall": "00:01:34 (14:40:29 -> 14:42:03)",
+  "determinism_check": "passed (tolerance 1e-08, re-run on 10% of the data)",
+  "memory": {
+    "before": "278.43 MB",
+    "after": "2.55 GB",
+    "consumed": "2.27 GB"
+  },
+  "payload_self_check": "payload ok; source and model verified by sha256",
+  "competition_verified": {
+    "project_found": "/path/to/workspace/structural-break-claude-wave3",
+    "competition": "structural-break-real-time",
+    "n_data_files": 6,
+    "files": [
+      "X_train.parquet",
+      "X_test.reduced.parquet",
+      "y_train.parquet",
+      "y_test.reduced.parquet",
+      "y_test_index.reduced.parquet",
+      "y_train_index.parquet"
+    ],
+    "note": "the documented trap: a run that validates only FOUR files was run against the 2025 competition. y_test_index.reduced and y_train_index are real-time only and are both present, so this ran against the right competition."
+  },
+  "score_returned": null,
+  "score_note": "crunch test is a local execution test and returns no score. Nothing was submitted and no leaderboard number was produced, so there was no score available to select on even in principle.",
+  "environment_issues": "none",
+  "comparison_to_freeze_record": {
+    "freeze_duration": "00:01:40",
+    "rc_duration": "00:01:47",
+    "freeze_memory_consumed": "2.55 GB",
+    "rc_memory_consumed": "2.27 GB",
+    "verdict": "within noise; no regression"
+  },
+  "output_contract": "see CRUNCH_OUTPUT_CONTRACT.json -- PASS",
+  "test_reduced_inspected_outside_the_runner": false
+}

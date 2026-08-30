@@ -1,0 +1,240 @@
+{
+  "interpretation_guardrail": "Small-n descriptive correlations only; no p-values and no promotion evidence.",
+  "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+  "relationships": [
+    {
+      "group": "all_scored_arms",
+      "n": 19,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.9073705605318352,
+      "predictor": "standalone_whole_auc",
+      "spearman": 0.7385964912280703,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "all_scored_arms",
+      "n": 19,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.9079133794193013,
+      "predictor": "dominant_cell_auc",
+      "spearman": 0.6631578947368422,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "all_scored_arms",
+      "n": 19,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.9116760199539036,
+      "predictor": "mature_vs_never_auc",
+      "spearman": 0.6842105263157895,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "all_scored_arms",
+      "n": 19,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.8932880302792561,
+      "predictor": "mature_vs_prebreak_auc",
+      "spearman": 0.6000000000000001,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "all_scored_arms",
+      "n": 19,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.8411013698798947,
+      "predictor": "within_t_rank_corr_rt600",
+      "spearman": 0.13684210526315788,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "all_scored_arms",
+      "n": 19,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 1.0,
+      "predictor": "gain_vs_rt600",
+      "spearman": 1.0,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "all_scored_arms",
+      "n": 14,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.22593652750085558,
+      "predictor": "candidate_vs_matched_control_marginal",
+      "spearman": 0.37142857142857144,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "all_scored_arms",
+      "n": 19,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.8821493501345372,
+      "predictor": "whole_pair_net",
+      "spearman": 0.5929824561403508,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "all_scored_arms",
+      "n": 19,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.906289162569744,
+      "predictor": "dominant_pair_net",
+      "spearman": 0.6491228070175438,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "all_scored_arms",
+      "n": 19,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.9067351295616377,
+      "predictor": "neverbreak_net",
+      "spearman": 0.6017543859649123,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "all_scored_arms",
+      "n": 19,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.8913452317797089,
+      "predictor": "prebreak_net",
+      "spearman": 0.6210526315789473,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "all_scored_arms",
+      "n": 19,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.6547302901204285,
+      "predictor": "feature_count",
+      "spearman": 0.3017681928556579,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "all_scored_arms",
+      "n": 19,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.5013382989615008,
+      "predictor": "training_runtime_s",
+      "spearman": 0.33611236232610686,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "candidate_arms_only",
+      "n": 12,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.8853134828849639,
+      "predictor": "standalone_whole_auc",
+      "spearman": 0.6433566433566434,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "candidate_arms_only",
+      "n": 12,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.8831097438203742,
+      "predictor": "dominant_cell_auc",
+      "spearman": 0.5874125874125874,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "candidate_arms_only",
+      "n": 12,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.8905088968731147,
+      "predictor": "mature_vs_never_auc",
+      "spearman": 0.5874125874125874,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "candidate_arms_only",
+      "n": 12,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.8622348914565598,
+      "predictor": "mature_vs_prebreak_auc",
+      "spearman": 0.5314685314685316,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "candidate_arms_only",
+      "n": 12,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.8053573691975989,
+      "predictor": "within_t_rank_corr_rt600",
+      "spearman": 0.2447552447552448,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "candidate_arms_only",
+      "n": 12,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 1.0,
+      "predictor": "gain_vs_rt600",
+      "spearman": 1.0,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "candidate_arms_only",
+      "n": 7,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.046437716198028035,
+      "predictor": "candidate_vs_matched_control_marginal",
+      "spearman": 0.5714285714285715,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "candidate_arms_only",
+      "n": 12,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.8558758746033828,
+      "predictor": "whole_pair_net",
+      "spearman": 0.6783216783216784,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "candidate_arms_only",
+      "n": 12,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.8794341244735957,
+      "predictor": "dominant_pair_net",
+      "spearman": 0.6783216783216784,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "candidate_arms_only",
+      "n": 12,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.8851117312195395,
+      "predictor": "neverbreak_net",
+      "spearman": 0.6293706293706295,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "candidate_arms_only",
+      "n": 12,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.8648822939303281,
+      "predictor": "prebreak_net",
+      "spearman": 0.5384615384615385,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "candidate_arms_only",
+      "n": 12,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.5856975783007309,
+      "predictor": "feature_count",
+      "spearman": 0.3333668712480307,
+      "target": "marginal_vs_clone"
+    },
+    {
+      "group": "candidate_arms_only",
+      "n": 12,
+      "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+      "pearson": 0.53385752922468,
+      "predictor": "training_runtime_s",
+      "spearman": 0.32867132867132864,
+      "target": "marginal_vs_clone"
+    }
+  ]
+}

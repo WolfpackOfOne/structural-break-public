@@ -1,0 +1,11 @@
+{
+  "schema": "rt600_release_candidate/packaging_neutrality/1",
+  "question": "does PACKAGING change behaviour? The source tree passing is not evidence that the shipped artifact passes, so the same 67-series prediction battery was run twice: once from src/sbr directly, once from the notebook's own unpacked payload.",
+  "n_predictions_compared": 38723,
+  "n_series": 67,
+  "bitwise_identical": true,
+  "n_differing": 0,
+  "max_abs_delta": 0.0,
+  "conclusion": "packaging contributes exactly zero. Every prediction difference between the shipped and rebuilt artifacts is therefore attributable to the audited src/sbr fixes, not to the build.",
+  "note": "no TS-AUC computed on either side"
+}

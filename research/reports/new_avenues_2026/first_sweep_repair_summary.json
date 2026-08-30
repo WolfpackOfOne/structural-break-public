@@ -1,0 +1,710 @@
+{
+  "arm_summary": {
+    "RT-1200": {
+      "cell_never_break_neg": {
+        "damage": 4796,
+        "damage_rate_of_rt600_right": 0.1380700138185168,
+        "net_pair_lift": -1210,
+        "repair_rate_of_rt600_wrong": 0.22690458111870412,
+        "repairs": 3586
+      },
+      "cell_pre_break_neg": {
+        "damage": 4125,
+        "damage_rate_of_rt600_right": 0.12476936571791537,
+        "net_pair_lift": -583,
+        "repair_rate_of_rt600_wrong": 0.2268186475409836,
+        "repairs": 3542
+      },
+      "dominant_cell": {
+        "damage": 4760,
+        "damage_rate_of_rt600_right": 0.13858561155268292,
+        "net_pair_lift": -1105,
+        "repair_rate_of_rt600_wrong": 0.22571481504353733,
+        "repairs": 3655
+      },
+      "whole_fold": {
+        "damage": 7595,
+        "damage_rate_of_rt600_right": 0.18417925649295536,
+        "net_pair_lift": -2847,
+        "repair_rate_of_rt600_wrong": 0.21442442306823828,
+        "repairs": 4748
+      }
+    },
+    "RT-1201": {
+      "cell_never_break_neg": {
+        "damage": 10042,
+        "damage_rate_of_rt600_right": 0.28909488714877934,
+        "net_pair_lift": -3287,
+        "repair_rate_of_rt600_wrong": 0.4274234371045305,
+        "repairs": 6755
+      },
+      "cell_pre_break_neg": {
+        "damage": 10210,
+        "damage_rate_of_rt600_right": 0.30882308460119173,
+        "net_pair_lift": -3888,
+        "repair_rate_of_rt600_wrong": 0.40484118852459017,
+        "repairs": 6322
+      },
+      "dominant_cell": {
+        "damage": 10109,
+        "damage_rate_of_rt600_right": 0.29431973680379653,
+        "net_pair_lift": -3228,
+        "repair_rate_of_rt600_wrong": 0.4249367010436608,
+        "repairs": 6881
+      },
+      "whole_fold": {
+        "damage": 13595,
+        "damage_rate_of_rt600_right": 0.3296796566190557,
+        "net_pair_lift": -4547,
+        "repair_rate_of_rt600_wrong": 0.4086167186018155,
+        "repairs": 9048
+      }
+    },
+    "RT-1202": {
+      "cell_never_break_neg": {
+        "damage": 17757,
+        "damage_rate_of_rt600_right": 0.5111987563334869,
+        "net_pair_lift": -9724,
+        "repair_rate_of_rt600_wrong": 0.5082890407491775,
+        "repairs": 8033
+      },
+      "cell_pre_break_neg": {
+        "damage": 16619,
+        "damage_rate_of_rt600_right": 0.5026768700281298,
+        "net_pair_lift": -9244,
+        "repair_rate_of_rt600_wrong": 0.4722720286885246,
+        "repairs": 7375
+      },
+      "dominant_cell": {
+        "damage": 17587,
+        "damage_rate_of_rt600_right": 0.5120388971380324,
+        "net_pair_lift": -9423,
+        "repair_rate_of_rt600_wrong": 0.5041684678564812,
+        "repairs": 8164
+      },
+      "whole_fold": {
+        "damage": 21161,
+        "damage_rate_of_rt600_right": 0.5131556611780682,
+        "net_pair_lift": -10394,
+        "repair_rate_of_rt600_wrong": 0.48624847581628505,
+        "repairs": 10767
+      }
+    },
+    "RT-1203": {
+      "cell_never_break_neg": {
+        "damage": 17919,
+        "damage_rate_of_rt600_right": 0.5158625057577153,
+        "net_pair_lift": -10172,
+        "repair_rate_of_rt600_wrong": 0.4901923563654771,
+        "repairs": 7747
+      },
+      "cell_pre_break_neg": {
+        "damage": 16740,
+        "damage_rate_of_rt600_right": 0.506336771422522,
+        "net_pair_lift": -9304,
+        "repair_rate_of_rt600_wrong": 0.4761782786885246,
+        "repairs": 7436
+      },
+      "dominant_cell": {
+        "damage": 17711,
+        "damage_rate_of_rt600_right": 0.5156491105482284,
+        "net_pair_lift": -9768,
+        "repair_rate_of_rt600_wrong": 0.49052059531896497,
+        "repairs": 7943
+      },
+      "whole_fold": {
+        "damage": 21044,
+        "damage_rate_of_rt600_right": 0.5103184033756093,
+        "net_pair_lift": -10561,
+        "repair_rate_of_rt600_wrong": 0.4734227521112767,
+        "repairs": 10483
+      }
+    },
+    "RT-1204": {
+      "cell_never_break_neg": {
+        "damage": 3333,
+        "damage_rate_of_rt600_right": 0.09595232611699678,
+        "net_pair_lift": -617,
+        "repair_rate_of_rt600_wrong": 0.1718552265249304,
+        "repairs": 2716
+      },
+      "cell_pre_break_neg": {
+        "damage": 2729,
+        "damage_rate_of_rt600_right": 0.08254438764707661,
+        "net_pair_lift": 34,
+        "repair_rate_of_rt600_wrong": 0.17693391393442623,
+        "repairs": 2763
+      },
+      "dominant_cell": {
+        "damage": 3220,
+        "damage_rate_of_rt600_right": 0.09374909016799138,
+        "net_pair_lift": -473,
+        "repair_rate_of_rt600_wrong": 0.16964120298894583,
+        "repairs": 2747
+      },
+      "whole_fold": {
+        "damage": 4553,
+        "damage_rate_of_rt600_right": 0.11041055362902248,
+        "net_pair_lift": -638,
+        "repair_rate_of_rt600_wrong": 0.17680531093347784,
+        "repairs": 3915
+      }
+    },
+    "RT-1205": {
+      "cell_never_break_neg": {
+        "damage": 3385,
+        "damage_rate_of_rt600_right": 0.09744933210502073,
+        "net_pair_lift": -635,
+        "repair_rate_of_rt600_wrong": 0.17400658061250315,
+        "repairs": 2750
+      },
+      "cell_pre_break_neg": {
+        "damage": 3308,
+        "damage_rate_of_rt600_right": 0.10005746952602765,
+        "net_pair_lift": -733,
+        "repair_rate_of_rt600_wrong": 0.16489497950819673,
+        "repairs": 2575
+      },
+      "dominant_cell": {
+        "damage": 3359,
+        "damage_rate_of_rt600_right": 0.09779602294232392,
+        "net_pair_lift": -617,
+        "repair_rate_of_rt600_wrong": 0.16933242759216946,
+        "repairs": 2742
+      },
+      "whole_fold": {
+        "damage": 4531,
+        "damage_rate_of_rt600_right": 0.10987705216189345,
+        "net_pair_lift": -574,
+        "repair_rate_of_rt600_wrong": 0.17870207288985232,
+        "repairs": 3957
+      }
+    },
+    "RT-1206": {
+      "cell_never_break_neg": {
+        "damage": 3650,
+        "damage_rate_of_rt600_right": 0.10507830492860433,
+        "net_pair_lift": -1007,
+        "repair_rate_of_rt600_wrong": 0.1672361427486712,
+        "repairs": 2643
+      },
+      "cell_pre_break_neg": {
+        "damage": 3261,
+        "damage_rate_of_rt600_right": 0.09863585493481745,
+        "net_pair_lift": -490,
+        "repair_rate_of_rt600_wrong": 0.17744620901639344,
+        "repairs": 2771
+      },
+      "dominant_cell": {
+        "damage": 3615,
+        "damage_rate_of_rt600_right": 0.10524936675692201,
+        "net_pair_lift": -904,
+        "repair_rate_of_rt600_wrong": 0.16741802013215587,
+        "repairs": 2711
+      },
+      "whole_fold": {
+        "damage": 4887,
+        "damage_rate_of_rt600_right": 0.11851007590270873,
+        "net_pair_lift": -922,
+        "repair_rate_of_rt600_wrong": 0.1790633608815427,
+        "repairs": 3965
+      }
+    },
+    "RT-1207": {
+      "cell_never_break_neg": {
+        "damage": 3175,
+        "damage_rate_of_rt600_right": 0.09140373099953938,
+        "net_pair_lift": -205,
+        "repair_rate_of_rt600_wrong": 0.18792710706150342,
+        "repairs": 2970
+      },
+      "cell_pre_break_neg": {
+        "damage": 3113,
+        "damage_rate_of_rt600_right": 0.09415928132845347,
+        "net_pair_lift": -329,
+        "repair_rate_of_rt600_wrong": 0.17827868852459017,
+        "repairs": 2784
+      },
+      "dominant_cell": {
+        "damage": 3130,
+        "damage_rate_of_rt600_right": 0.09112877398317175,
+        "net_pair_lift": -141,
+        "repair_rate_of_rt600_wrong": 0.18458593219292288,
+        "repairs": 2989
+      },
+      "whole_fold": {
+        "damage": 4478,
+        "damage_rate_of_rt600_right": 0.10859179862744622,
+        "net_pair_lift": -141,
+        "repair_rate_of_rt600_wrong": 0.1958632524951452,
+        "repairs": 4337
+      }
+    },
+    "RT-1208": {
+      "cell_never_break_neg": {
+        "damage": 3434,
+        "damage_rate_of_rt600_right": 0.09885997236296637,
+        "net_pair_lift": -581,
+        "repair_rate_of_rt600_wrong": 0.18052391799544418,
+        "repairs": 2853
+      },
+      "cell_pre_break_neg": {
+        "damage": 3001,
+        "damage_rate_of_rt600_right": 0.09077160400471855,
+        "net_pair_lift": -159,
+        "repair_rate_of_rt600_wrong": 0.18199282786885246,
+        "repairs": 2842
+      },
+      "dominant_cell": {
+        "damage": 3344,
+        "damage_rate_of_rt600_right": 0.09735930357818733,
+        "net_pair_lift": -361,
+        "repair_rate_of_rt600_wrong": 0.1842154017167912,
+        "repairs": 2983
+      },
+      "whole_fold": {
+        "damage": 4683,
+        "damage_rate_of_rt600_right": 0.11356306229842132,
+        "net_pair_lift": -442,
+        "repair_rate_of_rt600_wrong": 0.1915277965948607,
+        "repairs": 4241
+      }
+    },
+    "RT-1209": {
+      "cell_never_break_neg": {
+        "damage": 3556,
+        "damage_rate_of_rt600_right": 0.1023721787194841,
+        "net_pair_lift": -766,
+        "repair_rate_of_rt600_wrong": 0.1765375854214123,
+        "repairs": 2790
+      },
+      "cell_pre_break_neg": {
+        "damage": 3584,
+        "damage_rate_of_rt600_right": 0.10840567435951726,
+        "net_pair_lift": -1336,
+        "repair_rate_of_rt600_wrong": 0.14395491803278687,
+        "repairs": 2248
+      },
+      "dominant_cell": {
+        "damage": 3482,
+        "damage_rate_of_rt600_right": 0.10137712172824409,
+        "net_pair_lift": -763,
+        "repair_rate_of_rt600_wrong": 0.16791206076699808,
+        "repairs": 2719
+      },
+      "whole_fold": {
+        "damage": 4662,
+        "damage_rate_of_rt600_right": 0.11305381089797997,
+        "net_pair_lift": -587,
+        "repair_rate_of_rt600_wrong": 0.18403107076728537,
+        "repairs": 4075
+      }
+    },
+    "RT-1210": {
+      "cell_never_break_neg": {
+        "damage": 3676,
+        "damage_rate_of_rt600_right": 0.10582680792261631,
+        "net_pair_lift": -938,
+        "repair_rate_of_rt600_wrong": 0.17324727916983043,
+        "repairs": 2738
+      },
+      "cell_pre_break_neg": {
+        "damage": 3294,
+        "damage_rate_of_rt600_right": 0.09963400986056078,
+        "net_pair_lift": -536,
+        "repair_rate_of_rt600_wrong": 0.17661372950819673,
+        "repairs": 2758
+      },
+      "dominant_cell": {
+        "damage": 3603,
+        "damage_rate_of_rt600_right": 0.10489999126561271,
+        "net_pair_lift": -769,
+        "repair_rate_of_rt600_wrong": 0.17501389489285493,
+        "repairs": 2834
+      },
+      "whole_fold": {
+        "damage": 4836,
+        "damage_rate_of_rt600_right": 0.11727332250163688,
+        "net_pair_lift": -718,
+        "repair_rate_of_rt600_wrong": 0.18597299372262113,
+        "repairs": 4118
+      }
+    },
+    "RT-1211": {
+      "cell_never_break_neg": {
+        "damage": 3584,
+        "damage_rate_of_rt600_right": 0.10317825886688162,
+        "net_pair_lift": -645,
+        "repair_rate_of_rt600_wrong": 0.18596557833459884,
+        "repairs": 2939
+      },
+      "cell_pre_break_neg": {
+        "damage": 3703,
+        "damage_rate_of_rt600_right": 0.11200508151598561,
+        "net_pair_lift": -904,
+        "repair_rate_of_rt600_wrong": 0.1792392418032787,
+        "repairs": 2799
+      },
+      "dominant_cell": {
+        "damage": 3649,
+        "damage_rate_of_rt600_right": 0.10623926398229831,
+        "net_pair_lift": -632,
+        "repair_rate_of_rt600_wrong": 0.18631507441487064,
+        "repairs": 3017
+      },
+      "whole_fold": {
+        "damage": 4891,
+        "damage_rate_of_rt600_right": 0.11860707616945947,
+        "net_pair_lift": -506,
+        "repair_rate_of_rt600_wrong": 0.19803098044528744,
+        "repairs": 4385
+      }
+    },
+    "RT-1212": {
+      "cell_never_break_neg": {
+        "damage": 3639,
+        "damage_rate_of_rt600_right": 0.10476163058498388,
+        "net_pair_lift": -531,
+        "repair_rate_of_rt600_wrong": 0.19665907365223995,
+        "repairs": 3108
+      },
+      "cell_pre_break_neg": {
+        "damage": 3026,
+        "damage_rate_of_rt600_right": 0.09152778197876653,
+        "net_pair_lift": 361,
+        "repair_rate_of_rt600_wrong": 0.21689293032786885,
+        "repairs": 3387
+      },
+      "dominant_cell": {
+        "damage": 3535,
+        "damage_rate_of_rt600_right": 0.1029201968148601,
+        "net_pair_lift": -331,
+        "repair_rate_of_rt600_wrong": 0.19786327425430741,
+        "repairs": 3204
+      },
+      "whole_fold": {
+        "damage": 5023,
+        "damage_rate_of_rt600_right": 0.12180808497223368,
+        "net_pair_lift": -461,
+        "repair_rate_of_rt600_wrong": 0.20602447726143702,
+        "repairs": 4562
+      }
+    },
+    "RT-1213": {
+      "cell_never_break_neg": {
+        "damage": 3594,
+        "damage_rate_of_rt600_right": 0.1034661446338093,
+        "net_pair_lift": -787,
+        "repair_rate_of_rt600_wrong": 0.17761326246519868,
+        "repairs": 2807
+      },
+      "cell_pre_break_neg": {
+        "damage": 3474,
+        "damage_rate_of_rt600_right": 0.10507849127370618,
+        "net_pair_lift": -733,
+        "repair_rate_of_rt600_wrong": 0.1755251024590164,
+        "repairs": 2741
+      },
+      "dominant_cell": {
+        "damage": 3595,
+        "damage_rate_of_rt600_right": 0.10466707427140652,
+        "net_pair_lift": -740,
+        "repair_rate_of_rt600_wrong": 0.17631075155931575,
+        "repairs": 2855
+      },
+      "whole_fold": {
+        "damage": 5033,
+        "damage_rate_of_rt600_right": 0.1220505856391105,
+        "net_pair_lift": -782,
+        "repair_rate_of_rt600_wrong": 0.19197940658447366,
+        "repairs": 4251
+      }
+    },
+    "RT-1214": {
+      "cell_never_break_neg": {
+        "damage": 3353,
+        "damage_rate_of_rt600_right": 0.09652809765085214,
+        "net_pair_lift": -431,
+        "repair_rate_of_rt600_wrong": 0.18488990129081245,
+        "repairs": 2922
+      },
+      "cell_pre_break_neg": {
+        "damage": 3031,
+        "damage_rate_of_rt600_right": 0.09167901757357612,
+        "net_pair_lift": 208,
+        "repair_rate_of_rt600_wrong": 0.20741547131147542,
+        "repairs": 3239
+      },
+      "dominant_cell": {
+        "damage": 3440,
+        "damage_rate_of_rt600_right": 0.1001543075086616,
+        "net_pair_lift": -426,
+        "repair_rate_of_rt600_wrong": 0.1861298091768048,
+        "repairs": 3014
+      },
+      "whole_fold": {
+        "damage": 4641,
+        "damage_rate_of_rt600_right": 0.11254455949753862,
+        "net_pair_lift": -380,
+        "repair_rate_of_rt600_wrong": 0.19243101657408662,
+        "repairs": 4261
+      }
+    },
+    "RT-1215": {
+      "cell_never_break_neg": {
+        "damage": 3246,
+        "damage_rate_of_rt600_right": 0.09344771994472593,
+        "net_pair_lift": -411,
+        "repair_rate_of_rt600_wrong": 0.17938496583143507,
+        "repairs": 2835
+      },
+      "cell_pre_break_neg": {
+        "damage": 2650,
+        "damage_rate_of_rt600_right": 0.08015486524908502,
+        "net_pair_lift": 329,
+        "repair_rate_of_rt600_wrong": 0.19076588114754098,
+        "repairs": 2979
+      },
+      "dominant_cell": {
+        "damage": 3113,
+        "damage_rate_of_rt600_right": 0.09063382537048359,
+        "net_pair_lift": -148,
+        "repair_rate_of_rt600_wrong": 0.18310381028839623,
+        "repairs": 2965
+      },
+      "whole_fold": {
+        "damage": 4389,
+        "damage_rate_of_rt600_right": 0.10643354269224241,
+        "net_pair_lift": -175,
+        "repair_rate_of_rt600_wrong": 0.19030844962290566,
+        "repairs": 4214
+      }
+    },
+    "RT-1216": {
+      "cell_never_break_neg": {
+        "damage": 3308,
+        "damage_rate_of_rt600_right": 0.09523261169967757,
+        "net_pair_lift": -219,
+        "repair_rate_of_rt600_wrong": 0.19545684636800809,
+        "repairs": 3089
+      },
+      "cell_pre_break_neg": {
+        "damage": 2901,
+        "damage_rate_of_rt600_right": 0.08774689210852667,
+        "net_pair_lift": 369,
+        "repair_rate_of_rt600_wrong": 0.20940061475409835,
+        "repairs": 3270
+      },
+      "dominant_cell": {
+        "damage": 3458,
+        "damage_rate_of_rt600_right": 0.10067837074562552,
+        "net_pair_lift": -342,
+        "repair_rate_of_rt600_wrong": 0.19242882727104305,
+        "repairs": 3116
+      },
+      "whole_fold": {
+        "damage": 4742,
+        "damage_rate_of_rt600_right": 0.11499381623299464,
+        "net_pair_lift": -170,
+        "repair_rate_of_rt600_wrong": 0.20647608725105,
+        "repairs": 4572
+      }
+    },
+    "RT-1217": {
+      "cell_never_break_neg": {
+        "damage": 3457,
+        "damage_rate_of_rt600_right": 0.09952210962690004,
+        "net_pair_lift": -407,
+        "repair_rate_of_rt600_wrong": 0.1929891166793217,
+        "repairs": 3050
+      },
+      "cell_pre_break_neg": {
+        "damage": 3162,
+        "damage_rate_of_rt600_right": 0.09564139015758749,
+        "net_pair_lift": -199,
+        "repair_rate_of_rt600_wrong": 0.18974129098360656,
+        "repairs": 2963
+      },
+      "dominant_cell": {
+        "damage": 3511,
+        "damage_rate_of_rt600_right": 0.10222144583224153,
+        "net_pair_lift": -390,
+        "repair_rate_of_rt600_wrong": 0.19273760266781942,
+        "repairs": 3121
+      },
+      "whole_fold": {
+        "damage": 4821,
+        "damage_rate_of_rt600_right": 0.11690957150132163,
+        "net_pair_lift": -488,
+        "repair_rate_of_rt600_wrong": 0.1956826084993,
+        "repairs": 4333
+      }
+    },
+    "RT-1218": {
+      "cell_never_break_neg": {
+        "damage": 13777,
+        "damage_rate_of_rt600_right": 0.396620221096269,
+        "net_pair_lift": -6626,
+        "repair_rate_of_rt600_wrong": 0.45248038471273094,
+        "repairs": 7151
+      },
+      "cell_pre_break_neg": {
+        "damage": 15517,
+        "damage_rate_of_rt600_right": 0.4693445449320952,
+        "net_pair_lift": -9852,
+        "repair_rate_of_rt600_wrong": 0.3627689549180328,
+        "repairs": 5665
+      },
+      "dominant_cell": {
+        "damage": 13704,
+        "damage_rate_of_rt600_right": 0.39898681107520306,
+        "net_pair_lift": -6511,
+        "repair_rate_of_rt600_wrong": 0.44420428580250726,
+        "repairs": 7193
+      },
+      "whole_fold": {
+        "damage": 17311,
+        "damage_rate_of_rt600_right": 0.41979290443048717,
+        "net_pair_lift": -7257,
+        "repair_rate_of_rt600_wrong": 0.4540486835568803,
+        "repairs": 10054
+      }
+    }
+  },
+  "candidate_coverage": {
+    "cell_never_break_neg": {
+      "candidate_set": [
+        "RT-1200",
+        "RT-1201",
+        "RT-1202",
+        "RT-1204",
+        "RT-1206",
+        "RT-1208",
+        "RT-1210",
+        "RT-1212",
+        "RT-1214",
+        "RT-1215",
+        "RT-1216",
+        "RT-1218"
+      ],
+      "mean_candidate_repairs_per_rt600_wrong_pair": 3.0643507972665147,
+      "rt600_right_damaged_by_any_candidate": 28804,
+      "rt600_right_damaged_by_any_candidate_rate": 0.8292261630584984,
+      "rt600_wrong_pairs": 15804,
+      "rt600_wrong_repaired_by_any_candidate": 14557,
+      "rt600_wrong_repaired_by_any_candidate_rate": 0.9210959250822577,
+      "rt600_wrong_repaired_by_two_plus_candidates": 11328,
+      "rt600_wrong_repaired_by_two_plus_candidates_rate": 0.7167805618830676
+    },
+    "cell_pre_break_neg": {
+      "candidate_set": [
+        "RT-1200",
+        "RT-1201",
+        "RT-1202",
+        "RT-1204",
+        "RT-1206",
+        "RT-1208",
+        "RT-1210",
+        "RT-1212",
+        "RT-1214",
+        "RT-1215",
+        "RT-1216",
+        "RT-1218"
+      ],
+      "mean_candidate_repairs_per_rt600_wrong_pair": 3.0041623975409837,
+      "rt600_right_damaged_by_any_candidate": 27716,
+      "rt600_right_damaged_by_any_candidate_rate": 0.8383291491485436,
+      "rt600_wrong_pairs": 15616,
+      "rt600_wrong_repaired_by_any_candidate": 13858,
+      "rt600_wrong_repaired_by_any_candidate_rate": 0.8874231557377049,
+      "rt600_wrong_repaired_by_two_plus_candidates": 10741,
+      "rt600_wrong_repaired_by_two_plus_candidates_rate": 0.6878201844262295
+    },
+    "dominant_cell": {
+      "candidate_set": [
+        "RT-1200",
+        "RT-1201",
+        "RT-1202",
+        "RT-1204",
+        "RT-1206",
+        "RT-1208",
+        "RT-1210",
+        "RT-1212",
+        "RT-1214",
+        "RT-1215",
+        "RT-1216",
+        "RT-1218"
+      ],
+      "mean_candidate_repairs_per_rt600_wrong_pair": 3.054838510467486,
+      "rt600_right_damaged_by_any_candidate": 28505,
+      "rt600_right_damaged_by_any_candidate_rate": 0.8299123649809299,
+      "rt600_wrong_pairs": 16193,
+      "rt600_wrong_repaired_by_any_candidate": 14868,
+      "rt600_wrong_repaired_by_any_candidate_rate": 0.918174519854258,
+      "rt600_wrong_repaired_by_two_plus_candidates": 11626,
+      "rt600_wrong_repaired_by_two_plus_candidates_rate": 0.71796455258445
+    },
+    "whole_fold": {
+      "candidate_set": [
+        "RT-1200",
+        "RT-1201",
+        "RT-1202",
+        "RT-1204",
+        "RT-1206",
+        "RT-1208",
+        "RT-1210",
+        "RT-1212",
+        "RT-1214",
+        "RT-1215",
+        "RT-1216",
+        "RT-1218"
+      ],
+      "mean_candidate_repairs_per_rt600_wrong_pair": 3.091947793885201,
+      "rt600_right_damaged_by_any_candidate": 34914,
+      "rt600_right_damaged_by_any_candidate_rate": 0.8466668283337779,
+      "rt600_wrong_pairs": 22143,
+      "rt600_wrong_repaired_by_any_candidate": 20219,
+      "rt600_wrong_repaired_by_any_candidate_rate": 0.9131102379984646,
+      "rt600_wrong_repaired_by_two_plus_candidates": 15887,
+      "rt600_wrong_repaired_by_two_plus_candidates_rate": 0.7174727904981258
+    }
+  },
+  "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+  "samples": {
+    "cell_never_break_neg": {
+      "pairs_per_t": 64,
+      "pairs_sampled": 50540,
+      "rt600_right_pairs": 34736,
+      "rt600_wrong_pairs": 15804,
+      "seed": 20260825
+    },
+    "cell_pre_break_neg": {
+      "pairs_per_t": 64,
+      "pairs_sampled": 48677,
+      "rt600_right_pairs": 33061,
+      "rt600_wrong_pairs": 15616,
+      "seed": 20260825
+    },
+    "dominant_cell": {
+      "pairs_per_t": 64,
+      "pairs_sampled": 50540,
+      "rt600_right_pairs": 34347,
+      "rt600_wrong_pairs": 16193,
+      "seed": 20260825
+    },
+    "whole_fold": {
+      "pairs_per_t": 64,
+      "pairs_sampled": 63380,
+      "rt600_right_pairs": 41237,
+      "rt600_wrong_pairs": 22143,
+      "seed": 20260825
+    }
+  },
+  "sampling": {
+    "not_a_score": true,
+    "pairs_per_t": 64,
+    "scope": "fold0 dev same-t positive/negative pairs only",
+    "seed": 20260825,
+    "strict_pair_correct_rule": "score_positive > score_negative"
+  }
+}

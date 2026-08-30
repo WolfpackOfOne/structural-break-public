@@ -1,0 +1,50 @@
+model_directory=/tmp/rt1257_crunch_resources.R3WXJN
+14:06:40 
+14:06:42 started
+14:06:42 running local test
+14:06:42 internet access isn't restricted, no check will be done
+14:06:42 
+14:06:43 executing - command=train
+14:06:49 executing - command=get_parallelism
+14:06:49 using a parallelism of 1
+14:06:49 executing - command=infer
+14:09:17 checking determinism by executing the inference again with 10% of the data (tolerance: 1e-08)
+14:09:17 executing - command=infer
+14:09:29 save prediction - path=prediction
+14:09:29 determinism check: passed
+14:09:29 ended
+14:09:29 
+14:09:29 duration - time=00:02:46
+14:09:29 memory - before="230.62 MB" after="1.6 GB" consumed="1.37 GB"
+project: found /path/to/workspace/structural-break-claude-wave3
+payload ok; source and model verified by sha256
+data/X_train.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/X_train.parquet (218514418 bytes)
+data/X_train.parquet: already exists, file length match
+data/X_test.reduced.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/X_test.reduced.parquet (2587435 bytes)
+data/X_test.reduced.parquet: already exists, file length match
+data/y_train.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/y_train.parquet (8356193 bytes)
+data/y_train.parquet: already exists, file length match
+data/y_test.reduced.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/y_test.reduced.parquet (106299 bytes)
+data/y_test.reduced.parquet: already exists, file length match
+data/y_test_index.reduced.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/y_test_index.reduced.parquet (3674 bytes)
+data/y_test_index.reduced.parquet: already exists, file length match
+data/y_train_index.parquet: download from https:crunchdao--competition--production.s3-accelerate.amazonaws.com/data-releases/234/y_train_index.parquet (100183 bytes)
+data/y_train_index.parquet: already exists, file length match
+      172.68 real       159.45 user         5.29 sys
+          2748055552  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              424198  page reclaims
+                7636  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+              110390  messages sent
+              110831  messages received
+                   0  signals received
+              113291  voluntary context switches
+              213537  involuntary context switches
+       1591842910238  instructions retired
+        544057403899  cycles elapsed
+          2348125688  peak memory footprint

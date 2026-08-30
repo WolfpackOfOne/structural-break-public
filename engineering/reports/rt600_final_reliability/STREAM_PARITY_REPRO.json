@@ -1,0 +1,274 @@
+{
+  "schema": "rt600_stream_parity_repro/1",
+  "base_commit": "81658764c95a7d91f3ca1f80ff25ad8c2b9b33e2",
+  "branch": "engineering/rt600-final-reliability-2026",
+  "state": "PRE_FIX",
+  "environment": {
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "pandas": "3.0.5",
+    "scipy": "1.17.1",
+    "sklearn": "1.9.0",
+    "lightgbm": "4.7.0",
+    "numba": "0.67.0",
+    "torch": null
+  },
+  "test": "tests/test_stream_engine_parity.py::test_engine_parity_real",
+  "seeds_failing": [
+    0,
+    137,
+    4242,
+    7777
+  ],
+  "seeds_total": [
+    0,
+    137,
+    999,
+    4242,
+    7777
+  ],
+  "per_series": [
+    {
+      "seed": 0,
+      "series": 8506,
+      "n_hist": 3787,
+      "n_online": 149,
+      "tau": -1,
+      "n_diff": 0,
+      "n_cells": 74500
+    },
+    {
+      "seed": 0,
+      "series": 6369,
+      "n_hist": 4763,
+      "n_online": 261,
+      "tau": -1,
+      "n_diff": 0,
+      "n_cells": 130500
+    },
+    {
+      "seed": 0,
+      "series": 5111,
+      "n_hist": 4132,
+      "n_online": 370,
+      "tau": -1,
+      "n_diff": 2,
+      "n_cells": 185000
+    },
+    {
+      "seed": 137,
+      "series": 4911,
+      "n_hist": 1343,
+      "n_online": 355,
+      "tau": -1,
+      "n_diff": 0,
+      "n_cells": 177500
+    },
+    {
+      "seed": 137,
+      "series": 8581,
+      "n_hist": 4489,
+      "n_online": 442,
+      "tau": -1,
+      "n_diff": 1,
+      "n_cells": 221000
+    },
+    {
+      "seed": 137,
+      "series": 2349,
+      "n_hist": 2671,
+      "n_online": 780,
+      "tau": 406,
+      "n_diff": 0,
+      "n_cells": 390000
+    },
+    {
+      "seed": 999,
+      "series": 8138,
+      "n_hist": 2814,
+      "n_online": 316,
+      "tau": 57,
+      "n_diff": 0,
+      "n_cells": 158000
+    },
+    {
+      "seed": 999,
+      "series": 7788,
+      "n_hist": 4991,
+      "n_online": 428,
+      "tau": 141,
+      "n_diff": 0,
+      "n_cells": 214000
+    },
+    {
+      "seed": 999,
+      "series": 1742,
+      "n_hist": 4851,
+      "n_online": 553,
+      "tau": -1,
+      "n_diff": 0,
+      "n_cells": 276500
+    },
+    {
+      "seed": 4242,
+      "series": 4746,
+      "n_hist": 2167,
+      "n_online": 877,
+      "tau": -1,
+      "n_diff": 2,
+      "n_cells": 438500
+    },
+    {
+      "seed": 4242,
+      "series": 7822,
+      "n_hist": 2330,
+      "n_online": 629,
+      "tau": 208,
+      "n_diff": 0,
+      "n_cells": 314500
+    },
+    {
+      "seed": 4242,
+      "series": 8558,
+      "n_hist": 1289,
+      "n_online": 434,
+      "tau": -1,
+      "n_diff": 0,
+      "n_cells": 217000
+    },
+    {
+      "seed": 7777,
+      "series": 5002,
+      "n_hist": 4785,
+      "n_online": 357,
+      "tau": 26,
+      "n_diff": 1,
+      "n_cells": 178500
+    },
+    {
+      "seed": 7777,
+      "series": 9419,
+      "n_hist": 2267,
+      "n_online": 817,
+      "tau": -1,
+      "n_diff": 0,
+      "n_cells": 408500
+    },
+    {
+      "seed": 7777,
+      "series": 4971,
+      "n_hist": 2956,
+      "n_online": 821,
+      "tau": -1,
+      "n_diff": 0,
+      "n_cells": 410500
+    }
+  ],
+  "differing_cells": [
+    {
+      "series": 5111,
+      "t": 188,
+      "column": "m07_bayes::bo_p_lt25_z",
+      "batch": -0.25614890456199646,
+      "stream": -0.2561488747596741,
+      "abs_diff": 2.9802322387695312e-08,
+      "rel_diff": 1.1634764723532975e-07
+    },
+    {
+      "series": 5111,
+      "t": 296,
+      "column": "m07_bayes::bo_p_lt25_z",
+      "batch": -0.028020771220326424,
+      "stream": -0.028020769357681274,
+      "abs_diff": 1.862645149230957e-09,
+      "rel_diff": 6.647372888437074e-08
+    },
+    {
+      "series": 8581,
+      "t": 36,
+      "column": "m07_bayes::bo_lo_change_z",
+      "batch": -3.4722542762756348,
+      "stream": -3.4722540378570557,
+      "abs_diff": 2.384185791015625e-07,
+      "rel_diff": 6.866391690567432e-08
+    },
+    {
+      "series": 4746,
+      "t": 735,
+      "column": "m07_bayes::bo_lo_change_z",
+      "batch": -0.11939903348684311,
+      "stream": -0.11939902603626251,
+      "abs_diff": 7.450580596923828e-09,
+      "rel_diff": 6.240067762143842e-08
+    },
+    {
+      "series": 4746,
+      "t": 876,
+      "column": "m07_bayes::bo_ent",
+      "batch": 1.9279711246490479,
+      "stream": 1.9279710054397583,
+      "abs_diff": 1.1920928955078125e-07,
+      "rel_diff": 6.183147041296126e-08
+    },
+    {
+      "series": 5002,
+      "t": 145,
+      "column": "m07_bayes::bo_p_lt25_z",
+      "batch": -0.011449597775936127,
+      "stream": -0.011449598707258701,
+      "abs_diff": 9.313225746154785e-10,
+      "rel_diff": 8.13410735329812e-08
+    }
+  ],
+  "first_causal_divergence": {
+    "kernel": "_bocpd vs _BocpdStream",
+    "series": 5111,
+    "t": 1,
+    "column_index": 5,
+    "column": "bo_ent",
+    "abs_diff": 1.249e-16,
+    "persists": true,
+    "reconverges": false
+  },
+  "kernel_equivalence": {
+    "pyfunc_vs_stream_online_diff": 0,
+    "pyfunc_vs_stream_hist_diff": 0,
+    "jit_vs_stream_online_diff": 2530,
+    "jit_vs_stream_hist_diff": 5537,
+    "conclusion": "_BocpdStream is bitwise identical to the batch source; divergence is numba-vs-CPython"
+  },
+  "libm_probe": {
+    "n": 200000,
+    "log": 0,
+    "exp": 0,
+    "log1p": 0,
+    "fma_a_mul_b_plus_c": 0,
+    "lgamma": 104332
+  },
+  "root_cause": {
+    "primitive": "math.lgamma",
+    "sites": [
+      "src/sbr/features/m07_bayes.py:287",
+      "src/sbr/stream/s_m07_bayes.py:397"
+    ],
+    "object": "Student-t log normalising constant table ct[0:80]",
+    "entries_differing": 57,
+    "entries_total": 80,
+    "max_abs_diff": 5.684341886080802e-14,
+    "max_rel_diff": 6.17275160851788e-14,
+    "max_ulp": 512
+  },
+  "intended_semantics": {
+    "reference": "batch",
+    "evidence": [
+      "training cache cache/features/m07_bayes.npy matches batch bitwise (0 diffs) on all four failing series",
+      "sbr/production/model.py performs inference via StreamEngine",
+      "_BocpdStream docstring declares its contract is bitwise equality with _bocpd",
+      "FINAL_ARCHITECTURE_FREEZE.md freezes the bank built by the batch driver"
+    ],
+    "chosen_by_score": false
+  },
+  "classification": "TRAIN_SERVE_SKEW"
+}

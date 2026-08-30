@@ -1,0 +1,62 @@
+{
+  "title": "T2 / RT-995 -- FINAL PROMOTION BATTERY",
+  "branch": "research/wave7-t2-promotion",
+  "forked_from": "research/wave7-teacher-distillation@5093e0a",
+  "canonical": {
+    "T0_mean": 0.61185,
+    "T2_mean_delta_vs_T0": 0.00943,
+    "positive_folds": "5/5",
+    "bootstrap_ci95": [0.00425, 0.01373]
+  },
+  "alternate_partitions": {
+    "run": false,
+    "reason": "Ensemble-integration leg (the binding measurement) already gates promotion at MOSTLY REDUNDANT; alternate-partition retraining only re-confirms the standalone T0 comparison, estimated ~5h wall-clock per partition x3 partitions from the canonical nested run's timing, and would not change the promotion verdict.",
+    "fold_files_confirmed_present": ["research/folds/folds_alt1.parquet", "research/folds/folds_alt2.parquet", "research/folds/folds_alt3.parquet"]
+  },
+  "ensemble_integration": {
+    "prereg": "research/WAVE7_T2_INTEGRATION_PREREG.md",
+    "prereg_commit": "7198da2",
+    "fold": 0,
+    "E0_rt600_7stream": 0.6382763032336511,
+    "E1_rt600_plus_seedclone": 0.6385863723277498,
+    "E2_rt600_plus_t2": 0.6388229178065996,
+    "E1_minus_E0": 0.00031006909409870016,
+    "E2_minus_E0": 0.0005466145729484673,
+    "E2_minus_E1": 0.00023654547884977006
+  },
+  "pairflow": {
+    "t2_vs_e0_repairs": 708,
+    "t2_vs_e0_damage": 723,
+    "t2_vs_e0_net": -15,
+    "seedclone_vs_e0_repairs": 665,
+    "seedclone_vs_e0_damage": 731,
+    "seedclone_vs_e0_net": -66
+  },
+  "diversity": {
+    "corr_t2_vs_specialists": {
+      "RT-300": 0.912203761381564,
+      "RT-410": 0.8742212776945919,
+      "RT-411": 0.8557004817118002,
+      "RT-412": 0.883013660351992,
+      "RT-413": 0.7147350349617368,
+      "RT-414": 0.8785318355854748,
+      "RT-415": 0.9031587195099772
+    },
+    "corr_t2_vs_e0_blend": 0.6739977663609952,
+    "corr_t2_vs_seedclone": 0.9098779409696325
+  },
+  "deployment_feasibility": {
+    "student_inference_input_cols": 500,
+    "student_inference_input_cols_matches_production_causal_bank": true,
+    "assertion_in_code": "wave7_teacher_nested.py: assert Xtr.shape[1] == 500 (student), vs 1000 for the teacher (500 causal + 500 future broadcast, training-only)",
+    "no_Q_no_tau_no_future_at_inference": true,
+    "incremental_model_count": "+1 (eighth LightGBM booster alongside the seven specialists)",
+    "incremental_relative_compute": "~1/7 additional inference cost, same architecture family as existing specialists"
+  },
+  "verdict": "MOSTLY REDUNDANT",
+  "score_ladder": {
+    "external_rt600_anchor": 0.6268,
+    "measured_internal_E2_minus_E1": 0.00024,
+    "conservative_interpretation": "Standalone T2-T0 (+0.00943) is not a valid proxy for external gain; the measured ensemble marginal (+0.00024) is two orders of magnitude smaller and does not support treating T2 as material movement toward 0.640/0.645/0.650."
+  }
+}

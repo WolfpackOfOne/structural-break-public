@@ -1,0 +1,252 @@
+{
+ "generated": "2026-08-24",
+ "note": "descriptive diagnostics for research/NEW_AVENUES_2026.md; no experiment ID consumed; pre-declaration in research/scripts/novel_streams/PREDECLARE.md",
+ "rt600_reproduction": {
+  "dev_mean": 0.6258112639463216,
+  "per_fold": [
+   0.6382763032336511,
+   0.6204018503410609,
+   0.6339302291124634,
+   0.6175075054046519,
+   0.6189404316397805
+  ],
+  "pooled": 0.6256269256734708
+ },
+ "dominant_cell": {
+  "definition": "t>=200 and (y==0 or age>=100)",
+  "pooled_dev_auc": 0.6642770565078685
+ },
+ "D1_loss_attribution": {
+  "cell_pair_weight_double_counted": 3416056368.0,
+  "cell_inversion_loss_double_counted": 1146848499.0,
+  "never_break_series_loss_share": 0.3699537304796176,
+  "break_series_loss_share": 0.6300462695203823,
+  "concentration_never_break": {
+   "worst_5pct": 0.158,
+   "worst_10pct": 0.277,
+   "worst_20pct": 0.466,
+   "worst_50pct": 0.829
+  },
+  "concentration_break": {
+   "worst_5pct": 0.202,
+   "worst_10pct": 0.34,
+   "worst_20pct": 0.537,
+   "worst_50pct": 0.861
+  },
+  "reading": "loss is DIFFUSE, not concentrated -- a small-coverage repair mechanism (ORR) cannot move the aggregate"
+ },
+ "D3_history_predicts_loss": {
+  "never_break_oof_spearman": 0.1921,
+  "never_break_permutation_control": -0.0313,
+  "break_oof_spearman": 0.1163,
+  "break_permutation_control": -0.0304,
+  "top_correlates_never_break": {
+   "q_ratio": 0.1425,
+   "kurt": 0.1419,
+   "exc_n64": -0.1287,
+   "hill_tail_index": -0.1281,
+   "n_hist": -0.0954,
+   "perm_entropy": 0.0945,
+   "vr50": 0.0822
+  },
+  "reading": "heavy-tailed, long-memory, rarely-excursive histories produce more RT-600 false positives; the effect is real out-of-fold but weak (rho~0.19) and has NEGATIVE R2 -- monotone gate, not a level predictor"
+ },
+ "D4_D6_excursion_streams": {
+  "res64_maxrun90": {
+   "whole_fold": {
+    "rt600": 0.6382763032336511,
+    "candidate": 0.5741856062429687
+   },
+   "dominant_cell": {
+    "rt600": 0.6777110899011463,
+    "candidate": 0.6079109218241879
+   },
+   "mature_vs_neverbreak": {
+    "rt600": 0.676800868805288,
+    "candidate": 0.6132188010192913
+   },
+   "mature_vs_prebreak": {
+    "rt600": 0.6802509546650244,
+    "candidate": 0.5930999100821966
+   },
+   "within_t_rank_corr_rt600": 0.36671369988719893
+  },
+  "res128_mass90": {
+   "whole_fold": {
+    "rt600": 0.6382763032336511,
+    "candidate": 0.5567408782170328
+   },
+   "dominant_cell": {
+    "rt600": 0.6777110899011463,
+    "candidate": 0.5916977282037983
+   },
+   "mature_vs_neverbreak": {
+    "rt600": 0.676800868805288,
+    "candidate": 0.5947475321449933
+   },
+   "mature_vs_prebreak": {
+    "rt600": 0.6802509546650244,
+    "candidate": 0.5831876095060176
+   },
+   "within_t_rank_corr_rt600": 0.4152713587733547
+  },
+  "res32_maxrun90": {
+   "whole_fold": {
+    "rt600": 0.6382763032336511,
+    "candidate": 0.5740116402901292
+   },
+   "dominant_cell": {
+    "rt600": 0.6777110899011463,
+    "candidate": 0.5996835314910656
+   },
+   "mature_vs_neverbreak": {
+    "rt600": 0.676800868805288,
+    "candidate": 0.60737165918971
+   },
+   "mature_vs_prebreak": {
+    "rt600": 0.6802509546650244,
+    "candidate": 0.5782307166410973
+   },
+   "within_t_rank_corr_rt600": 0.37334570665923744
+  },
+  "scale128_run90": {
+   "whole_fold": {
+    "rt600": 0.6382763032336511,
+    "candidate": 0.5330473243815886
+   },
+   "dominant_cell": {
+    "rt600": 0.6777110899011463,
+    "candidate": 0.5564679661889878
+   },
+   "mature_vs_neverbreak": {
+    "rt600": 0.676800868805288,
+    "candidate": 0.5587699656367969
+   },
+   "mature_vs_prebreak": {
+    "rt600": 0.6802509546650244,
+    "candidate": 0.5500445078550052
+   },
+   "within_t_rank_corr_rt600": 0.3008016405019484
+  },
+  "loc64_run90": {
+   "whole_fold": {
+    "rt600": 0.6382763032336511,
+    "candidate": 0.5090030760548325
+   },
+   "dominant_cell": {
+    "rt600": 0.6777110899011463,
+    "candidate": 0.5074420201973882
+   },
+   "mature_vs_neverbreak": {
+    "rt600": 0.676800868805288,
+    "candidate": 0.5085219052236677
+   },
+   "mature_vs_prebreak": {
+    "rt600": 0.6802509546650244,
+    "candidate": 0.5044287282183652
+   },
+   "within_t_rank_corr_rt600": 0.08064061892791337
+  },
+  "ER_maxrun_minus_ERexp": {
+   "dominant_cell": {
+    "rt600": 0.6777110899011463,
+    "candidate": 0.5802831955983632
+   },
+   "mature_vs_neverbreak": {
+    "rt600": 0.676800868805288,
+    "candidate": 0.5859653713076352
+   },
+   "within_t_rank_corr_rt600": 0.31176053834692463
+  },
+  "ER_maxrun_over_ERexp": {
+   "dominant_cell": {
+    "rt600": 0.6777110899011463,
+    "candidate": 0.6002822929574709
+   },
+   "mature_vs_neverbreak": {
+    "rt600": 0.676800868805288,
+    "candidate": 0.6045386923169133
+   },
+   "within_t_rank_corr_rt600": 0.3547367237792205
+  },
+  "ER_gumbel_z": {
+   "dominant_cell": {
+    "rt600": 0.6777110899011463,
+    "candidate": 0.5802831955983632
+   },
+   "mature_vs_neverbreak": {
+    "rt600": 0.676800868805288,
+    "candidate": 0.5859653713076352
+   },
+   "within_t_rank_corr_rt600": 0.3117605362621998
+  },
+  "ER_cur_run_gumbel_z": {
+   "dominant_cell": {
+    "rt600": 0.6777110899011463,
+    "candidate": 0.5415167791799348
+   },
+   "mature_vs_neverbreak": {
+    "rt600": 0.676800868805288,
+    "candidate": 0.5465330532120175
+   },
+   "within_t_rank_corr_rt600": 0.16860888253369738
+  }
+ },
+ "D5_contiguity": {
+  "median_longest_run_res64_by_t_bucket": {
+   "200-300": {
+    "mature_break": 13.0,
+    "never_break": 3.0
+   },
+   "300-400": {
+    "mature_break": 21.0,
+    "never_break": 9.0
+   },
+   "400-500": {
+    "mature_break": 30.0,
+    "never_break": 16.0
+   },
+   "500-650": {
+    "mature_break": 37.0,
+    "never_break": 23.0
+   },
+   "650-800": {
+    "mature_break": 51.0,
+    "never_break": 27.0
+   },
+   "800-1000": {
+    "mature_break": 64.0,
+    "never_break": 33.0
+   }
+  },
+  "p90_longest_run": {
+   "200-300": {
+    "mature_break": 94.0,
+    "never_break": 56.0
+   },
+   "800-1000": {
+    "mature_break": 239.0,
+    "never_break": 94.2
+   }
+  },
+  "share_series_with_longest_excursion_ge": {
+   "25": {
+    "never_break": 0.458,
+    "break": 0.592
+   },
+   "50": {
+    "never_break": 0.278,
+    "break": 0.415
+   },
+   "100": {
+    "never_break": 0.062,
+    "break": 0.145
+   },
+   "200": {
+    "never_break": 0.03,
+    "break": 0.067
+   }
+  },
+  "reading": "never-break p90 excursion length saturates (56->94 as t grows 200->1000) while mature-break p90 grows 94->239. The discriminator is how excursion length SCALES with elapsed time, not the length itself."
+ }
+}

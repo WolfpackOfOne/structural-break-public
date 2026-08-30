@@ -1,0 +1,600 @@
+{
+  "RT-1208": {
+    "diagnostic_pack": {
+      "age_buckets": {
+        "0-5": {
+          "candidate": 0.5115924236412149,
+          "rt600": 0.5152445330859063
+        },
+        "100-1000000000": {
+          "candidate": 0.6665735451373936,
+          "rt600": 0.675917278353309
+        },
+        "20-50": {
+          "candidate": 0.5791341651106608,
+          "rt600": 0.5894557799021534
+        },
+        "5-20": {
+          "candidate": 0.5461521376675174,
+          "rt600": 0.5520505250854593
+        },
+        "50-100": {
+          "candidate": 0.6069814370131466,
+          "rt600": 0.6169058332601237
+        }
+      },
+      "dominant_cell": {
+        "candidate": 0.6682682544245729,
+        "rt600": 0.6777110899011463
+      },
+      "fold": 0,
+      "label": "RT-1208",
+      "mature_vs_neverbreak": {
+        "candidate": 0.6645700968556962,
+        "rt600": 0.676800868805288
+      },
+      "mature_vs_prebreak": {
+        "candidate": 0.6785875275585388,
+        "rt600": 0.6802509546650244
+      },
+      "t_buckets": {
+        "0-20": {
+          "candidate": 0.5180641780749231,
+          "rt600": 0.5300204619017298
+        },
+        "100-200": {
+          "candidate": 0.6259126701482232,
+          "rt600": 0.6390075342102901
+        },
+        "20-50": {
+          "candidate": 0.571724481854743,
+          "rt600": 0.5680248975917097
+        },
+        "200-400": {
+          "candidate": 0.6272141425027882,
+          "rt600": 0.6359029050927087
+        },
+        "400-1000000000": {
+          "candidate": 0.6556917796912098,
+          "rt600": 0.666690084227326
+        },
+        "50-100": {
+          "candidate": 0.5791170644696281,
+          "rt600": 0.5790183020058499
+        }
+      },
+      "whole_fold": {
+        "candidate": 0.6291410480816085,
+        "rt600": 0.6382763032336511
+      },
+      "within_t_rank_corr_rt600": 0.8780245832948086
+    },
+    "ensemble_marginal": {
+      "fold": 0,
+      "gain_vs_base": 0.000274294709323164,
+      "marginal_vs_clone": -3.5774384775533186e-05,
+      "rt600_7stream": 0.6382763032336511,
+      "rt600_plus_RT-1208": 0.6385505979429743,
+      "rt600_plus_seedclone": 0.6385863723277498
+    },
+    "pair_flow": {
+      "cell_never_break_neg": {
+        "damage": 1054,
+        "net_pair_lift": -131,
+        "repairs": 923,
+        "total_pairs_sampled": 15582
+      },
+      "cell_pre_break_neg": {
+        "damage": 882,
+        "net_pair_lift": -131,
+        "repairs": 751,
+        "total_pairs_sampled": 13378
+      },
+      "dominant_cell": {
+        "damage": 1000,
+        "net_pair_lift": -75,
+        "repairs": 925,
+        "total_pairs_sampled": 15598
+      },
+      "whole_fold": {
+        "damage": 1492,
+        "net_pair_lift": -172,
+        "repairs": 1320,
+        "total_pairs_sampled": 19562
+      }
+    },
+    "training": {
+      "fit_summaries": [
+        {
+          "fold": 0,
+          "runtime_s": 100.6,
+          "train_rows": 400000,
+          "ts_auc_scored": 0.6291410480816085,
+          "valid_rows": 806334
+        },
+        {
+          "fold": 1,
+          "runtime_s": 203.5,
+          "train_rows": 400000,
+          "valid_rows": 812939
+        },
+        {
+          "fold": 2,
+          "runtime_s": 300.6,
+          "train_rows": 400000,
+          "valid_rows": 806691
+        },
+        {
+          "fold": 3,
+          "runtime_s": 404.1,
+          "train_rows": 400000,
+          "valid_rows": 802506
+        },
+        {
+          "fold": 4,
+          "runtime_s": 507.2,
+          "train_rows": 400000,
+          "valid_rows": 804054
+        }
+      ],
+      "foldpure_oof_support_note": "Folds 1-4 were predicted only to provide fold-pure SCDF calibration support for the existing ensemble marginal path; no TS-AUC was computed or used for those folds.",
+      "importance_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1208.importance.csv",
+      "oof_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1208.npy",
+      "result_row": {
+        "agent": "codex-new-avenues",
+        "causal_verified": "harness.verify + prefix-invariance@module + future-mutation",
+        "date": "2026-08-24 16:56",
+        "experiment_id": "RT-1208",
+        "falsification_condition": "KILL if candidate marginal_vs_clone < +0.0010, or if entropy-only control matches within +0.0005.",
+        "feature_set": "m00_core,m01_seq,m02_dist,m03_dyn,m04_resid,m06_loc,m07_bayes,m15_ordinal_irrev",
+        "fold_std": 0.0,
+        "folds": "0",
+        "git_sha": "9dea531",
+        "hypothesis": "Pilot 7 tests whether order-3 ordinal transition structure and time irreversibility carry dependence-break information beyond permutation entropy. Transition KL and Ramsey-Rothman asymmetry should add ensemble alpha.",
+        "lockbox_touched": "no",
+        "mean_oof_ts_auc": 0.6291410480816085,
+        "model": "lgbm",
+        "n_features": 508,
+        "notes": "Pilot 7 ordinal transition/asymmetry arm. Fold-0 screen only; folds 1-4 generated only as fold-pure SCDF calibration support.",
+        "objective": "binary",
+        "per_fold_ts_auc": "0.62914",
+        "persistence": "none",
+        "pooled_oof_ts_auc": 0.6291410480816085,
+        "protocol": "pilot_fold0_only",
+        "random_seed": 0,
+        "sample_mode": "uniform",
+        "status": "recorded",
+        "test_reduced_touched": "no",
+        "train_rows": 400000,
+        "train_series": 8000,
+        "training_runtime_s": 507.3
+      }
+    }
+  },
+  "RT-1209": {
+    "diagnostic_pack": {
+      "age_buckets": {
+        "0-5": {
+          "candidate": 0.5078260731202557,
+          "rt600": 0.5152445330859063
+        },
+        "100-1000000000": {
+          "candidate": 0.6623623281672626,
+          "rt600": 0.675917278353309
+        },
+        "20-50": {
+          "candidate": 0.5816107278957262,
+          "rt600": 0.5894557799021534
+        },
+        "5-20": {
+          "candidate": 0.5400345082599777,
+          "rt600": 0.5520505250854593
+        },
+        "50-100": {
+          "candidate": 0.6089321994179944,
+          "rt600": 0.6169058332601237
+        }
+      },
+      "dominant_cell": {
+        "candidate": 0.6630770099251316,
+        "rt600": 0.6777110899011463
+      },
+      "fold": 0,
+      "label": "RT-1209",
+      "mature_vs_neverbreak": {
+        "candidate": 0.6634001835597972,
+        "rt600": 0.676800868805288
+      },
+      "mature_vs_prebreak": {
+        "candidate": 0.6621752319603748,
+        "rt600": 0.6802509546650244
+      },
+      "t_buckets": {
+        "0-20": {
+          "candidate": 0.5210480672291202,
+          "rt600": 0.5300204619017298
+        },
+        "100-200": {
+          "candidate": 0.6290937691380344,
+          "rt600": 0.6390075342102901
+        },
+        "20-50": {
+          "candidate": 0.5672069240890071,
+          "rt600": 0.5680248975917097
+        },
+        "200-400": {
+          "candidate": 0.6224186628433407,
+          "rt600": 0.6359029050927087
+        },
+        "400-1000000000": {
+          "candidate": 0.6525522367681093,
+          "rt600": 0.666690084227326
+        },
+        "50-100": {
+          "candidate": 0.5789247352091005,
+          "rt600": 0.5790183020058499
+        }
+      },
+      "whole_fold": {
+        "candidate": 0.6268359927946491,
+        "rt600": 0.6382763032336511
+      },
+      "within_t_rank_corr_rt600": 0.885033645135209
+    },
+    "ensemble_marginal": {
+      "fold": 0,
+      "gain_vs_base": -0.00019766043730717886,
+      "marginal_vs_clone": -0.0005077295314058761,
+      "rt600_7stream": 0.6382763032336511,
+      "rt600_plus_RT-1209": 0.638078642796344,
+      "rt600_plus_seedclone": 0.6385863723277498
+    },
+    "pair_flow": {
+      "cell_never_break_neg": {
+        "damage": 1057,
+        "net_pair_lift": -231,
+        "repairs": 826,
+        "total_pairs_sampled": 15582
+      },
+      "cell_pre_break_neg": {
+        "damage": 1017,
+        "net_pair_lift": -381,
+        "repairs": 636,
+        "total_pairs_sampled": 13378
+      },
+      "dominant_cell": {
+        "damage": 1139,
+        "net_pair_lift": -276,
+        "repairs": 863,
+        "total_pairs_sampled": 15598
+      },
+      "whole_fold": {
+        "damage": 1496,
+        "net_pair_lift": -226,
+        "repairs": 1270,
+        "total_pairs_sampled": 19562
+      }
+    },
+    "training": {
+      "fit_summaries": [
+        {
+          "fold": 0,
+          "runtime_s": 102.5,
+          "train_rows": 400000,
+          "ts_auc_scored": 0.6268359927946491,
+          "valid_rows": 806334
+        },
+        {
+          "fold": 1,
+          "runtime_s": 203.4,
+          "train_rows": 400000,
+          "valid_rows": 812939
+        },
+        {
+          "fold": 2,
+          "runtime_s": 301.4,
+          "train_rows": 400000,
+          "valid_rows": 806691
+        },
+        {
+          "fold": 3,
+          "runtime_s": 400.4,
+          "train_rows": 400000,
+          "valid_rows": 802506
+        },
+        {
+          "fold": 4,
+          "runtime_s": 498.0,
+          "train_rows": 400000,
+          "valid_rows": 804054
+        }
+      ],
+      "foldpure_oof_support_note": "Folds 1-4 were predicted only to provide fold-pure SCDF calibration support for the existing ensemble marginal path; no TS-AUC was computed or used for those folds.",
+      "importance_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1209.importance.csv",
+      "oof_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1209.npy",
+      "result_row": {
+        "agent": "codex-new-avenues",
+        "causal_verified": "harness.verify + prefix-invariance@module + future-mutation",
+        "date": "2026-08-24 17:04",
+        "experiment_id": "RT-1209",
+        "falsification_condition": "Control must not match or exceed the transition/asymmetry arm; if it does, new ordinal structure is killed.",
+        "feature_set": "m00_core,m01_seq,m02_dist,m03_dyn,m04_resid,m06_loc,m07_bayes,m15_ordinal_entropy",
+        "fold_std": 0.0,
+        "folds": "0",
+        "git_sha": "9dea531",
+        "hypothesis": "Pilot 7 tests whether order-3 ordinal transition structure and time irreversibility carry dependence-break information beyond permutation entropy. Permutation entropy alone is the binding control for existing ordinal information.",
+        "lockbox_touched": "no",
+        "mean_oof_ts_auc": 0.6268359927946491,
+        "model": "lgbm",
+        "n_features": 504,
+        "notes": "Pilot 7 permutation-entropy-only control. Fold-0 screen only; folds 1-4 generated only as fold-pure SCDF calibration support.",
+        "objective": "binary",
+        "per_fold_ts_auc": "0.62684",
+        "persistence": "none",
+        "pooled_oof_ts_auc": 0.6268359927946491,
+        "protocol": "pilot_fold0_only",
+        "random_seed": 0,
+        "sample_mode": "uniform",
+        "status": "recorded",
+        "test_reduced_touched": "no",
+        "train_rows": 400000,
+        "train_series": 8000,
+        "training_runtime_s": 498.1
+      }
+    }
+  },
+  "branch": "research/new-avenues-pilots-2026",
+  "candidate_minus_control_marginal": 0.0004719551466303429,
+  "causal_checks": {
+    "candidate_cols": [
+      "trans_kl_exp",
+      "trans_kl_exp_z",
+      "trans_kl_half",
+      "trans_kl_half_z",
+      "rr_asym_exp",
+      "rr_asym_exp_z",
+      "rr_asym_half",
+      "rr_asym_half_z"
+    ],
+    "control_cols": [
+      "pe_exp",
+      "pe_exp_z",
+      "pe_half",
+      "pe_half_z"
+    ],
+    "deterministic_replay_ok": true,
+    "first_valid_nan_semantics": {
+      "candidate_row15_exp_finite": true,
+      "candidate_row30_half_all_nan": true,
+      "candidate_row31_all_finite": true,
+      "candidate_rows_before_15_all_nan": true,
+      "control_row15_exp_finite": true,
+      "control_row30_half_all_nan": true,
+      "control_row31_all_finite": true,
+      "control_rows_before_15_all_nan": true
+    },
+    "future_mutation_prefix_ok": true,
+    "harness_verify_candidate": {
+      "message": "ok",
+      "ok": true
+    },
+    "harness_verify_entropy": {
+      "message": "ok",
+      "ok": true
+    },
+    "m07_bayes_parity_note": "Pilot 7 does not recompute m07_bayes::bo_p_lt25_z; it uses the existing cached base-bank features and independent new ordinal streams.",
+    "min_count": 16,
+    "module_prefix_invariance": {
+      "m15_ordinal_entropy": [
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 8245
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 4119
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 6325
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 574
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 502
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 2088
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 318
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 655
+        }
+      ],
+      "m15_ordinal_irrev": [
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 8245
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 4119
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 6325
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 574
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 502
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 2088
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 318
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 655
+        }
+      ]
+    },
+    "null_grid": [
+      16,
+      64,
+      256
+    ]
+  },
+  "continuation_status": "KILL",
+  "exp_ids": [
+    "RT-1208",
+    "RT-1209"
+  ],
+  "feature_build_runtime_s": 421.5123941898346,
+  "feature_cache": {
+    "m15_ordinal_entropy": {
+      "cols": [
+        "pe_exp",
+        "pe_exp_z",
+        "pe_half",
+        "pe_half_z"
+      ],
+      "dev_series": 8000,
+      "lockbox_rows_filled": 0,
+      "module": "m15_ordinal_entropy",
+      "shape": [
+        5036517,
+        4
+      ]
+    },
+    "m15_ordinal_irrev": {
+      "cols": [
+        "trans_kl_exp",
+        "trans_kl_exp_z",
+        "trans_kl_half",
+        "trans_kl_half_z",
+        "rr_asym_exp",
+        "rr_asym_exp_z",
+        "rr_asym_half",
+        "rr_asym_half_z"
+      ],
+      "dev_series": 8000,
+      "lockbox_rows_filled": 0,
+      "module": "m15_ordinal_irrev",
+      "shape": [
+        5036517,
+        8
+      ]
+    },
+    "runtime_s": 421.5123941898346
+  },
+  "feature_definitions": {
+    "candidate_cols": [
+      "trans_kl_exp",
+      "trans_kl_exp_z",
+      "trans_kl_half",
+      "trans_kl_half_z",
+      "rr_asym_exp",
+      "rr_asym_exp_z",
+      "rr_asym_half",
+      "rr_asym_half_z"
+    ],
+    "control_cols": [
+      "pe_exp",
+      "pe_exp_z",
+      "pe_half",
+      "pe_half_z"
+    ],
+    "min_count": 16,
+    "null_grid": [
+      16,
+      64,
+      256
+    ]
+  },
+  "feature_modules": [
+    "m15_ordinal_irrev",
+    "m15_ordinal_entropy"
+  ],
+  "gate_failures": [
+    {
+      "gate": "primary_marginal_vs_clone",
+      "message": "candidate marginal_vs_clone is below +0.0010",
+      "observed": -3.5774384775533186e-05,
+      "threshold": 0.001
+    },
+    {
+      "gate": "candidate_control_distinguishability",
+      "message": "candidate-control gap is below the preregistered +0.0005 distinguishability floor",
+      "observed_candidate_minus_control": 0.0004719551466303429,
+      "threshold": 0.0005
+    }
+  ],
+  "generated": "2026-08-24",
+  "head_sha": "9dea531",
+  "interpretation": "The preregistered order-3 ordinal transition divergence and time-irreversibility block failed a Pilot 7 binding gate. This falsifies this L3/L4 construction under the fixed tie convention, transition KL, Ramsey-Rothman asymmetry, matched-count historical-null calibration, and Mode-A fold-0 ABL screen; it does not falsify all ordinal or nonlinear dynamics representations.",
+  "prereg_sha": "1e7e42c",
+  "rt600_sentinel": {
+    "diffs": {
+      "dominant_cell": -2.943492131479708e-06,
+      "fold0_e0": -3.696766348815217e-06,
+      "fold0_e1_seedclone": -3.627672250150482e-06,
+      "mean": 1.2639463216057578e-06,
+      "pooled": -7.432652926464556e-08
+    },
+    "dominant_cell": 0.6642770565078685,
+    "expected": {
+      "dominant_cell": 0.66428,
+      "fold0_e0": 0.63828,
+      "fold0_e1_seedclone": 0.63859,
+      "mean": 0.62581,
+      "pooled": 0.625627
+    },
+    "fold0_e0": 0.6382763032336511,
+    "fold0_e1_seedclone": 0.6385863723277498,
+    "mean": 0.6258112639463216,
+    "ok": true,
+    "per_fold": [
+      0.6382763032336511,
+      0.6204018503410609,
+      0.6339302291124634,
+      0.6175075054046519,
+      0.6189404316397805
+    ],
+    "pooled": 0.6256269256734708
+  },
+  "runtime_s": 1627.8162360191345,
+  "verdict": "KILL",
+  "verdict_reason": "candidate marginal_vs_clone is below +0.0010"
+}

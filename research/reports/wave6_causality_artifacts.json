@@ -1,0 +1,83 @@
+{
+ "schema": "sbr.causality_artifacts/1",
+ "checked_at": "2026-08-22 19:33:03",
+ "git_sha": "b90513796c8b401115b7c9310982ee318a5fa887",
+ "model_dir": "/path/to/workspace/structural-break-claude-wave3/models/final10k_ensemble",
+ "artifact_manifest": {
+  "modules": [
+   "m00_core",
+   "m01_seq",
+   "m02_dist",
+   "m03_dyn",
+   "m04_resid",
+   "m06_loc",
+   "m07_bayes"
+  ],
+  "n_columns": 500,
+  "feature_manifest_sha256": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced",
+  "matches_frozen_rt600_sha": true,
+  "modules_are_the_rt600_seven": true
+ },
+ "live_engine": {
+  "default_modules": [
+   "m00_core",
+   "m01_seq",
+   "m02_dist",
+   "m03_dyn",
+   "m04_resid",
+   "m06_loc",
+   "m07_bayes"
+  ],
+  "n_columns": 500,
+  "feature_manifest_sha256": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced",
+  "matches_artifact": true,
+  "columns_identical_to_artifact": true
+ },
+ "artifact_files": {
+  "manifest.json": {
+   "bytes": 484789,
+   "sha256": "1483a59a268ded18b6af804a5f0eb0b191376a1dc86526f286751bf1613ec940"
+  },
+  "model.txt.0": {
+   "bytes": 4287720,
+   "sha256": "74a8caaa75156765ef4ed0ffd26fb957fbc0487e7eaf158c91a7903ea7db65d2"
+  },
+  "model.txt.1": {
+   "bytes": 8500943,
+   "sha256": "31bd0b7a8734fdd258d048faee7af8f62d0e7b4930f404d07d93897099853211"
+  },
+  "model.txt.2": {
+   "bytes": 2155913,
+   "sha256": "7f732c73f81bb20cb1f142c4c035e03a6a8db6191a218af36dfede63ecafe125"
+  },
+  "model.txt.3": {
+   "bytes": 17303945,
+   "sha256": "009c2e880ae0c3aa22f1ea632cb8256563239749dcf03c72dca7a08cf8131092"
+  },
+  "model.txt.4": {
+   "bytes": 4291642,
+   "sha256": "9df804accfab4fd9845c898203d5d643febe5b406efe0d51260e3085721ca05c"
+  },
+  "model.txt.5": {
+   "bytes": 4235622,
+   "sha256": "261b3bcf4a7e2cdda306cc909e236e07cec56411e5e7e73f9c40f099e9f8e953"
+  },
+  "model.txt.6": {
+   "bytes": 4273800,
+   "sha256": "c1edd219d7501232ccc127f84fd51c66a690ec882c00d2f5ba2d2b0ef2207c39"
+  }
+ },
+ "causality_tests": {
+  "requested": 4,
+  "per_test": {
+   "test_infer_never_measures_the_online_length": "PASSED",
+   "test_score_k_is_emitted_after_exactly_k_plus_one_points": "PASSED",
+   "test_a_prefix_scores_identically_however_the_series_continues": "PASSED",
+   "test_the_gate_itself_catches_a_length_peek": "PASSED"
+  },
+  "passed": 4,
+  "skipped": 0,
+  "exit_code": 0
+ },
+ "verdict": "ALL FOUR ARTIFACT-LEVEL CAUSALITY TESTS RAN AND PASSED; RT-600 MANIFEST BYTE-IDENTICAL"
+}

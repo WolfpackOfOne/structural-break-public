@@ -1,0 +1,4 @@
+learner,id,standalone,rho_vs_lgbm,marginal_vs_clone,folds_positive,dominant_pair_net,runtime_s,verdict
+TabM,RT-1250,,,,,,0.0,INFEASIBLE
+CatBoost,RT-1251,0.6204076650206014,0.7364678109351089,0.001109800300231667,5,88,10316.88073515892,INTERESTING
+RealMLP,RT-1252,,,,,,0.0,INFEASIBLE

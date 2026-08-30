@@ -1,0 +1,21 @@
+{
+  "schema": "rt600_release_candidate/crunch_output_contract/1",
+  "source": "prediction/prediction.parquet, fresh crunch test of the rebuilt artifact",
+  "rows_produced": 50983,
+  "rows_expected_online_period_2": 50983,
+  "row_count_matches": true,
+  "key_sets_identical": true,
+  "series_time_mapping_ordering_identical": true,
+  "missing_rows": 0,
+  "extra_rows": 0,
+  "duplicate_keys": 0,
+  "n_series": 100,
+  "n_series_in_X_test_reduced": 100,
+  "nan": 0,
+  "inf": 0,
+  "all_finite": true,
+  "outside_0_1": 0,
+  "min": 0.00390625,
+  "max": 0.99609375,
+  "PASS": true
+}

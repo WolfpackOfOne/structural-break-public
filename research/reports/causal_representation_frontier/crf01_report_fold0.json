@@ -1,0 +1,604 @@
+{
+ "stage": "fold0_report_no_ensemble",
+ "arms": {
+  "candidate": {
+   "experiment_id": "RT-1234",
+   "standalone_whole_fold_ts_auc": 0.5927618439117427,
+   "standalone_dominant_cell_ts_auc": 0.6214217435742344,
+   "within_t_rho_vs_rt600": 0.4460168520086562,
+   "diagnostic_pack": {
+    "label": "RT-1234",
+    "fold": 0,
+    "whole_fold": {
+     "rt600": 0.6382763032336511,
+     "candidate": 0.5927618439117427
+    },
+    "dominant_cell": {
+     "rt600": 0.6777110899011463,
+     "candidate": 0.6214217435742344
+    },
+    "mature_vs_neverbreak": {
+     "rt600": 0.676800868805288,
+     "candidate": 0.6206519300124606
+    },
+    "mature_vs_prebreak": {
+     "rt600": 0.6802509546650244,
+     "candidate": 0.6235698176511832
+    },
+    "t_buckets": {
+     "0-20": {
+      "rt600": 0.5300204619017298,
+      "candidate": 0.5655361217234426
+     },
+     "20-50": {
+      "rt600": 0.5680248975917097,
+      "candidate": 0.5591643127454239
+     },
+     "50-100": {
+      "rt600": 0.5790183020058499,
+      "candidate": 0.5737429979428742
+     },
+     "100-200": {
+      "rt600": 0.6390075342102901,
+      "candidate": 0.5881469102419254
+     },
+     "200-400": {
+      "rt600": 0.6359029050927087,
+      "candidate": 0.5836929867864277
+     },
+     "400-1000000000": {
+      "rt600": 0.666690084227326,
+      "candidate": 0.6155129549357243
+     }
+    },
+    "age_buckets": {
+     "0-5": {
+      "rt600": 0.5152445330859063,
+      "candidate": 0.5205365427244222
+     },
+     "5-20": {
+      "rt600": 0.5520505250854593,
+      "candidate": 0.5315125935835595
+     },
+     "20-50": {
+      "rt600": 0.5894557799021534,
+      "candidate": 0.5478735024346143
+     },
+     "50-100": {
+      "rt600": 0.6169058332601237,
+      "candidate": 0.5736126055974206
+     },
+     "100-1000000000": {
+      "rt600": 0.675917278353309,
+      "candidate": 0.6224870493397655
+     }
+    },
+    "within_t_rank_corr_rt600": 0.4460168520086562
+   },
+   "pair_flow": {
+    "whole_fold": {
+     "total_pairs_sampled": 63380,
+     "rt600_wrong": 22143,
+     "rt600_right": 41237,
+     "repairs": 8890,
+     "damage": 11752,
+     "net_pair_lift": -2862,
+     "repair_rate_of_rt600_wrong": 0.40148128076593054,
+     "damage_rate_of_rt600_right": 0.2849867837136552
+    },
+    "dominant_cell": {
+     "total_pairs_sampled": 50540,
+     "rt600_wrong": 16193,
+     "rt600_right": 34347,
+     "repairs": 6395,
+     "damage": 9193,
+     "net_pair_lift": -2798,
+     "repair_rate_of_rt600_wrong": 0.39492373247699625,
+     "damage_rate_of_rt600_right": 0.26765074096718783
+    },
+    "mature_vs_never": {
+     "total_pairs_sampled": 50540,
+     "rt600_wrong": 15804,
+     "rt600_right": 34736,
+     "repairs": 6451,
+     "damage": 9413,
+     "net_pair_lift": -2962,
+     "repair_rate_of_rt600_wrong": 0.4081878005568211,
+     "damage_rate_of_rt600_right": 0.2709868724090281
+    },
+    "mature_vs_prebreak": {
+     "total_pairs_sampled": 48677,
+     "rt600_wrong": 15616,
+     "rt600_right": 33061,
+     "repairs": 5862,
+     "damage": 8682,
+     "net_pair_lift": -2820,
+     "repair_rate_of_rt600_wrong": 0.3753842213114754,
+     "damage_rate_of_rt600_right": 0.2626054868273797
+    }
+   },
+   "unique_repair": {
+    "rt600_wrong": 16193,
+    "candidate_repairs": 6395,
+    "clone_repairs": 3012,
+    "unique_repairs": 5001,
+    "unique_repair_coverage": 0.3088371518557401,
+    "repair_jaccard_vs_clone": 0.17396730313240982
+   },
+   "prebreak_damage_rate_on_rt600_correct": 0.2626054868273797,
+   "marginal_vs_clone": null,
+   "marginal_vs_clone_status": "NOT COMPUTED - the section 7 abandon gate fired, so folds 1-4 were never trained and no fold-pure five-fold OOF exists to calibrate against",
+   "fold_meta": {
+    "state_sha256": "ab737b3f80eb4f385976a9eb2690c11e2000c74ab19ddfead66fc9ee11754858",
+    "n_parameters": 35649,
+    "n_train_series": 6383,
+    "n_val_series": 1617,
+    "loss_history": [
+     0.6852947595715523,
+     0.6785690814256669,
+     0.6808859407901764,
+     0.6788496047258377,
+     0.6772667694091797,
+     0.6767288541793823,
+     0.67481922224164,
+     0.6713624981045723,
+     0.6694002284109593,
+     0.6680804207921028,
+     0.6652609819173813,
+     0.665266202390194,
+     0.6632001230120659,
+     0.6609750932455063,
+     0.6587074869871139,
+     0.6574434967339039,
+     0.6556970798969268,
+     0.6541461184620857,
+     0.6535533851385117,
+     0.6530886980891227
+    ],
+    "occupancy": [
+     {
+      "epoch": 1,
+      "contributing_groups": 95278,
+      "pairs": 6549704,
+      "steps": 200
+     },
+     {
+      "epoch": 2,
+      "contributing_groups": 95278,
+      "pairs": 6549704,
+      "steps": 200
+     },
+     {
+      "epoch": 3,
+      "contributing_groups": 95278,
+      "pairs": 6549704,
+      "steps": 200
+     },
+     {
+      "epoch": 4,
+      "contributing_groups": 95278,
+      "pairs": 6549704,
+      "steps": 200
+     },
+     {
+      "epoch": 5,
+      "contributing_groups": 95278,
+      "pairs": 6549704,
+      "steps": 200
+     },
+     {
+      "epoch": 6,
+      "contributing_groups": 95278,
+      "pairs": 6549704,
+      "steps": 200
+     },
+     {
+      "epoch": 7,
+      "contributing_groups": 95278,
+      "pairs": 6549704,
+      "steps": 200
+     },
+     {
+      "epoch": 8,
+      "contributing_groups": 95278,
+      "pairs": 6549704,
+      "steps": 200
+     },
+     {
+      "epoch": 9,
+      "contributing_groups": 95278,
+      "pairs": 6549704,
+      "steps": 200
+     },
+     {
+      "epoch": 10,
+      "contributing_groups": 95278,
+      "pairs": 6549704,
+      "steps": 200
+     },
+     {
+      "epoch": 11,
+      "contributing_groups": 95278,
+      "pairs": 6549704,
+      "steps": 200
+     },
+     {
+      "epoch": 12,
+      "contributing_groups": 95278,
+      "pairs": 6549704,
+      "steps": 200
+     },
+     {
+      "epoch": 13,
+      "contributing_groups": 95278,
+      "pairs": 6549704,
+      "steps": 200
+     },
+     {
+      "epoch": 14,
+      "contributing_groups": 95278,
+      "pairs": 6549704,
+      "steps": 200
+     },
+     {
+      "epoch": 15,
+      "contributing_groups": 95278,
+      "pairs": 6549704,
+      "steps": 200
+     },
+     {
+      "epoch": 16,
+      "contributing_groups": 95278,
+      "pairs": 6549704,
+      "steps": 200
+     },
+     {
+      "epoch": 17,
+      "contributing_groups": 95278,
+      "pairs": 6549704,
+      "steps": 200
+     },
+     {
+      "epoch": 18,
+      "contributing_groups": 95278,
+      "pairs": 6549704,
+      "steps": 200
+     },
+     {
+      "epoch": 19,
+      "contributing_groups": 95278,
+      "pairs": 6549704,
+      "steps": 200
+     },
+     {
+      "epoch": 20,
+      "contributing_groups": 95278,
+      "pairs": 6549704,
+      "steps": 200
+     }
+    ],
+    "empty_pair_steps": 0,
+    "runtime_s": 906.6
+   }
+  },
+  "bce_control": {
+   "experiment_id": "RT-1235",
+   "standalone_whole_fold_ts_auc": 0.5705430161769247,
+   "standalone_dominant_cell_ts_auc": 0.5843220201857786,
+   "within_t_rho_vs_rt600": 0.3630912724815125,
+   "diagnostic_pack": {
+    "label": "RT-1235",
+    "fold": 0,
+    "whole_fold": {
+     "rt600": 0.6382763032336511,
+     "candidate": 0.5705430161769247
+    },
+    "dominant_cell": {
+     "rt600": 0.6777110899011463,
+     "candidate": 0.5843220201857786
+    },
+    "mature_vs_neverbreak": {
+     "rt600": 0.676800868805288,
+     "candidate": 0.5857041103512977
+    },
+    "mature_vs_prebreak": {
+     "rt600": 0.6802509546650244,
+     "candidate": 0.580465460358856
+    },
+    "t_buckets": {
+     "0-20": {
+      "rt600": 0.5300204619017298,
+      "candidate": 0.5258866271357318
+     },
+     "20-50": {
+      "rt600": 0.5680248975917097,
+      "candidate": 0.5576157900358768
+     },
+     "50-100": {
+      "rt600": 0.5790183020058499,
+      "candidate": 0.5464003523020567
+     },
+     "100-200": {
+      "rt600": 0.6390075342102901,
+      "candidate": 0.5906309109465779
+     },
+     "200-400": {
+      "rt600": 0.6359029050927087,
+      "candidate": 0.5657627355606966
+     },
+     "400-1000000000": {
+      "rt600": 0.666690084227326,
+      "candidate": 0.5729912020758403
+     }
+    },
+    "age_buckets": {
+     "0-5": {
+      "rt600": 0.5152445330859063,
+      "candidate": 0.5147615879484739
+     },
+     "5-20": {
+      "rt600": 0.5520505250854593,
+      "candidate": 0.5308792328032511
+     },
+     "20-50": {
+      "rt600": 0.5894557799021534,
+      "candidate": 0.5416307361226723
+     },
+     "50-100": {
+      "rt600": 0.6169058332601237,
+      "candidate": 0.5634370978822427
+     },
+     "100-1000000000": {
+      "rt600": 0.675917278353309,
+      "candidate": 0.5885332972047089
+     }
+    },
+    "within_t_rank_corr_rt600": 0.3630912724815125
+   },
+   "pair_flow": {
+    "whole_fold": {
+     "total_pairs_sampled": 63380,
+     "rt600_wrong": 22143,
+     "rt600_right": 41237,
+     "repairs": 9100,
+     "damage": 13897,
+     "net_pair_lift": -4797,
+     "repair_rate_of_rt600_wrong": 0.4109650905478029,
+     "damage_rate_of_rt600_right": 0.3370031767587361
+    },
+    "dominant_cell": {
+     "total_pairs_sampled": 50540,
+     "rt600_wrong": 16193,
+     "rt600_right": 34347,
+     "repairs": 6722,
+     "damage": 11741,
+     "net_pair_lift": -5019,
+     "repair_rate_of_rt600_wrong": 0.4151176434261718,
+     "damage_rate_of_rt600_right": 0.34183480362185925
+    },
+    "mature_vs_never": {
+     "total_pairs_sampled": 50540,
+     "rt600_wrong": 15804,
+     "rt600_right": 34736,
+     "repairs": 6627,
+     "damage": 11844,
+     "net_pair_lift": -5217,
+     "repair_rate_of_rt600_wrong": 0.41932422171602124,
+     "damage_rate_of_rt600_right": 0.34097190234914787
+    },
+    "mature_vs_prebreak": {
+     "total_pairs_sampled": 48677,
+     "rt600_wrong": 15616,
+     "rt600_right": 33061,
+     "repairs": 6504,
+     "damage": 10893,
+     "net_pair_lift": -4389,
+     "repair_rate_of_rt600_wrong": 0.41649590163934425,
+     "damage_rate_of_rt600_right": 0.32948186685218234
+    }
+   },
+   "unique_repair": {
+    "rt600_wrong": 16193,
+    "candidate_repairs": 6722,
+    "clone_repairs": 3012,
+    "unique_repairs": 5361,
+    "unique_repair_coverage": 0.33106898042363986,
+    "repair_jaccard_vs_clone": 0.16254627970858712
+   },
+   "prebreak_damage_rate_on_rt600_correct": 0.32948186685218234,
+   "marginal_vs_clone": null,
+   "marginal_vs_clone_status": "NOT COMPUTED - the section 7 abandon gate fired, so folds 1-4 were never trained and no fold-pure five-fold OOF exists to calibrate against",
+   "fold_meta": {
+    "state_sha256": "1cf9d01d9696f58767f5b43382bbf9d3f459f40116261e84854bd3799fa6c57b",
+    "n_parameters": 35649,
+    "n_train_series": 6383,
+    "n_val_series": 1617,
+    "loss_history": [
+     0.5697004130482674,
+     0.5479210607707501,
+     0.5480586574971675,
+     0.545273273140192,
+     0.5428111119568348,
+     0.5422824198007583,
+     0.5422263179719448,
+     0.5402898368239403,
+     0.5395674753189087,
+     0.5387374077737331,
+     0.5383999800682068,
+     0.5365581512451172,
+     0.5353368523716927,
+     0.5351360709965229,
+     0.5342897407710552,
+     0.53363504961133,
+     0.5329900713264942,
+     0.5325638823211193,
+     0.5321774536371231,
+     0.5318263214826584
+    ],
+    "occupancy": [
+     {
+      "epoch": 1,
+      "contributing_groups": 0,
+      "pairs": 0,
+      "steps": 200
+     },
+     {
+      "epoch": 2,
+      "contributing_groups": 0,
+      "pairs": 0,
+      "steps": 200
+     },
+     {
+      "epoch": 3,
+      "contributing_groups": 0,
+      "pairs": 0,
+      "steps": 200
+     },
+     {
+      "epoch": 4,
+      "contributing_groups": 0,
+      "pairs": 0,
+      "steps": 200
+     },
+     {
+      "epoch": 5,
+      "contributing_groups": 0,
+      "pairs": 0,
+      "steps": 200
+     },
+     {
+      "epoch": 6,
+      "contributing_groups": 0,
+      "pairs": 0,
+      "steps": 200
+     },
+     {
+      "epoch": 7,
+      "contributing_groups": 0,
+      "pairs": 0,
+      "steps": 200
+     },
+     {
+      "epoch": 8,
+      "contributing_groups": 0,
+      "pairs": 0,
+      "steps": 200
+     },
+     {
+      "epoch": 9,
+      "contributing_groups": 0,
+      "pairs": 0,
+      "steps": 200
+     },
+     {
+      "epoch": 10,
+      "contributing_groups": 0,
+      "pairs": 0,
+      "steps": 200
+     },
+     {
+      "epoch": 11,
+      "contributing_groups": 0,
+      "pairs": 0,
+      "steps": 200
+     },
+     {
+      "epoch": 12,
+      "contributing_groups": 0,
+      "pairs": 0,
+      "steps": 200
+     },
+     {
+      "epoch": 13,
+      "contributing_groups": 0,
+      "pairs": 0,
+      "steps": 200
+     },
+     {
+      "epoch": 14,
+      "contributing_groups": 0,
+      "pairs": 0,
+      "steps": 200
+     },
+     {
+      "epoch": 15,
+      "contributing_groups": 0,
+      "pairs": 0,
+      "steps": 200
+     },
+     {
+      "epoch": 16,
+      "contributing_groups": 0,
+      "pairs": 0,
+      "steps": 200
+     },
+     {
+      "epoch": 17,
+      "contributing_groups": 0,
+      "pairs": 0,
+      "steps": 200
+     },
+     {
+      "epoch": 18,
+      "contributing_groups": 0,
+      "pairs": 0,
+      "steps": 200
+     },
+     {
+      "epoch": 19,
+      "contributing_groups": 0,
+      "pairs": 0,
+      "steps": 200
+     },
+     {
+      "epoch": 20,
+      "contributing_groups": 0,
+      "pairs": 0,
+      "steps": 200
+     }
+    ],
+    "empty_pair_steps": 0,
+    "runtime_s": 884.2
+   }
+  }
+ },
+ "objective_effect_on_standalone": {
+  "whole_fold": 0.02221882773481798,
+  "dominant_cell": 0.037099723388455796,
+  "note": "CRF_PROGRAM_PREREG section 1.10: if CRF-01 fails but C1 fails by more, that is a real finding about the objective. Measured on standalone TS-AUC because the ensemble marginal was not computed."
+ },
+ "rt600_sentinel": {
+  "mean": 0.6258112639463216,
+  "per_fold": [
+   0.6382763032336511,
+   0.6204018503410609,
+   0.6339302291124634,
+   0.6175075054046519,
+   0.6189404316397805
+  ],
+  "pooled": 0.6256269256734708,
+  "dominant_cell": 0.6642770565078685,
+  "fold0_e0": 0.6382763032336511,
+  "fold0_e1_seedclone": 0.6385863723277498,
+  "expected": {
+   "mean": 0.625811,
+   "pooled": 0.625627,
+   "dominant_cell": 0.664277,
+   "fold0_e0": 0.638276,
+   "fold0_e1_seedclone": 0.638586
+  },
+  "diffs": {
+   "mean": 2.6394632157700215e-07,
+   "pooled": -7.432652926464556e-08,
+   "dominant_cell": 5.6507868495536684e-08,
+   "fold0_e0": 3.032336511887834e-07,
+   "fold0_e1_seedclone": 3.7232774985351824e-07
+  },
+  "ok": true
+ },
+ "git_sha": "ed05902",
+ "execution_prereg_sha": "afba958",
+ "runtime_s": 74.9,
+ "lockbox_touched": "no",
+ "test_reduced_touched": "no"
+}

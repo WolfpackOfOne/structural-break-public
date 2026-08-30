@@ -1,0 +1,593 @@
+{
+  "RT-1206": {
+    "diagnostic_pack": {
+      "age_buckets": {
+        "0-5": {
+          "candidate": 0.5067584970995943,
+          "rt600": 0.5152445330859063
+        },
+        "100-1000000000": {
+          "candidate": 0.6669209476667199,
+          "rt600": 0.675917278353309
+        },
+        "20-50": {
+          "candidate": 0.5772125143033097,
+          "rt600": 0.5894557799021534
+        },
+        "5-20": {
+          "candidate": 0.5392704248904393,
+          "rt600": 0.5520505250854593
+        },
+        "50-100": {
+          "candidate": 0.602964644937772,
+          "rt600": 0.6169058332601237
+        }
+      },
+      "dominant_cell": {
+        "candidate": 0.6675776107908251,
+        "rt600": 0.6777110899011463
+      },
+      "fold": 0,
+      "label": "RT-1206",
+      "mature_vs_neverbreak": {
+        "candidate": 0.6647951654767386,
+        "rt600": 0.676800868805288
+      },
+      "mature_vs_prebreak": {
+        "candidate": 0.6753416967286521,
+        "rt600": 0.6802509546650244
+      },
+      "t_buckets": {
+        "0-20": {
+          "candidate": 0.5352951223071208,
+          "rt600": 0.5300204619017298
+        },
+        "100-200": {
+          "candidate": 0.62639168009207,
+          "rt600": 0.6390075342102901
+        },
+        "20-50": {
+          "candidate": 0.5587783742175261,
+          "rt600": 0.5680248975917097
+        },
+        "200-400": {
+          "candidate": 0.6291902710218295,
+          "rt600": 0.6359029050927087
+        },
+        "400-1000000000": {
+          "candidate": 0.6525321612577324,
+          "rt600": 0.666690084227326
+        },
+        "50-100": {
+          "candidate": 0.5664928925066657,
+          "rt600": 0.5790183020058499
+        }
+      },
+      "whole_fold": {
+        "candidate": 0.62763628527406,
+        "rt600": 0.6382763032336511
+      },
+      "within_t_rank_corr_rt600": 0.8808904284254538
+    },
+    "ensemble_marginal": {
+      "fold": 0,
+      "gain_vs_base": -4.294831404527688e-05,
+      "marginal_vs_clone": -0.0003530174081439741,
+      "rt600_7stream": 0.6382763032336511,
+      "rt600_plus_RT-1206": 0.6382333549196059,
+      "rt600_plus_seedclone": 0.6385863723277498
+    },
+    "pair_flow": {
+      "cell_never_break_neg": {
+        "damage": 1154,
+        "net_pair_lift": -305,
+        "repairs": 849,
+        "total_pairs_sampled": 15582
+      },
+      "cell_pre_break_neg": {
+        "damage": 944,
+        "net_pair_lift": -197,
+        "repairs": 747,
+        "total_pairs_sampled": 13378
+      },
+      "dominant_cell": {
+        "damage": 1141,
+        "net_pair_lift": -249,
+        "repairs": 892,
+        "total_pairs_sampled": 15598
+      },
+      "whole_fold": {
+        "damage": 1541,
+        "net_pair_lift": -294,
+        "repairs": 1247,
+        "total_pairs_sampled": 19562
+      }
+    },
+    "training": {
+      "fit_summaries": [
+        {
+          "fold": 0,
+          "runtime_s": 103.2,
+          "train_rows": 400000,
+          "ts_auc_scored": 0.62763628527406,
+          "valid_rows": 806334
+        },
+        {
+          "fold": 1,
+          "runtime_s": 201.9,
+          "train_rows": 400000,
+          "valid_rows": 812939
+        },
+        {
+          "fold": 2,
+          "runtime_s": 298.5,
+          "train_rows": 400000,
+          "valid_rows": 806691
+        },
+        {
+          "fold": 3,
+          "runtime_s": 393.0,
+          "train_rows": 400000,
+          "valid_rows": 802506
+        },
+        {
+          "fold": 4,
+          "runtime_s": 486.0,
+          "train_rows": 400000,
+          "valid_rows": 804054
+        }
+      ],
+      "foldpure_oof_support_note": "Folds 1-4 were predicted only to provide fold-pure SCDF calibration support for the existing ensemble marginal path; no TS-AUC was computed or used for those folds.",
+      "importance_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1206.importance.csv",
+      "oof_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1206.npy",
+      "result_row": {
+        "agent": "codex-new-avenues",
+        "causal_verified": "harness.verify + prefix-invariance@module + future-mutation",
+        "date": "2026-08-24 16:05",
+        "experiment_id": "RT-1206",
+        "falsification_condition": "KILL if contrast marginal_vs_clone < +0.0010, or if the plain-energy control matches within +0.0005.",
+        "feature_set": "m00_core,m01_seq,m02_dist,m03_dyn,m04_resid,m06_loc,m07_bayes,m14_spectral_impulse",
+        "fold_std": 0.0,
+        "folds": "0",
+        "git_sha": "a7ab002",
+        "hypothesis": "Pilot 6 tests whether high band energy with low impulsiveness marks sustained structural breaks rather than isolated outlier bursts. Spectral-kurtosis and robust-negentropy product contrasts should add ensemble alpha.",
+        "lockbox_touched": "no",
+        "mean_oof_ts_auc": 0.62763628527406,
+        "model": "lgbm",
+        "n_features": 508,
+        "notes": "Pilot 6 spectral impulsiveness contrast arm. Fold-0 screen only; folds 1-4 generated only as fold-pure SCDF calibration support.",
+        "objective": "binary",
+        "per_fold_ts_auc": "0.62764",
+        "persistence": "none",
+        "pooled_oof_ts_auc": 0.62763628527406,
+        "protocol": "pilot_fold0_only",
+        "random_seed": 0,
+        "sample_mode": "uniform",
+        "status": "recorded",
+        "test_reduced_touched": "no",
+        "train_rows": 400000,
+        "train_series": 8000,
+        "training_runtime_s": 486.2
+      }
+    }
+  },
+  "RT-1207": {
+    "diagnostic_pack": {
+      "age_buckets": {
+        "0-5": {
+          "candidate": 0.510280951002885,
+          "rt600": 0.5152445330859063
+        },
+        "100-1000000000": {
+          "candidate": 0.6716394879412652,
+          "rt600": 0.675917278353309
+        },
+        "20-50": {
+          "candidate": 0.5796114014867829,
+          "rt600": 0.5894557799021534
+        },
+        "5-20": {
+          "candidate": 0.5457534874184873,
+          "rt600": 0.5520505250854593
+        },
+        "50-100": {
+          "candidate": 0.6018480476776327,
+          "rt600": 0.6169058332601237
+        }
+      },
+      "dominant_cell": {
+        "candidate": 0.6745712564601588,
+        "rt600": 0.6777110899011463
+      },
+      "fold": 0,
+      "label": "RT-1207",
+      "mature_vs_neverbreak": {
+        "candidate": 0.6733109893630214,
+        "rt600": 0.676800868805288
+      },
+      "mature_vs_prebreak": {
+        "candidate": 0.6780878833628521,
+        "rt600": 0.6802509546650244
+      },
+      "t_buckets": {
+        "0-20": {
+          "candidate": 0.5353307731083519,
+          "rt600": 0.5300204619017298
+        },
+        "100-200": {
+          "candidate": 0.6186671641533248,
+          "rt600": 0.6390075342102901
+        },
+        "20-50": {
+          "candidate": 0.5677310459887825,
+          "rt600": 0.5680248975917097
+        },
+        "200-400": {
+          "candidate": 0.6307988974202429,
+          "rt600": 0.6359029050927087
+        },
+        "400-1000000000": {
+          "candidate": 0.6646286658375132,
+          "rt600": 0.666690084227326
+        },
+        "50-100": {
+          "candidate": 0.5688027248227829,
+          "rt600": 0.5790183020058499
+        }
+      },
+      "whole_fold": {
+        "candidate": 0.6310837576540292,
+        "rt600": 0.6382763032336511
+      },
+      "within_t_rank_corr_rt600": 0.8851397306660036
+    },
+    "ensemble_marginal": {
+      "fold": 0,
+      "gain_vs_base": 0.0004988115825587114,
+      "marginal_vs_clone": 0.00018874248846001418,
+      "rt600_7stream": 0.6382763032336511,
+      "rt600_plus_RT-1207": 0.6387751148162099,
+      "rt600_plus_seedclone": 0.6385863723277498
+    },
+    "pair_flow": {
+      "cell_never_break_neg": {
+        "damage": 941,
+        "net_pair_lift": -43,
+        "repairs": 898,
+        "total_pairs_sampled": 15582
+      },
+      "cell_pre_break_neg": {
+        "damage": 911,
+        "net_pair_lift": -133,
+        "repairs": 778,
+        "total_pairs_sampled": 13378
+      },
+      "dominant_cell": {
+        "damage": 962,
+        "net_pair_lift": -20,
+        "repairs": 942,
+        "total_pairs_sampled": 15598
+      },
+      "whole_fold": {
+        "damage": 1428,
+        "net_pair_lift": -148,
+        "repairs": 1280,
+        "total_pairs_sampled": 19562
+      }
+    },
+    "training": {
+      "fit_summaries": [
+        {
+          "fold": 0,
+          "runtime_s": 95.3,
+          "train_rows": 400000,
+          "ts_auc_scored": 0.6310837576540292,
+          "valid_rows": 806334
+        },
+        {
+          "fold": 1,
+          "runtime_s": 191.1,
+          "train_rows": 400000,
+          "valid_rows": 812939
+        },
+        {
+          "fold": 2,
+          "runtime_s": 283.8,
+          "train_rows": 400000,
+          "valid_rows": 806691
+        },
+        {
+          "fold": 3,
+          "runtime_s": 379.6,
+          "train_rows": 400000,
+          "valid_rows": 802506
+        },
+        {
+          "fold": 4,
+          "runtime_s": 472.7,
+          "train_rows": 400000,
+          "valid_rows": 804054
+        }
+      ],
+      "foldpure_oof_support_note": "Folds 1-4 were predicted only to provide fold-pure SCDF calibration support for the existing ensemble marginal path; no TS-AUC was computed or used for those folds.",
+      "importance_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1207.importance.csv",
+      "oof_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1207.npy",
+      "result_row": {
+        "agent": "codex-new-avenues",
+        "causal_verified": "harness.verify + prefix-invariance@module + future-mutation",
+        "date": "2026-08-24 16:12",
+        "experiment_id": "RT-1207",
+        "falsification_condition": "Control must not match or exceed the contrast arm; if it does, spectral impulsiveness hypothesis is killed.",
+        "feature_set": "m00_core,m01_seq,m02_dist,m03_dyn,m04_resid,m06_loc,m07_bayes,m14_spectral_energy",
+        "fold_std": 0.0,
+        "folds": "0",
+        "git_sha": "a7ab002",
+        "hypothesis": "Pilot 6 tests whether high band energy with low impulsiveness marks sustained structural breaks rather than isolated outlier bursts. Plain band energy is the binding control for generic extra spectral power.",
+        "lockbox_touched": "no",
+        "mean_oof_ts_auc": 0.6310837576540292,
+        "model": "lgbm",
+        "n_features": 504,
+        "notes": "Pilot 6 plain band-energy control. Fold-0 screen only; folds 1-4 generated only as fold-pure SCDF calibration support.",
+        "objective": "binary",
+        "per_fold_ts_auc": "0.63108",
+        "persistence": "none",
+        "pooled_oof_ts_auc": 0.6310837576540292,
+        "protocol": "pilot_fold0_only",
+        "random_seed": 0,
+        "sample_mode": "uniform",
+        "status": "recorded",
+        "test_reduced_touched": "no",
+        "train_rows": 400000,
+        "train_series": 8000,
+        "training_runtime_s": 472.8
+      }
+    }
+  },
+  "branch": "research/new-avenues-pilots-2026",
+  "causal_checks": {
+    "bands": [
+      "nyq",
+      "high",
+      "mid",
+      "low"
+    ],
+    "deterministic_replay_ok": true,
+    "first_valid_nan_semantics": {
+      "contrast_row46_any_finite": true,
+      "contrast_rows_before_46_all_nan": true,
+      "energy_row46_any_finite": true,
+      "energy_rows_before_46_all_nan": true
+    },
+    "future_mutation_prefix_ok": true,
+    "harness_verify_contrast": {
+      "message": "ok",
+      "ok": true
+    },
+    "harness_verify_energy": {
+      "message": "ok",
+      "ok": true
+    },
+    "min_endpoint_count": 16,
+    "module_prefix_invariance": {
+      "m14_spectral_energy": [
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 8245
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 4119
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 6325
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 574
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 502
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 2088
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 318
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 655
+        }
+      ],
+      "m14_spectral_impulse": [
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 8245
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 4119
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 6325
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 574
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 502
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 2088
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 318
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 655
+        }
+      ]
+    },
+    "null_grid": [
+      16,
+      64,
+      256
+    ],
+    "segment_length": 32
+  },
+  "continuation_status": "KILL",
+  "contrast_minus_control_marginal": -0.0005417598966039883,
+  "exp_ids": [
+    "RT-1206",
+    "RT-1207"
+  ],
+  "feature_build_runtime_s": 435.0081253051758,
+  "feature_cache": {
+    "m14_spectral_energy": {
+      "cols": [
+        "energy_z_nyq",
+        "energy_z_high",
+        "energy_z_mid",
+        "energy_z_low"
+      ],
+      "dev_series": 8000,
+      "lockbox_rows_filled": 0,
+      "module": "m14_spectral_energy",
+      "shape": [
+        5036517,
+        4
+      ]
+    },
+    "m14_spectral_impulse": {
+      "cols": [
+        "contrast_sk_nyq",
+        "contrast_sk_high",
+        "contrast_sk_mid",
+        "contrast_sk_low",
+        "contrast_negent_nyq",
+        "contrast_negent_high",
+        "contrast_negent_mid",
+        "contrast_negent_low"
+      ],
+      "dev_series": 8000,
+      "lockbox_rows_filled": 0,
+      "module": "m14_spectral_impulse",
+      "shape": [
+        5036517,
+        8
+      ]
+    },
+    "runtime_s": 435.0081253051758
+  },
+  "feature_definitions": {
+    "bands": [
+      "nyq",
+      "high",
+      "mid",
+      "low"
+    ],
+    "contrast_cols": [
+      "contrast_sk_nyq",
+      "contrast_sk_high",
+      "contrast_sk_mid",
+      "contrast_sk_low",
+      "contrast_negent_nyq",
+      "contrast_negent_high",
+      "contrast_negent_mid",
+      "contrast_negent_low"
+    ],
+    "energy_cols": [
+      "energy_z_nyq",
+      "energy_z_high",
+      "energy_z_mid",
+      "energy_z_low"
+    ],
+    "min_endpoint_count": 16,
+    "null_grid": [
+      16,
+      64,
+      256
+    ],
+    "segment_length": 32
+  },
+  "feature_modules": [
+    "m14_spectral_impulse",
+    "m14_spectral_energy"
+  ],
+  "gate_failures": [
+    {
+      "gate": "primary_marginal_vs_clone",
+      "message": "contrast marginal_vs_clone is below +0.0010",
+      "observed": -0.0003530174081439741,
+      "threshold": 0.001
+    },
+    {
+      "gate": "plain_energy_control_not_worse",
+      "message": "plain-energy control matches or exceeds contrast",
+      "observed_contrast_minus_control": -0.0005417598966039883,
+      "threshold": "control < contrast"
+    }
+  ],
+  "generated": "2026-08-24",
+  "head_sha": "a7ab002",
+  "interpretation": "The preregistered spectral impulsiveness contrast failed a Pilot 6 binding gate. This falsifies the F1/F6 product-contrast construction under the fixed dyadic Goertzel bands, SEG=32 envelope, robust historical-null calibration, and Mode-A fold-0 ABL screen; it does not falsify all spectral representations.",
+  "prereg_sha": "dddc2d9",
+  "rt600_sentinel": {
+    "diffs": {
+      "dominant_cell": -2.943492131479708e-06,
+      "fold0_e0": -3.696766348815217e-06,
+      "fold0_e1_seedclone": -3.627672250150482e-06,
+      "mean": 1.2639463216057578e-06,
+      "pooled": -7.432652926464556e-08
+    },
+    "dominant_cell": 0.6642770565078685,
+    "expected": {
+      "dominant_cell": 0.66428,
+      "fold0_e0": 0.63828,
+      "fold0_e1_seedclone": 0.63859,
+      "mean": 0.62581,
+      "pooled": 0.625627
+    },
+    "fold0_e0": 0.6382763032336511,
+    "fold0_e1_seedclone": 0.6385863723277498,
+    "mean": 0.6258112639463216,
+    "ok": true,
+    "per_fold": [
+      0.6382763032336511,
+      0.6204018503410609,
+      0.6339302291124634,
+      0.6175075054046519,
+      0.6189404316397805
+    ],
+    "pooled": 0.6256269256734708
+  },
+  "runtime_s": 1586.8922610282898,
+  "verdict": "KILL",
+  "verdict_reason": "contrast marginal_vs_clone is below +0.0010"
+}

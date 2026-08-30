@@ -1,0 +1,780 @@
+{
+  "artifact_root": "/path/to/workspace/structural-break-learner-diversity-2026",
+  "calibration": "SCDF_NSEEN",
+  "csa00": {
+    "E0_original_rt600": {
+      "mean_ts_auc": 0.6258113418832281,
+      "per_fold_ts_auc": [
+        0.638276215299891,
+        0.6204019581662752,
+        0.6339304299070194,
+        0.6175075878311903,
+        0.6189405182117643
+      ]
+    },
+    "E1_rt600_plus_rt401": {
+      "mean_ts_auc": 0.6258383121815279,
+      "per_fold_ts_auc": [
+        0.6385865078922968,
+        0.6204868094216436,
+        0.6341589898879638,
+        0.6176448654841981,
+        0.6183143882215368
+      ]
+    },
+    "E2_minus_E0": 0.0010028083720590164,
+    "E2_minus_E1": 0.0009758380737592276,
+    "E2_rt600_plus_rt1251": {
+      "mean_ts_auc": 0.6268141502552871,
+      "per_fold_ts_auc": [
+        0.640273905455878,
+        0.6212132818035196,
+        0.6350503392323625,
+        0.6181698476004492,
+        0.6193633771842262
+      ]
+    },
+    "fold_deltas_E2_minus_E1": [
+      0.0016873975635812721,
+      0.0007264723818760643,
+      0.0008913493443987175,
+      0.0005249821162511825,
+      0.0010489889626893456
+    ],
+    "pair_flow_vs_E0": {
+      "dominant_cell": {
+        "damage": 463,
+        "damage_rate": 0.009175948313448808,
+        "net_pair_lift": 70,
+        "repairs": 533,
+        "total_pairs_sampled": 50458
+      },
+      "mature_vs_never": {
+        "damage": 483,
+        "damage_rate": 0.009573455958138428,
+        "net_pair_lift": 36,
+        "repairs": 519,
+        "total_pairs_sampled": 50452
+      },
+      "mature_vs_prebreak": {
+        "damage": 397,
+        "damage_rate": 0.009015965298753207,
+        "net_pair_lift": 87,
+        "repairs": 484,
+        "total_pairs_sampled": 44033
+      },
+      "whole": {
+        "damage": 704,
+        "damage_rate": 0.011140298129569263,
+        "net_pair_lift": 34,
+        "repairs": 738,
+        "total_pairs_sampled": 63194
+      }
+    },
+    "pair_flow_vs_E1": {
+      "dominant_cell": {
+        "damage": 575,
+        "damage_rate": 0.01139561615601094,
+        "net_pair_lift": 44,
+        "repairs": 619,
+        "total_pairs_sampled": 50458
+      },
+      "mature_vs_never": {
+        "damage": 626,
+        "damage_rate": 0.012407833187980655,
+        "net_pair_lift": 6,
+        "repairs": 632,
+        "total_pairs_sampled": 50452
+      },
+      "mature_vs_prebreak": {
+        "damage": 494,
+        "damage_rate": 0.011218858583335226,
+        "net_pair_lift": 84,
+        "repairs": 578,
+        "total_pairs_sampled": 44033
+      },
+      "whole": {
+        "damage": 897,
+        "damage_rate": 0.01419438554293129,
+        "net_pair_lift": 0,
+        "repairs": 897,
+        "total_pairs_sampled": 63194
+      }
+    }
+  },
+  "git_sha": "a360dfd",
+  "hybrid": {
+    "cat_streams": [
+      "RT-1255",
+      "RT-410",
+      "RT-411",
+      "RT-412",
+      "RT-1254",
+      "RT-414",
+      "RT-415"
+    ],
+    "clone_streams": [
+      "RT-401",
+      "RT-410",
+      "RT-411",
+      "RT-412",
+      "RT-402",
+      "RT-414",
+      "RT-415"
+    ],
+    "ensemble": {
+      "E0_original_rt600": {
+        "mean_ts_auc": 0.6258113418832281,
+        "per_fold_ts_auc": [
+          0.638276215299891,
+          0.6204019581662752,
+          0.6339304299070194,
+          0.6175075878311903,
+          0.6189405182117643
+        ]
+      },
+      "E1_clone_replacement": {
+        "mean_ts_auc": 0.6254304589418282,
+        "per_fold_ts_auc": [
+          0.6372651492611827,
+          0.6204114899152263,
+          0.6325444789502865,
+          0.6178966186123694,
+          0.6190345579700758
+        ]
+      },
+      "E2_cat_hybrid": {
+        "mean_ts_auc": 0.6278376636118985,
+        "per_fold_ts_auc": [
+          0.6404303396152772,
+          0.620692694480152,
+          0.6351380232402147,
+          0.6207459541776635,
+          0.622181306546185
+        ]
+      },
+      "E2_minus_E0": 0.002026321728670455,
+      "fold_deltas_vs_clone": [
+        0.0031651903540944604,
+        0.00028120456492564117,
+        0.0025935442899281957,
+        0.0028493355652940977,
+        0.003146748576109193
+      ],
+      "marginal_vs_clone": 0.002407204670070273,
+      "positive_folds_vs_clone": 5
+    },
+    "id": "RT-1257",
+    "name": "HYBRID",
+    "pair_flow_vs_E0": {
+      "dominant_cell": {
+        "damage": 1157,
+        "damage_rate": 0.022929961552182014,
+        "net_pair_lift": 158,
+        "repairs": 1315,
+        "total_pairs_sampled": 50458
+      },
+      "mature_vs_never": {
+        "damage": 1162,
+        "damage_rate": 0.023031792594941727,
+        "net_pair_lift": 73,
+        "repairs": 1235,
+        "total_pairs_sampled": 50452
+      },
+      "mature_vs_prebreak": {
+        "damage": 954,
+        "damage_rate": 0.021665569005064382,
+        "net_pair_lift": 146,
+        "repairs": 1100,
+        "total_pairs_sampled": 44033
+      },
+      "whole": {
+        "damage": 1627,
+        "damage_rate": 0.025746115137513056,
+        "net_pair_lift": 192,
+        "repairs": 1819,
+        "total_pairs_sampled": 63194
+      }
+    },
+    "pair_flow_vs_clone": {
+      "dominant_cell": {
+        "damage": 1149,
+        "damage_rate": 0.022771413849141862,
+        "net_pair_lift": 104,
+        "repairs": 1253,
+        "total_pairs_sampled": 50458
+      },
+      "mature_vs_never": {
+        "damage": 1151,
+        "damage_rate": 0.022813763577261555,
+        "net_pair_lift": 107,
+        "repairs": 1258,
+        "total_pairs_sampled": 50452
+      },
+      "mature_vs_prebreak": {
+        "damage": 897,
+        "damage_rate": 0.02037108532237186,
+        "net_pair_lift": 161,
+        "repairs": 1058,
+        "total_pairs_sampled": 44033
+      },
+      "whole": {
+        "damage": 1524,
+        "damage_rate": 0.024116213564578916,
+        "net_pair_lift": 286,
+        "repairs": 1810,
+        "total_pairs_sampled": 63194
+      }
+    },
+    "ran": true,
+    "runtime_s": 0.0,
+    "survivors": [
+      "CAT-413",
+      "CAT-300"
+    ],
+    "verdict": "PROMOTION_WORTHY"
+  },
+  "oof_dir": "/path/to/workspace/structural-break-learner-diversity-2026/research/oof",
+  "pair_seed": 20260827,
+  "pairs_per_t": 64,
+  "program": "CATBOOST SPECIALIST ACTIVATION 2026",
+  "runtime_s": 5032.96265296936,
+  "specialists": {
+    "CAT-300": {
+      "catboost_params": {
+        "allow_writing_files": false,
+        "bootstrap_type": "Bernoulli",
+        "border_count": 127,
+        "depth": 6,
+        "eval_metric": "Logloss",
+        "iterations": 600,
+        "l2_leaf_reg": 5.0,
+        "learning_rate": 0.05,
+        "loss_function": "Logloss",
+        "random_seed": 0,
+        "rsm": 0.7,
+        "subsample": 0.7,
+        "thread_count": 2,
+        "verbose": false
+      },
+      "ensemble": {
+        "E0_original_rt600": {
+          "mean_ts_auc": 0.6258113418832281,
+          "per_fold_ts_auc": [
+            0.638276215299891,
+            0.6204019581662752,
+            0.6339304299070194,
+            0.6175075878311903,
+            0.6189405182117643
+          ]
+        },
+        "E1_clone_replacement": {
+          "mean_ts_auc": 0.6259087588552168,
+          "per_fold_ts_auc": [
+            0.6384178399485095,
+            0.6208292479258148,
+            0.6335605588981115,
+            0.6170046248406685,
+            0.6197315226629795
+          ]
+        },
+        "E2_cat_replacement": {
+          "mean_ts_auc": 0.6269382179271005,
+          "per_fold_ts_auc": [
+            0.6405017638120012,
+            0.621084969798409,
+            0.634427292317317,
+            0.618181844408444,
+            0.6204952192993313
+          ]
+        },
+        "E2_minus_E0": 0.0011268760438724046,
+        "fold_deltas_vs_clone": [
+          0.0020839238634916546,
+          0.00025572187259415013,
+          0.0008667334192055121,
+          0.0011772195677755004,
+          0.000763696636351785
+        ],
+        "marginal_vs_clone": 0.001029459071883676,
+        "positive_folds_vs_clone": 5
+      },
+      "fold_runtime_s": [
+        434.3,
+        440.7,
+        448.5,
+        445.3,
+        439.3
+      ],
+      "id": "RT-1255",
+      "incumbent_standalone": {
+        "fold_std": 0.010400920167712557,
+        "mean_ts_auc": 0.6160536457985584,
+        "per_fold_ts_auc": [
+          0.629028155789136,
+          0.6106107062717593,
+          0.6268789006620026,
+          0.6122259125582563,
+          0.6015245537116376
+        ],
+        "pooled_ts_auc": 0.6159307259036215
+      },
+      "name": "CAT-300",
+      "pair_flow_vs_E0": {
+        "dominant_cell": {
+          "damage": 656,
+          "damage_rate": 0.013000911649292481,
+          "net_pair_lift": 75,
+          "repairs": 731,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 664,
+          "damage_rate": 0.013161024339966701,
+          "net_pair_lift": 80,
+          "repairs": 744,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 563,
+          "damage_rate": 0.0127858651465946,
+          "net_pair_lift": 82,
+          "repairs": 645,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 931,
+          "damage_rate": 0.014732411304870716,
+          "net_pair_lift": 92,
+          "repairs": 1023,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "pair_flow_vs_clone": {
+        "dominant_cell": {
+          "damage": 698,
+          "damage_rate": 0.01383328709025328,
+          "net_pair_lift": 15,
+          "repairs": 713,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 686,
+          "damage_rate": 0.013597082375327044,
+          "net_pair_lift": 62,
+          "repairs": 748,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 555,
+          "damage_rate": 0.012604183226216701,
+          "net_pair_lift": 102,
+          "repairs": 657,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 992,
+          "damage_rate": 0.015697692818938506,
+          "net_pair_lift": 56,
+          "repairs": 1048,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "replaced": "RT-300",
+      "rho_vs_incumbent": 0.7377860606191275,
+      "runtime_s": 2208.1,
+      "standalone": {
+        "fold_std": 0.011655690711060186,
+        "mean_ts_auc": 0.6202420610687559,
+        "per_fold_ts_auc": [
+          0.6392125559619609,
+          0.6131722128470595,
+          0.6277300464741975,
+          0.6141103106120459,
+          0.6069851794485157
+        ],
+        "pooled_ts_auc": 0.6200772484978174
+      },
+      "standalone_delta_vs_incumbent": 0.004188415270197532,
+      "status": "SCORED",
+      "training_spec": {
+        "incumbent_objective": "binary",
+        "max_train_rows": 1000000,
+        "modules": [
+          "m00_core",
+          "m01_seq",
+          "m02_dist",
+          "m03_dyn",
+          "m04_resid",
+          "m06_loc",
+          "m07_bayes"
+        ],
+        "replaced": "RT-300",
+        "sample_mode": "uniform",
+        "seed": 0
+      },
+      "verdict": "INTERESTING"
+    },
+    "CAT-410": {
+      "catboost_params": {
+        "allow_writing_files": false,
+        "bootstrap_type": "Bernoulli",
+        "border_count": 127,
+        "depth": 6,
+        "eval_metric": "Logloss",
+        "iterations": 600,
+        "l2_leaf_reg": 5.0,
+        "learning_rate": 0.05,
+        "loss_function": "Logloss",
+        "random_seed": 0,
+        "rsm": 0.7,
+        "subsample": 0.7,
+        "thread_count": 2,
+        "verbose": false
+      },
+      "ensemble": {
+        "E0_original_rt600": {
+          "mean_ts_auc": 0.6258113418832281,
+          "per_fold_ts_auc": [
+            0.638276215299891,
+            0.6204019581662752,
+            0.6339304299070194,
+            0.6175075878311903,
+            0.6189405182117643
+          ]
+        },
+        "E1_clone_replacement": {
+          "mean_ts_auc": 0.6259878363120857,
+          "per_fold_ts_auc": [
+            0.6401254879242839,
+            0.6201218318534933,
+            0.6346854397479234,
+            0.6186326314001724,
+            0.6163737906345554
+          ]
+        },
+        "E2_cat_replacement": {
+          "mean_ts_auc": 0.6267409316267892,
+          "per_fold_ts_auc": [
+            0.6400172854323555,
+            0.6203688845788515,
+            0.6353808210425437,
+            0.6205195247300784,
+            0.617418142350117
+          ]
+        },
+        "E2_minus_E0": 0.0009295897435611655,
+        "fold_deltas_vs_clone": [
+          -0.00010820249192844411,
+          0.0002470527253581878,
+          0.000695381294620323,
+          0.001886893329905992,
+          0.0010443517155616089
+        ],
+        "marginal_vs_clone": 0.0007530953147035779,
+        "positive_folds_vs_clone": 4
+      },
+      "fold_runtime_s": [
+        228.2,
+        226.3,
+        225.3,
+        226.5,
+        225.8
+      ],
+      "id": "RT-1256",
+      "incumbent_standalone": {
+        "fold_std": 0.006774004669267466,
+        "mean_ts_auc": 0.6051165280089322,
+        "per_fold_ts_auc": [
+          0.6086781036539423,
+          0.6051837554068684,
+          0.6097378540061009,
+          0.592009331583343,
+          0.6099735953944067
+        ],
+        "pooled_ts_auc": 0.6048208395204936
+      },
+      "name": "CAT-410",
+      "pair_flow_vs_E0": {
+        "dominant_cell": {
+          "damage": 768,
+          "damage_rate": 0.015220579491854612,
+          "net_pair_lift": 17,
+          "repairs": 785,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 749,
+          "damage_rate": 0.014845794022040752,
+          "net_pair_lift": 76,
+          "repairs": 825,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 588,
+          "damage_rate": 0.013353621147775533,
+          "net_pair_lift": 80,
+          "repairs": 668,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 1046,
+          "damage_rate": 0.01655220432319524,
+          "net_pair_lift": 107,
+          "repairs": 1153,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "pair_flow_vs_clone": {
+        "dominant_cell": {
+          "damage": 835,
+          "damage_rate": 0.016548416504815887,
+          "net_pair_lift": -29,
+          "repairs": 806,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 845,
+          "damage_rate": 0.016748592721794974,
+          "net_pair_lift": 62,
+          "repairs": 907,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 721,
+          "damage_rate": 0.016374083074058094,
+          "net_pair_lift": 26,
+          "repairs": 747,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 1146,
+          "damage_rate": 0.018134633034781782,
+          "net_pair_lift": 71,
+          "repairs": 1217,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "replaced": "RT-410",
+      "rho_vs_incumbent": 0.6808253010142363,
+      "runtime_s": 1132.1,
+      "standalone": {
+        "fold_std": 0.006117737521037012,
+        "mean_ts_auc": 0.6103282509291912,
+        "per_fold_ts_auc": [
+          0.6177521275976311,
+          0.6049781686647865,
+          0.6166772692389575,
+          0.6098326430298078,
+          0.6024010461147729
+        ],
+        "pooled_ts_auc": 0.6100022060568281
+      },
+      "standalone_delta_vs_incumbent": 0.005211722920258954,
+      "status": "SCORED",
+      "training_spec": {
+        "incumbent_objective": "binary",
+        "max_train_rows": 900000,
+        "modules": [
+          "m00_core",
+          "m01_seq",
+          "m07_bayes"
+        ],
+        "replaced": "RT-410",
+        "sample_mode": "uniform",
+        "seed": 0
+      },
+      "verdict": "KILL"
+    },
+    "CAT-413": {
+      "catboost_params": {
+        "allow_writing_files": false,
+        "bootstrap_type": "Bernoulli",
+        "border_count": 127,
+        "depth": 6,
+        "eval_metric": "Logloss",
+        "iterations": 600,
+        "l2_leaf_reg": 5.0,
+        "learning_rate": 0.05,
+        "loss_function": "Logloss",
+        "random_seed": 0,
+        "rsm": 0.7,
+        "subsample": 0.7,
+        "thread_count": 2,
+        "verbose": false
+      },
+      "ensemble": {
+        "E0_original_rt600": {
+          "mean_ts_auc": 0.6258113418832281,
+          "per_fold_ts_auc": [
+            0.638276215299891,
+            0.6204019581662752,
+            0.6339304299070194,
+            0.6175075878311903,
+            0.6189405182117643
+          ]
+        },
+        "E1_clone_replacement": {
+          "mean_ts_auc": 0.625968537932223,
+          "per_fold_ts_auc": [
+            0.6378415513953996,
+            0.6200700254321583,
+            0.6338685517180254,
+            0.6188560335458028,
+            0.6192065275697289
+          ]
+        },
+        "E2_cat_replacement": {
+          "mean_ts_auc": 0.6270556887649625,
+          "per_fold_ts_auc": [
+            0.6386239713380495,
+            0.6202619111836665,
+            0.6350096485874397,
+            0.6204282935387373,
+            0.62095461917692
+          ]
+        },
+        "E2_minus_E0": 0.0012443468817344705,
+        "fold_deltas_vs_clone": [
+          0.0007824199426499368,
+          0.00019188575150819176,
+          0.0011410968694143264,
+          0.0015722599929345327,
+          0.0017480916071910269
+        ],
+        "marginal_vs_clone": 0.0010871508327395807,
+        "positive_folds_vs_clone": 5
+      },
+      "fold_runtime_s": [
+        308.6,
+        311.0,
+        306.6,
+        300.4,
+        300.5
+      ],
+      "id": "RT-1254",
+      "incumbent_standalone": {
+        "fold_std": 0.01194077626689197,
+        "mean_ts_auc": 0.614809747839776,
+        "per_fold_ts_auc": [
+          0.6318499098510418,
+          0.613260474973376,
+          0.6245466793313991,
+          0.6003098338644413,
+          0.604081841178622
+        ],
+        "pooled_ts_auc": 0.6147771197268335
+      },
+      "name": "CAT-413",
+      "pair_flow_vs_E0": {
+        "dominant_cell": {
+          "damage": 716,
+          "damage_rate": 0.014190019422093622,
+          "net_pair_lift": 93,
+          "repairs": 809,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 739,
+          "damage_rate": 0.014647585824149687,
+          "net_pair_lift": 80,
+          "repairs": 819,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 616,
+          "damage_rate": 0.013989507869098177,
+          "net_pair_lift": 71,
+          "repairs": 687,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 1100,
+          "damage_rate": 0.017406715827451975,
+          "net_pair_lift": 9,
+          "repairs": 1109,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "pair_flow_vs_clone": {
+        "dominant_cell": {
+          "damage": 696,
+          "damage_rate": 0.013793650164493241,
+          "net_pair_lift": 20,
+          "repairs": 716,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 744,
+          "damage_rate": 0.014746689923095219,
+          "net_pair_lift": 17,
+          "repairs": 761,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 571,
+          "damage_rate": 0.012967547066972498,
+          "net_pair_lift": 67,
+          "repairs": 638,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 1035,
+          "damage_rate": 0.01637813716492072,
+          "net_pair_lift": -16,
+          "repairs": 1019,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "replaced": "RT-413",
+      "rho_vs_incumbent": 0.7141956533581161,
+      "runtime_s": 1527.1,
+      "standalone": {
+        "fold_std": 0.007909158721957778,
+        "mean_ts_auc": 0.6204402439437672,
+        "per_fold_ts_auc": [
+          0.6318118565163144,
+          0.6136774063239876,
+          0.6281032231564433,
+          0.615665467098267,
+          0.6129432666238234
+        ],
+        "pooled_ts_auc": 0.6200951192580461
+      },
+      "standalone_delta_vs_incumbent": 0.005630496103991134,
+      "status": "SCORED",
+      "training_spec": {
+        "incumbent_objective": "pairwise_t",
+        "max_train_rows": 700000,
+        "modules": [
+          "m00_core",
+          "m01_seq",
+          "m02_dist",
+          "m03_dyn",
+          "m04_resid",
+          "m06_loc",
+          "m07_bayes"
+        ],
+        "replaced": "RT-413",
+        "sample_mode": "uniform",
+        "seed": 0
+      },
+      "verdict": "INTERESTING"
+    }
+  },
+  "training_runtime_s_from_initial_run": {
+    "CAT-300": 2208.1,
+    "CAT-410": 1132.1,
+    "CAT-413": 1527.1
+  },
+  "training_runtime_source": "Initial full run stdout before hybrid failed on missing RT-402 symlink; rerun reused OOF for scoring/reporting.",
+  "training_runtime_total_s_from_initial_run": 4867.299999999999,
+  "versions": {
+    "catboost": "1.2.10",
+    "lightgbm": "4.7.0",
+    "numpy": "2.4.6",
+    "pandas": "3.0.5",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.17.1"
+  }
+}

@@ -1,0 +1,801 @@
+{
+  "RT-1216": {
+    "diagnostic_pack": {
+      "age_buckets": {
+        "0-5": {
+          "candidate": 0.5181831019671841,
+          "rt600": 0.5152445330859063
+        },
+        "100-1000000000": {
+          "candidate": 0.672664657011937,
+          "rt600": 0.675917278353309
+        },
+        "20-50": {
+          "candidate": 0.5797670676974762,
+          "rt600": 0.5894557799021534
+        },
+        "5-20": {
+          "candidate": 0.5460558392895415,
+          "rt600": 0.5520505250854593
+        },
+        "50-100": {
+          "candidate": 0.6147359274895453,
+          "rt600": 0.6169058332601237
+        }
+      },
+      "dominant_cell": {
+        "candidate": 0.6739864917323464,
+        "rt600": 0.6777110899011463
+      },
+      "fold": 0,
+      "label": "RT-1216",
+      "mature_vs_neverbreak": {
+        "candidate": 0.6702901614034252,
+        "rt600": 0.676800868805288
+      },
+      "mature_vs_prebreak": {
+        "candidate": 0.6843006661684251,
+        "rt600": 0.6802509546650244
+      },
+      "t_buckets": {
+        "0-20": {
+          "candidate": 0.5596023360394778,
+          "rt600": 0.5300204619017298
+        },
+        "100-200": {
+          "candidate": 0.6315871209019707,
+          "rt600": 0.6390075342102901
+        },
+        "20-50": {
+          "candidate": 0.5521515066226288,
+          "rt600": 0.5680248975917097
+        },
+        "200-400": {
+          "candidate": 0.6396441705076538,
+          "rt600": 0.6359029050927087
+        },
+        "400-1000000000": {
+          "candidate": 0.6586858273836135,
+          "rt600": 0.666690084227326
+        },
+        "50-100": {
+          "candidate": 0.5648698288332288,
+          "rt600": 0.5790183020058499
+        }
+      },
+      "whole_fold": {
+        "candidate": 0.6342791898938198,
+        "rt600": 0.6382763032336511
+      },
+      "within_t_rank_corr_rt600": 0.8652758676630837
+    },
+    "ensemble_marginal": {
+      "fold": 0,
+      "gain_vs_base": 0.0012466369183825599,
+      "marginal_vs_clone": 0.0009365678242838626,
+      "rt600_7stream": 0.6382763032336511,
+      "rt600_plus_RT-1216": 0.6395229401520337,
+      "rt600_plus_seedclone": 0.6385863723277498
+    },
+    "pair_flow": {
+      "cell_never_break_neg": {
+        "damage": 1079,
+        "net_pair_lift": -151,
+        "repairs": 928,
+        "total_pairs_sampled": 15582
+      },
+      "cell_pre_break_neg": {
+        "damage": 843,
+        "net_pair_lift": 55,
+        "repairs": 898,
+        "total_pairs_sampled": 13378
+      },
+      "dominant_cell": {
+        "damage": 1027,
+        "net_pair_lift": -35,
+        "repairs": 992,
+        "total_pairs_sampled": 15598
+      },
+      "whole_fold": {
+        "damage": 1517,
+        "net_pair_lift": -67,
+        "repairs": 1450,
+        "total_pairs_sampled": 19562
+      }
+    },
+    "training": {
+      "fit_summaries": [
+        {
+          "fold": 0,
+          "runtime_s": 102.6,
+          "train_rows": 400000,
+          "ts_auc_scored": 0.6342791898938198,
+          "valid_rows": 806334
+        },
+        {
+          "fold": 1,
+          "runtime_s": 204.5,
+          "train_rows": 400000,
+          "valid_rows": 812939
+        },
+        {
+          "fold": 2,
+          "runtime_s": 303.8,
+          "train_rows": 400000,
+          "valid_rows": 806691
+        },
+        {
+          "fold": 3,
+          "runtime_s": 401.8,
+          "train_rows": 400000,
+          "valid_rows": 802506
+        },
+        {
+          "fold": 4,
+          "runtime_s": 499.4,
+          "train_rows": 400000,
+          "valid_rows": 804054
+        }
+      ],
+      "foldpure_oof_support_note": "Folds 1-4 were predicted only to provide fold-pure SCDF calibration support for the existing ensemble marginal path; no TS-AUC was computed or used for those folds.",
+      "importance_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1216.importance.csv",
+      "oof_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1216.npy",
+      "result_row": {
+        "agent": "codex-new-avenues",
+        "causal_verified": "harness.verify + prefix-invariance@module + future-mutation",
+        "date": "2026-08-24 20:11",
+        "experiment_id": "RT-1216",
+        "falsification_condition": "KILL if marginal_vs_clone < +0.0010, or if weighted CTM does not beat unweighted CTM on mature-vs-never-break AUC.",
+        "feature_set": "m00_core,m01_seq,m02_dist,m03_dyn,m04_resid,m06_loc,m07_bayes,m18_wctm",
+        "fold_std": 0.0,
+        "folds": "0",
+        "git_sha": "c6a1546",
+        "hypothesis": "Pilot 8 tests whether conformal test martingale weighting by a predictable benign-tail estimate improves never-break discrimination. The weighted CTM arm should add ensemble alpha beyond the seed clone and incumbent m07 e-processes.",
+        "lockbox_touched": "no",
+        "mean_oof_ts_auc": 0.6342791898938198,
+        "model": "lgbm",
+        "n_features": 508,
+        "notes": "Pilot 8 weighted conformal test martingale arm. Fold-0 screen only; folds 1-4 generated only as fold-pure SCDF calibration support.",
+        "objective": "binary",
+        "per_fold_ts_auc": "0.63428",
+        "persistence": "none",
+        "pooled_oof_ts_auc": 0.6342791898938198,
+        "protocol": "pilot_fold0_only",
+        "random_seed": 0,
+        "sample_mode": "uniform",
+        "status": "recorded",
+        "test_reduced_touched": "no",
+        "train_rows": 400000,
+        "train_series": 8000,
+        "training_runtime_s": 499.5
+      }
+    }
+  },
+  "RT-1217": {
+    "diagnostic_pack": {
+      "age_buckets": {
+        "0-5": {
+          "candidate": 0.5145991145135642,
+          "rt600": 0.5152445330859063
+        },
+        "100-1000000000": {
+          "candidate": 0.6675126893728619,
+          "rt600": 0.675917278353309
+        },
+        "20-50": {
+          "candidate": 0.5773288833272563,
+          "rt600": 0.5894557799021534
+        },
+        "5-20": {
+          "candidate": 0.545686248439622,
+          "rt600": 0.5520505250854593
+        },
+        "50-100": {
+          "candidate": 0.6088028297678715,
+          "rt600": 0.6169058332601237
+        }
+      },
+      "dominant_cell": {
+        "candidate": 0.6708327268563673,
+        "rt600": 0.6777110899011463
+      },
+      "fold": 0,
+      "label": "RT-1217",
+      "mature_vs_neverbreak": {
+        "candidate": 0.6681554542805351,
+        "rt600": 0.676800868805288
+      },
+      "mature_vs_prebreak": {
+        "candidate": 0.6783033406551409,
+        "rt600": 0.6802509546650244
+      },
+      "t_buckets": {
+        "0-20": {
+          "candidate": 0.5155968109943755,
+          "rt600": 0.5300204619017298
+        },
+        "100-200": {
+          "candidate": 0.6231741235632745,
+          "rt600": 0.6390075342102901
+        },
+        "20-50": {
+          "candidate": 0.563410908178421,
+          "rt600": 0.5680248975917097
+        },
+        "200-400": {
+          "candidate": 0.6308009405864331,
+          "rt600": 0.6359029050927087
+        },
+        "400-1000000000": {
+          "candidate": 0.6593925085575635,
+          "rt600": 0.666690084227326
+        },
+        "50-100": {
+          "candidate": 0.5668530507702666,
+          "rt600": 0.5790183020058499
+        }
+      },
+      "whole_fold": {
+        "candidate": 0.6298026946685278,
+        "rt600": 0.6382763032336511
+      },
+      "within_t_rank_corr_rt600": 0.8683079648073693
+    },
+    "ensemble_marginal": {
+      "fold": 0,
+      "gain_vs_base": 0.0005225060670264181,
+      "marginal_vs_clone": 0.0002124369729277209,
+      "rt600_7stream": 0.6382763032336511,
+      "rt600_plus_RT-1217": 0.6387988093006776,
+      "rt600_plus_seedclone": 0.6385863723277498
+    },
+    "pair_flow": {
+      "cell_never_break_neg": {
+        "damage": 1030,
+        "net_pair_lift": -93,
+        "repairs": 937,
+        "total_pairs_sampled": 15582
+      },
+      "cell_pre_break_neg": {
+        "damage": 901,
+        "net_pair_lift": -98,
+        "repairs": 803,
+        "total_pairs_sampled": 13378
+      },
+      "dominant_cell": {
+        "damage": 1044,
+        "net_pair_lift": -45,
+        "repairs": 999,
+        "total_pairs_sampled": 15598
+      },
+      "whole_fold": {
+        "damage": 1517,
+        "net_pair_lift": -137,
+        "repairs": 1380,
+        "total_pairs_sampled": 19562
+      }
+    },
+    "training": {
+      "fit_summaries": [
+        {
+          "fold": 0,
+          "runtime_s": 98.7,
+          "train_rows": 400000,
+          "ts_auc_scored": 0.6298026946685278,
+          "valid_rows": 806334
+        },
+        {
+          "fold": 1,
+          "runtime_s": 197.4,
+          "train_rows": 400000,
+          "valid_rows": 812939
+        },
+        {
+          "fold": 2,
+          "runtime_s": 294.6,
+          "train_rows": 400000,
+          "valid_rows": 806691
+        },
+        {
+          "fold": 3,
+          "runtime_s": 392.3,
+          "train_rows": 400000,
+          "valid_rows": 802506
+        },
+        {
+          "fold": 4,
+          "runtime_s": 492.1,
+          "train_rows": 400000,
+          "valid_rows": 804054
+        }
+      ],
+      "foldpure_oof_support_note": "Folds 1-4 were predicted only to provide fold-pure SCDF calibration support for the existing ensemble marginal path; no TS-AUC was computed or used for those folds.",
+      "importance_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1217.importance.csv",
+      "oof_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1217.npy",
+      "result_row": {
+        "agent": "codex-new-avenues",
+        "causal_verified": "harness.verify + prefix-invariance@module + future-mutation",
+        "date": "2026-08-24 20:19",
+        "experiment_id": "RT-1217",
+        "falsification_condition": "Control must not match or exceed weighted CTM on the never-break split; if it does, H1 weighting is killed.",
+        "feature_set": "m00_core,m01_seq,m02_dist,m03_dyn,m04_resid,m06_loc,m07_bayes,m18_uctm",
+        "fold_std": 0.0,
+        "folds": "0",
+        "git_sha": "c6a1546",
+        "hypothesis": "Pilot 8 tests whether conformal test martingale weighting by a predictable benign-tail estimate improves never-break discrimination. The unweighted CTM block is the binding control isolating the weighting rule.",
+        "lockbox_touched": "no",
+        "mean_oof_ts_auc": 0.6298026946685278,
+        "model": "lgbm",
+        "n_features": 508,
+        "notes": "Pilot 8 matched unweighted CTM control. Fold-0 screen only; folds 1-4 generated only as fold-pure SCDF calibration support.",
+        "objective": "binary",
+        "per_fold_ts_auc": "0.62980",
+        "persistence": "none",
+        "pooled_oof_ts_auc": 0.6298026946685278,
+        "protocol": "pilot_fold0_only",
+        "random_seed": 0,
+        "sample_mode": "uniform",
+        "status": "recorded",
+        "test_reduced_touched": "no",
+        "train_rows": 400000,
+        "train_series": 8000,
+        "training_runtime_s": 492.2
+      }
+    }
+  },
+  "RT-1218": {
+    "diagnostic_pack": {
+      "age_buckets": {
+        "0-5": {
+          "candidate": 0.5050457511269963,
+          "rt600": 0.5152445330859063
+        },
+        "100-1000000000": {
+          "candidate": 0.5335174409321185,
+          "rt600": 0.675917278353309
+        },
+        "20-50": {
+          "candidate": 0.51376063051903,
+          "rt600": 0.5894557799021534
+        },
+        "5-20": {
+          "candidate": 0.5120347489612159,
+          "rt600": 0.5520505250854593
+        },
+        "50-100": {
+          "candidate": 0.5198098642476552,
+          "rt600": 0.6169058332601237
+        }
+      },
+      "dominant_cell": {
+        "candidate": 0.5367566763137017,
+        "rt600": 0.6777110899011463
+      },
+      "fold": 0,
+      "label": "RT-1218",
+      "mature_vs_neverbreak": {
+        "candidate": 0.5405053538142789,
+        "rt600": 0.676800868805288
+      },
+      "mature_vs_prebreak": {
+        "candidate": 0.5262964332604673,
+        "rt600": 0.6802509546650244
+      },
+      "t_buckets": {
+        "0-20": {
+          "candidate": 0.4741490236654993,
+          "rt600": 0.5300204619017298
+        },
+        "100-200": {
+          "candidate": 0.5217868861903827,
+          "rt600": 0.6390075342102901
+        },
+        "20-50": {
+          "candidate": 0.49095460549071207,
+          "rt600": 0.5680248975917097
+        },
+        "200-400": {
+          "candidate": 0.5330112080162575,
+          "rt600": 0.6359029050927087
+        },
+        "400-1000000000": {
+          "candidate": 0.528176628657111,
+          "rt600": 0.666690084227326
+        },
+        "50-100": {
+          "candidate": 0.5121811517683005,
+          "rt600": 0.5790183020058499
+        }
+      },
+      "whole_fold": {
+        "candidate": 0.5256778853876939,
+        "rt600": 0.6382763032336511
+      },
+      "within_t_rank_corr_rt600": 0.1341477659239802
+    },
+    "ensemble_marginal": {
+      "fold": 0,
+      "gain_vs_base": -0.0019035570656907863,
+      "marginal_vs_clone": -0.0022136261597894835,
+      "rt600_7stream": 0.6382763032336511,
+      "rt600_plus_RT-1218": 0.6363727461679604,
+      "rt600_plus_seedclone": 0.6385863723277498
+    },
+    "pair_flow": {
+      "cell_never_break_neg": {
+        "damage": 4233,
+        "net_pair_lift": -2040,
+        "repairs": 2193,
+        "total_pairs_sampled": 15582
+      },
+      "cell_pre_break_neg": {
+        "damage": 4093,
+        "net_pair_lift": -2418,
+        "repairs": 1675,
+        "total_pairs_sampled": 13378
+      },
+      "dominant_cell": {
+        "damage": 4369,
+        "net_pair_lift": -2167,
+        "repairs": 2202,
+        "total_pairs_sampled": 15598
+      },
+      "whole_fold": {
+        "damage": 5375,
+        "net_pair_lift": -2297,
+        "repairs": 3078,
+        "total_pairs_sampled": 19562
+      }
+    },
+    "training": {
+      "m07_cols": [
+        "ev_tail_mix",
+        "ev_tail_ad",
+        "ev_disp_mix",
+        "ev_disp_ad",
+        "ev_pow_mix"
+      ],
+      "oof_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1218.npy",
+      "result_row": {
+        "agent": "codex-new-avenues",
+        "causal_verified": "existing m07 e-process columns only + no lockbox rows filled",
+        "date": "2026-08-24 20:19",
+        "experiment_id": "RT-1218",
+        "falsification_condition": "KILL if marginal_vs_clone < +0.0010 against RT600 + RT-401 seed clone.",
+        "feature_set": "m07_bayes::ev_tail_mix,m07_bayes::ev_tail_ad,m07_bayes::ev_disp_mix,m07_bayes::ev_disp_ad,m07_bayes::ev_pow_mix",
+        "fold_std": 0.0,
+        "folds": "0",
+        "git_sha": "c6a1546",
+        "hypothesis": "Pilot 8 H2 tests whether a parameter-free log-average of existing m07_bayes e-process log-capitals is useful as an eighth stream.",
+        "lockbox_touched": "no",
+        "mean_oof_ts_auc": 0.5256778853876939,
+        "model": "log_mean_evalue",
+        "n_features": 5,
+        "notes": "Pilot 8 H2 parameter-free e-value aggregation direct-score arm. Fold-0 screen only.",
+        "objective": "none",
+        "per_fold_ts_auc": "0.52568",
+        "persistence": "none",
+        "pooled_oof_ts_auc": 0.5256778853876939,
+        "protocol": "pilot_fold0_only",
+        "random_seed": 0,
+        "sample_mode": "none",
+        "status": "recorded",
+        "test_reduced_touched": "no",
+        "train_rows": 3226190,
+        "train_series": 8000,
+        "training_runtime_s": 1.3
+      },
+      "runtime_s": 1.3525581359863281
+    }
+  },
+  "branch": "research/new-avenues-pilots-2026",
+  "causal_checks": {
+    "deterministic_replay_ok": true,
+    "finite_and_peak_checks": {
+      "unweighted_all_finite": true,
+      "unweighted_peaks_dominate_current": true,
+      "weighted_all_finite": true,
+      "weighted_peaks_dominate_current": true
+    },
+    "future_mutation_prefix_ok": true,
+    "h2_column_indices": [
+      31,
+      33,
+      34,
+      36,
+      40
+    ],
+    "h2_evalue_cols": [
+      "ev_tail_mix",
+      "ev_tail_ad",
+      "ev_disp_mix",
+      "ev_disp_ad",
+      "ev_pow_mix"
+    ],
+    "h2_uses_only_preregistered_columns": true,
+    "harness_verify_unweighted": {
+      "message": "ok",
+      "ok": true
+    },
+    "harness_verify_weighted": {
+      "message": "ok",
+      "ok": true
+    },
+    "hist_tail_rate_clip": [
+      0.02,
+      0.3
+    ],
+    "m07_bayes_parity_note": "Pilot 8 H1 does not recompute m07_bayes; H2 reads only existing e-process log-capital columns and excludes the known BOCPD z/parity path.",
+    "module_prefix_invariance": {
+      "m18_uctm": [
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 8245
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 4119
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 6325
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 574
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 502
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 2088
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 318
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 655
+        }
+      ],
+      "m18_wctm": [
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 8245
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 4119
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 6325
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 574
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 502
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 2088
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 318
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 655
+        }
+      ]
+    },
+    "omega_min": 0.25,
+    "omega_predictability": {
+      "omega_max_observed": 1.0,
+      "omega_min_observed": 0.25,
+      "omega_row0_excludes_current": true,
+      "omega_row1_uses_prior_row": true
+    },
+    "tail_weight_threshold": 0.45,
+    "unweighted_cols": [
+      "uctm_tail_log",
+      "uctm_tail_pk",
+      "uctm_disp_log",
+      "uctm_disp_pk",
+      "uctm_dep_log",
+      "uctm_vc_log",
+      "uctm_pow_log",
+      "uctm_pow_pk"
+    ],
+    "weighted_cols": [
+      "wctm_tail_log",
+      "wctm_tail_pk",
+      "wctm_disp_log",
+      "wctm_disp_pk",
+      "wctm_dep_log",
+      "wctm_vc_log",
+      "wctm_pow_log",
+      "wctm_pow_pk"
+    ]
+  },
+  "continuation_arms": [],
+  "exp_ids": [
+    "RT-1216",
+    "RT-1217",
+    "RT-1218"
+  ],
+  "feature_build_runtime_s": 393.63802099227905,
+  "feature_cache": {
+    "m18_uctm": {
+      "cols": [
+        "uctm_tail_log",
+        "uctm_tail_pk",
+        "uctm_disp_log",
+        "uctm_disp_pk",
+        "uctm_dep_log",
+        "uctm_vc_log",
+        "uctm_pow_log",
+        "uctm_pow_pk"
+      ],
+      "dev_series": 8000,
+      "lockbox_rows_filled": 0,
+      "module": "m18_uctm",
+      "shape": [
+        5036517,
+        8
+      ]
+    },
+    "m18_wctm": {
+      "cols": [
+        "wctm_tail_log",
+        "wctm_tail_pk",
+        "wctm_disp_log",
+        "wctm_disp_pk",
+        "wctm_dep_log",
+        "wctm_vc_log",
+        "wctm_pow_log",
+        "wctm_pow_pk"
+      ],
+      "dev_series": 8000,
+      "lockbox_rows_filled": 0,
+      "module": "m18_wctm",
+      "shape": [
+        5036517,
+        8
+      ]
+    },
+    "runtime_s": 393.63802099227905
+  },
+  "feature_definitions": {
+    "h2_evalue_cols": [
+      "ev_tail_mix",
+      "ev_tail_ad",
+      "ev_disp_mix",
+      "ev_disp_ad",
+      "ev_pow_mix"
+    ],
+    "hist_tail_rate_clip": [
+      0.02,
+      0.3
+    ],
+    "omega_min": 0.25,
+    "tail_weight_threshold": 0.45,
+    "unweighted_cols": [
+      "uctm_tail_log",
+      "uctm_tail_pk",
+      "uctm_disp_log",
+      "uctm_disp_pk",
+      "uctm_dep_log",
+      "uctm_vc_log",
+      "uctm_pow_log",
+      "uctm_pow_pk"
+    ],
+    "weighted_cols": [
+      "wctm_tail_log",
+      "wctm_tail_pk",
+      "wctm_disp_log",
+      "wctm_disp_pk",
+      "wctm_dep_log",
+      "wctm_vc_log",
+      "wctm_pow_log",
+      "wctm_pow_pk"
+    ]
+  },
+  "feature_modules": [
+    "m18_wctm",
+    "m18_uctm"
+  ],
+  "generated": "2026-08-24",
+  "head_sha": "c6a1546",
+  "interpretation": "No Pilot 8 arm cleared the preregistered 5-fold continuation gate. This kills or shelves the exact weighted CTM and parameter-free e-value aggregation constructions under the fold-0 screen and exhausts the planned first-sweep queue.",
+  "overall_continuation_status": "FIRST_SWEEP_EXHAUSTED",
+  "prereg_sha": "83c3994",
+  "rt600_sentinel": {
+    "diffs": {
+      "dominant_cell": -2.943492131479708e-06,
+      "fold0_e0": -3.696766348815217e-06,
+      "fold0_e1_seedclone": -3.627672250150482e-06,
+      "mean": 1.2639463216057578e-06,
+      "pooled": -7.432652926464556e-08
+    },
+    "dominant_cell": 0.6642770565078685,
+    "expected": {
+      "dominant_cell": 0.66428,
+      "fold0_e0": 0.63828,
+      "fold0_e1_seedclone": 0.63859,
+      "mean": 0.62581,
+      "pooled": 0.625627
+    },
+    "fold0_e0": 0.6382763032336511,
+    "fold0_e1_seedclone": 0.6385863723277498,
+    "mean": 0.6258112639463216,
+    "ok": true,
+    "per_fold": [
+      0.6382763032336511,
+      0.6204018503410609,
+      0.6339302291124634,
+      0.6175075054046519,
+      0.6189404316397805
+    ],
+    "pooled": 0.6256269256734708
+  },
+  "runtime_s": 1651.5128271579742,
+  "verdicts": {
+    "RT-1216": {
+      "continuation_status": "KILL",
+      "gate_failures": [
+        {
+          "gate": "primary_marginal_vs_clone",
+          "message": "weighted CTM marginal_vs_clone is below +0.0010",
+          "observed": 0.0009365678242838626,
+          "threshold": 0.001
+        }
+      ],
+      "reason": "weighted CTM marginal_vs_clone is below +0.0010",
+      "verdict": "KILL"
+    },
+    "RT-1217": {
+      "continuation_status": "CONTROL",
+      "gate_failures": [],
+      "reason": "matched unweighted control",
+      "verdict": "CONTROL"
+    },
+    "RT-1218": {
+      "continuation_status": "KILL",
+      "gate_failures": [
+        {
+          "gate": "primary_marginal_vs_clone",
+          "message": "H2 marginal_vs_clone is below +0.0010",
+          "observed": -0.0022136261597894835,
+          "threshold": 0.001
+        }
+      ],
+      "reason": "H2 marginal_vs_clone is below +0.0010",
+      "verdict": "KILL"
+    }
+  },
+  "weighted_minus_unweighted_mature_vs_never": 0.0021347071228901005
+}

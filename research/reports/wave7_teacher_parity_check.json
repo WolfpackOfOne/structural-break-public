@@ -1,0 +1,7 @@
+{
+  "corr_binary_xentropy": 0.9999999999999999,
+  "auc_binary": 0.622237284298303,
+  "auc_xentropy": 0.622237284298303,
+  "auc_diff": 0.0,
+  "passed": true
+}

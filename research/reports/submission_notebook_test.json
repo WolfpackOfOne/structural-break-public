@@ -1,0 +1,14 @@
+{
+  "runtime_s": 20.002827167510986,
+  "n_series": 20,
+  "n_points": 10476,
+  "ms_per_point": 1.9093954913622553,
+  "deterministic": true,
+  "order_independent": true,
+  "future_poison_safe": true,
+  "all_finite": true,
+  "in_range": true,
+  "ts_auc_diagnostic_in_sample_do_not_quote": 0.9595016840482085,
+  "PASS": true,
+  "notebook": "/path/to/workspace/structural-break-claude-wave3/submissions/C_ensemble_deployable.ipynb"
+}
