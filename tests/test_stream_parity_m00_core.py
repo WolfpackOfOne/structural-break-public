@@ -14,6 +14,7 @@ import time
 
 import numpy as np
 import pytest
+from conftest import skip_on_missing_store
 
 from sbr.features.base import REGISTRY, load_all, make_ctx
 from sbr.stream.ctx import StreamCtx
@@ -192,7 +193,7 @@ def test_synthetic_coverage():
 # --------------------------------------------------------------------------
 def _real_ids(n=30, seed=11):
     from sbr.store import load_store
-    st = load_store()
+    st = skip_on_missing_store(load_store)
     rng = np.random.default_rng(seed)
     return st, [int(i) for i in rng.choice(st.n_series, size=n, replace=False)]
 

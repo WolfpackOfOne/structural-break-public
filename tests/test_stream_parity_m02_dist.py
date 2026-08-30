@@ -8,6 +8,7 @@ import time
 
 import numpy as np
 import pytest
+from conftest import skip_on_missing_store
 
 from sbr.features.base import REGISTRY, load_all, make_ctx
 from sbr.features.m02_dist import _sg, _up
@@ -200,7 +201,7 @@ def test_parity_real_store_bitwise():
     """>= 30 random real series from the competition store."""
     from sbr.store import load_store
 
-    st = load_store()
+    st = skip_on_missing_store(load_store)
     rng = np.random.default_rng(2026)
     idx = rng.choice(st.n_series, size=30, replace=False)
     for i in idx:

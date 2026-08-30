@@ -14,6 +14,7 @@ import time
 
 import numpy as np
 import pytest
+from conftest import skip_on_missing_store
 
 import sbr.stream.s_m03_dyn as S
 from sbr.features import m03_dyn as B
@@ -181,7 +182,7 @@ def test_bitwise_parity_synthetic(label, h, o):
 def test_bitwise_parity_real_store():
     from sbr.store import load_store
 
-    st = load_store()
+    st = skip_on_missing_store(load_store)
     rng = np.random.default_rng(2026)
     idx = rng.choice(st.n_series, size=30, replace=False)
     for i in idx:

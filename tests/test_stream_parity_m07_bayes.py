@@ -184,6 +184,7 @@ def test_parity_real_bitwise(i):
     _assert_parity(h, o, f"series{i}")
 
 
+@pytest.mark.skipif(_STORE is None, reason="store unavailable")
 def test_real_count():
     assert len(_IDS) >= 30
 

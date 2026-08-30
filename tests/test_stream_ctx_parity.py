@@ -5,6 +5,7 @@ bitwise identical, no module built on it can be.
 """
 import numpy as np
 import pytest
+from conftest import skip_on_missing_store
 
 from sbr.features.base import make_ctx
 from sbr.stream.ctx import TRANSFORM_NAMES, StreamCtx
@@ -61,7 +62,7 @@ def test_ctx_parity_bitwise(kind):
 
 def test_ctx_parity_real_store():
     from sbr.store import load_store
-    st = load_store()
+    st = skip_on_missing_store(load_store)
     rng = np.random.default_rng(7)
     for i in rng.integers(0, st.n_series, 12):
         h, o, _ = st.series(int(i))

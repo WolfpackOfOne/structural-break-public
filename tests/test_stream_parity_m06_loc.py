@@ -18,6 +18,7 @@ import time
 
 import numpy as np
 import pytest
+from conftest import skip_on_missing_store
 
 from sbr.features.base import REGISTRY, load_all, make_ctx
 from sbr.stream.ctx import StreamCtx
@@ -210,7 +211,7 @@ def test_synthetic_bitwise(idx):
 def test_real_store_bitwise():
     from sbr.store import load_store
 
-    st = load_store()
+    st = skip_on_missing_store(load_store)
     rng = np.random.default_rng(606)
     ids = rng.choice(st.n_series, size=30, replace=False)
     for i in ids:
@@ -222,7 +223,7 @@ def test_real_store_extremes_bitwise():
     """The shortest and the longest real online segments in the store."""
     from sbr.store import load_store
 
-    st = load_store()
+    st = skip_on_missing_store(load_store)
     n_on = st.meta.n_online.to_numpy()
     for i in list(np.argsort(n_on)[:3]) + list(np.argsort(n_on)[-3:]):
         h, o, _tau = st.series(int(i))
@@ -286,7 +287,7 @@ def test_n_cols_matches_batch():
 def test_timing_microseconds_per_observation(capsys):
     from sbr.store import load_store
 
-    st = load_store()
+    st = skip_on_missing_store(load_store)
     rng = np.random.default_rng(9)
     ids = rng.choice(st.n_series, size=5, replace=False)
 

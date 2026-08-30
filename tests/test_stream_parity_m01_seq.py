@@ -11,6 +11,7 @@ import time
 
 import numpy as np
 import pytest
+from conftest import skip_on_missing_store
 
 from sbr.features.base import REGISTRY, load_all, make_ctx
 from sbr.stream.ctx import StreamCtx
@@ -180,7 +181,7 @@ def test_bitwise_parity_synthetic(i):
 def _real_indices(k=30):
     from sbr.store import load_store
 
-    st = load_store()
+    st = skip_on_missing_store(load_store)
     rng = np.random.default_rng(4242)
     return st, sorted({int(i) for i in rng.integers(0, st.n_series, k + 8)})[:k]
 

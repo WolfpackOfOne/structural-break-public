@@ -24,12 +24,13 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 import numpy as np
 import pytest
 import wave8_common as W8
+from conftest import skip_on_missing_store
 from wave5_lib import FOLDS
 
 
 # --------------------------------------------------------------------------- 1
 def test_future_row_index_matches_direct_lookup():
-    d = W8.PL.Data()
+    d = skip_on_missing_store(W8.PL.Data)
     first_row, series_len = W8.row_layout(d)
     for h in (1, 50, 200):
         fut, valid = W8.future_row_index(d, h, first_row, series_len)
@@ -77,7 +78,7 @@ def test_nested_oof_regressor_purity_live():
     outer fold with a tiny row budget, so the assertion inside
     nested_oof_regressor itself is proven reachable and correct, not just
     the set arithmetic above."""
-    d = W8.PL.Data()
+    d = skip_on_missing_store(W8.PL.Data)
     mats, names = W8.PL.load_features(["m00_core"])
     keep_idx = np.arange(len(names))
     y = d.y.astype(np.float64)
@@ -101,13 +102,13 @@ def test_assert_no_forbidden_columns_catches_and_passes():
 
 
 def test_full_module_list_has_no_forbidden_columns():
-    _, names = W8.PL.load_features(W8.FULL)
+    _, names = skip_on_missing_store(W8.PL.load_features, W8.FULL)
     W8.assert_no_forbidden_columns(names)
 
 
 # --------------------------------------------------------------------------- 5
 def test_eligibility_diagnostic_shape_and_flag_logic():
-    d = W8.PL.Data()
+    d = skip_on_missing_store(W8.PL.Data)
     out = W8.eligibility_diagnostic(d, 200)
     assert out["horizon"] == 200
     assert len(out["buckets"]) > 0
@@ -120,7 +121,7 @@ def test_eligibility_diagnostic_shape_and_flag_logic():
 
 # --------------------------------------------------------------------------- 6
 def test_future_row_index_deterministic():
-    d = W8.PL.Data()
+    d = skip_on_missing_store(W8.PL.Data)
     fut1, valid1 = W8.future_row_index(d, 100)
     fut2, valid2 = W8.future_row_index(d, 100)
     assert np.array_equal(fut1, fut2)

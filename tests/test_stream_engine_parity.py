@@ -8,6 +8,7 @@ would have written into cache/features.
 
 import numpy as np
 import pytest
+from conftest import skip_on_missing_store
 
 from sbr.features.base import REGISTRY, load_all, make_ctx
 from sbr.store import load_store
@@ -40,7 +41,7 @@ def _compare(hist, online):
 
 @pytest.mark.parametrize("i0", [0, 137, 999, 4242, 7777])
 def test_engine_parity_real(i0):
-    st = load_store()
+    st = skip_on_missing_store(load_store)
     rng = np.random.default_rng(i0)
     for i in rng.integers(0, st.n_series, 3):
         h, o, _ = st.series(int(i))
@@ -71,7 +72,7 @@ def test_engine_parity_edge_cases():
 
 
 def test_manifest_stable():
-    st = load_store()
+    st = skip_on_missing_store(load_store)
     h, o, _ = st.series(0)
     a = StreamEngine().fit_historical(h).manifest()
     h2, o2, _ = st.series(500)

@@ -8,6 +8,7 @@ import time
 
 import numpy as np
 import pytest
+from conftest import skip_on_missing_store
 
 from sbr.features.base import REGISTRY, load_all, make_ctx
 from sbr.stream.ctx import StreamCtx
@@ -168,7 +169,7 @@ def test_parity_synthetic_bitwise(idx):
 def _real_indices(k=30, seed=4):
     from sbr.store import load_store
 
-    st = load_store()
+    st = skip_on_missing_store(load_store)
     rng = np.random.default_rng(seed)
     return st, [int(i) for i in rng.choice(st.n_series, size=k, replace=False)]
 
@@ -253,7 +254,7 @@ def test_prefix_invariance_and_poison():
 def test_timing_microseconds_per_observation(capsys):
     from sbr.store import load_store
 
-    st = load_store()
+    st = skip_on_missing_store(load_store)
     idx = [int(i) for i in np.random.default_rng(3).choice(st.n_series, 6, replace=False)]
 
     # warm-up (imports, BLAS handles, code paths)
