@@ -1,0 +1,7 @@
+2026-08-30T09:13:24 idle load1=2.74 threshold=6.50
+2026-08-30T09:19:13 busy load1=8.07 threshold=6.50 blockers=1
+  pid=39850 cpu=98.0 rss_kb=780496 cmd=python research/scripts/kimi_score_followups.py --all --include-context
+2026-08-30T09:24:41 busy load1=3.85 threshold=6.50 blockers=1
+  pid=40317 cpu=100.0 rss_kb=1165712 cmd=python research/scripts/kimi_score_followups.py --m03-az-score --baseline-stream RT-990 --include-context
+2026-08-30T09:39:41 idle load1=2.62 threshold=6.50
+2026-08-30T09:45:27 idle load1=5.55 threshold=6.50

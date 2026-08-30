@@ -61,13 +61,15 @@ Each agent will eventually write exactly one Markdown report under:
 
 research/multi_agent_frontier_20260829/responses/
 
+The report filename must include a unique identifier for the agent/model writing it, so independently written reports cannot collide.
+
 Suggested filenames:
 
-agent_01.md
-agent_02.md
-agent_03.md
-agent_04.md
-agent_05.md
+agent_01_UNIQUE_ID.md
+agent_02_UNIQUE_ID.md
+agent_03_UNIQUE_ID.md
+agent_04_UNIQUE_ID.md
+agent_05_UNIQUE_ID.md
 
 Agents must not modify another agent's response.
 

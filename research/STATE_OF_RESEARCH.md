@@ -1,9 +1,17 @@
 # STATE OF RESEARCH — 2026 ADIA Lab / CrunchDAO Structural Break Challenge (Real-Time Edition)
 **Research Director (Agent 0) · 2026-08-18 · 78 logged experiments · 8 agents · waves 1-6 complete**
 
+> **Archival snapshot.** This file is the Wave 1-6 summary, not the live status
+> page. Its opening "current champion" section describes the historical
+> `RT-131` within-timestep rank-average ensemble, which was later ruled
+> non-deployable because the inference cross-section does not exist. For the
+> live production anchor (`RT-600`), current external best (`RT-1257`, 0.6290 on
+> 2026-08-29), and the Arm-C residualization follow-up, start with
+> [`STATUS.md`](STATUS.md).
+
 ---
 
-## CURRENT CHAMPION — seven-stream rank-average ensemble (`RT-131`)
+## ARCHIVAL WAVE 1-6 CHAMPION — seven-stream rank-average ensemble (`RT-131`, non-deployable)
 
 | | |
 |---|---|
@@ -100,7 +108,7 @@ research gain.
 | `RT-101` `m00_core` alone (calibrated null evidence + LightGBM) | 0.56349 | +0.0430 |
 | `RT-100` best single model | 0.61500 | +0.0945 |
 | `RT-130` 4-stream ensemble | 0.62374 | +0.1032 |
-| **`RT-131` 7-stream ensemble** | **0.62524** | **+0.1047** |
+| **`RT-131` 7-stream ensemble (non-deployable rank average)** | **0.62524** | **+0.1047** |
 
 Paired series-level bootstrap (120 replicates, resampling whole series):
 champion − baseline 0 = **+0.0951, 95 % CI [+0.0841, +0.1059], 120/120 replicates positive**;
@@ -120,7 +128,7 @@ their code, so this is a reconstruction on our folds, not a byte-level replicati
 | + residual monitoring (~0.557) | `m00_core`+`m04_resid` | 0.6024 (screen fold 0) |
 | + LightGBM stack (~0.575–0.579) | `RT-101` `m00_core` alone, full 5-fold | 0.5635 |
 | — | `RT-100` best single model, full 5-fold | 0.6150 |
-| — | **`RT-131` ensemble, full 5-fold** | **0.6252** |
+| — | **`RT-131` ensemble, full 5-fold (non-deployable rank average)** | **0.6252** |
 
 We clear the public band by ~0.046 on 5-fold series-level OOF and by ~0.033 on
 the untouched lockbox.

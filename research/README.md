@@ -9,8 +9,8 @@ experiment layer on top of it.
 
 1. [`STATUS.md`](STATUS.md) — concise current state: production anchor,
    external score, active conclusion, where everything else lives.
-2. [`STATE_OF_RESEARCH.md`](STATE_OF_RESEARCH.md) — the full summary of
-   record: current champion, per-fold scores, lockbox confirmation.
+2. [`STATE_OF_RESEARCH.md`](STATE_OF_RESEARCH.md) — archival Wave 1-6 summary:
+   useful evidence, but its opening "current champion" section is stale.
 3. [`PROTOCOL.md`](PROTOCOL.md) — the binding rules (causal contract, fold
    discipline, lockbox) before you touch anything.
 4. [`FAILED_EXPERIMENTS.md`](FAILED_EXPERIMENTS.md) — so you don't
@@ -21,7 +21,7 @@ experiment layer on top of it.
 **Old reports are evidence, not live instructions.** Everything under
 `reports/` and `archive/` documents what was tried and what was concluded
 at the time — it is not a standing instruction to redo, resume, or follow
-that plan. Only `STATUS.md`, `STATE_OF_RESEARCH.md`, `PROTOCOL.md`,
+that plan. Only `STATUS.md`, `PROTOCOL.md`,
 `RESULTS.csv`, `FAILED_EXPERIMENTS.md`, and `RDOF_LEDGER.md` are canonical
 and current.
 
@@ -30,7 +30,7 @@ and current.
 | path | what it is |
 |---|---|
 | `STATUS.md` | concise current-state pointer — start here |
-| `STATE_OF_RESEARCH.md` | the full summary of record |
+| `STATE_OF_RESEARCH.md` | archival Wave 1-6 summary; do not use as live champion status |
 | `PROTOCOL.md` | the binding research protocol — validation rules, the causal contract, file ownership |
 | `RESULTS.csv` | experiment ledger, one row per run, appended under a file lock |
 | `EXPERIMENT_ID_MAP.md` | how experiment IDs (RT-xxx) are allocated |

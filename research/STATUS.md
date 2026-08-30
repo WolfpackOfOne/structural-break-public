@@ -1,9 +1,9 @@
 # STATUS
 
-Concise pointer to current state. For the full picture (per-fold scores,
-lockbox confirmation, what won/failed in detail) see
-[`STATE_OF_RESEARCH.md`](STATE_OF_RESEARCH.md) — this file is deliberately
-short and gets updated whenever that changes materially.
+Concise pointer to current state. [`STATE_OF_RESEARCH.md`](STATE_OF_RESEARCH.md)
+is an archival Wave 1-6 summary whose opening "current champion" section is
+stale; use this file for live production-anchor, external-score, and active
+research conclusions.
 
 - **Competition:** ADIA Lab / CrunchDAO Structural Break Challenge —
   **Real-Time Edition** (causal/streaming inference; break location unknown,
@@ -24,8 +24,14 @@ short and gets updated whenever that changes materially.
   on it, and the anchor has not moved (see above): promotion of `RT-1257` to
   production is an owner decision, and two deployment-hygiene items are open
   against the artifact first (§4 of that record).
-- **Current best deployable internal result:** RT-600 seven specialists,
-  pooled OOF ≈ 0.63828 (E0 in the Wave 7 T2 promotion battery).
+- **Production anchor:** still **`RT-600`** (see above) — `RT-1257` has not been
+  promoted, so the anchor has not moved.
+- **Best-scoring internal result not yet promoted:** `RT-1257` two-slot hybrid,
+  E2 mean OOF TS-AUC **0.627837664**, E2-E0 **+0.002026322** over the fixed
+  `RT-600` counterfactual. Deployable in the sense that it qualified as an
+  artifact and reached scoring; *not* the current anchor. For `RT-600` itself,
+  the canonical E0 scores are mean OOF **0.625811342** and pooled dev
+  **0.625626926**; **0.638276** is fold 0 only, not pooled OOF.
 - **Current research conclusion:** **CATBOOST SPECIALIST ACTIVATION 2026** is
   complete on `research/catboost-specialist-2026`. CAT-413 (`RT-1254`) and
   CAT-300 (`RT-1255`) are INTERESTING, CAT-410 (`RT-1256`) is KILL, and the
@@ -65,14 +71,44 @@ short and gets updated whenever that changes materially.
   five pilots (ORR, TGMC, SST, PCFB, CFEP), all KILL on the full population.
   Lives on the sibling branch `research/wave8-future-aware-distillation`
   (tag `wave8-future-aware-final`); not merged into this lineage.
-- **Latest major positive result:** W7-D3R same-prefix-vs-full-sequence
+- **Standing major positive result:** W7-D3R same-prefix-vs-full-sequence
   diagnostic (tag `wave7-d3r-information-frontier`) established the
   future-information limit (CASE 2) that later Wave 7/8 work is measured
-  against.
+  against. Still the reference point, but **CASE 2 is now only partially
+  right**: residualizing Arm C against endpoint/horizon variables shows a real
+  orthogonal residual on the never-break cut, so the limit was not purely
+  future information. See the Grok follow-up below.
+- **Latest Grok-response score follow-up:** Arm-C horizon residualization and
+  nested causal student are complete on this branch. First, `RT-991.npy` was
+  found in the Wave 8 OOF artifacts and the cross-fitted projection of
+  `logit(RT-991)` on `{n_online, n_online-t, t/n_online}` showed a real
+  residual: **0.685794** on the W7-D0 dominant cell, **+0.038303** over Arm B
+  (`RT-990`), with within-t rank rho **0.457016** vs Arm B. That lift is
+  **never-break-cut only** — on the pre-break cut the residual is
+  **−0.006822** against Arm B, so Arm C's raw pre-break lift is endpoint
+  information, not transferable structure. Second, a nested fold-pure
+  500-causal-feature student of that residual gives
+  `RT600 + residual_student` pooled whole-dev gain **+0.001973**, marginal vs
+  seed-clone blend **+0.001951** (**5/5 positive folds**, clearing the
+  **+0.0015** bar), never-break net rate **+0.003409**, and pre-break damage
+  rate **0.013672 < 0.015000** on the dominant pre-break cut. A light
+  combination with the current CatBoost hybrid is also positive:
+  `RT1257 + residual_student` is **+0.001396** mean whole-dev TS-AUC over
+  `RT-1257`, **+0.003422** over `RT-600`. Caveats that must travel with these
+  numbers: the gain is concentrated in folds 1 and 3 (t = 2.56 on five folds);
+  the standalone student-vs-Arm-B contrast is **2/5 positive** and not stable;
+  and the whole-dev damage rate is **0.015175**, above the gate value, which is
+  scoped to the pre-break cut only. This is **PROMOTE for confirmation only**,
+  not a production change or new RT ID. Reports:
+  [`reports/armc_residualization.md`](reports/armc_residualization.md),
+  [`reports/armc_residual_student/armc_residual_student.md`](reports/armc_residual_student/armc_residual_student.md),
+  and the roll-up
+  [`reports/grok_response_followup.md`](reports/grok_response_followup.md).
 - **Active research branch:** this worktree is
-  `research/catboost-specialist-2026`, forked from
-  `research/learner-diversity-2026@7e5ee4c` for the CatBoost specialist
-  activation audit; the canonical chain remains
+  `grok-response-issues-20260830`, a follow-up branch for addressing
+  `agent_05_grok46.md`. It was branched from
+  `research/multi-agent-frontier-20260829`, whose checked-in research state was
+  based on the CatBoost-specialist lineage. The canonical chain remains
   `research/current` (wave2 → wave3-integration → wave5-alpha → wave6-alpha →
   wave7-teacher-distillation → wave7-t2-promotion). Standalone sibling
   branches still worth checking: `research/wave8-future-aware-distillation`
@@ -214,13 +250,21 @@ short and gets updated whenever that changes materially.
     checkpoint **provenance fingerprint** that stops the run on mismatch, and
     test-isolated caches. `CRF-01` was verified unaffected. Detail in
     `EXPERIMENT_ID_MAP.md` and `crf02_acgn.md` §7.
-  - **Reading.** The representation × objective factorial is complete and empty, and
-    learned generative nulls are closed. **H-A** (representation saturation),
-    **H-B** (objective mismatch) and **H-E** (null misspecification) are all closed,
-    leaving **H-D**: the practical limit is the legal prefix itself and the residual
-    W7-D3R gap is predominantly **post-`t`** information. The remaining budget
-    belongs to deployment robustness rather than model search. Production `RT-600`
-    (external **0.6268**) is unchanged.
+  - **Reading at the time.** The representation × objective factorial is complete and
+    empty, and learned generative nulls are closed. **H-A** (representation
+    saturation), **H-B** (objective mismatch) and **H-E** (null misspecification)
+    are closed under the CRF tests. CRF left **H-D** as the working explanation:
+    the practical limit is the legal prefix itself and the residual W7-D3R gap is
+    predominantly **post-`t`** information.
+  - **2026-08-29 update.** The Arm-C horizon residualization follow-up challenges
+    that last inference: after removing a within-t endpoint/horizon projection,
+    the residual remains **+0.038303** dominant-cell AUC over Arm B.
+  - **2026-08-30 update.** A nested fold-pure causal student did shadow part of
+    that residual from the existing prefix feature bank, giving `RT600 +
+    residual_student` **+0.001973** pooled whole-dev gain and clearing the
+    pre-break damage cap (`0.013672 < 0.015000`). H-D is no longer sufficient as
+    a complete explanation; the remaining work is confirmation and deployment
+    costing, not feature expansion.
 - **Final Wave reports:** [`reports/wave4/`](reports/wave4/),
   [`reports/wave5/`](reports/wave5/), [`reports/wave6/`](reports/wave6/),
   [`reports/wave7/`](reports/wave7/); Wave 8's report is on the
@@ -229,9 +273,9 @@ short and gets updated whenever that changes materially.
   [`FINAL_ARCHITECTURE_FREEZE.md`](FINAL_ARCHITECTURE_FREEZE.md),
   [`FINAL_REPRODUCIBILITY_MANIFEST.json`](FINAL_REPRODUCIBILITY_MANIFEST.json).
 
-_Last updated: 2026-08-27 on `research/learner-diversity-2026`: Learner
-Diversity 2026 is complete. CatBoost is INTERESTING but not SERIOUS; TabM and
-RealMLP are INFEASIBLE; no combination opens and production `RT-600` remains
-unchanged. Update this file whenever the production anchor, external score, or
-active research conclusion changes — see `AGENTS.md` at the repo root for the
-update rule._
+_Last updated: 2026-08-30 on `grok-response-issues-20260830`: RT-1257 remains
+the best external read; production `RT-600` remains unchanged; Arm-C horizon
+residualization plus the nested residual student produced a confirmation-only
+score candidate. Update
+this file whenever the production anchor, external score, or active research
+conclusion changes — see `AGENTS.md` at the repo root for the update rule._

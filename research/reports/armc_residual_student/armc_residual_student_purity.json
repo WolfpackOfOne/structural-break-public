@@ -1,0 +1,170 @@
+{
+  "checked_outer_inner_pairs": 20,
+  "new_nested_failures": [],
+  "new_nested_passed": true,
+  "old_global_oof_contaminated_checks": 20,
+  "old_global_oof_total_checks": 20,
+  "old_global_oof_sentinel_catches_defect": true,
+  "artifact_parts": [
+    {
+      "outer_fold": 0,
+      "inner_fold": 1,
+      "finite_target_rows": 812939,
+      "target_rows": 812939,
+      "finite_outer_rows": 0,
+      "finite_non_target_rows": 0
+    },
+    {
+      "outer_fold": 0,
+      "inner_fold": 2,
+      "finite_target_rows": 806691,
+      "target_rows": 806691,
+      "finite_outer_rows": 0,
+      "finite_non_target_rows": 0
+    },
+    {
+      "outer_fold": 0,
+      "inner_fold": 3,
+      "finite_target_rows": 802506,
+      "target_rows": 802506,
+      "finite_outer_rows": 0,
+      "finite_non_target_rows": 0
+    },
+    {
+      "outer_fold": 0,
+      "inner_fold": 4,
+      "finite_target_rows": 804054,
+      "target_rows": 804054,
+      "finite_outer_rows": 0,
+      "finite_non_target_rows": 0
+    },
+    {
+      "outer_fold": 1,
+      "inner_fold": 0,
+      "finite_target_rows": 806334,
+      "target_rows": 806334,
+      "finite_outer_rows": 0,
+      "finite_non_target_rows": 0
+    },
+    {
+      "outer_fold": 1,
+      "inner_fold": 2,
+      "finite_target_rows": 806691,
+      "target_rows": 806691,
+      "finite_outer_rows": 0,
+      "finite_non_target_rows": 0
+    },
+    {
+      "outer_fold": 1,
+      "inner_fold": 3,
+      "finite_target_rows": 802506,
+      "target_rows": 802506,
+      "finite_outer_rows": 0,
+      "finite_non_target_rows": 0
+    },
+    {
+      "outer_fold": 1,
+      "inner_fold": 4,
+      "finite_target_rows": 804054,
+      "target_rows": 804054,
+      "finite_outer_rows": 0,
+      "finite_non_target_rows": 0
+    },
+    {
+      "outer_fold": 2,
+      "inner_fold": 0,
+      "finite_target_rows": 806334,
+      "target_rows": 806334,
+      "finite_outer_rows": 0,
+      "finite_non_target_rows": 0
+    },
+    {
+      "outer_fold": 2,
+      "inner_fold": 1,
+      "finite_target_rows": 812939,
+      "target_rows": 812939,
+      "finite_outer_rows": 0,
+      "finite_non_target_rows": 0
+    },
+    {
+      "outer_fold": 2,
+      "inner_fold": 3,
+      "finite_target_rows": 802506,
+      "target_rows": 802506,
+      "finite_outer_rows": 0,
+      "finite_non_target_rows": 0
+    },
+    {
+      "outer_fold": 2,
+      "inner_fold": 4,
+      "finite_target_rows": 804054,
+      "target_rows": 804054,
+      "finite_outer_rows": 0,
+      "finite_non_target_rows": 0
+    },
+    {
+      "outer_fold": 3,
+      "inner_fold": 0,
+      "finite_target_rows": 806334,
+      "target_rows": 806334,
+      "finite_outer_rows": 0,
+      "finite_non_target_rows": 0
+    },
+    {
+      "outer_fold": 3,
+      "inner_fold": 1,
+      "finite_target_rows": 812939,
+      "target_rows": 812939,
+      "finite_outer_rows": 0,
+      "finite_non_target_rows": 0
+    },
+    {
+      "outer_fold": 3,
+      "inner_fold": 2,
+      "finite_target_rows": 806691,
+      "target_rows": 806691,
+      "finite_outer_rows": 0,
+      "finite_non_target_rows": 0
+    },
+    {
+      "outer_fold": 3,
+      "inner_fold": 4,
+      "finite_target_rows": 804054,
+      "target_rows": 804054,
+      "finite_outer_rows": 0,
+      "finite_non_target_rows": 0
+    },
+    {
+      "outer_fold": 4,
+      "inner_fold": 0,
+      "finite_target_rows": 806334,
+      "target_rows": 806334,
+      "finite_outer_rows": 0,
+      "finite_non_target_rows": 0
+    },
+    {
+      "outer_fold": 4,
+      "inner_fold": 1,
+      "finite_target_rows": 812939,
+      "target_rows": 812939,
+      "finite_outer_rows": 0,
+      "finite_non_target_rows": 0
+    },
+    {
+      "outer_fold": 4,
+      "inner_fold": 2,
+      "finite_target_rows": 806691,
+      "target_rows": 806691,
+      "finite_outer_rows": 0,
+      "finite_non_target_rows": 0
+    },
+    {
+      "outer_fold": 4,
+      "inner_fold": 3,
+      "finite_target_rows": 802506,
+      "target_rows": 802506,
+      "finite_outer_rows": 0,
+      "finite_non_target_rows": 0
+    }
+  ]
+}
