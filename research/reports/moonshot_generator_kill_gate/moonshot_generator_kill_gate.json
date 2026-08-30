@@ -1,0 +1,111 @@
+{
+  "experiment": "moonshot_generator_kill_gate",
+  "generated": "2026-08-30 15:03:07",
+  "git_sha": "6ae2177",
+  "discharges": [
+    "agent_05_grok46.md section 5 (SNPE / ABC-SMC on a reconstructed generator)",
+    "agent_02_kimi_k3.md section 5 (DGP reverse-engineering -> simulation-based amortized inference)"
+  ],
+  "note": "Both agents proposed the same moonshot and the same kill gate, independently.",
+  "n_real_battery": 1361,
+  "n_simulated_transfer": 1200,
+  "n_simulated_series_used": 1200,
+  "transfer_protocol": "row-level TS-AUC on real fold 0; real feature modules m00_core + m07_bayes built on simulated series",
+  "grid_size": 36,
+  "real_battery": {
+    "break_rate": 0.5069801616458487,
+    "hist_mean_abs": 4.1113446178452675e-10,
+    "hist_sd_mean": 1.000000000007019,
+    "hist_kurt_median": 0.21187260265056418,
+    "transient_rate_mean": 0.08128959629846812,
+    "ar6_resid_logsd_auc": 0.5663124473530746,
+    "location_auc": 0.4759865223870926,
+    "scale_auc": 0.5612777813775676,
+    "dependence_auc": 0.5424372016674226,
+    "shape_auc": 0.5188189809715112
+  },
+  "best_simulator": {
+    "params": {
+      "ar_order": 6,
+      "phi": 0.15,
+      "phi_decay": 0.55,
+      "t_df": 20.0,
+      "garch_a": 0.05,
+      "garch_b": 0.8,
+      "garch_w": 0.05,
+      "break_rate": 0.5069801616458487,
+      "p_scale": 0.45,
+      "p_dep": 0.35,
+      "scale_jump": [
+        1.15,
+        2.0
+      ],
+      "dep_jump": [
+        0.3,
+        2.2
+      ]
+    },
+    "battery": {
+      "break_rate": 0.51,
+      "hist_mean_abs": 1.2217259132039018e-17,
+      "hist_sd_mean": 1.0,
+      "hist_kurt_median": 0.4188398666887849,
+      "transient_rate_mean": 0.08259903478179187,
+      "ar6_resid_logsd_auc": 0.5259353741496599,
+      "location_auc": 0.48614445778311327,
+      "scale_auc": 0.7665566226490597,
+      "dependence_auc": 0.5201330532212886,
+      "shape_auc": 0.4887955182072829
+    },
+    "matched": {
+      "location_auc": true,
+      "scale_auc": false,
+      "dependence_auc": true,
+      "shape_auc": true,
+      "ar6_resid_logsd_auc": true,
+      "transient_rate_mean": true,
+      "hist_kurt_median": true
+    },
+    "n_matched": 6,
+    "n_criteria": 7,
+    "loss": 5.374686636722031
+  },
+  "battery_tolerance": {
+    "location_auc": 0.04,
+    "scale_auc": 0.06,
+    "dependence_auc": 0.06,
+    "shape_auc": 0.06,
+    "ar6_resid_logsd_auc": 0.06,
+    "transient_rate_mean": 0.08,
+    "hist_kurt_median": 1.5
+  },
+  "gates": {
+    "battery_match": {
+      "n_matched": 6,
+      "n_criteria": 7,
+      "required": 6,
+      "passed": true
+    },
+    "transfer_auc_real_fold0": {
+      "observed": 0.5320629865420751,
+      "threshold": 0.55,
+      "passed": false
+    }
+  },
+  "real_trained_reference_auc": 0.6117469259346688,
+  "transfer_retention_of_real_reference": 0.2869249983737379,
+  "gates_power": {
+    "real_reference_auc": 0.6117469259346688,
+    "required_for_test_to_have_power": 0.6,
+    "passed": true,
+    "note": "If the real-trained reference is at or below the 0.55 transfer threshold, the transfer test cannot distinguish a wrong simulator from weak features and no verdict may be drawn from it."
+  },
+  "gates_retention": {
+    "retention": 0.2869249983737379,
+    "threshold": 0.6,
+    "passed": false
+  },
+  "n_real_fold0_rows": 806334,
+  "runtime_s": 295.1,
+  "verdict": "KILL both moonshots. Battery match 6/7 (required 6); simulator-trained transfer AUC on real fold 0 is 0.5321 against the 0.55 threshold both agents set, while the identical features and learner trained on REAL data reach 0.6117 on the same rows, so the simulator transfers 0.29 of the achievable lift against a 0.60 requirement. The features are not the problem; the generator is not the DGP. The expensive amortization stage is never entered."
+}

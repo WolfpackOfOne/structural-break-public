@@ -204,11 +204,115 @@ threshold its author set, but its correlation with the plain scale control is
 `0.684349` and residualised on that control it falls to `0.553682`. That is one
 fold-0 build's worth of evidence, not a claim of independent signal.
 
-M4 is the one to build first: it has the largest, cleanest screen margin, it was
-the author's own highest-probability mechanism, and the assumption it attacks —
-memoryless dwell in `m07_bayes` — is now measured false rather than merely
-suspected.
+M4 was built. Report: `research/reports/grok_m4_hsmm/grok_m4_hsmm.md`.
+
+## M4 Built — And Killed At Experiment C
+
+The premise held all the way to the ensemble and then stopped. The
+explicit-duration filter produces exactly the object the mechanism predicted:
+
+- The posterior is **not** monotone in `ab_fast` — within-`t` rank correlation
+  on the dominant cell is `0.137037`, far under the `0.90` kill line.
+- It carries real univariate signal: `hsmm_post_absorbing` alone scores
+  `0.558605` on the dominant cell, and the Bayes factor against the matched
+  geometric scores `0.543333`.
+- The disagreement with `ab_fast` clears its own gate at `0.539881` (≥ `0.52`).
+
+Experiment C, three fold-pure specialists on the same `m00_core + m07_bayes`
+base differing only in what is appended:
+
+| arm | marginal vs clone | positive folds |
+|---|---:|---:|
+| control, `{m00 + m07}` | `+0.001028` | 3/5 |
+| `+ dwell scalar` | `+0.000545` | 3/5 |
+| `+ HSMM posterior` | `+0.001149` | 4/5 |
+
+**Verdict: KILL**, and the reason the gate had to be rewritten is worth
+recording. The two conditions Grok wrote down — `marginal_vs_clone ≥ +0.0010`
+and *beats the dwell-scalar control by ≥ +0.0005* — are **both met**
+(`+0.001149` and `+0.000604`). They are still the wrong test:
+
+- The absolute marginal is carried by the **base**, which scores `+0.001028`
+  with no dwell channel of any kind. Gating on it credits the HSMM for
+  `m00 + m07`.
+- The dwell-scalar comparator is **negative** (`-0.000482` against the base), so
+  clearing it by `+0.0005` requires only not being harmful.
+
+Both conditions are therefore satisfiable by a channel that adds nothing. The
+contrast Experiment C actually names — "specialist on `{m00 + m07_old +
+m07_hsmm}` vs `{m00 + m07_old}`" — is `+0.000122`, positive on **2/5** folds.
+That is noise, and it is the number the verdict is taken on.
+
+So M4 joins the pattern: the mechanism's scientific claim is correct and
+measurable — dwell is not memoryless, and a filter built on that fact produces a
+channel the incumbent does not already contain — and the ensemble still does not
+want it. Of the five Grok mechanisms, four are now closed and one (M2
+delay-cloud) is screened but unbuilt.
 
 Operational rule for the remaining large jobs: check machine load before launch,
 then retry every 15 minutes until idle enough to run. Completed residual-student
 fold checkpoints are already saved and resumable.
+
+## Moonshot — Killed At Its Own Gate
+
+Grok's section 5 (SNPE / ABC-SMC on a reconstructed generator) and Kimi's
+section 5 (DGP reverse-engineering → simulation-based amortized inference) are
+the **same moonshot**, proposed independently under the independence rule, with
+the **same kill gate**. One run discharges both. Report:
+`research/reports/moonshot_generator_kill_gate/moonshot_generator_kill_gate.md`.
+
+No amortized posterior was trained. That is the gate's purpose.
+
+An AR(6) + persistent-variance + t-noise generator with permanent scale and
+dependence jumps was fitted by a bounded search over 24 configurations against
+the real artifact battery, then given every advantage: it picks its own best
+configuration against the real battery *before* transfer is measured.
+
+**The battery passes and the transfer fails.**
+
+| statistic | real | best simulator | matched |
+|---|---:|---:|---|
+| location AUC | `0.4760` | `0.4861` | yes |
+| scale AUC | `0.5613` | `0.7666` | **no** |
+| dependence AUC | `0.5424` | `0.5201` | yes |
+| shape AUC | `0.5188` | `0.4888` | yes |
+| AR(6) resid log-sd AUC | `0.5663` | `0.5259` | yes |
+| transient rate | `0.0813` | `0.0826` | yes |
+| hist kurtosis median | `0.2119` | `0.4188` | yes |
+
+Battery match `6/7`, clearing the `6` required. Then the transfer test, run as
+Grok specified it — the real feature modules `m00_core + m07_bayes` built on
+simulated series, trained at row level, scored by TS-AUC on real fold 0:
+
+| model | TS-AUC on real fold 0 |
+|---|---:|
+| trained on 1,200 simulated series | **`0.5321`** |
+| identical features and learner, trained on real data | `0.6117` |
+
+`0.5321` is below the `0.55` threshold both agents set, and it retains only
+`0.29` of the real-trained reference's lift over chance against a `0.60`
+requirement. The reference is the control that makes this readable: at `0.6117`
+the features clearly can see breaks, so the failure is the generator, not the
+representation.
+
+**Verdict: KILL both moonshots.** This is the outcome Grok predicted at his own
+`<30%`: "DGP misspecification is the default outcome."
+
+The methodological finding is worth more than the verdict. **Kimi's kill
+criterion (i) — battery match — would have greenlit this moonshot.** Matching
+the marginal artifact battery to `6/7` is not sufficient to identify the
+generator; the simulator reproduces the taxonomy strengths, the transient rate
+and the tail law while still transferring less than a third of the achievable
+signal. Only criterion (ii), the transfer test, carries weight here, and it
+should be the one any future generator is judged on.
+
+## Status Of The Five Mechanisms Plus Moonshot
+
+| mechanism | state |
+|---|---|
+| M1 T-orthogonal residual student | **PROMOTE for confirmation** — the only surviving candidate |
+| M2 delay-cloud predictive null | screened PROCEED (narrowly), not built |
+| M3 frozen cohort two-null atlas | KILL at screen |
+| M4 explicit-duration HSMM | KILL at Experiment C, after building |
+| M5 per-series C2ST | KILL at screen |
+| Moonshot simulator posterior | KILL at its own gate |

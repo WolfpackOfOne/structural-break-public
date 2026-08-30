@@ -1,0 +1,131 @@
+{
+  "experiment": "grok_m4_explicit_duration_absorbing_filter",
+  "generated": "2026-08-30 14:34:08",
+  "git_sha": "6ae2177",
+  "artifact_root": "/path/to/workspace/structural-break-wave6",
+  "implementation_note": ", stated precisely so the report does not overclaim. This is\nan explicit-duration two-component model of the CURRENT elevated episode, solved\nin closed form, not a full multi-state HSMM forward pass. The duration\ndistribution is explicit and non-geometric, which is the entire scientific\ncontent of M4; what is not modelled is transitions between multiple elevated\nregimes. Given an ongoing elevated episode of length r:\n\n    p(absorbing | r) = pi_A S_A(r) / (pi_A S_A(r) + (1 - pi_A) S_T(r))\n\nS_T is this series' own empirical survival of historical excursion lengths, so\nthe transient prior is per-series and causal. S_A is a Weibull survival with\nincreasing hazard and globally frozen hyper-parameters -- never fitted to y on\nthe scored fold. The emission magnitude cancels between the two components\nbecause both condition on \"elevated\", which is deliberate: magnitude is what\nm07_bayes already prices, and duration is the object M4 claims is missing.",
+  "frozen_hyperparameters": {
+    "weibull_shape": 1.5,
+    "weibull_scale": 512.0,
+    "prior_absorbing": 0.05,
+    "smooth_window": 64,
+    "note": "globally frozen; never fitted to y on any fold"
+  },
+  "cache": {
+    "cache": "/path/to/workspace/structural-break-multi-agent-frontier-20260829/research/oof/grok_m4_hsmm_channels.npy",
+    "loaded": true
+  },
+  "coverage_dev": 0.8423612605901416,
+  "rho_post_vs_ab_fast_within_t_cell": 0.13703653935121682,
+  "univariate": {
+    "hsmm_post_absorbing_cell": 0.5586049633613628,
+    "hsmm_logbf_vs_geometric_cell": 0.5433329250586674,
+    "disagreement_vs_ab_fast_cell": 0.539880791276217,
+    "disagreement_vs_ab_fast_mature_vs_never": 0.5425712212062512,
+    "ab_fast_cell": 0.6016770900660969
+  },
+  "gates": {
+    "monotone_in_ab_fast_kill": {
+      "rho": 0.13703653935121682,
+      "limit": 0.9,
+      "passed": true
+    },
+    "disagreement_univariate_cell": {
+      "auc": 0.539880791276217,
+      "threshold": 0.52,
+      "passed": true
+    },
+    "experiment_c": {
+      "primary_contrast": "hsmm arm minus {m00 + m07} control -- what Experiment C specifies",
+      "observed_increment": 0.0001218827661202404,
+      "increment_threshold": 0.0005,
+      "increment_positive_folds": 2,
+      "increment_positive_folds_required": 3,
+      "passed": false,
+      "literal_spec_reading": {
+        "marginal_vs_clone": 0.00114948982331875,
+        "threshold": 0.001,
+        "over_dwell_scalar": 0.0006040756346026299,
+        "must_beat_dwell_scalar_by": 0.0005,
+        "passed": true,
+        "why_not_used": "Both conditions are satisfiable by a channel that adds nothing. The absolute marginal is carried by the base specialist (+0.001028 with no dwell channel), and the dwell-scalar comparator is negative (-0.000482), so clearing it by +0.0005 requires only not being harmful."
+      }
+    }
+  },
+  "arms": {
+    "control_m00_m07": {
+      "E0": 0.6258113418832281,
+      "E1_plus_clone": 0.6258383121815279,
+      "E2_plus_candidate": 0.6268659192387264,
+      "marginal_vs_clone": 0.0010276070571985096,
+      "per_fold_marginal": [
+        -0.0006708173453269239,
+        0.0011972552387221613,
+        -0.0008337027147505838,
+        0.0010643926233793177,
+        0.004380907483968799
+      ],
+      "positive_folds": 3,
+      "standalone": {
+        "whole": 0.6040667450367401,
+        "dominant_cell": 0.6416625400368686,
+        "mature_vs_never": 0.6429999415893033,
+        "mature_vs_prebreak": 0.6378069746534755
+      }
+    },
+    "dwell_scalar": {
+      "E0": 0.6258113418832281,
+      "E1_plus_clone": 0.6258383121815279,
+      "E2_plus_candidate": 0.626383726370244,
+      "marginal_vs_clone": 0.0005454141887161201,
+      "per_fold_marginal": [
+        -0.0008861634601546875,
+        0.0009174380248881953,
+        -0.0009747794823987688,
+        0.0007184072285376653,
+        0.0029521686327088625
+      ],
+      "positive_folds": 3,
+      "standalone": {
+        "whole": 0.6024955300560464,
+        "dominant_cell": 0.6417561146051909,
+        "mature_vs_never": 0.6431032881405647,
+        "mature_vs_prebreak": 0.6378723777881107
+      }
+    },
+    "hsmm": {
+      "E0": 0.6258113418832281,
+      "E1_plus_clone": 0.6258383121815279,
+      "E2_plus_candidate": 0.6269878020048466,
+      "marginal_vs_clone": 0.00114948982331875,
+      "per_fold_marginal": [
+        0.0008854563261665449,
+        0.001153769329763299,
+        -0.001419026282200142,
+        0.0018061677755470962,
+        0.0033210819673177294
+      ],
+      "positive_folds": 4,
+      "standalone": {
+        "whole": 0.6042884666533458,
+        "dominant_cell": 0.6433854876015325,
+        "mature_vs_never": 0.6448617518923533,
+        "mature_vs_prebreak": 0.6391295978980501
+      }
+    }
+  },
+  "contrasts": {
+    "hsmm_minus_dwell_scalar": 0.0006040756346026299,
+    "hsmm_minus_control": 0.0001218827661202404,
+    "dwell_scalar_minus_control": -0.0004821928684823895,
+    "hsmm_minus_control_per_fold": [
+      0.0015562736714934688,
+      -4.3485908958862396e-05,
+      -0.0005853235674495583,
+      0.0007417751521677785,
+      -0.0010598255166510695
+    ],
+    "hsmm_minus_control_positive_folds": 2
+  },
+  "verdict": "KILL. The filter works and the premise holds -- the posterior is not monotone in ab_fast (rho 0.1370) and carries real univariate cell signal (0.558605) -- but it adds +0.000122 over the {m00 + m07} control at only 2/5 positive folds, against a +0.000500 requirement. Note that the spec's two literal conditions ARE met (marginal +0.001149 >= +0.0010; over dwell scalar +0.000604 >= +0.0005), and they are misleading here: the absolute marginal is carried by the base specialist, which scores +0.001028 with no dwell channel at all, and the dwell-scalar comparator is negative (-0.000482), so beating it requires only not being harmful. The dwell premise is real; the posterior does not convert it into ensemble marginal."
+}
