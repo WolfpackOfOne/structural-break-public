@@ -172,15 +172,42 @@ have. Orthogonality to the incumbent beats standalone strength here — the same
 pattern as Wave 7 T2 (`+0.00943` standalone, `+0.00024` at ensemble). Full
 record: `agent_02_kimi_audit.md` §D on the sibling branch.
 
-## Remaining Grok Mechanisms
+## Remaining Grok Mechanisms — Screened 2026-08-30
 
-| mechanism | Status | Next action |
+Every mechanism carried an explicit "Cheapest falsification" and a kill
+threshold in `agent_05_grok46.md`. All four were run at the author's own
+thresholds. Script: `research/scripts/grok_mechanism_screens.py`; report:
+`research/reports/grok_mechanism_screens/grok_mechanism_screens.md`.
+
+| mechanism | screen result | verdict |
 |---|---|---|
-| M3 frozen cohort two-null atlas | Still open and now first in queue. It is the next lowest-cost score-relevant check because it uses existing feature cache plus OOF arrays before any training. | Run the cheap cross-fitted atlas disagreement probe, then train only if it beats the deranged/control screen and keeps pre-break damage `<0.015`. |
-| M4 explicit-duration HSMM | Still open. Lower upside than M3 but high enough probability to probe. | First run the historical excursion survival-vs-geometric falsification; do not train the filter if historical dwell is geometric or redundant with `ab_fast`. |
-| M2 per-series delay-cloud predictive null | Still open. Requires new causal feature computation and should follow M3/M4 probes. | Start with the 400-row occupancy-disagreement falsification before building a stream. |
-| M5 per-series C2ST | Still open but lowest priority. | Only run after M3/M4/M2 unless a cheap length-matched linear C2ST probe beats Wasserstein by the declared margin. |
-| Moonshot simulator posterior | Not a next branch item. | Only worth the one-hour generator-transfer kill gate after the concrete prefix/reference-measure lanes are exhausted. |
+| M3 frozen cohort two-null atlas | Disagreement indicator `0.501655` on the mature-vs-never cut, continuous two-null residual `0.533826`, both below the `0.55` gate. The deranged atlas scores *higher* than the real one (gap `-0.011659`). | **KILL** |
+| M4 explicit-duration HSMM | Excursion dwell is strongly non-geometric: pooled hazard slope `-0.0138` in log-dwell, survival gap `0.3047` against the matched geometric, and the frailty control does not explain it (within-series slope `-0.0631`, mixture gap `0.2229`). | **PROCEED** |
+| M2 per-series delay-cloud predictive null | Occupancy disagreement `0.582653`, bootstrap 95% CI `[0.5589, 0.6057]`, lower bound clears the `0.55` gate at n=1200/class. | **PROCEED, narrowly** |
+| M5 per-series C2ST | Linear C2ST sits at chance, `0.503378` CI `[0.5007, 0.5411]`, while the Wasserstein control it must displace scores `0.591948` on identical windows — a margin of `-0.088570` against a required `+0.02`. | **KILL** |
+| Moonshot simulator posterior | Not screened. Correctly last in the author's own ranking; nothing above it has yet produced a promotable stream. | not started |
+
+Two results are worth carrying forward beyond the verdicts.
+
+**M3 dies in an informative way.** The two reference measures genuinely do
+disagree — within-`t` rank correlation between own-history and cohort atlas is
+only `0.240387`, mean absolute rank disagreement `0.282484` — so the family does
+not die of the second null being a copy of the first. It dies because the
+*disagreement* carries nothing while the population *level* does: atlas rank
+alone scores `0.596503` against own-z alone at `0.558822`. A within-`t`
+population level is exactly what `SmoothTimeCDFCal` already applies to scores.
+That answers the mechanism's own "information even on failure" question: yes, a
+population reference is already implicit in SCDF calibration.
+
+**M2's PROCEED is narrow and should be read as "not falsified".** It clears the
+threshold its author set, but its correlation with the plain scale control is
+`0.684349` and residualised on that control it falls to `0.553682`. That is one
+fold-0 build's worth of evidence, not a claim of independent signal.
+
+M4 is the one to build first: it has the largest, cleanest screen margin, it was
+the author's own highest-probability mechanism, and the assumption it attacks —
+memoryless dwell in `m07_bayes` — is now measured false rather than merely
+suspected.
 
 Operational rule for the remaining large jobs: check machine load before launch,
 then retry every 15 minutes until idle enough to run. Completed residual-student

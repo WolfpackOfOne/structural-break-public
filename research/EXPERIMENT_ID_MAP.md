@@ -1010,3 +1010,47 @@ E0 `0.625811342`; matched clone control E1 `0.625430459`; CatBoost hybrid E2
 `0.627837664`; primary `marginal_vs_clone = +0.002407205`; E2-E0
 `+0.002026322`; `5/5` folds positive; dominant-cell net `+158`;
 mature-vs-never net `+73`.
+
+---
+
+## 4. STALE `status` LABELS IN `RESULTS.csv`, RECORDED 2026-08-30
+
+`research/PROTOCOL.md` says the ledger is appended through `sbr.pipeline.run(...)`
+under a file lock and is never hand-edited, and §1 of this file says historical
+rows keep what they were written with, forever. Both rules are correct and neither
+is being broken here. But a rule that rows are immutable only works if the place
+that *interprets* them is kept current, and that place is this file.
+
+Two rows carry a `status` of `NEW CHAMPION` that has since been superseded, and
+nothing in the ledger itself says so.
+
+| row | `status` as written | what is actually true now |
+|---|---|---|
+| `RT-130` | `NEW CHAMPION` (2026-08-18) | Superseded. The four-stream blend was overtaken within the same wave. |
+| `RT-131` | `NEW CHAMPION` (2026-08-18) | **Superseded and non-deployable.** §2 of this file already records `RT-131` as **ORACLE / ILLEGAL**: it is a within-timestep cross-sectional rank average, and the inference-time cross-section does not exist. It was never a champion in any deployable sense. |
+
+These are the only two rows in the file whose `status` reads `NEW CHAMPION`.
+Both date from 2026-08-18 and neither was ever amended, because amending them is
+exactly what the protocol forbids.
+
+**How to read the ledger's `status` column.** It records the verdict *at the time
+the row was appended*, against the evidence available then. It is not a standing
+claim. For current state, use `STATUS.md`; for what an ID means, use this file.
+A reader who takes `RT-131,…,NEW CHAMPION` at face value will conclude that the
+project's champion is an illegal estimator, which is the specific failure §1 of
+this file was written to prevent.
+
+### On the "wave-1 fossil" characterisation
+
+The Kimi agent response (`agent_02_kimi_k3.md`, discrepancy note (i)) reports the
+`RT-131` label above and is **right about it**. The same note also calls
+`RESULTS.csv` "a wave-1 fossil", and that part is **wrong**: the file holds 267
+data rows and is current to 2026-08-27, including the `RT-1254`/`RT-1255`/
+`RT-1257` CatBoost rows filed in §3 above. The DeepSeek response
+(`agent_01_deepseek_v4_pro.md`) made a stronger version of the same error
+("77/78 rows nogit") and it was corrected in `agent_01_deepseek_audit.md`.
+
+Two agents independently mistook a genuine stale label on two rows for the file
+being stale. The defect is real and narrow; the inference from it was not. Both
+halves are recorded here so the next reader inherits the correction rather than
+repeating it.
