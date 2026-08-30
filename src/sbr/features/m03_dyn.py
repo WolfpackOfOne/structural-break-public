@@ -135,8 +135,12 @@ def _local(z: np.ndarray, e: np.ndarray, off: int) -> dict:
         d[f"h{s}"] = dd * dd
 
     # --- complexity: order-3 ordinal patterns ----------------------------
-    a = np.empty_like(z); a[:2] = 0.0; a[2:] = z[:-2]
-    b = np.empty_like(z); b[:1] = 0.0; b[1:] = z[:-1]
+    a = np.empty_like(z)
+    a[:2] = 0.0
+    a[2:] = z[:-2]
+    b = np.empty_like(z)
+    b[:1] = 0.0
+    b[1:] = z[:-1]
     code = 4 * (a > b).astype(np.int64) + 2 * (a > z).astype(np.int64) + (b > z).astype(np.int64)
     for i, pc in enumerate(PCODES):
         d[f"p{i}"] = (code == pc).astype(np.float64)
@@ -223,9 +227,11 @@ class _Cal:
                 else:
                     v = np.sort(v)          # cheaper than 5x np.quantile
                     k = v.size - 1
-                    p05 = v[int(0.05 * k)]; q1 = v[int(0.25 * k)]
+                    p05 = v[int(0.05 * k)]
+                    q1 = v[int(0.25 * k)]
                     m = v[int(0.5 * k)]
-                    q3 = v[int(0.75 * k)]; p95 = v[int(0.95 * k)]
+                    q3 = v[int(0.75 * k)]
+                    p95 = v[int(0.95 * k)]
                     mus[i] = m
                     sds[i] = max((q3 - q1) / 1.349, (p95 - p05) / 3.29, 1e-9)
             p = (mus, np.log(sds))
@@ -352,7 +358,6 @@ def _hj_comp(R, W, tend):
 @register("m03_dyn", version="1", owner="agent7")
 def build(ctx):
     n = ctx.n
-    hp = ctx.hp
 
     zh = np.asarray(ctx.hist_tr["mean"], dtype=np.float64)
     eh = np.asarray(ctx.hist_tr.get("res_mean", ctx.hist_tr["mean"]), dtype=np.float64)
@@ -372,7 +377,7 @@ def build(ctx):
     cal = _Cal(cum_h, nh)
 
     tend = np.arange(n, dtype=np.int64)
-    L = tend + 1.0
+    tend + 1.0
     W_exp = tend + 1
     W_half = np.maximum(W_exp // 2, 1)
     W_quart = np.maximum(W_exp // 4, 1)

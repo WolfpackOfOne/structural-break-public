@@ -619,17 +619,24 @@ class StreamM03Dyn:
             self._grow()
         pad = self._pad
         i = pad + t
-        zp = self._zp; ep = self._ep; aeb = self._ae; e2b = self._e2
-        sgb = self._sg; cz = self._cz
+        zp = self._zp
+        ep = self._ep
+        aeb = self._ae
+        e2b = self._e2
+        sgb = self._sg
+        cz = self._cz
         vb = self._vb
 
         z = ctx.tr["mean"].item(t)
         e = ctx.tr[self._ekey].item(t)
         zp[i] = z
         ep[i] = e
-        ae = abs(e); aeb[i] = ae
-        e2 = e * e; e2b[i] = e2
-        sg = _sign(z); sgb[i] = sg
+        ae = abs(e)
+        aeb[i] = ae
+        e2 = e * e
+        e2b[i] = e2
+        sg = _sign(z)
+        sgb[i] = sg
         cz[i + 1] = cz[i] + z
 
         # --- dependence -----------------------------------------------------
@@ -639,31 +646,46 @@ class StreamM03Dyn:
         for q in ZLAGS:
             vb[k] = z * zp[i - q] if i >= q else 0.0
             k += 1
-        vb[k] = e; k += 1
-        vb[k] = e2; k += 1
-        vb[k] = e2 * e2; k += 1
+        vb[k] = e
+        k += 1
+        vb[k] = e2
+        k += 1
+        vb[k] = e2 * e2
+        k += 1
         for q in ELAGS:
             vb[k] = e * ep[i - q] if i >= q else 0.0
             k += 1
-        vb[k] = ae; k += 1
+        vb[k] = ae
+        k += 1
         for q in ALAGS:
             vb[k] = ae * aeb[i - q] if i >= q else 0.0
             k += 1
-        vb[k] = e2 * e2b[i - 1] if i >= 1 else 0.0; k += 1
-        vb[k] = sg; k += 1
-        vb[k] = sg * sg; k += 1
-        vb[k] = sg * sgb[i - 1] if i >= 1 else 0.0; k += 1
+        vb[k] = e2 * e2b[i - 1] if i >= 1 else 0.0
+        k += 1
+        vb[k] = sg
+        k += 1
+        vb[k] = sg * sg
+        k += 1
+        vb[k] = sg * sgb[i - 1] if i >= 1 else 0.0
+        k += 1
 
         # --- trend ------------------------------------------------------------
-        vb[k] = (float(i) - float(pad)) * z; k += 1
+        vb[k] = (float(i) - float(pad)) * z
+        k += 1
         dz = (z - zp[i - 1]) if i >= 1 else 0.0
         ddz = (z - 2.0 * zp[i - 1] + zp[i - 2]) if i >= 2 else 0.0
-        vb[k] = dz; k += 1
-        vb[k] = dz * dz; k += 1
-        vb[k] = ddz; k += 1
-        vb[k] = ddz * ddz; k += 1
-        vb[k] = _sign(dz); k += 1
-        vb[k] = _sign(z - zp[i - 8]) if i >= 8 else 0.0; k += 1
+        vb[k] = dz
+        k += 1
+        vb[k] = dz * dz
+        k += 1
+        vb[k] = ddz
+        k += 1
+        vb[k] = ddz * ddz
+        k += 1
+        vb[k] = _sign(dz)
+        k += 1
+        vb[k] = _sign(z - zp[i - 8]) if i >= 8 else 0.0
+        k += 1
 
         # --- spectral: windowed-DFT quadratures ---------------------------------
         ang = _TWO_PI * (FREQS * float(t))
@@ -677,7 +699,8 @@ class StreamM03Dyn:
                 dd = (cz[i + 1] - 2.0 * cz[i + 1 - s] + cz[i + 1 - 2 * s]) / _SQ2S[q]
             else:
                 dd = 0.0
-            vb[k] = dd * dd; k += 1
+            vb[k] = dd * dd
+            k += 1
 
         # --- complexity: order-3 ordinal patterns -------------------------------
         a = zp[i - 2] if i >= 2 else 0.0
@@ -701,7 +724,9 @@ class StreamM03Dyn:
         ix = self._ix
         bases = self._bases
         wi = self._wi
-        we = wi[0][t]; wh = wi[1][t]; wq = wi[2][t]
+        we = wi[0][t]
+        wh = wi[1][t]
+        wq = wi[2][t]
         scheme = ((_R1(C, we, t1, ix, bases), we),
                   (_R1(C, wh, t1, ix, bases), wh),
                   (_R1(C, wq, t1, ix, bases), wq))

@@ -90,7 +90,9 @@ def _block_counts(idx: np.ndarray, n_cat: int, L: int) -> np.ndarray:
 
 def _smooth_probs(counts: np.ndarray, alpha: float = ALPHA) -> np.ndarray:
     counts = np.asarray(counts, dtype=np.float64)
-    return (counts + alpha) / np.maximum(counts.sum(axis=-1, keepdims=True) + alpha * counts.shape[-1], EPS)
+    return (counts + alpha) / np.maximum(
+        counts.sum(axis=-1, keepdims=True) + alpha * counts.shape[-1], EPS
+    )
 
 
 def _transition_ref(hist_trans: np.ndarray) -> np.ndarray:

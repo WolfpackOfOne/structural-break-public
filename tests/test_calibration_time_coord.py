@@ -14,8 +14,7 @@ carries legacy payloads with no `time_coord` field at all.
 import numpy as np
 import pytest
 
-from sbr.production.calibration import (COORDS, DEFAULT_COORD, LEGACY_COORD,
-                                        SmoothTimeCDFCal)
+from sbr.production.calibration import COORDS, DEFAULT_COORD, LEGACY_COORD, SmoothTimeCDFCal
 
 
 @pytest.fixture(scope="module")

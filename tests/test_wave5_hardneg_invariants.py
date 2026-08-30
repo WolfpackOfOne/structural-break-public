@@ -40,8 +40,9 @@ pytestmark = pytest.mark.skipif(
 
 @pytest.fixture(scope="module")
 def env():
-    from sbr.pipeline import Data
     from wave5_e3_hardneg import FOLDS, HARD_FRAC, OVER_K, oversample_pool
+
+    from sbr.pipeline import Data
     d = Data()
     H = np.load(HARD, mmap_mode="r")
     return d, H, FOLDS, HARD_FRAC, OVER_K, oversample_pool

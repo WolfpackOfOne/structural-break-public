@@ -20,7 +20,9 @@ NULL_N = 700
 CLIP_Z = 10.0
 EPS = 1e-12
 
-CONTRAST_COLS = [f"contrast_sk_{b}" for b in BAND_NAMES] + [f"contrast_negent_{b}" for b in BAND_NAMES]
+CONTRAST_COLS = [f"contrast_sk_{b}" for b in BAND_NAMES] + [
+    f"contrast_negent_{b}" for b in BAND_NAMES
+]
 ENERGY_COLS = [f"energy_z_{b}" for b in BAND_NAMES]
 
 
@@ -123,7 +125,9 @@ def _loglin(y: np.ndarray, x: np.ndarray) -> np.ndarray:
     return out
 
 
-def _z(raw: np.ndarray, L: np.ndarray, params: dict[str, tuple[np.ndarray, np.ndarray]], key: str) -> np.ndarray:
+def _z(
+    raw: np.ndarray, L: np.ndarray, params: dict[str, tuple[np.ndarray, np.ndarray]], key: str
+) -> np.ndarray:
     out = np.full(len(raw), np.nan, dtype=np.float64)
     ok = np.isfinite(raw) & (L >= MIN_L)
     if not np.any(ok):

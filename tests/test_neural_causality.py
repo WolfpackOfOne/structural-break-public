@@ -21,13 +21,23 @@ import pytest
 
 torch = pytest.importorskip("torch")
 
-import sys, os
+import os  # noqa: E402
+import sys  # noqa: E402
+
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                                 "research", "scripts"))
-from wave6_neural_lib import (CHANNEL_NAMES, CausalTCN, FoldStandardiser, N_CHANNELS,
-                              PROD_MODULES, build_mlp, causal_channels, set_determinism)
+from wave6_neural_lib import (  # noqa: E402
+    CHANNEL_NAMES,
+    N_CHANNELS,
+    PROD_MODULES,
+    CausalTCN,
+    FoldStandardiser,
+    build_mlp,
+    causal_channels,
+    set_determinism,
+)
 
-from sbr.features.base import REGISTRY, load_all, make_ctx
+from sbr.features.base import REGISTRY, load_all, make_ctx  # noqa: E402
 
 TOL = 1e-8
 
@@ -197,7 +207,7 @@ def test_gate3_group_indicators_carry_no_within_timestep_information(loaded):
     """
     from sbr.metric import ts_auc_flat
     rng = np.random.default_rng(2026)
-    sizes, IND, ys, ts = None, [], [], []
+    _sizes, IND, ys, ts = None, [], [], []
     for k in range(18):
         n_online = int(rng.integers(150, 400))
         broke = k % 3 != 0
@@ -208,17 +218,20 @@ def test_gate3_group_indicators_carry_no_within_timestep_information(loaded):
         parts, sz = [], []
         for m in PROD_MODULES:
             names, A = loaded[m].fn(ctx)
-            parts.append(np.asarray(A, dtype=np.float64)); sz.append(len(names))
-        sizes = sz
+            parts.append(np.asarray(A, dtype=np.float64))
+            sz.append(len(names))
         F = np.hstack(parts)
         bad = ~np.isfinite(F)
         off, ind = 0, np.empty((len(F), len(sz)))
         for g, w in enumerate(sz):
-            ind[:, g] = bad[:, off:off + w].any(1); off += w
+            ind[:, g] = bad[:, off:off + w].any(1)
+            off += w
         IND.append(ind)
         ys.append((np.arange(n_online) >= tau).astype(np.int8))
         ts.append(np.arange(n_online, dtype=np.int64))
-    IND = np.vstack(IND); y = np.concatenate(ys); t = np.concatenate(ts)
+    IND = np.vstack(IND)
+    y = np.concatenate(ys)
+    t = np.concatenate(ts)
     worst = (None, 0.5)
     for g in range(IND.shape[1]):
         col = IND[:, g]

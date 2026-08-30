@@ -104,10 +104,10 @@ def build(ctx):
     # ---- short-vs-long contrast (transient vs persistent discrimination)
     for name in ("mean", "sq", "abs", "u2"):
         s = ctx.roll(name, 16)
-        l = ctx.roll(name, 128)
+        lg = ctx.roll(name, 128)
         e = ctx.expand(name)
         cols.append(f"sl_{name}_16_128")
-        out.append(s - l)
+        out.append(s - lg)
         cols.append(f"se_{name}_16_exp")
         out.append(s - e)
 

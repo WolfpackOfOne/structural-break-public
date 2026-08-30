@@ -14,9 +14,10 @@ sys.path.insert(0, NOVEL)
 sys.path.insert(0, SCRIPTS)
 sys.path.insert(0, SRC)
 
-import harness
-from sbr.features.base import REGISTRY, check_prefix_invariance, load_all, make_ctx
-from sbr.features.m14_spectral_impulse import (
+import harness  # noqa: E402
+
+from sbr.features.base import REGISTRY, check_prefix_invariance, load_all, make_ctx  # noqa: E402
+from sbr.features.m14_spectral_impulse import (  # noqa: E402
     CONTRAST_COLS,
     ENERGY_COLS,
     MIN_L,

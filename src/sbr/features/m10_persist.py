@@ -57,9 +57,10 @@ from __future__ import annotations
 import numpy as np
 
 from sbr.features.base import register
+
 # the null machinery is shared with m12_rdep rather than duplicated: same
 # construction, same tests, one place for it to be wrong.
-from sbr.features.m12_rdep import _GridNull, _WinNull, _cum, _roll, CLIP, EPS
+from sbr.features.m12_rdep import EPS, _cum, _GridNull, _WinNull
 
 WINDOWS = (32, 128)
 TRIM = 2                      #: points dropped from each tail-end of a window
@@ -201,7 +202,7 @@ def build(ctx):
         # many moderate exceedances (a regime change) vs few huge ones (outliers)
         add(f"{sname}_exc_shape", z_g - z_n)
         # a burst is CONTIGUOUS; scattered outliers are not
-        gn_r = _GridNull(exc_h, lambda seg: _max_run((seg > 0)))
+        gn_r = _GridNull(exc_h, lambda seg: _max_run(seg > 0))
         add(f"{sname}_exc_run", gn_r.z(L, _max_run(exc > 0)))
 
         # ---- persistence of the ROBUST scale channel -----------------------

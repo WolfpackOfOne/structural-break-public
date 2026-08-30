@@ -128,8 +128,8 @@ def _sr_log(x: np.ndarray, delta: float) -> np.ndarray:
     R_t = (1 + R_{t-1}) * exp(delta*x_t - delta^2/2), kept in log space so it
     never overflows (R grows exponentially once a break starts).
     """
-    l = np.ascontiguousarray(delta * x - 0.5 * delta * delta)
-    return _sr_log_kernel(l)
+    lg = np.ascontiguousarray(delta * x - 0.5 * delta * delta)
+    return _sr_log_kernel(lg)
 
 
 def _reflect(y: np.ndarray) -> np.ndarray:
@@ -385,7 +385,7 @@ def build(ctx):
     # ------------------------------------------------------------------ CUSUM (raw)
     cp50, cn50 = _cusum_pair(z, 0.5)
     hp50, hn50 = _cusum_pair(zh, 0.5)
-    ch50 = full_pack("cz50", np.maximum(cp50, cn50), np.maximum(hp50, hn50))
+    full_pack("cz50", np.maximum(cp50, cn50), np.maximum(hp50, hn50))
     one_col("cz50_up", _Chan(hp50, False).usur(cp50))
     one_col("cz50_dn", _Chan(hn50, False).usur(cn50))
 

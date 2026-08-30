@@ -172,20 +172,25 @@ def _occupancy_distances(u, w, bins=BINS):
     idx = np.clip((u * bins).astype(np.int64), 0, bins - 1)
     C = np.stack([_cum((idx == b).astype(np.float64)) for b in range(bins)])
     if w is None:
-        O = C[:, 1:] / np.arange(1, n + 1)
+        occ = C[:, 1:] / np.arange(1, n + 1)
         valid = np.ones(n, bool)
     else:
-        O = np.full((bins, n), np.nan)
+        occ = np.full((bins, n), np.nan)
         if w <= n:
-            O[:, w - 1:] = (C[:, w:] - C[:, :-w]) / w
-        valid = ~np.isnan(O[0])
+            occ[:, w - 1:] = (C[:, w:] - C[:, :-w]) / w
+        valid = ~np.isnan(occ[0])
     q = 1.0 / bins
     with np.errstate(invalid="ignore", divide="ignore"):
-        chi2 = np.nansum((O - q) ** 2, axis=0) / q
-        M = 0.5 * (O + q)
-        js = 0.5 * (np.nansum(np.where(O > 0, O * np.log(np.maximum(O, EPS) / np.maximum(M, EPS)), 0.0), axis=0)
-                    + np.nansum(np.where(M > 0, q * np.log(q / np.maximum(M, EPS)), 0.0), axis=0))
-        d = np.cumsum(O, axis=0) - np.cumsum(np.full(bins, q))[:, None]
+        chi2 = np.nansum((occ - q) ** 2, axis=0) / q
+        M = 0.5 * (occ + q)
+        js = 0.5 * (
+            np.nansum(
+                np.where(occ > 0, occ * np.log(np.maximum(occ, EPS) / np.maximum(M, EPS)), 0.0),
+                axis=0,
+            )
+            + np.nansum(np.where(M > 0, q * np.log(q / np.maximum(M, EPS)), 0.0), axis=0)
+        )
+        d = np.cumsum(occ, axis=0) - np.cumsum(np.full(bins, q))[:, None]
         ks = np.nanmax(np.abs(d), axis=0)
         w1 = np.nansum(np.abs(d), axis=0) / bins
         cvm = np.nansum(d ** 2, axis=0) / bins

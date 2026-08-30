@@ -47,7 +47,8 @@ class Store:
 
     def labels(self, i: int) -> np.ndarray:
         r = self.meta.iloc[i]
-        n = int(r.n_online); tau = int(r.tau_index)
+        n = int(r.n_online)
+        tau = int(r.tau_index)
         y = np.zeros(n, dtype=np.int8)
         if tau >= 0:
             y[tau:] = 1

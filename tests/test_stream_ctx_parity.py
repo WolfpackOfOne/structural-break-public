@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 
 from sbr.features.base import make_ctx
-from sbr.stream.ctx import StreamCtx, TRANSFORM_NAMES
+from sbr.stream.ctx import TRANSFORM_NAMES, StreamCtx
 
 
 def _synthetic(rng, n_hist, n_online, kind="mix"):
@@ -71,8 +71,10 @@ def test_ctx_parity_real_store():
 
 def test_hist_side_identical():
     rng = np.random.default_rng(0)
-    h = rng.standard_normal(3000); o = rng.standard_normal(50)
-    b = make_ctx(h, o); s = StreamCtx().fit_historical(h)
+    h = rng.standard_normal(3000)
+    o = rng.standard_normal(50)
+    b = make_ctx(h, o)
+    s = StreamCtx().fit_historical(h)
     assert b.hp.mu == s.hp.mu and b.hp.sd == s.hp.sd and b.hp.ar_sigma == s.hp.ar_sigma
     assert np.array_equal(b.hp.ar_coef, s.hp.ar_coef)
     assert np.array_equal(b.hp.ecdf_x, s.hp.ecdf_x)

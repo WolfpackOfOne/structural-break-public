@@ -14,9 +14,10 @@ sys.path.insert(0, NOVEL)
 sys.path.insert(0, SCRIPTS)
 sys.path.insert(0, SRC)
 
-import harness
-from sbr.features.base import REGISTRY, check_prefix_invariance, load_all, make_ctx
-from sbr.features.m17_observers import (
+import harness  # noqa: E402
+
+from sbr.features.base import REGISTRY, check_prefix_invariance, load_all, make_ctx  # noqa: E402
+from sbr.features.m17_observers import (  # noqa: E402
     DMD_COLS,
     DMD_DELAY,
     DMD_RANK,

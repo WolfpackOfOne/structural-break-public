@@ -74,8 +74,10 @@ class StreamEngine:
         self._widths = None
 
     # ------------------------------------------------------------------ fit
-    def fit_historical(self, hist) -> "StreamEngine":
-        self.ctx = StreamCtx(ar_order=self.ar_order).fit_historical(np.asarray(hist, dtype=np.float64))
+    def fit_historical(self, hist) -> StreamEngine:
+        self.ctx = StreamCtx(ar_order=self.ar_order).fit_historical(
+            np.asarray(hist, dtype=np.float64)
+        )
         for e in self._engines:
             e.fit_historical(self.ctx)
         self._cols = []

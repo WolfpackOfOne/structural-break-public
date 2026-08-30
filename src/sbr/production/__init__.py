@@ -1,1 +1,1 @@
-from sbr.production.model import ProductionModel, MODEL_FILE, MANIFEST_FILE  # noqa: F401
+from sbr.production.model import MANIFEST_FILE, MODEL_FILE, ProductionModel  # noqa: F401

@@ -48,15 +48,14 @@ import math
 import numpy as np
 
 from sbr.features.m01_seq import (
+    _LOG_PEAK_WIN,
     DECAY_HL,
     DYADIC,
     EPS,
     EWMA_HL,
-    PEAK_WIN_LOG2,
     SLOPE_K,
     SUR_CAP,
     ZCAP,
-    _LOG_PEAK_WIN,
     _Chan,
     _cusum_pair,
     _ewma,

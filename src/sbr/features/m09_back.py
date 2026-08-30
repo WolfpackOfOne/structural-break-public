@@ -104,7 +104,7 @@ def build(ctx):
         if tname not in ctx.cum:
             continue
         c = ctx.cum[tname]                       # cumsum with leading zero, len n+1
-        tot = c[1:]                              # sum of online[0..t]
+        c[1:]                              # sum of online[0..t]
         # historical per-point scale of this transform, for the denominator floor
         s1 = float(np.std(ctx.hist_tr[tname])) if tname in ctx.hist_tr else 1.0
         floor = max(1e-4 * s1, 1e-9)
@@ -147,7 +147,9 @@ def build(ctx):
 
             # the nuisance term the contrast removes: prefix vs HISTORY at the winning length
             mstar = np.maximum(L - kstar, 1.0)
-            pre_star = np.where(valid, (c[np.maximum(rows + 1 - kstar.astype(np.int64), 0)]) / mstar, np.nan)
+            pre_star = np.where(
+                valid, (c[np.maximum(rows + 1 - kstar.astype(np.int64), 0)]) / mstar, np.nan
+            )
             pre_z = np.asarray(ctx.nc.z(tname, mstar, np.nan_to_num(pre_star, nan=0.0)), float)
             pre_z = np.where(valid, np.clip(pre_z, -CLIP, CLIP), np.nan)
 
@@ -172,9 +174,12 @@ def build(ctx):
         mean = np.full(n, np.nan)
         if ok.any():
             mean[ok] = np.nanmean(M[:, ok], axis=0)
-        names.append("xb_max"); cols.append(mx)
-        names.append("xb_mean"); cols.append(mean)
-        names.append("xb_rng"); cols.append(mx - mn)
+        names.append("xb_max")
+        cols.append(mx)
+        names.append("xb_mean")
+        cols.append(mean)
+        names.append("xb_rng")
+        cols.append(mx - mn)
 
     out = np.empty((n, len(cols)), dtype=np.float32)
     for j, v in enumerate(cols):

@@ -15,10 +15,10 @@ import time
 import numpy as np
 import pytest
 
+import sbr.stream.s_m03_dyn as S
 from sbr.features import m03_dyn as B
 from sbr.features.base import REGISTRY, load_all, make_ctx
 from sbr.stream.ctx import StreamCtx
-import sbr.stream.s_m03_dyn as S
 from sbr.stream.s_m03_dyn import StreamM03Dyn
 
 MODULE = "m03_dyn"

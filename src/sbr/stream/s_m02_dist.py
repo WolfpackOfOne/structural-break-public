@@ -56,7 +56,8 @@ reported by the test suite.
 """
 from __future__ import annotations
 
-from bisect import bisect_left as _bl, bisect_right as _br
+from bisect import bisect_left as _bl
+from bisect import bisect_right as _br
 from math import sqrt as _sqrt
 
 import numpy as np
@@ -621,13 +622,17 @@ class StreamM02Dist:
             mu20[0] = (cu[t1] - cu[t1 - 32]) / 32
             mu220[0] = (cu2[t1] - cu2[t1 - 32]) / 32
         else:
-            M20[0] = 0.0; mu20[0] = 0.0; mu220[0] = 0.0
+            M20[0] = 0.0
+            mu20[0] = 0.0
+            mu220[0] = 0.0
         if ge128:
             np.subtract(top, C20[t1 - 128], out=M20[1])
             mu20[1] = (cu[t1] - cu[t1 - 128]) / 128
             mu220[1] = (cu2[t1] - cu2[t1 - 128]) / 128
         else:
-            M20[1] = 0.0; mu20[1] = 0.0; mu220[1] = 0.0
+            M20[1] = 0.0
+            mu20[1] = 0.0
+            mu220[1] = 0.0
         M20[2] = top
         wl20[2] = L
         mu20[2] = cu[t1] / L
@@ -644,7 +649,9 @@ class StreamM02Dist:
             np.subtract(Cab[t1], Cab[t1 - 128], out=M10[2])
             np.subtract(Crs[t1], Crs[t1 - 128], out=M10[3])
         else:
-            M10[1] = 0.0; M10[2] = 0.0; M10[3] = 0.0
+            M10[1] = 0.0
+            M10[2] = 0.0
+            M10[3] = 0.0
         M10[4] = C10[t1]
         M10[5] = Cab[t1]
         M10[6] = Crs[t1]
@@ -656,13 +663,20 @@ class StreamM02Dist:
         qf = self._quant(M20[1], 128.0) if ge128 else (nan, nan, nan)
 
         # ---- pull every needed statistic out as python floats ------------
-        chi2 = s20["chi2"].tolist(); js = s20["js"].tolist()
-        ks = s20["ks"].tolist(); ene = s20["ene"].tolist()
-        cvm = s20["cvm"].tolist(); w1 = s20["w1"].tolist()
-        ent = s10["ent"].tolist(); mxd = s10["maxdev"].tolist()
-        amax = s10["amax"].tolist(); hell = s10["hell"].tolist()
-        chi2b = s10["chi2"].tolist(); ksb = s10["ks"].tolist()
-        tv = s10["tv"].tolist(); jsb = s10["js"].tolist()
+        chi2 = s20["chi2"].tolist()
+        js = s20["js"].tolist()
+        ks = s20["ks"].tolist()
+        ene = s20["ene"].tolist()
+        cvm = s20["cvm"].tolist()
+        w1 = s20["w1"].tolist()
+        ent = s10["ent"].tolist()
+        mxd = s10["maxdev"].tolist()
+        amax = s10["amax"].tolist()
+        hell = s10["hell"].tolist()
+        chi2b = s10["chi2"].tolist()
+        ksb = s10["ks"].tolist()
+        tv = s10["tv"].tolist()
+        jsb = s10["js"].tolist()
 
         F = self._F
         X = self._X
@@ -670,19 +684,29 @@ class StreamM02Dist:
 
         # ---- divergence family ------------------------------------------
         if ge32:
-            nt = F[0]; o[0] = nan if nt is None else nt.up_of(chi2[0])
-            nt = F[1]; o[1] = nan if nt is None else nt.up_of(js[0])
-            nt = F[2]; o[2] = nan if nt is None else nt.up_of(ks[0])
-            nt = F[3]; o[3] = nan if nt is None else nt.up_of(ene[0])
+            nt = F[0]
+            o[0] = nan if nt is None else nt.up_of(chi2[0])
+            nt = F[1]
+            o[1] = nan if nt is None else nt.up_of(js[0])
+            nt = F[2]
+            o[2] = nan if nt is None else nt.up_of(ks[0])
+            nt = F[3]
+            o[3] = nan if nt is None else nt.up_of(ene[0])
         else:
             o[0] = o[1] = o[2] = o[3] = nan
         if ge128:
-            nt = F[4]; o[4] = nan if nt is None else nt.up_of(chi2[1])
-            nt = F[5]; o[5] = nan if nt is None else nt.up_of(js[1])
-            nt = F[6]; o[6] = nan if nt is None else nt.up_of(ks[1])
-            nt = F[7]; o[7] = nan if nt is None else nt.up_of(cvm[1])
-            nt = F[8]; o[8] = nan if nt is None else nt.up_of(w1[1])
-            nt = F[9]; o[9] = nan if nt is None else nt.up_of(ene[1])
+            nt = F[4]
+            o[4] = nan if nt is None else nt.up_of(chi2[1])
+            nt = F[5]
+            o[5] = nan if nt is None else nt.up_of(js[1])
+            nt = F[6]
+            o[6] = nan if nt is None else nt.up_of(ks[1])
+            nt = F[7]
+            o[7] = nan if nt is None else nt.up_of(cvm[1])
+            nt = F[8]
+            o[8] = nan if nt is None else nt.up_of(w1[1])
+            nt = F[9]
+            o[9] = nan if nt is None else nt.up_of(ene[1])
         else:
             o[4] = o[5] = o[6] = o[7] = o[8] = o[9] = nan
         for sl, val, xi in ((10, chi2[2], 0), (11, js[2], 1),
@@ -694,46 +718,63 @@ class StreamM02Dist:
 
         # ---- occupancy-shape family --------------------------------------
         if ge32:
-            nt = F[10]; o[16] = nan if nt is None else nt.sg_of(ent[0])
-            nt = F[11]; o[17] = nan if nt is None else nt.up_of(mxd[0])
+            nt = F[10]
+            o[16] = nan if nt is None else nt.sg_of(ent[0])
+            nt = F[11]
+            o[17] = nan if nt is None else nt.up_of(mxd[0])
         else:
             o[16] = o[17] = nan
         if ge128:
-            nt = F[12]; o[18] = nan if nt is None else nt.sg_of(ent[1])
-            nt = F[13]; o[19] = nan if nt is None else nt.up_of(mxd[1])
+            nt = F[12]
+            o[18] = nan if nt is None else nt.sg_of(ent[1])
+            nt = F[13]
+            o[19] = nan if nt is None else nt.up_of(mxd[1])
             o[20] = amax[1]
-            nt = F[14]; o[21] = nan if nt is None else nt.up_of(hell[1])
+            nt = F[14]
+            o[21] = nan if nt is None else nt.up_of(hell[1])
         else:
             o[18] = o[19] = o[20] = o[21] = nan
-        jm, nts = X[4]; o[22] = nan if jm is None else nts[jm[t]].sg_of(ent[4])
-        jm, nts = X[5]; o[23] = nan if jm is None else nts[jm[t]].up_of(mxd[4])
-        jm, nts = X[6]; o[24] = nan if jm is None else nts[jm[t]].up_of(tv[4])
+        jm, nts = X[4]
+        o[22] = nan if jm is None else nts[jm[t]].sg_of(ent[4])
+        jm, nts = X[5]
+        o[23] = nan if jm is None else nts[jm[t]].up_of(mxd[4])
+        jm, nts = X[6]
+        o[24] = nan if jm is None else nts[jm[t]].up_of(tv[4])
         o[25] = amax[4]
 
         # ---- quantile-deviation family ------------------------------------
         o[26], o[27], o[28] = qf
         o[29], o[30], o[31] = qe
         if ge128:
-            nt = F[15]; o[32] = nan if nt is None else nt.sg_of(qf[0])
-            nt = F[16]; o[33] = nan if nt is None else nt.sg_of(qf[1])
-            nt = F[17]; o[34] = nan if nt is None else nt.sg_of(qf[2])
+            nt = F[15]
+            o[32] = nan if nt is None else nt.sg_of(qf[0])
+            nt = F[16]
+            o[33] = nan if nt is None else nt.sg_of(qf[1])
+            nt = F[17]
+            o[34] = nan if nt is None else nt.sg_of(qf[2])
         else:
             o[32] = o[33] = o[34] = nan
-        jm, nts = X[7]; o[35] = nan if jm is None else nts[jm[t]].sg_of(qe[0])
-        jm, nts = X[8]; o[36] = nan if jm is None else nts[jm[t]].sg_of(qe[1])
+        jm, nts = X[7]
+        o[35] = nan if jm is None else nts[jm[t]].sg_of(qe[0])
+        jm, nts = X[8]
+        o[36] = nan if jm is None else nts[jm[t]].sg_of(qe[1])
 
         # ---- tail family --------------------------------------------------
         if n >= W_TAIL:
-            c = self.c_a05; nt = F[18]
+            c = self.c_a05
+            nt = F[18]
             o[37] = nan if nt is None else nt.sg_of((c[t1] - c[t1 - W_TAIL]) / W_TAIL)
-            c = self.c_a01; nt = F[19]
+            c = self.c_a01
+            nt = F[19]
             o[38] = nan if nt is None else nt.sg_of((c[t1] - c[t1 - W_TAIL]) / W_TAIL)
-            c = self.c_ctr; nt = F[20]
+            c = self.c_ctr
+            nt = F[20]
             o[39] = nan if nt is None else nt.sg_of((c[t1] - c[t1 - W_TAIL]) / W_TAIL)
         else:
             o[37] = o[38] = o[39] = nan
         ev05 = self.c_a05[t1] / L
-        jm, nts = X[9]; o[40] = nan if jm is None else nts[jm[t]].sg_of(ev05)
+        jm, nts = X[9]
+        o[40] = nan if jm is None else nts[jm[t]].sg_of(ev05)
         jm, nts = X[10]
         o[41] = nan if jm is None else nts[jm[t]].sg_of(self.c_a01[t1] / L)
         o[42] = ev05
@@ -756,18 +797,24 @@ class StreamM02Dist:
 
         # ---- CUSUM ----------------------------------------------------------
         o[45] = 20.0 if cu_u > 20.0 else (0.0 if cu_u < 0.0 else cu_u)
-        jm, nts = X[12]; o[46] = nan if jm is None else nts[jm[t]].up_of(cu_u)
+        jm, nts = X[12]
+        o[46] = nan if jm is None else nts[jm[t]].up_of(cu_u)
         o[47] = 20.0 if cu_r > 20.0 else (0.0 if cu_r < 0.0 else cu_r)
-        jm, nts = X[13]; o[48] = nan if jm is None else nts[jm[t]].up_of(cu_r)
+        jm, nts = X[13]
+        o[48] = nan if jm is None else nts[jm[t]].up_of(cu_r)
 
         # ---- |x - med| stream ------------------------------------------------
         if ge128:
-            nt = F[22]; o[49] = nan if nt is None else nt.up_of(chi2b[2])
-            nt = F[23]; o[50] = nan if nt is None else nt.up_of(ksb[2])
+            nt = F[22]
+            o[49] = nan if nt is None else nt.up_of(chi2b[2])
+            nt = F[23]
+            o[50] = nan if nt is None else nt.up_of(ksb[2])
         else:
             o[49] = o[50] = nan
-        jm, nts = X[14]; o[51] = nan if jm is None else nts[jm[t]].up_of(chi2b[5])
-        jm, nts = X[15]; o[52] = nan if jm is None else nts[jm[t]].up_of(jsb[5])
+        jm, nts = X[14]
+        o[51] = nan if jm is None else nts[jm[t]].up_of(chi2b[5])
+        jm, nts = X[15]
+        o[52] = nan if jm is None else nts[jm[t]].up_of(jsb[5])
         nt = F[24]
         if nt is None or not ge128:
             o[53] = nan
@@ -776,13 +823,18 @@ class StreamM02Dist:
 
         # ---- AR-residual stream ----------------------------------------------
         if ge128:
-            nt = F[25]; o[54] = nan if nt is None else nt.up_of(chi2b[3])
-            nt = F[26]; o[55] = nan if nt is None else nt.up_of(ksb[3])
-            nt = F[27]; o[56] = nan if nt is None else nt.up_of(jsb[3])
+            nt = F[25]
+            o[54] = nan if nt is None else nt.up_of(chi2b[3])
+            nt = F[26]
+            o[55] = nan if nt is None else nt.up_of(ksb[3])
+            nt = F[27]
+            o[56] = nan if nt is None else nt.up_of(jsb[3])
         else:
             o[54] = o[55] = o[56] = nan
-        jm, nts = X[16]; o[57] = nan if jm is None else nts[jm[t]].up_of(chi2b[6])
-        jm, nts = X[17]; o[58] = nan if jm is None else nts[jm[t]].up_of(jsb[6])
+        jm, nts = X[16]
+        o[57] = nan if jm is None else nts[jm[t]].up_of(chi2b[6])
+        jm, nts = X[17]
+        o[58] = nan if jm is None else nts[jm[t]].up_of(jsb[6])
 
         out = np.array(o, dtype=np.float32).astype(np.float64)
         bad = ~np.isfinite(out)

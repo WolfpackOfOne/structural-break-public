@@ -554,7 +554,7 @@ def _llr_matrix(g, g_prev):
     ``g_prev`` is the lag-1 stream (warm started from history at position 0),
     which is what makes the dependence components causal at t = 0.
     """
-    n = g.shape[0]
+    g.shape[0]
     cols, logw, fam, meta = [], [], [], []
     g2 = g * g
 
@@ -690,7 +690,7 @@ def build(ctx):
     lpo = _fam_lse(L, logw, fam, fnorm, 0)
     f_var = _fam_lse(L, logw, fam, fnorm, F_VAR)
     f_dep = _fam_lse(L, logw, fam, fnorm, F_DEP)
-    f_arch = _fam_lse(L, logw, fam, fnorm, F_ARCH)
+    _fam_lse(L, logw, fam, fnorm, F_ARCH)
     f_loc = _fam_lse(L, logw, fam, fnorm, F_LOC)
 
     # posterior over the mixture component GIVEN broken -> "what kind of break"

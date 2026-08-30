@@ -122,14 +122,14 @@ def _cases():
     out.append((_vol_cluster(rng, 2000), rng.standard_normal(250) * 6.0, "volclust_varbreak"))
 
     # --- break at tau = 0 --------------------------------------------------
-    for k, shift in enumerate((0.5, 3.0, 20.0)):
+    for _k, shift in enumerate((0.5, 3.0, 20.0)):
         o = rng.standard_normal(300) + shift
         out.append((rng.standard_normal(2500), o, f"tau0_shift{shift}"))
     o = rng.standard_normal(300) * 8.0
     out.append((rng.standard_normal(2500), o, "tau0_varshift"))
 
     # --- break at the LAST point ------------------------------------------
-    for k, shift in enumerate((3.0, 50.0)):
+    for _k, shift in enumerate((3.0, 50.0)):
         o = rng.standard_normal(400)
         o[-1] += shift
         out.append((rng.standard_normal(2500), o, f"lastbreak{shift}"))
@@ -138,7 +138,7 @@ def _cases():
     out.append((rng.standard_normal(1500), o, "lastbreak_shortonline"))
 
     # --- huge single outliers ---------------------------------------------
-    for k, mag in enumerate((1e6, 1e12, 1e30, -1e30)):
+    for _k, mag in enumerate((1e6, 1e12, 1e30, -1e30)):
         o = rng.standard_normal(300)
         o[137] = mag
         out.append((rng.standard_normal(2500), o, f"outlier{mag:g}"))
@@ -263,25 +263,32 @@ def test_timing_microseconds_per_obs(capsys):
     o = rng.standard_normal(999)
 
     # warm up (import/compile caches)
-    ctx = StreamCtx(); ctx.fit_historical(h)
-    eng = StreamM01Seq(); eng.fit_historical(ctx)
+    ctx = StreamCtx()
+    ctx.fit_historical(h)
+    eng = StreamM01Seq()
+    eng.fit_historical(ctx)
     for x in o[:20]:
-        ctx.push(x); eng.step(ctx)
+        ctx.push(x)
+        eng.step(ctx)
 
     best_step = float("inf")
     best_push = float("inf")
     best_fit = float("inf")
     for _ in range(5):
-        ctx = StreamCtx(); ctx.fit_historical(h)
+        ctx = StreamCtx()
+        ctx.fit_historical(h)
         eng = StreamM01Seq()
-        t0 = time.perf_counter(); eng.fit_historical(ctx); best_fit = min(best_fit, time.perf_counter() - t0)
+        t0 = time.perf_counter()
+        eng.fit_historical(ctx)
+        best_fit = min(best_fit, time.perf_counter() - t0)
         t0 = time.perf_counter()
         for x in o:
             ctx.push(x)
             eng.step(ctx)
         best_step = min(best_step, time.perf_counter() - t0)
 
-        ctx2 = StreamCtx(); ctx2.fit_historical(h)
+        ctx2 = StreamCtx()
+        ctx2.fit_historical(h)
         t0 = time.perf_counter()
         for x in o:
             ctx2.push(x)

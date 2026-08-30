@@ -42,6 +42,10 @@ import math
 import numpy as np
 
 from sbr.features.m04_resid import (
+    _GA,
+    _GB,
+    _HL22,
+    _HL63,
     A_MON,
     B_MON,
     BURN_MAX,
@@ -51,10 +55,6 @@ from sbr.features.m04_resid import (
     TIER_A,
     TIER_B,
     W_TR,
-    _GA,
-    _GB,
-    _HL22,
-    _HL63,
     _ewma_pred,
     _fit_ar_huber,
     _fit_ar_ridge,
@@ -258,7 +258,7 @@ class StreamM04Resid:
 
         cols: list[str] = []
         cap = self.cap
-        for ri, tag in enumerate(_REPS):
+        for _ri, tag in enumerate(_REPS):
             e_h = eh[tag]
             tier_a = tag in TIER_A
             want = A_MON if tier_a else B_MON

@@ -77,10 +77,37 @@ import numpy as np
 from scipy.special import ndtri
 
 from sbr.features.m07_bayes import (
-    AR_ORDER, ARCH_GRID, BET_C, BLK_STRIDE, BO_AL0, BO_HAZ, BO_HIST_MAX,
-    BO_KAP0, F_ARCH, F_DEP, F_LOC, F_VAR, GCLIP, GRAPA_K0, HAZ_FAST, HAZ_SLOW, MU_GRID,
-    POS_GRID, POW_EPS, RHO_GRID, R_MAX, VAR_GRID, ZCAP, _AddNull,
-    _bocpd_ct, _fam_lse, _fam_norm, _llr_matrix, _MargNull, _mix_bet, _PosNull,
+    AR_ORDER,
+    ARCH_GRID,
+    BET_C,
+    BLK_STRIDE,
+    BO_AL0,
+    BO_HAZ,
+    BO_HIST_MAX,
+    BO_KAP0,
+    F_ARCH,
+    F_DEP,
+    F_LOC,
+    F_VAR,
+    GCLIP,
+    GRAPA_K0,
+    HAZ_FAST,
+    HAZ_SLOW,
+    MU_GRID,
+    POS_GRID,
+    POW_EPS,
+    R_MAX,
+    RHO_GRID,
+    VAR_GRID,
+    ZCAP,
+    _AddNull,
+    _bocpd_ct,
+    _fam_lse,
+    _fam_norm,
+    _llr_matrix,
+    _MargNull,
+    _mix_bet,
+    _PosNull,
     _signed_surprise,
 )
 from sbr.transforms import _ar_resid, _fit_ar
@@ -659,9 +686,12 @@ class StreamM07Bayes:
         ghh = gh[-BO_HIST_MAX:] if gh.shape[0] > BO_HIST_MAX else gh
         bo = _BocpdStream(mu0, be0, BO_KAP0, BO_AL0, lbh, lb1, R_MAX)
         BH = np.array([bo.step(v) for v in ghh.tolist()], dtype=np.float64)
-        m = _MargNull(BH[:, 7]); self._mn_bo7 = (m.med, m.sd)
-        m = _MargNull(BH[:, 1]); self._mn_bo1 = (m.med, m.sd)
-        m = _MargNull(BH[:, 5]); self._mn_bo5 = (m.med, m.sd)
+        m = _MargNull(BH[:, 7])
+        self._mn_bo7 = (m.med, m.sd)
+        m = _MargNull(BH[:, 1])
+        self._mn_bo1 = (m.med, m.sd)
+        m = _MargNull(BH[:, 5])
+        self._mn_bo5 = (m.med, m.sd)
 
         # e-processes
         u_h = np.asarray(ctx.hist_tr["u"], dtype=np.float64)

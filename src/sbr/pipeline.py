@@ -13,7 +13,11 @@ also stamps the ledger row so the touch is permanently visible.
 """
 from __future__ import annotations
 
-import argparse, json, os, subprocess, time
+import json
+import os
+import subprocess
+import time
+
 import numpy as np
 import pandas as pd
 
@@ -157,7 +161,8 @@ def run(exp_id, modules, hypothesis, falsification, agent="agent0", model="lgbm"
                 # equal number of rows per series: stops long series dominating
                 s = d.sidx[tr_rows]
                 order = np.argsort(s, kind="stable")
-                tr_rows = tr_rows[order]; s = s[order]
+                tr_rows = tr_rows[order]
+                s = s[order]
                 bnd = np.flatnonzero(np.r_[True, s[1:] != s[:-1]])
                 per = max_train_rows // len(bnd)
                 sel = []
@@ -189,7 +194,10 @@ def run(exp_id, modules, hypothesis, falsification, agent="agent0", model="lgbm"
         per_fold.append(float(s))
         imp_sum += booster.feature_importance("gain")
         fold_rt.append(time.time() - t_start)
-        print(f"  fold {f}: TS-AUC {s:.5f}  ({len(tr_rows)} train rows, {len(va_rows)} valid rows)", flush=True)
+        print(
+            f"  fold {f}: TS-AUC {s:.5f}  ({len(tr_rows)} train rows, {len(va_rows)} valid rows)",
+            flush=True,
+        )
 
     dev_rows = d.rows_for(list(folds))
     overall = ts_auc_flat(oof[dev_rows], d.y[dev_rows], d.t[dev_rows])
@@ -197,9 +205,13 @@ def run(exp_id, modules, hypothesis, falsification, agent="agent0", model="lgbm"
         "experiment_id": exp_id, "date": time.strftime("%Y-%m-%d %H:%M"), "git_sha": git_sha(),
         "agent": agent, "hypothesis": hypothesis, "falsification_condition": falsification,
         "feature_set": ",".join(modules), "n_features": len(keep_idx), "model": model,
-        "objective": (params or {}).get("objective", "binary"), "folds": ",".join(map(str, folds)), "random_seed": seed,
+        "objective": (params or {}).get("objective", "binary"),
+        "folds": ",".join(map(str, folds)),
+        "random_seed": seed,
         "train_series": int((~np.isin(d.series_fold, [-1])).sum()),
-        "train_rows": int(min(max_train_rows, len(d.rows_for([x for x in (0,1,2,3,4) if x != folds[0]])))),
+        "train_rows": int(
+            min(max_train_rows, len(d.rows_for([x for x in (0, 1, 2, 3, 4) if x != folds[0]])))
+        ),
         "mean_oof_ts_auc": float(np.mean(per_fold)), "pooled_oof_ts_auc": float(overall),
         "per_fold_ts_auc": ";".join(f"{x:.5f}" for x in per_fold),
         "fold_std": float(np.std(per_fold)),
@@ -214,7 +226,9 @@ def run(exp_id, modules, hypothesis, falsification, agent="agent0", model="lgbm"
     if save_oof and not screen:
         os.makedirs(OOF, exist_ok=True)
         np.save(f"{OOF}/{exp_id}.npy", oof)
-        imp = pd.DataFrame({"feature": used_names, "gain": imp_sum}).sort_values("gain", ascending=False)
+        imp = pd.DataFrame({"feature": used_names, "gain": imp_sum}).sort_values(
+            "gain", ascending=False
+        )
         imp.to_csv(f"{OOF}/{exp_id}.importance.csv", index=False)
     append_result(res)
     print(json.dumps({k: res[k] for k in ("experiment_id", "mean_oof_ts_auc", "pooled_oof_ts_auc",
@@ -273,15 +287,19 @@ def apply_persistence(pred, d, rows, mode):
             out[b:e] = np.maximum.accumulate(v)
         elif mode.startswith("decaymax"):
             g = float(mode.split(":")[1]) if ":" in mode else 0.99
-            m = v[0]; res = np.empty_like(v)
+            m = v[0]
+            res = np.empty_like(v)
             for i, x in enumerate(v):
-                m = max(x, m * g); res[i] = m
+                m = max(x, m * g)
+                res[i] = m
             out[b:e] = res
         elif mode.startswith("ewma"):
             a = float(mode.split(":")[1]) if ":" in mode else 0.3
-            m = v[0]; res = np.empty_like(v)
+            m = v[0]
+            res = np.empty_like(v)
             for i, x in enumerate(v):
-                m = (1 - a) * m + a * x; res[i] = m
+                m = (1 - a) * m + a * x
+                res[i] = m
             out[b:e] = res
     return out
 
@@ -301,7 +319,7 @@ def append_result(res: dict):
         fcntl.flock(lk, fcntl.LOCK_UN)
 
 
-def evaluate_scores(scores: np.ndarray, folds=(0, 1, 2, 3, 4), d: "Data | None" = None):
+def evaluate_scores(scores: np.ndarray, folds=(0, 1, 2, 3, 4), d: Data | None = None):
     """TS-AUC of an arbitrary full-length score vector (NaN outside dev folds)."""
     d = d or Data()
     per = []

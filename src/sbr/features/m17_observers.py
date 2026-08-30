@@ -69,7 +69,9 @@ def _ar2_phi(hp: HistParams) -> np.ndarray:
     return phi
 
 
-def _kalman_pass(z: np.ndarray, phi: np.ndarray, q: float, r: float) -> tuple[np.ndarray, np.ndarray, float]:
+def _kalman_pass(
+    z: np.ndarray, phi: np.ndarray, q: float, r: float
+) -> tuple[np.ndarray, np.ndarray, float]:
     f = np.array([[phi[0], phi[1]], [1.0, 0.0]], dtype=np.float64)
     h = np.array([1.0, 0.0], dtype=np.float64)
     qmat = np.array([[q, 0.0], [0.0, 0.0]], dtype=np.float64)
@@ -119,7 +121,9 @@ def fit_kalman_observer(hist: np.ndarray, hp: HistParams | None = None) -> Kalma
             if best is None or key < (best[4], best[0], best[1]):
                 best = (float(q), float(r), x, p, nll)
     assert best is not None
-    return KalmanObserverState(phi=phi, q=best[0], r=best[1], x0=best[2], p0=best[3], history_nll=best[4])
+    return KalmanObserverState(
+        phi=phi, q=best[0], r=best[1], x0=best[2], p0=best[3], history_nll=best[4]
+    )
 
 
 def _acf1_scaled(x: np.ndarray, w: int) -> float:
@@ -225,7 +229,9 @@ def _effective_rank_series(v: np.ndarray, w: int) -> np.ndarray:
     if n < w:
         return out
     outer = np.einsum("ni,nj->nij", v, v, optimize=True)
-    csum = np.concatenate([np.zeros((1, v.shape[1], v.shape[1]), dtype=np.float64), np.cumsum(outer, axis=0)], axis=0)
+    csum = np.concatenate(
+        [np.zeros((1, v.shape[1], v.shape[1]), dtype=np.float64), np.cumsum(outer, axis=0)], axis=0
+    )
     grams = csum[w:] - csum[:-w]
     eig = np.linalg.eigvalsh(grams)
     sig = np.sqrt(np.clip(eig, 0.0, None))
@@ -277,7 +283,9 @@ def fit_hankel_dmd_observer(hist: np.ndarray, hp: HistParams | None = None) -> D
         "er32": _robust_null(er32),
         "er64": _robust_null(er64),
     }
-    return DmdObserverState(operator=a, operator_h5=a5, subspace=u_r, fitted_rank=fitted_rank, nulls=nulls)
+    return DmdObserverState(
+        operator=a, operator_h5=a5, subspace=u_r, fitted_rank=fitted_rank, nulls=nulls
+    )
 
 
 def hankel_dmd_features(ctx) -> np.ndarray:
@@ -308,12 +316,16 @@ def hankel_dmd_features(ctx) -> np.ndarray:
     h1 = np.full(n, np.nan, dtype=np.float64)
     ok1 = j >= 1
     if np.any(ok1):
-        h1[rows[ok1]] = np.linalg.norm(v_all[j[ok1] - 1] @ state.operator.T - cur[ok1], axis=1) / np.sqrt(d)
+        h1[rows[ok1]] = (
+            np.linalg.norm(v_all[j[ok1] - 1] @ state.operator.T - cur[ok1], axis=1) / np.sqrt(d)
+        )
 
     h5 = np.full(n, np.nan, dtype=np.float64)
     ok5 = j >= 5
     if np.any(ok5):
-        h5[rows[ok5]] = np.linalg.norm(v_all[j[ok5] - 5] @ state.operator_h5.T - cur[ok5], axis=1) / np.sqrt(d)
+        h5[rows[ok5]] = (
+            np.linalg.norm(v_all[j[ok5] - 5] @ state.operator_h5.T - cur[ok5], axis=1) / np.sqrt(d)
+        )
 
     sub = np.full(n, np.nan, dtype=np.float64)
     sub[rows] = _subspace_fraction(cur, state.subspace)

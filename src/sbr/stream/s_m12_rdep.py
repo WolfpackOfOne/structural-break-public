@@ -46,9 +46,15 @@ from __future__ import annotations
 import numpy as np
 
 from sbr.features.m12_rdep import (
-    BINS, WINDOWS, CLIP, EPS, LEN_GRID, N_RESTART,
-    _GridNull, _WinNull, _occupancy_distances, _dep_lr_path, _reflect_cusum,
-    _cum, _roll,
+    BINS,
+    CLIP,
+    EPS,
+    WINDOWS,
+    _dep_lr_path,
+    _GridNull,
+    _occupancy_distances,
+    _reflect_cusum,
+    _WinNull,
 )
 from sbr.nullcal import NullCal
 
@@ -59,10 +65,10 @@ K_DRIFT = 0.5
 _MAX_ONLINE = 1024
 
 
-def _dist_from_occupancy(O, bins=BINS):
+def _dist_from_occupancy(occ, bins=BINS):
     """The batch divergence block, applied to ONE occupancy column.
 
-    ``O`` must be ``(bins, 2)`` float64 with the occupancy in column 0; column 1
+    ``occ`` must be ``(bins, 2)`` float64 with the occupancy in column 0; column 1
     is padding and its value is discarded.
 
     WHY THE PADDING IS LOAD-BEARING.  Batch reduces a ``(bins, n)`` array along
@@ -79,11 +85,16 @@ def _dist_from_occupancy(O, bins=BINS):
     """
     q = 1.0 / bins
     with np.errstate(invalid="ignore", divide="ignore"):
-        chi2 = np.nansum((O - q) ** 2, axis=0) / q
-        M = 0.5 * (O + q)
-        js = 0.5 * (np.nansum(np.where(O > 0, O * np.log(np.maximum(O, EPS) / np.maximum(M, EPS)), 0.0), axis=0)
-                    + np.nansum(np.where(M > 0, q * np.log(q / np.maximum(M, EPS)), 0.0), axis=0))
-        d = np.cumsum(O, axis=0) - np.cumsum(np.full(bins, q))[:, None]
+        chi2 = np.nansum((occ - q) ** 2, axis=0) / q
+        M = 0.5 * (occ + q)
+        js = 0.5 * (
+            np.nansum(
+                np.where(occ > 0, occ * np.log(np.maximum(occ, EPS) / np.maximum(M, EPS)), 0.0),
+                axis=0,
+            )
+            + np.nansum(np.where(M > 0, q * np.log(q / np.maximum(M, EPS)), 0.0), axis=0)
+        )
+        d = np.cumsum(occ, axis=0) - np.cumsum(np.full(bins, q))[:, None]
         ks = np.nanmax(np.abs(d), axis=0)
         w1 = np.nansum(np.abs(d), axis=0) / bins
         cvm = np.nansum(d ** 2, axis=0) / bins
@@ -157,10 +168,10 @@ def _clip(r):
 
 def _pad2(col):
     """A (bins, 2) array whose column 0 is ``col``.  See _dist_from_occupancy."""
-    O = np.empty((len(col), 2), dtype=np.float64)
-    O[:, 0] = col
-    O[:, 1] = col
-    return O
+    occ = np.empty((len(col), 2), dtype=np.float64)
+    occ[:, 0] = col
+    occ[:, 1] = col
+    return occ
 
 
 class StreamM12Rdep:
@@ -291,7 +302,6 @@ class StreamM12Rdep:
         n = t + 1
         L = float(n)
         t1 = t + 1
-        hp = self.hp
         out = np.empty(len(self._cols), dtype=np.float64)
         i = 0
 
@@ -324,7 +334,7 @@ class StreamM12Rdep:
                     out[i] = _clip((Dw[k] - med) / sd) if ok else np.nan
                     i += 1
             else:
-                for k in DIST:
+                for _k in DIST:
                     out[i] = np.nan
                     i += 1
 
@@ -365,11 +375,16 @@ class StreamM12Rdep:
                 self.parg[key] = L
             if zp > 2.0:
                 self.pcnt[key] += 1
-            out[i] = zp; i += 1
-            out[i] = pk; i += 1
-            out[i] = dpk; i += 1
-            out[i] = np.log1p(L - self.parg[key]); i += 1
-            out[i] = self.pcnt[key] / L; i += 1
+            out[i] = zp
+            i += 1
+            out[i] = pk
+            i += 1
+            out[i] = dpk
+            i += 1
+            out[i] = np.log1p(L - self.parg[key])
+            i += 1
+            out[i] = self.pcnt[key] / L
+            i += 1
 
         # ---------- dependence LR, variance profiled out -------------------
         zl1 = float(ctx.tr["mean"][t - 1]) if t >= 1 else 0.0
@@ -383,11 +398,14 @@ class StreamM12Rdep:
         base = max((syy - 2 * self.phi0 * sxy + self.phi0 * self.phi0 * sxx) / m, EPS)
         lr = m * np.log(base / free)
         dl_exp_lr = self.sg_lr.z(n, lr)
-        out[i] = dl_exp_lr; i += 1
+        out[i] = dl_exp_lr
+        i += 1
         pe = phi - self.phi0
-        out[i] = -3.0 if pe < -3.0 else (3.0 if pe > 3.0 else pe); i += 1
+        out[i] = -3.0 if pe < -3.0 else (3.0 if pe > 3.0 else pe)
+        i += 1
         dl_exp_vlr = self.sg_v.z(n, free)
-        out[i] = dl_exp_vlr; i += 1
+        out[i] = dl_exp_vlr
+        i += 1
 
         for w in WINDOWS:
             if w <= n:
@@ -403,17 +421,24 @@ class StreamM12Rdep:
                              + self.phi0 * self.phi0 * sxxw) / mw, EPS)
                 lrw = mw * np.log(basew / freew)
                 ok, med, sd = self.wn_lr_s[w]
-                out[i] = _clip((lrw - med) / sd) if ok else np.nan; i += 1
+                out[i] = _clip((lrw - med) / sd) if ok else np.nan
+                i += 1
                 pw = phiw - self.phi0
-                out[i] = -3.0 if pw < -3.0 else (3.0 if pw > 3.0 else pw); i += 1
+                out[i] = -3.0 if pw < -3.0 else (3.0 if pw > 3.0 else pw)
+                i += 1
                 ok, med, sd = self.wn_v_s[w]
-                out[i] = _clip((freew - med) / sd) if ok else np.nan; i += 1
+                out[i] = _clip((freew - med) / sd) if ok else np.nan
+                i += 1
             else:
-                out[i] = np.nan; i += 1
-                out[i] = np.nan; i += 1
-                out[i] = np.nan; i += 1
+                out[i] = np.nan
+                i += 1
+                out[i] = np.nan
+                i += 1
+                out[i] = np.nan
+                i += 1
 
-        out[i] = dl_exp_lr - abs(dl_exp_vlr); i += 1
+        out[i] = dl_exp_lr - abs(dl_exp_vlr)
+        i += 1
 
         assert i == len(self._cols), (i, len(self._cols))
         out[~np.isfinite(out)] = np.nan
@@ -427,13 +452,16 @@ class StreamM12Rdep:
         self.Cbin = C
         for k in self.cums:
             a = self.cums[k]
-            b = np.zeros(self.cap + 1, dtype=np.float64); b[:len(a)] = a
+            b = np.zeros(self.cap + 1, dtype=np.float64)
+            b[:len(a)] = a
             self.cums[k] = b
         for name in ("c_xx", "c_xy", "c_yy"):
             a = getattr(self, name)
-            b = np.zeros(self.cap + 1, dtype=np.float64); b[:len(a)] = a
+            b = np.zeros(self.cap + 1, dtype=np.float64)
+            b[:len(a)] = a
             setattr(self, name, b)
         for key in list(self.pc):
             a = self.pc[key]
-            b = np.zeros(self.cap + 1, dtype=np.float64); b[:len(a)] = a
+            b = np.zeros(self.cap + 1, dtype=np.float64)
+            b[:len(a)] = a
             self.pc[key] = b

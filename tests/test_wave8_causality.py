@@ -15,14 +15,14 @@ Run to green BEFORE any SST/ORR/PCFB/CFEP/TGMC score is read.
 """
 from __future__ import annotations
 
-import os, sys
+import os
+import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                                 "research", "scripts"))
 
 import numpy as np
 import pytest
-
 import wave8_common as W8
 from wave5_lib import FOLDS
 

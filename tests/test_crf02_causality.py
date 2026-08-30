@@ -183,7 +183,7 @@ def test_p3b_pretrain_null_rejects_a_contaminated_series_set(data, monkeypatch):
 
 # ================================================ P4 history-only per-series state
 def test_p4_series_state_depends_only_on_its_own_history(spread):
-    for h, o, sid in spread:
+    for h, _o, sid in spread:
         a = K2.SeriesNull(h)
         b = K2.SeriesNull(np.array(h, copy=True))
         for f in ("mu", "sd", "sig", "last_hist"):
@@ -371,7 +371,8 @@ def test_c4_batch_composition_does_not_change_the_knots(spread, net64):
     T = max(len(n.hwin) for n in nulls)
 
     def pool(idx):
-        Z = np.zeros((len(idx), 1, T)); M = np.zeros((len(idx), T))
+        Z = np.zeros((len(idx), 1, T))
+        M = np.zeros((len(idx), T))
         for k, j in enumerate(idx):
             w = nulls[j].hwin
             Z[k, 0, :len(w)] = w
@@ -390,8 +391,10 @@ def test_c4_batch_composition_does_not_change_the_knots(spread, net64):
 
 # ============================================================ C5 deterministic
 def test_c5_deterministic_build_and_signals(spread):
-    d1 = set_determinism(0); n1 = K2.ACGN.build(11, d1).eval()
-    d2 = set_determinism(0); n2 = K2.ACGN.build(11, d2).eval()
+    d1 = set_determinism(0)
+    n1 = K2.ACGN.build(11, d1).eval()
+    d2 = set_determinism(0)
+    n2 = K2.ACGN.build(11, d2).eval()
     assert sha_state_dict(n1.state_dict()) == sha_state_dict(n2.state_dict())
     h, o, _ = spread[4]
     nl = K2.SeriesNull(h)
@@ -443,7 +446,8 @@ def test_c7b_shift_input_carries_the_last_history_point_not_a_zero(spread):
 
 
 def test_c7c_no_final_online_length_in_the_signal_path():
-    import ast, inspect
+    import ast
+    import inspect
     tree = ast.parse(inspect.getsource(K2.signals_from_knots))
     fn = tree.body[0]
     if fn.body and isinstance(fn.body[0], ast.Expr) and isinstance(fn.body[0].value, ast.Constant):

@@ -16,7 +16,7 @@ sys.path.insert(0, NOVEL)
 sys.path.insert(0, SCRIPTS)
 sys.path.insert(0, SRC)
 
-from pilot09_difficulty_gate import (
+from pilot09_difficulty_gate import (  # noqa: E402
     DEV_FOLDS,
     apply_derangement,
     derangement_audit,
@@ -37,7 +37,10 @@ def test_nested_plan_excludes_outer_and_predicted_folds():
             assert outer not in train_folds
             assert item["pred_fold"] not in train_folds
             assert item["predict_mask"].sum() == 4
-        assert fold_purity_ok([{k: v for k, v in item.items() if k in ("outer_fold", "pred_fold", "train_folds")} for item in plan])
+        assert fold_purity_ok([
+            {k: v for k, v in item.items() if k in ("outer_fold", "pred_fold", "train_folds")}
+            for item in plan
+        ])
 
 
 def test_derangement_has_no_fixed_points_and_preserves_fold_multiset():

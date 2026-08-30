@@ -287,9 +287,9 @@ class StreamM00Core:
         for name in self._sl_plan:
             c = cum[name]
             s = (c[t1] - c[t1 - 16]) / 16 if t1 >= 16 else np.nan
-            l = (c[t1] - c[t1 - 128]) / 128 if t1 >= 128 else np.nan
+            lg = (c[t1] - c[t1 - 128]) / 128 if t1 >= 128 else np.nan
             e = c[t1] / t1
-            ap(s - l)
+            ap(s - lg)
             ap(s - e)
 
         # ---- evidence-quantity conditioning columns -------------------------

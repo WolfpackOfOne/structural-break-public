@@ -25,7 +25,7 @@ import numpy as np
 from sbr.nullcal import NullCal
 from sbr.transforms import HistParams, ar_filter_causal, build_transforms
 
-REGISTRY: dict[str, "FeatureModule"] = {}
+REGISTRY: dict[str, FeatureModule] = {}
 
 
 @dataclass
@@ -39,7 +39,9 @@ class FeatureModule:
 
 def register(name: str, version: str = "1", owner: str = ""):
     def deco(fn):
-        REGISTRY[name] = FeatureModule(name=name, version=version, fn=fn, owner=owner, doc=fn.__doc__ or "")
+        REGISTRY[name] = FeatureModule(
+            name=name, version=version, fn=fn, owner=owner, doc=fn.__doc__ or ""
+        )
         return fn
     return deco
 
@@ -87,7 +89,9 @@ class SeriesCtx:
         return c[1:] / np.arange(1, self.n + 1)
 
 
-def make_ctx(hist: np.ndarray, online: np.ndarray, ar_order: int = 2, max_window: int | None = None) -> SeriesCtx:
+def make_ctx(
+    hist: np.ndarray, online: np.ndarray, ar_order: int = 2, max_window: int | None = None
+) -> SeriesCtx:
     hp = HistParams(hist, ar_order=ar_order)
     zh = (hist - hp.mu) / hp.sd
     from sbr.transforms import _ar_resid

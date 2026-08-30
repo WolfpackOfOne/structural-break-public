@@ -151,7 +151,9 @@ def _stats(C: np.ndarray, wl, B: int, mu=None, mu2=None, quant: bool = False) ->
         for p in QLEV:
             k = np.minimum((F < p).sum(1), B - 1)
             Fk = np.take_along_axis(F, k[:, None], 1)[:, 0]
-            Fkm = np.where(k > 0, np.take_along_axis(F, np.maximum(k - 1, 0)[:, None], 1)[:, 0], 0.0)
+            Fkm = np.where(
+                k > 0, np.take_along_axis(F, np.maximum(k - 1, 0)[:, None], 1)[:, 0], 0.0
+            )
             Q[p] = (k + (p - Fkm) / np.maximum(Fk - Fkm, 1e-12)) / B
         out["q50"] = Q[0.5] - 0.5
         out["qiqr"] = (Q[0.75] - Q[0.25]) - 0.5

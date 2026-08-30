@@ -69,7 +69,7 @@ class ProductionModel:
 
     # ------------------------------------------------------------------ io
     @classmethod
-    def load(cls, model_directory_path: str) -> "ProductionModel":
+    def load(cls, model_directory_path: str) -> ProductionModel:
         man = json.load(open(os.path.join(model_directory_path, MANIFEST_FILE)))
         members = cls._load_members(model_directory_path, man)
         m = cls(members, man)

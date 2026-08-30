@@ -110,7 +110,7 @@ def ts_auc_flat(
 def ts_auc_ragged(scores, labels, **kw):
     """Reference/parity entry point taking lists of per-series trajectories."""
     sc = np.concatenate([np.asarray(s, dtype=np.float64) for s in scores])
-    la = np.concatenate([np.asarray(l, dtype=np.int8) for l in labels])
+    la = np.concatenate([np.asarray(lab, dtype=np.int8) for lab in labels])
     ti = np.concatenate([np.arange(len(s), dtype=np.int64) for s in scores])
     return ts_auc_flat(sc, la, ti, **kw)
 
@@ -124,7 +124,7 @@ def ts_auc_reference(scores, labels) -> float:
     tw = 0.0
     for t in range(max_len):
         st = [s[t] for s in scores if t < len(s)]
-        lt = [int(l[t]) for l in labels if t < len(l)]
+        lt = [int(lab[t]) for lab in labels if t < len(lab)]
         npos = sum(lt)
         nneg = len(lt) - npos
         if npos == 0 or nneg == 0:

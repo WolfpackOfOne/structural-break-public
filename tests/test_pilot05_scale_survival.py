@@ -14,9 +14,10 @@ sys.path.insert(0, NOVEL)
 sys.path.insert(0, SCRIPTS)
 sys.path.insert(0, SRC)
 
-import harness
-from sbr.features.base import REGISTRY, check_prefix_invariance, load_all, make_ctx
-from sbr.features.m13_scale_survival import (
+import harness  # noqa: E402
+
+from sbr.features.base import REGISTRY, check_prefix_invariance, load_all, make_ctx  # noqa: E402
+from sbr.features.m13_scale_survival import (  # noqa: E402
     INDIV_COLS,
     Q01,
     Q05,

@@ -14,9 +14,10 @@ sys.path.insert(0, NOVEL)
 sys.path.insert(0, SCRIPTS)
 sys.path.insert(0, SRC)
 
-import harness
-from sbr.features.base import REGISTRY, check_prefix_invariance, load_all, make_ctx
-from sbr.features.m16_joint_rarity import (
+import harness  # noqa: E402
+
+from sbr.features.base import REGISTRY, check_prefix_invariance, load_all, make_ctx  # noqa: E402
+from sbr.features.m16_joint_rarity import (  # noqa: E402
     DWELL_COLS,
     JOINT_COLS,
     MIN_ENDPOINTS,
@@ -101,7 +102,9 @@ def test_future_online_mutation_does_not_change_past_rows():
     mutated = online.copy()
     mutated[cut:] = mutated[cut:][::-1] * -2.5 + 3.0
     mut_candidate, mut_control = joint_rarity_features(make_ctx(hist, mutated))
-    assert np.allclose(full_candidate[:cut], mut_candidate[:cut], rtol=0.0, atol=0.0, equal_nan=True)
+    assert np.allclose(
+        full_candidate[:cut], mut_candidate[:cut], rtol=0.0, atol=0.0, equal_nan=True
+    )
     assert np.allclose(full_control[:cut], mut_control[:cut], rtol=0.0, atol=0.0, equal_nan=True)
 
 

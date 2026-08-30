@@ -74,7 +74,7 @@ class StreamCtx:
         self.t = -1
 
     # ------------------------------------------------------------------ fit
-    def fit_historical(self, hist: np.ndarray) -> "StreamCtx":
+    def fit_historical(self, hist: np.ndarray) -> StreamCtx:
         """One-off O(n_hist log n_hist) historical summary. Same code as batch."""
         hist = np.asarray(hist, dtype=np.float64)
         p = self.ar_order
@@ -82,7 +82,9 @@ class StreamCtx:
         self.hp = HistParams(hist, ar_order=p)
         zh = (hist - self.hp.mu) / self.hp.sd
         rh = np.concatenate([np.zeros(p), _ar_resid(zh, self.hp.ar_coef)]) if p else zh
-        self.hist_tr = build_transforms(hist, self.hp, ar_resid=rh * self.hp.ar_sigma if p else None)
+        self.hist_tr = build_transforms(
+            hist, self.hp, ar_resid=rh * self.hp.ar_sigma if p else None
+        )
         self.nc = NullCal(self.hist_tr)
         self._warm = zh[-p:].copy() if p and len(zh) >= p else np.zeros(p)
         # AR-residual scratch: 10 trailing historical z values followed by the
@@ -150,10 +152,19 @@ class StreamCtx:
             b = np.empty(self.cap, dtype=np.float64)
             b[:len(a)] = a
             setattr(self, name, b)
-        a = self._zf; b = np.zeros(_AR_PAD + self.cap, dtype=np.float64); b[:len(a)] = a; self._zf = b
+        a = self._zf
+        b = np.zeros(_AR_PAD + self.cap, dtype=np.float64)
+        b[:len(a)] = a
+        self._zf = b
         for k in TRANSFORM_NAMES:
-            a = self.tr[k]; b = np.empty(self.cap, dtype=np.float64); b[:len(a)] = a; self.tr[k] = b
-            a = self.cum[k]; b = np.zeros(self.cap + 1, dtype=np.float64); b[:len(a)] = a; self.cum[k] = b
+            a = self.tr[k]
+            b = np.empty(self.cap, dtype=np.float64)
+            b[:len(a)] = a
+            self.tr[k] = b
+            a = self.cum[k]
+            b = np.zeros(self.cap + 1, dtype=np.float64)
+            b[:len(a)] = a
+            self.cum[k] = b
 
     # ------------------------------------------------------------- read API
     @property

@@ -109,14 +109,18 @@ def _focus_brute(x):
     x = np.asarray(x, dtype=np.float64)
     n = len(x)
     S = np.concatenate([[0.0], np.cumsum(x)])
-    stat = np.zeros(n); age = np.ones(n); second = np.zeros(n); anchored = np.zeros(n)
+    stat = np.zeros(n)
+    age = np.ones(n)
+    second = np.zeros(n)
+    anchored = np.zeros(n)
     for i in range(n):
         t = i + 1
         d = t - np.arange(t)
         D = S[t] - S[:t]
         v = D * D / (2.0 * d)
         k = int(np.argmax(v))
-        stat[i] = v[k]; age[i] = d[k]
+        stat[i] = v[k]
+        age[i] = d[k]
         far = np.abs(np.log(d) - np.log(d[k])) > FAR
         second[i] = v[far].max() if far.any() else 0.0
         anchored[i] = S[t] * S[t] / (2.0 * t)
@@ -126,14 +130,19 @@ def _focus_brute(x):
 def _focus_np(x):
     """Hull-pruned exact scan, pure numpy/python (used when numba is absent)."""
     n = len(x)
-    stat = np.zeros(n); age = np.ones(n); second = np.zeros(n); anchored = np.zeros(n)
+    stat = np.zeros(n)
+    age = np.ones(n)
+    second = np.zeros(n)
+    anchored = np.zeros(n)
     lo_t, lo_s = [0], [0.0]          # lower hull of (tau, S_tau)
     up_t, up_s = [0], [0.0]          # upper hull
     S = 0.0
     for i in range(n):
         S += x[i]
         t = i + 1
-        best = 0.0; bage = 1.0; sec = 0.0
+        best = 0.0
+        bage = 1.0
+        sec = 0.0
         for ht, hs in ((lo_t, lo_s), (up_t, up_s)):
             for k in range(len(ht)):
                 d = t - ht[k]
@@ -144,19 +153,26 @@ def _focus_np(x):
                 if v > best:
                     if best > sec and abs(math.log(bage) - math.log(d)) > FAR:
                         sec = best
-                    best = v; bage = d
+                    best = v
+                    bage = d
                 elif v > sec and abs(math.log(d) - math.log(bage)) > FAR:
                     sec = v
-        stat[i] = best; age[i] = bage; second[i] = sec
+        stat[i] = best
+        age[i] = bage
+        second[i] = sec
         anchored[i] = S * S / (2.0 * t)
         while len(lo_t) >= 2 and (lo_s[-1] - lo_s[-2]) * (t - lo_t[-1]) >= \
                 (S - lo_s[-1]) * (lo_t[-1] - lo_t[-2]):
-            lo_t.pop(); lo_s.pop()
-        lo_t.append(t); lo_s.append(S)
+            lo_t.pop()
+            lo_s.pop()
+        lo_t.append(t)
+        lo_s.append(S)
         while len(up_t) >= 2 and (up_s[-1] - up_s[-2]) * (t - up_t[-1]) <= \
                 (S - up_s[-1]) * (up_t[-1] - up_t[-2]):
-            up_t.pop(); up_s.pop()
-        up_t.append(t); up_s.append(S)
+            up_t.pop()
+            up_s.pop()
+        up_t.append(t)
+        up_s.append(S)
     return stat, age, second, anchored
 
 
@@ -177,18 +193,28 @@ try:
     @njit(cache=True, fastmath=False)
     def _focus_kernel(x):
         n = x.shape[0]
-        stat = np.zeros(n); age = np.ones(n)
-        second = np.zeros(n); anchored = np.zeros(n)
+        stat = np.zeros(n)
+        age = np.ones(n)
+        second = np.zeros(n)
+        anchored = np.zeros(n)
         cap = n + 2
-        lo_t = np.empty(cap, dtype=np.int64); lo_s = np.empty(cap, dtype=np.float64)
-        up_t = np.empty(cap, dtype=np.int64); up_s = np.empty(cap, dtype=np.float64)
-        lo_t[0] = 0; lo_s[0] = 0.0; nlo = 1
-        up_t[0] = 0; up_s[0] = 0.0; nup = 1
+        lo_t = np.empty(cap, dtype=np.int64)
+        lo_s = np.empty(cap, dtype=np.float64)
+        up_t = np.empty(cap, dtype=np.int64)
+        up_s = np.empty(cap, dtype=np.float64)
+        lo_t[0] = 0
+        lo_s[0] = 0.0
+        nlo = 1
+        up_t[0] = 0
+        up_s[0] = 0.0
+        nup = 1
         S = 0.0
         for i in range(n):
             S += x[i]
             t = i + 1
-            best = 0.0; bage = 1.0; sec = 0.0
+            best = 0.0
+            bage = 1.0
+            sec = 0.0
             for k in range(nlo):
                 d = t - lo_t[k]
                 if d <= 0:
@@ -198,7 +224,8 @@ try:
                 if v > best:
                     if best > sec and abs(math.log(bage) - math.log(d)) > FAR:
                         sec = best
-                    best = v; bage = d
+                    best = v
+                    bage = d
                 elif v > sec and abs(math.log(d) - math.log(bage)) > FAR:
                     sec = v
             for k in range(nup):
@@ -210,19 +237,26 @@ try:
                 if v > best:
                     if best > sec and abs(math.log(bage) - math.log(d)) > FAR:
                         sec = best
-                    best = v; bage = d
+                    best = v
+                    bage = d
                 elif v > sec and abs(math.log(d) - math.log(bage)) > FAR:
                     sec = v
-            stat[i] = best; age[i] = bage; second[i] = sec
+            stat[i] = best
+            age[i] = bage
+            second[i] = sec
             anchored[i] = S * S / (2.0 * t)
             while nlo >= 2 and (lo_s[nlo - 1] - lo_s[nlo - 2]) * (t - lo_t[nlo - 1]) >= \
                     (S - lo_s[nlo - 1]) * (lo_t[nlo - 1] - lo_t[nlo - 2]):
                 nlo -= 1
-            lo_t[nlo] = t; lo_s[nlo] = S; nlo += 1
+            lo_t[nlo] = t
+            lo_s[nlo] = S
+            nlo += 1
             while nup >= 2 and (up_s[nup - 1] - up_s[nup - 2]) * (t - up_t[nup - 1]) <= \
                     (S - up_s[nup - 1]) * (up_t[nup - 1] - up_t[nup - 2]):
                 nup -= 1
-            up_t[nup] = t; up_s[nup] = S; nup += 1
+            up_t[nup] = t
+            up_s[nup] = S
+            nup += 1
         return stat, age, second, anchored
 
     _HAVE_NUMBA = True
@@ -314,7 +348,7 @@ def _pct_at(tab, L, v):
     A, _, _, _, _, sorted_null = tab
     la = np.log(A)
     j = np.abs(np.log(np.maximum(np.asarray(L, float), 1.0))[:, None] - la[None, :]).argmin(1)
-    R = sorted_null.shape[0]
+    sorted_null.shape[0]
     out = np.empty(len(v))
     for a in np.unique(j):
         m = j == a

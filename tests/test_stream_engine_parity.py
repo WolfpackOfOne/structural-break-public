@@ -5,7 +5,6 @@ test files: it rebuilds the full 500-column production vector from the streaming
 engine and compares it, bit for bit, against the concatenation the batch driver
 would have written into cache/features.
 """
-import json
 
 import numpy as np
 import pytest
@@ -114,7 +113,8 @@ def test_rt600_manifest_sha_is_unchanged():
     else has been added to the registry since.
     """
     import numpy as np
-    from sbr.stream.engine import StreamEngine, MODULE_ORDER
+
+    from sbr.stream.engine import StreamEngine
 
     h = np.arange(1200, dtype=np.float64) % 7 - 3.0
     m7 = StreamEngine(SEVEN).fit_historical(h).manifest()

@@ -71,7 +71,9 @@ def _dwell_surprise(hist_run: np.ndarray, query_run: np.ndarray) -> np.ndarray:
     return out
 
 
-def _joint_surprise(hist_run: np.ndarray, hist_peak: np.ndarray, query_run: np.ndarray, query_peak: np.ndarray) -> np.ndarray:
+def _joint_surprise(
+    hist_run: np.ndarray, hist_peak: np.ndarray, query_run: np.ndarray, query_peak: np.ndarray
+) -> np.ndarray:
     hist_run = np.asarray(hist_run, dtype=np.int64)
     hist_peak = np.asarray(hist_peak, dtype=np.float64)
     query_run = np.asarray(query_run, dtype=np.int64)
@@ -99,7 +101,9 @@ def _joint_surprise(hist_run: np.ndarray, hist_peak: np.ndarray, query_run: np.n
     return out
 
 
-def _window_features(hist_sq: np.ndarray, online_sq: np.ndarray, w: int) -> tuple[np.ndarray, np.ndarray]:
+def _window_features(
+    hist_sq: np.ndarray, online_sq: np.ndarray, w: int
+) -> tuple[np.ndarray, np.ndarray]:
     n = len(online_sq)
     candidate = np.full((n, 2), np.nan, dtype=np.float64)
     control = np.full((n, 2), np.nan, dtype=np.float64)

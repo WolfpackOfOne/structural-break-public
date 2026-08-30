@@ -163,7 +163,7 @@ def test_p3b_train_fold_rejects_a_contaminated_series_set(data, monkeypatch):
 
 # ==================================================== P4  per-series constants only
 def test_p4_history_constants_depend_only_on_that_series_history(spread):
-    for h, o, sid in spread:
+    for h, _o, sid in spread:
         a = K.HistoryNull(h)
         # rebuild from an independent copy while unrelated data is scrambled
         rng = np.random.default_rng(7)
@@ -358,7 +358,8 @@ def test_c5_deterministic_build_and_forward():
     assert sha_state_dict(n1.state_dict()) == sha_state_dict(n2.state_dict())
     x = torch.from_numpy(np.random.default_rng(0).normal(
         size=(2, K.N_CHANNELS, 300)).astype(np.float32))
-    n1.eval(); n2.eval()
+    n1.eval()
+    n2.eval()
     with torch.no_grad():
         assert np.array_equal(n1(x).numpy(), n2(x).numpy())
 
@@ -376,7 +377,8 @@ def test_c5b_pair_sampler_is_deterministic_and_respects_occupancy():
     assert a[4] == 40                            # every timestep contributes
     assert len(a[0]) == 40 * 10 * K.M_NEG        # m_neg = 8 negatives per positive
     # a timestep with fewer than m_neg negatives must NOT contribute
-    Y2 = np.zeros((32, 3), dtype=np.float32); Y2[:26, :] = 1.0   # 6 negatives only
+    Y2 = np.zeros((32, 3), dtype=np.float32)
+    Y2[:26, :] = 1.0   # 6 negatives only
     assert K.sample_pairs(Y2, np.ones_like(Y2), np.random.default_rng(0)) is None
     # nor one with no positives
     assert K.sample_pairs(np.zeros((32, 3), dtype=np.float32),
@@ -423,7 +425,8 @@ def test_c6_emitted_rows_never_touch_the_lockbox(data):
 # ================================================== C7  no final-length reference
 def test_c7_no_final_online_length_in_the_input_path():
     """A length-dependent constant cannot survive C1, but assert the source too."""
-    import ast, inspect
+    import ast
+    import inspect
     tree = ast.parse(inspect.getsource(K.causal_channels))
     fn = tree.body[0]
     if (fn.body and isinstance(fn.body[0], ast.Expr)
@@ -500,7 +503,8 @@ def test_receptive_field_is_causal_and_253():
     x = torch.zeros(1, K.N_CHANNELS, T, dtype=torch.float64)
     with torch.no_grad():
         base = net(x).numpy()[0]
-        x2 = x.clone(); x2[0, :, j] = 1.0
+        x2 = x.clone()
+        x2[0, :, j] = 1.0
         pert = net(x2).numpy()[0]
     moved = np.flatnonzero(np.abs(pert - base) > 0)
     assert moved.min() == j, "the encoder is not causal: an earlier output moved"

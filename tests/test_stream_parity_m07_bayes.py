@@ -69,10 +69,11 @@ def _bank():
     """>= 40 synthetic (hist, online) pairs spanning the required regimes."""
     rng = np.random.default_rng(20260819)
     S = []
-    add = lambda name, h, o: S.append((name, np.asarray(h, float), np.asarray(o, float)))
+    def add(name, h, o):
+        return S.append((name, np.asarray(h, float), np.asarray(o, float)))
 
     # --- short online (10-20) --------------------------------------------
-    for i, n_o in enumerate((10, 11, 13, 16, 20)):
+    for _i, n_o in enumerate((10, 11, 13, 16, 20)):
         add(f"short{n_o}", rng.standard_normal(1500), rng.standard_normal(n_o))
     # --- long online (900-999) -------------------------------------------
     for n_o in (900, 941, 997, 998, 999):

@@ -256,7 +256,7 @@ def _roll_std(x: np.ndarray, w: int) -> np.ndarray:
 
 def _localise(Z, U, needs, M, n):
     """max / argmax / runner-up over the available candidates at every index."""
-    K = len(M)
+    len(M)
     ar = np.arange(n)
     A = np.where(np.isfinite(U), U, -1.0)
     i1 = A.argmax(axis=0)
@@ -335,12 +335,18 @@ def build(ctx):
             q = _calibrate_max(u1, k, nl["CUS"], nl["N"])
             stab = _roll_std(lm, STAB_W)
 
-            cols.append(f"loc_{base}_q");    out.append(q)
-            cols.append(f"loc_{base}_sz");   out.append(sz)
-            cols.append(f"loc_{base}_lm");   out.append(lm)
-            cols.append(f"loc_{base}_rel");  out.append(rel)
-            cols.append(f"loc_{base}_gap");  out.append(gap)
-            cols.append(f"loc_{base}_stab"); out.append(stab)
+            cols.append(f"loc_{base}_q")
+            out.append(q)
+            cols.append(f"loc_{base}_sz")
+            out.append(sz)
+            cols.append(f"loc_{base}_lm")
+            out.append(lm)
+            cols.append(f"loc_{base}_rel")
+            out.append(rel)
+            cols.append(f"loc_{base}_gap")
+            out.append(gap)
+            cols.append(f"loc_{base}_stab")
+            out.append(stab)
 
             pos = {int(mm): j for j, mm in enumerate(Ma)}
             for m in fixo:

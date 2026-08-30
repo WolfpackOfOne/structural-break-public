@@ -175,14 +175,17 @@ def test_n_online_is_never_a_feature():
     r1 = np.vstack([e1.step(x) for x in o_short])
     e2 = StreamEngine().fit_historical(h)
     r2 = np.vstack([e2.step(x) for x in o_long])[:len(o_short)]
-    assert np.array_equal(r1, r2, equal_nan=True), "a feature depends on how long the series will be"
+    assert np.array_equal(r1, r2, equal_nan=True), (
+        "a feature depends on how long the series will be"
+    )
 
 
 # -------------------------------------------------------------------- model
 @needs_model
 def test_model_rejects_a_mismatched_feature_manifest(tmp_path):
-    from sbr.production.model import ProductionModel
     import shutil
+
+    from sbr.production.model import ProductionModel
     shutil.copytree(MODEL_DIR, tmp_path / "m")
     man = json.load(open(tmp_path / "m" / "manifest.json"))
     man["feature_manifest_sha256"] = "0" * 64
@@ -196,6 +199,7 @@ def test_infer_contract_single_pass_and_range():
     import sys
     sys.path.insert(0, os.path.join(_REPO, "research", "scripts"))
     from local_runner import run_infer
+
     from sbr.production.submission import infer
     rng = np.random.default_rng(5)
     series = [(_hist(rng, 1200, k), EDGE_ONLINE[o](rng))
@@ -214,6 +218,7 @@ def test_infer_is_deterministic_and_order_independent():
     import sys
     sys.path.insert(0, os.path.join(_REPO, "research", "scripts"))
     from local_runner import run_infer
+
     from sbr.production.submission import infer
     rng = np.random.default_rng(6)
     series = [(_hist(rng, 1100), rng.standard_normal(60)) for _ in range(5)]

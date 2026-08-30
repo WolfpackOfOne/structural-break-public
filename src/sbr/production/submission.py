@@ -12,7 +12,7 @@ the Crunch Real-Time contract exactly (see research/reports/runner_semantics.md)
 from __future__ import annotations
 
 import os
-from typing import Iterable, List, Optional, Tuple
+from collections.abc import Iterable
 
 import numpy as np
 
@@ -33,7 +33,7 @@ from sbr.production.model import ProductionModel
 INFER_PARALLELISM = 1
 
 
-def train(datasets: List[Tuple[int, List[float], List[float], Optional[int]]],
+def train(datasets: list[tuple[int, list[float], list[float], int | None]],
           model_directory_path: str) -> None:
     """Fit and persist the model.
 
@@ -50,7 +50,7 @@ def train(datasets: List[Tuple[int, List[float], List[float], Optional[int]]],
     fit_from_datasets(datasets, model_directory_path)
 
 
-def infer(datasets: Iterable[Tuple[List[float], Iterable[float]]],
+def infer(datasets: Iterable[tuple[list[float], Iterable[float]]],
           model_directory_path: str):
     model = ProductionModel.load(model_directory_path)
 

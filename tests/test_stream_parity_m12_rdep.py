@@ -12,9 +12,9 @@ import numpy as np
 import pytest
 
 from sbr.features.base import REGISTRY, load_all, make_ctx
+from sbr.features.m12_rdep import BINS, _occupancy_distances
 from sbr.stream.ctx import StreamCtx
 from sbr.stream.s_m12_rdep import StreamM12Rdep, _dist_from_occupancy
-from sbr.features.m12_rdep import _occupancy_distances, BINS
 
 load_all()
 MODULE = "m12_rdep"
@@ -138,9 +138,14 @@ def test_reduction_width_invariance():
             elif width == 1 and v != ref if ref is not None else False:
                 pass
         # recompute in a fixed order now that ref is known
-        A1 = np.empty((BINS, 1)); A1[:, 0] = col
-        A2 = np.empty((BINS, 2)); A2[:, 0] = col; A2[:, 1] = col
-        AN = np.empty((BINS, 257)); AN[:] = rng.random((BINS, 257)); AN[:, 0] = col
+        A1 = np.empty((BINS, 1))
+        A1[:, 0] = col
+        A2 = np.empty((BINS, 2))
+        A2[:, 0] = col
+        A2[:, 1] = col
+        AN = np.empty((BINS, 257))
+        AN[:] = rng.random((BINS, 257))
+        AN[:, 0] = col
         ref = np.nansum(AN, axis=0)[0]
         assert np.nansum(A2, axis=0)[0] == ref, "width-2 padding no longer matches width-n"
         if np.nansum(A1, axis=0)[0] != ref:

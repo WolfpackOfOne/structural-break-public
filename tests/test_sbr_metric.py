@@ -62,7 +62,7 @@ def test_single_class_timesteps_carry_no_weight():
     scores = [np.array([0.9, 0.1, 0.5]), np.array([0.2, 0.8, 0.4])]
     labels = [np.array([0, 0, 1], dtype=np.int8), np.array([0, 1, 1], dtype=np.int8)]
     # step 0 is all-negative; the answer must equal the metric over steps 1-2 alone
-    trimmed = ts_auc_ragged([s[1:] for s in scores], [l[1:] for l in labels])
+    trimmed = ts_auc_ragged([s[1:] for s in scores], [lab[1:] for lab in labels])
     assert ts_auc_ragged(scores, labels) == pytest.approx(trimmed, abs=1e-12)
 
 

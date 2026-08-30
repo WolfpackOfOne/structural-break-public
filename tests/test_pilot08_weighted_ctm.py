@@ -14,9 +14,10 @@ sys.path.insert(0, NOVEL)
 sys.path.insert(0, SCRIPTS)
 sys.path.insert(0, SRC)
 
-import harness
-from sbr.features.base import REGISTRY, check_prefix_invariance, load_all, make_ctx
-from sbr.features.m18_weighted_ctm import (
+import harness  # noqa: E402
+
+from sbr.features.base import REGISTRY, check_prefix_invariance, load_all, make_ctx  # noqa: E402
+from sbr.features.m18_weighted_ctm import (  # noqa: E402
     H2_EVALUE_COLS,
     UNWEIGHTED_COLS,
     WEIGHTED_COLS,
@@ -121,7 +122,9 @@ def test_deterministic_replay():
 
 
 def test_h2_log_mean_evalue_uses_exact_five_columns_shape():
-    assert H2_EVALUE_COLS == ["ev_tail_mix", "ev_tail_ad", "ev_disp_mix", "ev_disp_ad", "ev_pow_mix"]
+    assert H2_EVALUE_COLS == [
+        "ev_tail_mix", "ev_tail_ad", "ev_disp_mix", "ev_disp_ad", "ev_pow_mix",
+    ]
     x = np.array([[0.0, 1.0, -1.0, 0.5, -0.5], [2.0, 2.0, 2.0, 2.0, 2.0]], dtype=np.float64)
     got = h2_log_mean_evalue(x)
     expected0 = np.log(np.exp(x[0]).mean())

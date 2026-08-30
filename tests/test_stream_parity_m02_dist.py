@@ -89,7 +89,7 @@ def _cases():
         C.append((tag, np.asarray(h, float), np.asarray(o, float)))
 
     # --- plain gaussian, assorted lengths ------------------------------
-    for k, no in enumerate((10, 13, 17, 20, 31, 64, 127, 200, 512, 900, 950, 999)):
+    for _k, no in enumerate((10, 13, 17, 20, 31, 64, 127, 200, 512, 900, 950, 999)):
         add(f"gauss_n{no}", rng.standard_normal(2000), rng.standard_normal(no))
 
     # --- constant / near-zero-variance history -------------------------
@@ -125,28 +125,37 @@ def _cases():
     add("break0_long", rng.standard_normal(2000), rng.standard_normal(999) * 0.15)
 
     # --- break at the last point ----------------------------------------
-    o = rng.standard_normal(300); o[-1] += 40.0
+    o = rng.standard_normal(300)
+    o[-1] += 40.0
     add("break_last_point", rng.standard_normal(2000), o)
-    o = rng.standard_normal(999); o[-1] = -1e6
+    o = rng.standard_normal(999)
+    o[-1] = -1e6
     add("break_last_point_long", rng.standard_normal(2000), o)
-    o = rng.standard_normal(10); o[-1] = 25.0
+    o = rng.standard_normal(10)
+    o[-1] = 25.0
     add("break_last_point_tiny", rng.standard_normal(2000), o)
 
     # --- breaks in the middle -------------------------------------------
-    o = rng.standard_normal(600); o[300:] *= 5.0
+    o = rng.standard_normal(600)
+    o[300:] *= 5.0
     add("break_mid_scale", rng.standard_normal(2000), o)
-    o = rng.standard_normal(600); o[128:] += 3.0
+    o = rng.standard_normal(600)
+    o[128:] += 3.0
     add("break_at_w128", rng.standard_normal(2000), o)
-    o = rng.standard_normal(400); o[32:] = np.clip(o[32:], -0.4, 0.4)
+    o = rng.standard_normal(400)
+    o[32:] = np.clip(o[32:], -0.4, 0.4)
     add("break_censoring", rng.standard_normal(2000), o)
 
     # --- huge single outliers -------------------------------------------
-    o = rng.standard_normal(400); o[150] = 1e9
+    o = rng.standard_normal(400)
+    o[150] = 1e9
     add("outlier_1e9", rng.standard_normal(2000), o)
-    o = rng.standard_normal(400); o[3] = -1e18
+    o = rng.standard_normal(400)
+    o[3] = -1e18
     add("outlier_early", rng.standard_normal(2000), o)
     add("outlier_all", rng.standard_normal(2000), np.full(300, 1e300))
-    h = rng.standard_normal(2000); h[1000] = 1e12
+    h = rng.standard_normal(2000)
+    h[1000] = 1e12
     add("outlier_in_hist", h, rng.standard_normal(300))
 
     # --- histories too short for some/all nulls --------------------------
@@ -305,11 +314,13 @@ def test_quant_block_bitwise():
         B, w = 20, float(rng.choice([1, 2, 7, 32, 128, 257, 999]))
         style = rng.integers(0, 5)
         if style == 0:                       # all mass in one bin
-            c = np.zeros(B); c[rng.integers(B)] = w
+            c = np.zeros(B)
+            c[rng.integers(B)] = w
         elif style == 1:                     # empty (the degenerate dummy row)
             c = np.zeros(B)
         elif style == 2:                     # two-point support
-            c = np.zeros(B); c[[0, B - 1]] = [w // 2, w - w // 2]
+            c = np.zeros(B)
+            c[[0, B - 1]] = [w // 2, w - w // 2]
         elif style == 3:                     # multinomial
             c = rng.multinomial(int(w), np.full(B, 1.0 / B)).astype(float)
         else:                                # skewed multinomial
