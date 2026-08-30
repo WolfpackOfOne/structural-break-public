@@ -311,8 +311,59 @@ should be the one any future generator is judged on.
 | mechanism | state |
 |---|---|
 | M1 T-orthogonal residual student | **PROMOTE for confirmation** — the only surviving candidate |
-| M2 delay-cloud predictive null | screened PROCEED (narrowly), not built |
+| M2 delay-cloud predictive null | KILL at the ensemble gate, after building |
 | M3 frozen cohort two-null atlas | KILL at screen |
 | M4 explicit-duration HSMM | KILL at Experiment C, after building |
 | M5 per-series C2ST | KILL at screen |
 | Moonshot simulator posterior | KILL at its own gate |
+
+All five mechanisms and the moonshot are now closed. One candidate survives on
+this branch: the Arm-C residual student, promoted for confirmation only.
+
+## M2 Built — And Killed, With The Redundancy Gate Exposed
+
+Report: `research/reports/grok_m2_delay_cloud/grok_m2_delay_cloud.md`.
+
+The full streaming occupancy block was built to spec: history-only `mu_H` frozen
+before the first online step, delay vectors on both the raw and AR(6)-residual
+streams, twelve columns spanning k-NN surprise, conformal p, off-cloud dwell, an
+e-process on occupancy, and the occupancy-minus-AR-residual disagreement the
+spec calls "the point". All three named leakage risks are handled: the cloud
+never sees an online point, `d` is a fixed constant, and there is no cross-series
+pooling.
+
+**Grok's kill rule trips if any of `marginal < +0.0010`, `rho > 0.85`, or
+`dominant net < 0`. Two of the three trip:**
+
+| quantity | observed | requirement |
+|---|---:|---|
+| marginal vs clone | `-0.000190` | `>= +0.0010` |
+| dominant net pair flow | `-46` | `> 0` |
+| rho vs RT-600 | `0.1036` | `<= 0.85` (passes) |
+
+| arm | marginal vs clone | positive folds |
+|---|---:|---:|
+| `{m00_core}` | `-0.000672` | 1/5 |
+| `{m00_core + occupancy}` | `-0.000190` | 3/5 |
+| `{full bank}` | `+0.000621` | 4/5 |
+| `{full bank + occupancy}` | `+0.000251` | 4/5 |
+
+Over the spec's own `m00_core` base the block is worth `+0.000482` at **5/5**
+positive folds — consistent on every fold, unlike M4's 2/5, and the most
+encouraging increment in the sweep. Over the **full 500-column bank**, which is
+the base that actually matters, it is `-0.000370` at 2/5.
+
+**The redundancy gate measured the wrong object.** `rho = 0.1036` against RT-600
+reads as "genuinely new channel" and clears the `0.85` line with enormous room.
+It is still spanned by the bank. Low correlation with the ensemble's blended
+*score* is not evidence of independence from the ensemble's *inputs*: the six
+modules beyond `m00_core` already carry what occupancy adds, which is why the
+increment is strongly positive over `m00_core` alone and negative over the whole
+bank. Any future redundancy gate here should be stated against the feature bank,
+not the blended score — `RT-1215` was killed at `rho = 0.8859` measured the same
+way, and that kill was right, but the statistic would not have caught this.
+
+The near-miss against the `+0.0005` increment bar (`+0.000482`) is **not** what
+kills M2, and should not be reported as if it were: missing a self-chosen
+threshold by `0.000018` is a coin flip. What kills it is two of the author's own
+three criteria, plus a negative increment over the real bank.

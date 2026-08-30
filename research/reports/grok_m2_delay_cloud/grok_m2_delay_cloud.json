@@ -1,0 +1,275 @@
+{
+  "experiment": "grok_m2_delay_cloud_predictive_null",
+  "generated": "2026-08-30 16:19:41",
+  "git_sha": "bb35a35",
+  "artifact_root": "/path/to/workspace/structural-break-wave6",
+  "config": {
+    "delay_dim": 3,
+    "n_ref": 512,
+    "knn_k": 5,
+    "ewma_spans": [
+      16,
+      64
+    ],
+    "columns": [
+      "occ_surprise_raw",
+      "occ_surprise_resid",
+      "occ_ewma16_raw",
+      "occ_ewma64_raw",
+      "occ_conformal_p_raw",
+      "occ_conformal_p_resid",
+      "occ_dwell_off_cloud",
+      "occ_max_dwell_off_cloud",
+      "occ_frac_off_last64",
+      "occ_eprocess_log",
+      "occ_minus_ar_resid_z",
+      "occ_raw_minus_resid"
+    ]
+  },
+  "cache": {
+    "cache": "/path/to/workspace/structural-break-multi-agent-frontier-20260829/research/oof/grok_m2_occupancy.npy",
+    "loaded": true
+  },
+  "coverage_dev": 0.8781358771826281,
+  "univariate": {
+    "occ_surprise_raw": 0.5176521847135984,
+    "occ_surprise_resid": 0.5263530033764361,
+    "occ_ewma16_raw": 0.5346243961627744,
+    "occ_ewma64_raw": 0.5470759415759149,
+    "occ_conformal_p_raw": 0.5203231836717748,
+    "occ_conformal_p_resid": 0.5285507695111897,
+    "occ_dwell_off_cloud": 0.5139105394879128,
+    "occ_max_dwell_off_cloud": 0.5427657345963326,
+    "occ_frac_off_last64": 0.5439040574403075,
+    "occ_eprocess_log": 0.558369959251211,
+    "occ_minus_ar_resid_z": 0.5042278219221703,
+    "occ_raw_minus_resid": 0.511798513741621
+  },
+  "rho_vs_rt600": 0.1036083063556293,
+  "gates": {
+    "redundancy": {
+      "rho": 0.1036083063556293,
+      "kill_above": 0.85,
+      "promote_below": 0.75,
+      "passed": true
+    },
+    "ensemble": {
+      "primary_contrast": "occupancy arm minus {m00_core} control",
+      "observed_increment": 0.00048154064077343683,
+      "increment_threshold": 0.0005,
+      "increment_positive_folds": 5,
+      "required_positive_folds": 3,
+      "passed": false,
+      "literal_spec_reading": {
+        "marginal_vs_clone": -0.00019049820484851043,
+        "threshold": 0.001,
+        "dominant_net": -46,
+        "passed": false,
+        "why_not_used": "The absolute marginal is dominated by the m00_core base (-0.000672 on its own), so it does not identify the occupancy block. The same conflation made M4 look like a pass. Here the spec's own criteria kill the mechanism anyway."
+      }
+    },
+    "spec_kill_criterion": {
+      "trips": [
+        "marginal_vs_clone -0.000190 < +0.0010",
+        "dominant net -46 < 0"
+      ],
+      "killed": true
+    }
+  },
+  "arms": {
+    "control_m00": {
+      "E0": 0.6258113418832281,
+      "E1_plus_clone": 0.6258383121815279,
+      "E2_plus_candidate": 0.6251662733359059,
+      "marginal_vs_clone": -0.0006720388456219473,
+      "per_fold_marginal": [
+        -0.001380340200769492,
+        -0.0005058799641264322,
+        -0.0010666467101667632,
+        -0.0005688330346682591,
+        0.0001615056816214322
+      ],
+      "positive_folds": 1,
+      "standalone": {
+        "whole": 0.5629079322215365,
+        "dominant_cell": 0.5879027151931352,
+        "mature_vs_never": 0.5894900649971961,
+        "mature_vs_prebreak": 0.5833265795181529
+      },
+      "pair_flow_vs_E0": {
+        "dominant_cell": {
+          "pairs": 50458,
+          "repairs": 912,
+          "damage": 977,
+          "net": -65,
+          "damage_rate": 0.019362638233778588
+        },
+        "mature_vs_never": {
+          "pairs": 50452,
+          "repairs": 942,
+          "damage": 1044,
+          "net": -102,
+          "damage_rate": 0.020692935859827163
+        },
+        "mature_vs_prebreak": {
+          "pairs": 44033,
+          "repairs": 763,
+          "damage": 916,
+          "net": -153,
+          "damage_rate": 0.020802579883269365
+        }
+      }
+    },
+    "occupancy": {
+      "E0": 0.6258113418832281,
+      "E1_plus_clone": 0.6258383121815279,
+      "E2_plus_candidate": 0.6256478139766793,
+      "marginal_vs_clone": -0.00019049820484851043,
+      "per_fold_marginal": [
+        -0.0013315589472974176,
+        -8.597263759790863e-05,
+        9.79059381178704e-06,
+        2.401609595470422e-05,
+        0.0004312338708866159
+      ],
+      "positive_folds": 3,
+      "standalone": {
+        "whole": 0.5707834678099946,
+        "dominant_cell": 0.5968342856103597,
+        "mature_vs_never": 0.5967545229084938,
+        "mature_vs_prebreak": 0.5970642317410787
+      },
+      "pair_flow_vs_E0": {
+        "dominant_cell": {
+          "pairs": 50458,
+          "repairs": 901,
+          "damage": 947,
+          "net": -46,
+          "damage_rate": 0.018768084347378016
+        },
+        "mature_vs_never": {
+          "pairs": 50452,
+          "repairs": 965,
+          "damage": 1022,
+          "net": -57,
+          "damage_rate": 0.02025687782446682
+        },
+        "mature_vs_prebreak": {
+          "pairs": 44033,
+          "repairs": 761,
+          "damage": 828,
+          "net": -67,
+          "damage_rate": 0.018804078759112483
+        }
+      }
+    },
+    "control_full_bank": {
+      "E0": 0.6258113418832281,
+      "E1_plus_clone": 0.6258383121815279,
+      "E2_plus_candidate": 0.6264597620538763,
+      "marginal_vs_clone": 0.0006214498723484674,
+      "per_fold_marginal": [
+        0.001090261381490154,
+        0.0014520138727346366,
+        0.0011797498214359825,
+        -0.002119249994932626,
+        0.0015044742810144118
+      ],
+      "positive_folds": 4,
+      "standalone": {
+        "whole": 0.597246764400285,
+        "dominant_cell": 0.6401502833749493,
+        "mature_vs_never": 0.641303780057311,
+        "mature_vs_prebreak": 0.6368248932778042
+      },
+      "pair_flow_vs_E0": {
+        "dominant_cell": {
+          "pairs": 50458,
+          "repairs": 708,
+          "damage": 657,
+          "net": 51,
+          "damage_rate": 0.0130207301121725
+        },
+        "mature_vs_never": {
+          "pairs": 50452,
+          "repairs": 676,
+          "damage": 699,
+          "net": -23,
+          "damage_rate": 0.013854753032585428
+        },
+        "mature_vs_prebreak": {
+          "pairs": 44033,
+          "repairs": 561,
+          "damage": 610,
+          "net": -49,
+          "damage_rate": 0.013853246428814752
+        }
+      }
+    },
+    "occupancy_full_bank": {
+      "E0": 0.6258113418832281,
+      "E1_plus_clone": 0.6258383121815279,
+      "E2_plus_candidate": 0.626089282682545,
+      "marginal_vs_clone": 0.0002509705010171892,
+      "per_fold_marginal": [
+        0.0018751324777056544,
+        0.00040734568905342883,
+        0.0004668361873466642,
+        -0.0015137071773995148,
+        1.9245328380046445e-05
+      ],
+      "positive_folds": 4,
+      "standalone": {
+        "whole": 0.5950635126581972,
+        "dominant_cell": 0.6377524271578413,
+        "mature_vs_never": 0.640618223804135,
+        "mature_vs_prebreak": 0.6294906853308041
+      },
+      "pair_flow_vs_E0": {
+        "dominant_cell": {
+          "pairs": 50458,
+          "repairs": 693,
+          "damage": 669,
+          "net": 24,
+          "damage_rate": 0.013258551666732728
+        },
+        "mature_vs_never": {
+          "pairs": 50452,
+          "repairs": 693,
+          "damage": 679,
+          "net": 14,
+          "damage_rate": 0.013458336636803299
+        },
+        "mature_vs_prebreak": {
+          "pairs": 44033,
+          "repairs": 563,
+          "damage": 584,
+          "net": -21,
+          "damage_rate": 0.013262780187586583
+        }
+      }
+    }
+  },
+  "contrasts": {
+    "occupancy_minus_control": 0.00048154064077343683,
+    "increment_per_fold": [
+      4.8781253472074404e-05,
+      0.0004199073265285236,
+      0.0010764373039785502,
+      0.0005928491306229633,
+      0.0002697281892651837
+    ],
+    "increment_positive_folds": 5,
+    "dominant_net_pair_flow": -46,
+    "full_bank_occupancy_minus_control": -0.0003704793713312782,
+    "full_bank_increment_per_fold": [
+      0.0007848710962155003,
+      -0.0010446681836812077,
+      -0.0007129136340893183,
+      0.0006055428175331112,
+      -0.0014852289526343654
+    ],
+    "full_bank_increment_positive_folds": 2
+  },
+  "verdict": "KILL, on the mechanism's own criteria: marginal_vs_clone -0.000190 < +0.0010; dominant net -46 < 0. Grok's kill rule trips if ANY of marginal < +0.0010, rho > 0.85, or dominant net < 0; 2 of the three trip. What is real and worth carrying forward: occupancy is genuinely non-redundant with the incumbent (rho 0.1036 against an 0.85 line, the least redundant channel screened on this branch), and its increment over the specified m00_core base is +0.000482 at 5/5 positive folds -- consistent in sign on every fold, unlike M4's 2/5. On the full 500-column bank, which is the base that actually matters, the increment is -0.000370 at 2/5. The absolute marginal is negative because the m00_core base is itself negative (-0.000672); occupancy improves that base without rescuing it."
+}
