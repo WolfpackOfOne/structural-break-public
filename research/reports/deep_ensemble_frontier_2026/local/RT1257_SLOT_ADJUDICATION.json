@@ -1,0 +1,1265 @@
+{
+  "date": "2026-08-31",
+  "git_sha": "8adb33f889d6dc547739c0f0e71542a979e1b99e",
+  "artifact_root": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026",
+  "protocol": {
+    "name": "rt1257_slot_adjudication",
+    "training": "none; frozen OOF artifact re-score only",
+    "E0": [
+      "RT-1255",
+      "RT-410",
+      "RT-411",
+      "RT-412",
+      "RT-1254",
+      "RT-414",
+      "RT-415"
+    ],
+    "E1": "RT-1257 with each target residual slot replaced by RT-401",
+    "E2": "RT-1257 with each target residual slot replaced by the CatBoost candidate",
+    "primary_endpoint": "E2_minus_E1",
+    "secondary_endpoint": "E2_minus_E0",
+    "noise_floor": 0.0011,
+    "continuation_rule": "Both endpoints must clear max(bootstrap SE, noise floor), with >=4/5 positive folds against RT-1257 and positive dominant-cell plus mature-vs-never pair-flow nets."
+  },
+  "checks": {
+    "RT600": {
+      "label": "RT600.mean_ts_auc",
+      "observed": 0.6258113418832281,
+      "expected": 0.6258113418832281,
+      "diff": 0.0,
+      "passed": true
+    },
+    "RT1257": {
+      "label": "RT1257.mean_ts_auc",
+      "observed": 0.6278376636118985,
+      "expected": 0.6278376636118985,
+      "diff": 0.0,
+      "passed": true
+    }
+  },
+  "bootstrap": {
+    "method": "paired series bootstrap with exact weighted TS-AUC recomputation under multinomial series counts",
+    "reps": 2000,
+    "seed": 20260831,
+    "series_resampled_within_fold": true,
+    "weighted_auc_exact_check_max_abs_by_label": {
+      "E0_RT1257": 0.0,
+      "E1_CAT-412": 0.0,
+      "E2_CAT-412": 0.0,
+      "E1_CAT-415": 0.0,
+      "E2_CAT-415": 0.0,
+      "E1_CAT-414": 0.0,
+      "E2_CAT-414": 0.0,
+      "E1_CAT-411": 0.0,
+      "E2_CAT-411": 0.0
+    }
+  },
+  "copy_records": [
+    {
+      "id": "RT-300",
+      "source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-300.npy",
+      "resolved_source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-300.npy",
+      "local": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-300.npy",
+      "bytes": 20146196,
+      "copied": false
+    },
+    {
+      "id": "RT-410",
+      "source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-410.npy",
+      "resolved_source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-410.npy",
+      "local": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-410.npy",
+      "bytes": 20146196,
+      "copied": false
+    },
+    {
+      "id": "RT-411",
+      "source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-411.npy",
+      "resolved_source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-411.npy",
+      "local": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-411.npy",
+      "bytes": 20146196,
+      "copied": false
+    },
+    {
+      "id": "RT-412",
+      "source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-412.npy",
+      "resolved_source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-412.npy",
+      "local": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-412.npy",
+      "bytes": 20146196,
+      "copied": false
+    },
+    {
+      "id": "RT-413",
+      "source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-413.npy",
+      "resolved_source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-413.npy",
+      "local": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-413.npy",
+      "bytes": 20146196,
+      "copied": false
+    },
+    {
+      "id": "RT-414",
+      "source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-414.npy",
+      "resolved_source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-414.npy",
+      "local": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-414.npy",
+      "bytes": 20146196,
+      "copied": false
+    },
+    {
+      "id": "RT-415",
+      "source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-415.npy",
+      "resolved_source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-415.npy",
+      "local": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-415.npy",
+      "bytes": 20146196,
+      "copied": false
+    },
+    {
+      "id": "RT-401",
+      "source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-401.npy",
+      "resolved_source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-401.npy",
+      "local": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-401.npy",
+      "bytes": 20146196,
+      "copied": false
+    },
+    {
+      "id": "RT-1255",
+      "source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1255.npy",
+      "resolved_source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1255.npy",
+      "local": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-1255.npy",
+      "bytes": 20146196,
+      "copied": false
+    },
+    {
+      "id": "RT-1254",
+      "source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1254.npy",
+      "resolved_source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1254.npy",
+      "local": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-1254.npy",
+      "bytes": 20146196,
+      "copied": false
+    },
+    {
+      "id": "RT-1261",
+      "source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1261.npy",
+      "resolved_source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1261.npy",
+      "local": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-1261.npy",
+      "bytes": 20146196,
+      "copied": false
+    },
+    {
+      "id": "RT-1263",
+      "source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1263.npy",
+      "resolved_source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1263.npy",
+      "local": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-1263.npy",
+      "bytes": 20146196,
+      "copied": false
+    },
+    {
+      "id": "RT-1262",
+      "source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1262.npy",
+      "resolved_source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1262.npy",
+      "local": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-1262.npy",
+      "bytes": 20146196,
+      "copied": false
+    },
+    {
+      "id": "RT-1260",
+      "source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1260.npy",
+      "resolved_source": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1260.npy",
+      "local": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-1260.npy",
+      "bytes": 20146196,
+      "copied": false
+    }
+  ],
+  "validation": {
+    "RT-300": {
+      "path": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-300.npy",
+      "shape": [
+        5036517
+      ],
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0
+    },
+    "RT-410": {
+      "path": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-410.npy",
+      "shape": [
+        5036517
+      ],
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0
+    },
+    "RT-411": {
+      "path": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-411.npy",
+      "shape": [
+        5036517
+      ],
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0
+    },
+    "RT-412": {
+      "path": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-412.npy",
+      "shape": [
+        5036517
+      ],
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0
+    },
+    "RT-413": {
+      "path": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-413.npy",
+      "shape": [
+        5036517
+      ],
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0
+    },
+    "RT-414": {
+      "path": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-414.npy",
+      "shape": [
+        5036517
+      ],
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0
+    },
+    "RT-415": {
+      "path": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-415.npy",
+      "shape": [
+        5036517
+      ],
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0
+    },
+    "RT-401": {
+      "path": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-401.npy",
+      "shape": [
+        5036517
+      ],
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0
+    },
+    "RT-1255": {
+      "path": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-1255.npy",
+      "shape": [
+        5036517
+      ],
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0
+    },
+    "RT-1254": {
+      "path": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-1254.npy",
+      "shape": [
+        5036517
+      ],
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0
+    },
+    "RT-1261": {
+      "path": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-1261.npy",
+      "shape": [
+        5036517
+      ],
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0
+    },
+    "RT-1263": {
+      "path": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-1263.npy",
+      "shape": [
+        5036517
+      ],
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0
+    },
+    "RT-1262": {
+      "path": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-1262.npy",
+      "shape": [
+        5036517
+      ],
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0
+    },
+    "RT-1260": {
+      "path": "/path/to/workspace/structural-break-rt1257-slot-adjudication/research/oof/RT-1260.npy",
+      "shape": [
+        5036517
+      ],
+      "dtype": "float32",
+      "finite_dev_rows": 4032524,
+      "finite_lockbox_rows": 0
+    }
+  },
+  "E0_RT1257": {
+    "mean_ts_auc": 0.6278376636118985,
+    "per_fold_ts_auc": [
+      0.6404303396152772,
+      0.620692694480152,
+      0.6351380232402147,
+      0.6207459541776635,
+      0.622181306546185
+    ],
+    "score_pack": {
+      "whole": 0.6275779836443426,
+      "dominant_cell": 0.6666581120654388,
+      "mature_vs_never": 0.6674920759265627,
+      "mature_vs_prebreak": 0.6642538960780291
+    }
+  },
+  "RT600": {
+    "mean_ts_auc": 0.6258113418832281,
+    "per_fold_ts_auc": [
+      0.638276215299891,
+      0.6204019581662752,
+      0.6339304299070194,
+      0.6175075878311903,
+      0.6189405182117643
+    ]
+  },
+  "candidates": [
+    {
+      "name": "CAT-412",
+      "ticket": "RT-1261 / CAT-412",
+      "id": "RT-1261",
+      "priority": 1,
+      "note": "Strongest remaining residual slot candidate.",
+      "replaced": "RT-412",
+      "clone_control": "RT-401",
+      "training_spec": {
+        "replaced": "RT-412",
+        "modules": [
+          "m00_core",
+          "m01_seq",
+          "m02_dist",
+          "m03_dyn",
+          "m04_resid",
+          "m06_loc",
+          "m07_bayes"
+        ],
+        "seed": 7,
+        "max_train_rows": 900000,
+        "sample_mode": "per_series",
+        "incumbent_objective": "binary_extra_trees_per_series"
+      },
+      "E1_streams": [
+        "RT-1255",
+        "RT-410",
+        "RT-411",
+        "RT-401",
+        "RT-1254",
+        "RT-414",
+        "RT-415"
+      ],
+      "E2_streams": [
+        "RT-1255",
+        "RT-410",
+        "RT-411",
+        "RT-1261",
+        "RT-1254",
+        "RT-414",
+        "RT-415"
+      ],
+      "incumbent_standalone": {
+        "mean_ts_auc": 0.6139359753979305,
+        "pooled_ts_auc": 0.6138752530171063,
+        "per_fold_ts_auc": [
+          0.6287384763356841,
+          0.6023381473625496,
+          0.6198609524472606,
+          0.6063900686811637,
+          0.6123522321629945
+        ],
+        "fold_std": 0.009467607437973998
+      },
+      "candidate_standalone": {
+        "mean_ts_auc": 0.6235112755826302,
+        "pooled_ts_auc": 0.6233490009640642,
+        "per_fold_ts_auc": [
+          0.6332425571143329,
+          0.6211166847881316,
+          0.6301998827255677,
+          0.6198971106988036,
+          0.6131001425863156
+        ],
+        "fold_std": 0.007302372887073689
+      },
+      "standalone_delta_vs_incumbent": 0.009575300184699653,
+      "rho_candidate_vs_incumbent": 0.687396635133629,
+      "E1": {
+        "mean_ts_auc": 0.627088621752881,
+        "per_fold_ts_auc": [
+          0.6393768235538315,
+          0.6215871837052466,
+          0.6347628348939917,
+          0.6201557988961812,
+          0.6195604677151543
+        ],
+        "score_pack": {
+          "whole": 0.6268156768162795,
+          "dominant_cell": 0.6659812520400424,
+          "mature_vs_never": 0.6665951397892297,
+          "mature_vs_prebreak": 0.6642114886127857
+        }
+      },
+      "E2": {
+        "mean_ts_auc": 0.6281758979532357,
+        "per_fold_ts_auc": [
+          0.6398143599611561,
+          0.6226996020652956,
+          0.6356810051852815,
+          0.6218044870234964,
+          0.6208800355309488
+        ],
+        "score_pack": {
+          "whole": 0.6279058619381326,
+          "dominant_cell": 0.6672974206027504,
+          "mature_vs_never": 0.6677402624431015,
+          "mature_vs_prebreak": 0.6660207616465325
+        }
+      },
+      "delta_E1_minus_E0": -0.0007490418590174741,
+      "delta_E1_minus_E0_per_fold": [
+        -0.0010535160614456585,
+        0.0008944892250946079,
+        -0.0003751883462230765,
+        -0.0005901552814823185,
+        -0.002620838831030703
+      ],
+      "delta_E2_minus_E1": 0.0010872762003546477,
+      "delta_E2_minus_E1_per_fold": [
+        0.0004375364073245791,
+        0.00111241836004905,
+        0.0009181702912898215,
+        0.0016486881273152232,
+        0.0013195678157945645
+      ],
+      "positive_folds_E2_minus_E1": 5,
+      "delta_E2_minus_E0": 0.00033823434133717356,
+      "delta_E2_minus_E0_per_fold": [
+        -0.0006159796541210794,
+        0.002006907585143658,
+        0.000542981945066745,
+        0.0010585328458329046,
+        -0.0013012710152361384
+      ],
+      "positive_folds_E2_minus_E0": 3,
+      "score_pack_delta_vs_E1": {
+        "whole": 0.0010901851218531045,
+        "dominant_cell": 0.0013161685627079978,
+        "mature_vs_never": 0.0011451226538717885,
+        "mature_vs_prebreak": 0.0018092730337467833
+      },
+      "score_pack_delta_vs_E0": {
+        "whole": 0.000327878293789996,
+        "dominant_cell": 0.0006393085373116447,
+        "mature_vs_never": 0.0002481865165387953,
+        "mature_vs_prebreak": 0.0017668655685033618
+      },
+      "pair_flow_vs_E1": {
+        "whole": {
+          "total_pairs_sampled": 63194,
+          "repairs": 1130,
+          "damage": 1069,
+          "net_pair_lift": 61,
+          "damage_rate": 0.016916162926860146
+        },
+        "dominant_cell": {
+          "total_pairs_sampled": 50458,
+          "repairs": 782,
+          "damage": 721,
+          "net_pair_lift": 61,
+          "damage_rate": 0.014289111736493717
+        },
+        "mature_vs_never": {
+          "total_pairs_sampled": 50452,
+          "repairs": 806,
+          "damage": 768,
+          "net_pair_lift": 38,
+          "damage_rate": 0.015222389598033775
+        },
+        "mature_vs_prebreak": {
+          "total_pairs_sampled": 44033,
+          "repairs": 644,
+          "damage": 638,
+          "net_pair_lift": 6,
+          "damage_rate": 0.014489133150137397
+        }
+      },
+      "pair_flow_vs_E0": {
+        "whole": {
+          "total_pairs_sampled": 63194,
+          "repairs": 1276,
+          "damage": 1223,
+          "net_pair_lift": 53,
+          "damage_rate": 0.019353103142703422
+        },
+        "dominant_cell": {
+          "total_pairs_sampled": 50458,
+          "repairs": 841,
+          "damage": 872,
+          "net_pair_lift": -31,
+          "damage_rate": 0.01728169963137659
+        },
+        "mature_vs_never": {
+          "total_pairs_sampled": 50452,
+          "repairs": 869,
+          "damage": 830,
+          "net_pair_lift": 39,
+          "damage_rate": 0.016451280424958376
+        },
+        "mature_vs_prebreak": {
+          "total_pairs_sampled": 44033,
+          "repairs": 694,
+          "damage": 689,
+          "net_pair_lift": 5,
+          "damage_rate": 0.0156473553925465
+        }
+      },
+      "bootstrap": {
+        "E1_minus_E0": {
+          "mean": -0.000727313489651785,
+          "se": 0.0004748442990206656,
+          "ci95_percentile": [
+            -0.0016601281828614479,
+            0.00019194015615852072
+          ],
+          "prob_gt_zero": 0.061,
+          "prob_ge_noise_floor": 0.0
+        },
+        "E2_minus_E1": {
+          "mean": 0.0010756825520523905,
+          "se": 0.00047910948791996606,
+          "ci95_percentile": [
+            0.00012055012198073645,
+            0.0020010071616203377
+          ],
+          "prob_gt_zero": 0.9865,
+          "prob_ge_noise_floor": 0.4805
+        },
+        "E2_minus_E0": {
+          "mean": 0.0003483690624006053,
+          "se": 0.000518803505404767,
+          "ci95_percentile": [
+            -0.0006313056034386533,
+            0.0013584573733958858
+          ],
+          "prob_gt_zero": 0.7415,
+          "prob_ge_noise_floor": 0.078
+        }
+      },
+      "decision_bars": {
+        "E2_minus_E1": 0.0011,
+        "E2_minus_E0": 0.0011
+      },
+      "recommendation": "RESEARCH_ALIVE_WEAK"
+    },
+    {
+      "name": "CAT-415",
+      "ticket": "RT-1263 / CAT-415",
+      "id": "RT-1263",
+      "priority": 2,
+      "note": "Positive individually; no corrected multi-slot lift.",
+      "replaced": "RT-415",
+      "clone_control": "RT-401",
+      "training_spec": {
+        "replaced": "RT-415",
+        "modules": [
+          "m00_core",
+          "m01_seq",
+          "m02_dist",
+          "m03_dyn",
+          "m04_resid",
+          "m06_loc",
+          "m07_bayes"
+        ],
+        "seed": 11,
+        "max_train_rows": 700000,
+        "sample_mode": "uniform",
+        "incumbent_objective": "binary_goss",
+        "caveat": "GOSS has no CatBoost analogue; frozen Bernoulli bootstrap is used."
+      },
+      "E1_streams": [
+        "RT-1255",
+        "RT-410",
+        "RT-411",
+        "RT-412",
+        "RT-1254",
+        "RT-414",
+        "RT-401"
+      ],
+      "E2_streams": [
+        "RT-1255",
+        "RT-410",
+        "RT-411",
+        "RT-412",
+        "RT-1254",
+        "RT-414",
+        "RT-1263"
+      ],
+      "incumbent_standalone": {
+        "mean_ts_auc": 0.6170844293688152,
+        "pooled_ts_auc": 0.6170677150454902,
+        "per_fold_ts_auc": [
+          0.6305177097200763,
+          0.6139336565401323,
+          0.6266685311804607,
+          0.6091067462262602,
+          0.6051955031771467
+        ],
+        "fold_std": 0.00987142737666118
+      },
+      "candidate_standalone": {
+        "mean_ts_auc": 0.6198318156115358,
+        "pooled_ts_auc": 0.619727542225447,
+        "per_fold_ts_auc": [
+          0.6349649852896345,
+          0.618867706002534,
+          0.6329418736870314,
+          0.6097764168906514,
+          0.6026080961878275
+        ],
+        "fold_std": 0.01264581756004531
+      },
+      "standalone_delta_vs_incumbent": 0.0027473862427205287,
+      "rho_candidate_vs_incumbent": 0.7191747230739166,
+      "E1": {
+        "mean_ts_auc": 0.6277292890160877,
+        "per_fold_ts_auc": [
+          0.640262866105066,
+          0.6205854263627143,
+          0.6347723503248934,
+          0.6206515907778641,
+          0.6223742115099004
+        ],
+        "score_pack": {
+          "whole": 0.627430534607464,
+          "dominant_cell": 0.6666557971153478,
+          "mature_vs_never": 0.6675707773478828,
+          "mature_vs_prebreak": 0.664018020820989
+        }
+      },
+      "E2": {
+        "mean_ts_auc": 0.6280128914150717,
+        "per_fold_ts_auc": [
+          0.6408250339618501,
+          0.6212460067560835,
+          0.6359526132879724,
+          0.6203998826096228,
+          0.6216409204598294
+        ],
+        "score_pack": {
+          "whole": 0.6277323484251816,
+          "dominant_cell": 0.6670529035602846,
+          "mature_vs_never": 0.6676770782235982,
+          "mature_vs_prebreak": 0.665253484215599
+        }
+      },
+      "delta_E1_minus_E0": -0.00010837459581081177,
+      "delta_E1_minus_E0_per_fold": [
+        -0.00016747351021118018,
+        -0.0001072681174376644,
+        -0.0003656729153213023,
+        -9.4363399799402e-05,
+        0.00019290496371537902
+      ],
+      "delta_E2_minus_E1": 0.0002836023989839509,
+      "delta_E2_minus_E1_per_fold": [
+        0.0005621678567840904,
+        0.0006605803933692478,
+        0.0011802629630789374,
+        -0.0002517081682413824,
+        -0.0007332910500709167
+      ],
+      "positive_folds_E2_minus_E1": 3,
+      "delta_E2_minus_E0": 0.00017522780317313913,
+      "delta_E2_minus_E0_per_fold": [
+        0.00039469434657291025,
+        0.0005533122759315834,
+        0.0008145900477576351,
+        -0.00034607156804078443,
+        -0.0005403860863555376
+      ],
+      "positive_folds_E2_minus_E0": 3,
+      "score_pack_delta_vs_E1": {
+        "whole": 0.00030181381771754445,
+        "dominant_cell": 0.0003971064449367345,
+        "mature_vs_never": 0.0001063008757153927,
+        "mature_vs_prebreak": 0.0012354633946100035
+      },
+      "score_pack_delta_vs_E0": {
+        "whole": 0.00015436478083896699,
+        "dominant_cell": 0.0003947914948457809,
+        "mature_vs_never": 0.0001850022970355525,
+        "mature_vs_prebreak": 0.0009995881375699511
+      },
+      "pair_flow_vs_E1": {
+        "whole": {
+          "total_pairs_sampled": 63194,
+          "repairs": 1110,
+          "damage": 1043,
+          "net_pair_lift": 67,
+          "damage_rate": 0.016504731461847645
+        },
+        "dominant_cell": {
+          "total_pairs_sampled": 50458,
+          "repairs": 730,
+          "damage": 741,
+          "net_pair_lift": -11,
+          "damage_rate": 0.014685480994094098
+        },
+        "mature_vs_never": {
+          "total_pairs_sampled": 50452,
+          "repairs": 724,
+          "damage": 795,
+          "net_pair_lift": -71,
+          "damage_rate": 0.01575755173233965
+        },
+        "mature_vs_prebreak": {
+          "total_pairs_sampled": 44033,
+          "repairs": 655,
+          "damage": 580,
+          "net_pair_lift": 75,
+          "damage_rate": 0.013171939227397634
+        }
+      },
+      "pair_flow_vs_E0": {
+        "whole": {
+          "total_pairs_sampled": 63194,
+          "repairs": 1119,
+          "damage": 1062,
+          "net_pair_lift": 57,
+          "damage_rate": 0.01680539291704909
+        },
+        "dominant_cell": {
+          "total_pairs_sampled": 50458,
+          "repairs": 754,
+          "damage": 770,
+          "net_pair_lift": -16,
+          "damage_rate": 0.01526021641761465
+        },
+        "mature_vs_never": {
+          "total_pairs_sampled": 50452,
+          "repairs": 765,
+          "damage": 768,
+          "net_pair_lift": -3,
+          "damage_rate": 0.015222389598033775
+        },
+        "mature_vs_prebreak": {
+          "total_pairs_sampled": 44033,
+          "repairs": 667,
+          "damage": 623,
+          "net_pair_lift": 44,
+          "damage_rate": 0.014148479549428838
+        }
+      },
+      "bootstrap": {
+        "E1_minus_E0": {
+          "mean": -0.00010606868748941567,
+          "se": 0.0003773532511743673,
+          "ci95_percentile": [
+            -0.0008358025392928514,
+            0.0006473020829901278
+          ],
+          "prob_gt_zero": 0.3915,
+          "prob_ge_noise_floor": 0.0005
+        },
+        "E2_minus_E1": {
+          "mean": 0.0002821296183297741,
+          "se": 0.00047257613128070906,
+          "ci95_percentile": [
+            -0.0006234531205229294,
+            0.0011961954880708942
+          ],
+          "prob_gt_zero": 0.716,
+          "prob_ge_noise_floor": 0.034
+        },
+        "E2_minus_E0": {
+          "mean": 0.00017606093084035845,
+          "se": 0.00048760837127167584,
+          "ci95_percentile": [
+            -0.0007565190400992267,
+            0.001139339696536387
+          ],
+          "prob_gt_zero": 0.6355,
+          "prob_ge_noise_floor": 0.0325
+        }
+      },
+      "decision_bars": {
+        "E2_minus_E1": 0.0011,
+        "E2_minus_E0": 0.0011
+      },
+      "recommendation": "RESEARCH_ALIVE_WEAK"
+    },
+    {
+      "name": "CAT-414",
+      "ticket": "RT-1262 / CAT-414",
+      "id": "RT-1262",
+      "priority": 3,
+      "note": "Positive individually; no corrected multi-slot lift.",
+      "replaced": "RT-414",
+      "clone_control": "RT-401",
+      "training_spec": {
+        "replaced": "RT-414",
+        "modules": [
+          "m07_bayes",
+          "m06_loc",
+          "m01_seq"
+        ],
+        "seed": 3,
+        "max_train_rows": 700000,
+        "sample_mode": "uniform",
+        "incumbent_objective": "binary"
+      },
+      "E1_streams": [
+        "RT-1255",
+        "RT-410",
+        "RT-411",
+        "RT-412",
+        "RT-1254",
+        "RT-401",
+        "RT-415"
+      ],
+      "E2_streams": [
+        "RT-1255",
+        "RT-410",
+        "RT-411",
+        "RT-412",
+        "RT-1254",
+        "RT-1262",
+        "RT-415"
+      ],
+      "incumbent_standalone": {
+        "mean_ts_auc": 0.6110448436752867,
+        "pooled_ts_auc": 0.6107717342243957,
+        "per_fold_ts_auc": [
+          0.6120702693626513,
+          0.6122070837298516,
+          0.6124617176812629,
+          0.6005730330414647,
+          0.6179121145612029
+        ],
+        "fold_std": 0.005678521975034218
+      },
+      "candidate_standalone": {
+        "mean_ts_auc": 0.6153268233320311,
+        "pooled_ts_auc": 0.6150334539197383,
+        "per_fold_ts_auc": [
+          0.6168588231833666,
+          0.6179321785008469,
+          0.6188021776273709,
+          0.6097755476653376,
+          0.6132653896832333
+        ],
+        "fold_std": 0.0033549711412864127
+      },
+      "standalone_delta_vs_incumbent": 0.0042819796567444834,
+      "rho_candidate_vs_incumbent": 0.7416281510131915,
+      "E1": {
+        "mean_ts_auc": 0.6269591974796596,
+        "per_fold_ts_auc": [
+          0.6417317116354787,
+          0.6194261867004082,
+          0.6351379749007846,
+          0.6202949948395367,
+          0.6182051193220899
+        ],
+        "score_pack": {
+          "whole": 0.6267321727968942,
+          "dominant_cell": 0.6656075887094378,
+          "mature_vs_never": 0.6662780815941927,
+          "mature_vs_prebreak": 0.6636746395876381
+        }
+      },
+      "E2": {
+        "mean_ts_auc": 0.6280165215292054,
+        "per_fold_ts_auc": [
+          0.6408298080322478,
+          0.621115930011631,
+          0.6357743151591181,
+          0.62157742439023,
+          0.6207851300528002
+        ],
+        "score_pack": {
+          "whole": 0.62775586568034,
+          "dominant_cell": 0.6669113409079437,
+          "mature_vs_never": 0.6678133730035168,
+          "mature_vs_prebreak": 0.6643108925115213
+        }
+      },
+      "delta_E1_minus_E0": -0.0008784661322389642,
+      "delta_E1_minus_E0_per_fold": [
+        0.00130137202020153,
+        -0.0012665077797437974,
+        -4.8339430125388105e-08,
+        -0.0004509593381268884,
+        -0.003976187224095096
+      ],
+      "delta_E2_minus_E1": 0.001057324049545838,
+      "delta_E2_minus_E1_per_fold": [
+        -0.0009019036032309469,
+        0.0016897433112228466,
+        0.0006363402583334787,
+        0.0012824295506933536,
+        0.002580010730710347
+      ],
+      "positive_folds_E2_minus_E1": 4,
+      "delta_E2_minus_E0": 0.00017885791730687384,
+      "delta_E2_minus_E0_per_fold": [
+        0.0003994684169705831,
+        0.00042323553147904924,
+        0.0006362919189033533,
+        0.0008314702125664652,
+        -0.0013961764933847487
+      ],
+      "positive_folds_E2_minus_E0": 4,
+      "score_pack_delta_vs_E1": {
+        "whole": 0.001023692883445837,
+        "dominant_cell": 0.0013037521985058698,
+        "mature_vs_never": 0.0015352914093241798,
+        "mature_vs_prebreak": 0.0006362529238832515
+      },
+      "score_pack_delta_vs_E0": {
+        "whole": 0.00017788203599744534,
+        "dominant_cell": 0.0002532288425048934,
+        "mature_vs_never": 0.00032129707695416343,
+        "mature_vs_prebreak": 5.6996433492217946e-05
+      },
+      "pair_flow_vs_E1": {
+        "whole": {
+          "total_pairs_sampled": 63194,
+          "repairs": 1315,
+          "damage": 1204,
+          "net_pair_lift": 111,
+          "damage_rate": 0.01905244168750198
+        },
+        "dominant_cell": {
+          "total_pairs_sampled": 50458,
+          "repairs": 903,
+          "damage": 904,
+          "net_pair_lift": -1,
+          "damage_rate": 0.0179158904435372
+        },
+        "mature_vs_never": {
+          "total_pairs_sampled": 50452,
+          "repairs": 931,
+          "damage": 946,
+          "net_pair_lift": -15,
+          "damage_rate": 0.018750495520494726
+        },
+        "mature_vs_prebreak": {
+          "total_pairs_sampled": 44033,
+          "repairs": 786,
+          "damage": 781,
+          "net_pair_lift": 5,
+          "damage_rate": 0.01773669747689233
+        }
+      },
+      "pair_flow_vs_E0": {
+        "whole": {
+          "total_pairs_sampled": 63194,
+          "repairs": 1016,
+          "damage": 1000,
+          "net_pair_lift": 16,
+          "damage_rate": 0.01582428711586543
+        },
+        "dominant_cell": {
+          "total_pairs_sampled": 50458,
+          "repairs": 673,
+          "damage": 757,
+          "net_pair_lift": -84,
+          "damage_rate": 0.015002576400174402
+        },
+        "mature_vs_never": {
+          "total_pairs_sampled": 50452,
+          "repairs": 733,
+          "damage": 722,
+          "net_pair_lift": 11,
+          "damage_rate": 0.014310631887734876
+        },
+        "mature_vs_prebreak": {
+          "total_pairs_sampled": 44033,
+          "repairs": 619,
+          "damage": 633,
+          "net_pair_lift": -14,
+          "damage_rate": 0.01437558194990121
+        }
+      },
+      "bootstrap": {
+        "E1_minus_E0": {
+          "mean": -0.0008963747517755289,
+          "se": 0.0005828494447443722,
+          "ci95_percentile": [
+            -0.00204266991407315,
+            0.0002085283104887142
+          ],
+          "prob_gt_zero": 0.0615,
+          "prob_ge_noise_floor": 0.0
+        },
+        "E2_minus_E1": {
+          "mean": 0.0010606276358225562,
+          "se": 0.0005915249317867312,
+          "ci95_percentile": [
+            -0.00014139599584438723,
+            0.0021928082597197354
+          ],
+          "prob_gt_zero": 0.958,
+          "prob_ge_noise_floor": 0.4725
+        },
+        "E2_minus_E0": {
+          "mean": 0.00016425288404702697,
+          "se": 0.00046247078341784485,
+          "ci95_percentile": [
+            -0.0007292040399243249,
+            0.0010568903242613669
+          ],
+          "prob_gt_zero": 0.6305,
+          "prob_ge_noise_floor": 0.02
+        }
+      },
+      "decision_bars": {
+        "E2_minus_E1": 0.0011,
+        "E2_minus_E0": 0.0011
+      },
+      "recommendation": "RESEARCH_ALIVE_WEAK"
+    },
+    {
+      "name": "CAT-411",
+      "ticket": "RT-1260 / CAT-411",
+      "id": "RT-1260",
+      "priority": 4,
+      "note": "Weakest residual slot; passed only the original individual gate.",
+      "replaced": "RT-411",
+      "clone_control": "RT-401",
+      "training_spec": {
+        "replaced": "RT-411",
+        "modules": [
+          "m02_dist",
+          "m03_dyn",
+          "m04_resid",
+          "m06_loc"
+        ],
+        "seed": 1,
+        "max_train_rows": 900000,
+        "sample_mode": "uniform",
+        "incumbent_objective": "binary"
+      },
+      "E1_streams": [
+        "RT-1255",
+        "RT-410",
+        "RT-401",
+        "RT-412",
+        "RT-1254",
+        "RT-414",
+        "RT-415"
+      ],
+      "E2_streams": [
+        "RT-1255",
+        "RT-410",
+        "RT-1260",
+        "RT-412",
+        "RT-1254",
+        "RT-414",
+        "RT-415"
+      ],
+      "incumbent_standalone": {
+        "mean_ts_auc": 0.6078119814488463,
+        "pooled_ts_auc": 0.6076509427043426,
+        "per_fold_ts_auc": [
+          0.6240788627186783,
+          0.6035144449737704,
+          0.6133128820855462,
+          0.6097810440167831,
+          0.5883726734494537
+        ],
+        "fold_std": 0.011790708686995584
+      },
+      "candidate_standalone": {
+        "mean_ts_auc": 0.6093784358323114,
+        "pooled_ts_auc": 0.6092370957925254,
+        "per_fold_ts_auc": [
+          0.622580423814051,
+          0.6049423958528295,
+          0.6156199892229843,
+          0.6094424432904479,
+          0.5943069269812442
+        ],
+        "fold_std": 0.00959252210944205
+      },
+      "standalone_delta_vs_incumbent": 0.0015664543834651434,
+      "rho_candidate_vs_incumbent": 0.8011339401444495,
+      "E1": {
+        "mean_ts_auc": 0.6266542478404127,
+        "per_fold_ts_auc": [
+          0.638409478913477,
+          0.6200981210888515,
+          0.6341409667173579,
+          0.6182018965372349,
+          0.6224207759451418
+        ],
+        "score_pack": {
+          "whole": 0.6264011814795064,
+          "dominant_cell": 0.6656406967696734,
+          "mature_vs_never": 0.6664648214740214,
+          "mature_vs_prebreak": 0.6632648458699204
+        }
+      },
+      "E2": {
+        "mean_ts_auc": 0.6279716057448075,
+        "per_fold_ts_auc": [
+          0.6400400969153145,
+          0.6206369955685778,
+          0.6353026004077453,
+          0.6206713281871448,
+          0.6232070076452547
+        ],
+        "score_pack": {
+          "whole": 0.6277089212076071,
+          "dominant_cell": 0.6667542182079121,
+          "mature_vs_never": 0.667479118377002,
+          "mature_vs_prebreak": 0.664664419528323
+        }
+      },
+      "delta_E1_minus_E0": -0.0011834157714858407,
+      "delta_E1_minus_E0_per_fold": [
+        -0.0020208607018001867,
+        -0.0005945733913004236,
+        -0.000997056522856865,
+        -0.002544057640428643,
+        0.0002394693989568042
+      ],
+      "delta_E2_minus_E1": 0.0013173579043948003,
+      "delta_E2_minus_E1_per_fold": [
+        0.0016306180018375027,
+        0.0005388744797262257,
+        0.0011616336903874647,
+        0.00246943164990987,
+        0.0007862317001129382
+      ],
+      "positive_folds_E2_minus_E1": 5,
+      "delta_E2_minus_E0": 0.00013394213290895962,
+      "delta_E2_minus_E0_per_fold": [
+        -0.000390242699962684,
+        -5.569891157419793e-05,
+        0.0001645771675305996,
+        -7.462599051877294e-05,
+        0.0010257010990697424
+      ],
+      "positive_folds_E2_minus_E0": 2,
+      "score_pack_delta_vs_E1": {
+        "whole": 0.0013077397281007208,
+        "dominant_cell": 0.0011135214382387293,
+        "mature_vs_never": 0.0010142969029806048,
+        "mature_vs_prebreak": 0.0013995736584025975
+      },
+      "score_pack_delta_vs_E0": {
+        "whole": 0.00013093756326454375,
+        "dominant_cell": 9.610614247335114e-05,
+        "mature_vs_never": -1.2957549560654869e-05,
+        "mature_vs_prebreak": 0.00041052345029390924
+      },
+      "pair_flow_vs_E1": {
+        "whole": {
+          "total_pairs_sampled": 63194,
+          "repairs": 1314,
+          "damage": 1244,
+          "net_pair_lift": 70,
+          "damage_rate": 0.019685413172136595
+        },
+        "dominant_cell": {
+          "total_pairs_sampled": 50458,
+          "repairs": 954,
+          "damage": 906,
+          "net_pair_lift": 48,
+          "damage_rate": 0.017955527369297238
+        },
+        "mature_vs_never": {
+          "total_pairs_sampled": 50452,
+          "repairs": 958,
+          "damage": 928,
+          "net_pair_lift": 30,
+          "damage_rate": 0.01839372076429081
+        },
+        "mature_vs_prebreak": {
+          "total_pairs_sampled": 44033,
+          "repairs": 793,
+          "damage": 735,
+          "net_pair_lift": 58,
+          "damage_rate": 0.016692026434719415
+        }
+      },
+      "pair_flow_vs_E0": {
+        "whole": {
+          "total_pairs_sampled": 63194,
+          "repairs": 868,
+          "damage": 920,
+          "net_pair_lift": -52,
+          "damage_rate": 0.014558344146596196
+        },
+        "dominant_cell": {
+          "total_pairs_sampled": 50458,
+          "repairs": 665,
+          "damage": 670,
+          "net_pair_lift": -5,
+          "damage_rate": 0.013278370129612747
+        },
+        "mature_vs_never": {
+          "total_pairs_sampled": 50452,
+          "repairs": 653,
+          "damage": 648,
+          "net_pair_lift": 5,
+          "damage_rate": 0.012843891223340998
+        },
+        "mature_vs_prebreak": {
+          "total_pairs_sampled": 44033,
+          "repairs": 530,
+          "damage": 527,
+          "net_pair_lift": 3,
+          "damage_rate": 0.011968296504894057
+        }
+      },
+      "bootstrap": {
+        "E1_minus_E0": {
+          "mean": -0.0011665569160628725,
+          "se": 0.0005175701022124572,
+          "ci95_percentile": [
+            -0.002189765638241095,
+            -0.00013280749523598805
+          ],
+          "prob_gt_zero": 0.0165,
+          "prob_ge_noise_floor": 0.0
+        },
+        "E2_minus_E1": {
+          "mean": 0.0013020865182924478,
+          "se": 0.0005457740612005807,
+          "ci95_percentile": [
+            0.00022690511307390526,
+            0.0024034730218651266
+          ],
+          "prob_gt_zero": 0.9915,
+          "prob_ge_noise_floor": 0.651
+        },
+        "E2_minus_E0": {
+          "mean": 0.00013552960222957544,
+          "se": 0.0003050400295014376,
+          "ci95_percentile": [
+            -0.0004551876093085161,
+            0.0007489568450730289
+          ],
+          "prob_gt_zero": 0.673,
+          "prob_ge_noise_floor": 0.002
+        }
+      },
+      "decision_bars": {
+        "E2_minus_E1": 0.0011,
+        "E2_minus_E0": 0.0011
+      },
+      "recommendation": "PARK_NO_PROMOTION"
+    }
+  ]
+}
