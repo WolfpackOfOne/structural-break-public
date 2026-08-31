@@ -24,10 +24,10 @@ This file answers **what matters now**. It does not replace `RESULTS.csv` (the q
 | **RT-600** | Seven LightGBM specialists + fold-pure smooth time-conditional CDF calibration | Pure-LightGBM reference and current formal production anchor | Official external TS-AUC **0.6268**; frozen/reliability-tested lineage. | **REFERENCE / FORMAL_PRODUCTION_ANCHOR** |
 | **RT-1254** | CAT-413 | Replaces RT-413 inside RT-1257 | standalone 0.620440244; fixed-slot E2-E0 +0.001244347; marginal_vs_clone +0.001087151; 5/5 positive; dominant net +93. | **ACTIVE_COMPONENT** |
 | **RT-1255** | CAT-300 | Replaces RT-300 inside RT-1257 | standalone 0.620242061; fixed-slot E2-E0 +0.001126876; marginal_vs_clone +0.001029459; 5/5 positive; dominant net +75. | **ACTIVE_COMPONENT** |
-| **RT-1261** | CAT-412 | Strongest remaining additional CatBoost slot candidate | Corrected greedy k=3 = CAT-413 + CAT-300 + CAT-412 reaches E2-E0 +0.002364556, only **+0.000338234 vs RT-1257**, below the 0.0011 paired-bootstrap noise floor. | **RESEARCH_ALIVE — highest-priority residual slot question** |
-| **RT-1263** | CAT-415 | Additional CatBoost slot replacement | Positive individual evidence; corrected multi-slot curve does not establish improvement over RT-1257. | **RESEARCH_ALIVE** |
-| **RT-1262** | CAT-414 | Additional CatBoost slot replacement | Positive individual evidence; corrected multi-slot curve does not establish improvement over RT-1257. | **RESEARCH_ALIVE** |
-| **RT-1260** | CAT-411 | Additional CatBoost slot replacement | Passed original clone-relative individual gate, but corrected E2-E0 is small and mature-vs-never evidence is weak. | **RESEARCH_ALIVE** |
+| **RT-1261** | CAT-412 | Strongest remaining additional CatBoost slot candidate | RT-1257-relative adjudication: primary E2-E1 +0.001087276 (5/5; 95% CI [+0.000120550, +0.002001007]) but deployment E2-E0 only **+0.000338234** (3/5; 95% CI [-0.000631306, +0.001358457]), below the 0.0011 noise floor; dominant-cell net -31. | **RESEARCH_ALIVE_WEAK — optional alt-partition only** |
+| **RT-1263** | CAT-415 | Additional CatBoost slot replacement | RT-1257-relative adjudication: primary E2-E1 +0.000283602 (3/5) and deployment E2-E0 +0.000175228 (3/5; 95% CI [-0.000756519, +0.001139340]); dominant-cell net -16 and mature-vs-never net -3. | **RESEARCH_ALIVE_WEAK — no new lane absent new evidence** |
+| **RT-1262** | CAT-414 | Additional CatBoost slot replacement | RT-1257-relative adjudication: primary E2-E1 +0.001057324 (4/5) but deployment E2-E0 +0.000178858 (4/5; 95% CI [-0.000729204, +0.001056890]); dominant-cell net -84. | **RESEARCH_ALIVE_WEAK — no new lane absent new evidence** |
+| **RT-1260** | CAT-411 | Additional CatBoost slot replacement | RT-1257-relative adjudication: primary E2-E1 +0.001317358 (5/5) is driven by a degraded clone control; deployment E2-E0 is only +0.000133942 (2/5; 95% CI [-0.000455188, +0.000748957]). | **PARKED / NO_PROMOTION** |
 | **RT-1320** | M1 Arm-C residual student | First candidate to *add* an 8th member rather than swap a slot | Addition contract vs RT-1257: primary E2-E1 **+0.001516** (4/5 folds, fold 0 negative); secondary E2-E0 +0.001416. On the RT-600 lane +0.001965 at 5/5. Confirmed at a second seed. | **RESEARCH_ALIVE — clears the primary endpoint; NOT deployable, NOT a member of any promoted system** |
 | **RT-995 / T2** | Teacher-distilled causal LightGBM | Privileged-information student | Strong standalone improvement (~+0.00943 vs matched T0) but final ensemble marginal vs matched seed clone only ~+0.000237; mostly redundant. | **PARKED** |
 | **RT-1265** | CSA-04R corrected reanalysis identity | Corrected hybrid-selection result | Fixed E2-E0 + preregistered parsimony selects k*=2 = CAT-413 + CAT-300, exactly RT-1257. `delta_vs_RT1257=0`; no new OOF vector. | **SUPERSEDING_ANALYSIS / NOT_DISTINGUISHABLE** |
@@ -67,6 +67,8 @@ RT-1257 is the current **external champion** at 0.6290. RT-600 remains the forma
 ## Future comparison rule
 
 Serious new candidates should be evaluated for **marginal information relative to RT-1257**, not just standalone AUC. RT-600 remains a permanent homogeneous LightGBM reference. For a candidate C, prefer a matched test of E0=RT-1257, E1=RT-1257 with an exchangeable matched control, and E2=RT-1257 with C, with E2-E1 as the primary endpoint and E2-E0, fold consistency, pair flow, dominant-cell repair, mature-vs-never repair, correlation, runtime, causality, and deployment complexity as supporting evidence.
+
+First application of this rule to the four residual CSA-04 slot candidates is filed in `research/reports/deep_ensemble_frontier_2026/local/RT1257_SLOT_ADJUDICATION.md`.
 
 ## RT-1320 — what it would take to become an ACTIVE_COMPONENT
 
