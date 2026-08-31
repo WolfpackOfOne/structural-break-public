@@ -24,7 +24,7 @@ The internal evidence that licensed RT-1257 was E2-E0 **+0.002026322**, marginal
 
 **RT-600 — official TS-AUC 0.6268.**
 
-RT-600 remains the formal production anchor during consolidation. RT-1257's build/manifest SHA split has been checked and the intervening tracked changes are packaging, dependency-declaration, and engineering-evidence changes rather than `src/sbr` model/feature changes. However, the tracked `CRUNCH_TEST.json` predates the shipped/post-packaging build. A fresh Crunch test against the exact current RT-1257 build is still required before formal production promotion.
+RT-600 remains the formal production anchor during consolidation. RT-1257's build/manifest SHA split has been checked and the intervening tracked changes are packaging, dependency-declaration, and engineering-evidence changes rather than `src/sbr` model/feature changes. A fresh local Crunch test against the shipped/post-packaging entrypoint was recorded on 2026-08-31 and passed with determinism. Formal production promotion has not been made yet; it still requires the final consolidated validation/CI gate and owner tag/promotion step.
 
 See `engineering/reports/rt1257_deployment/CONSOLIDATION_HYGIENE_REVIEW.md`.
 
@@ -63,7 +63,9 @@ Read these first:
 
 ## Ledger consolidation finding
 
-The pre-consolidation `research/current` branch was not a complete canonical ledger: its `RESULTS.csv` omitted the later RT-1250+ champion lineage. The consolidation imported the later CatBoost / Deep Ensemble generation containing RT-1250..RT-1257 and RT-1260..RT-1265. The binding RT-1258/RT-1259 H4 results exist in the canonical imported report but were not found as rows in the inspected branch-head ledgers; this remains an explicit ledger-reconciliation item until filed into `RESULTS.csv` without inventing missing metadata.
+The pre-consolidation `research/current` branch was not a complete canonical ledger: its `RESULTS.csv` omitted the later RT-1250+ champion lineage. The consolidation imported the later CatBoost / Deep Ensemble generation containing RT-1250..RT-1257 and RT-1260..RT-1265. A follow-up then filed the binding RT-1258/RT-1259 H4 results into canonical `RESULTS.csv` without inventing missing metadata.
+
+PR #14 follow-up bookkeeping filed RT-1258/RT-1259 as append-only rows in canonical `RESULTS.csv` using recovered metadata from the reachable H4 JSON at commit `3f94d55`: `git_sha=b3a16bc`, `train_series=8000`, and both per-fold standalone TS-AUC vectors. The `persistence` field remains blank because no source artifact defines a persistence tag/category for these GPU arms.
 
 The exact pre-consolidation `research/current` ledger is preserved at `archive/2026-08-30/RESULTS_SNAPSHOT.csv`.
 
@@ -79,4 +81,4 @@ Use RT-1257 as the primary ensemble baseline and RT-600 as the permanent homogen
 
 Work is occurring on `release/2026-research-consolidation`; `main` has not been moved. No historical branch should be deleted until the final consolidation gate passes and its unique history is proven reachable or tagged.
 
-_Last updated: 2026-08-30 during research-to-production consolidation._
+_Last updated: 2026-08-31 during PR #14 consolidation follow-up._

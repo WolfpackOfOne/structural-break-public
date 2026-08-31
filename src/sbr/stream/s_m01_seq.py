@@ -30,7 +30,10 @@ The three places that needed care:
     the larger ``L`` only contribute ``np.maximum(best, 0.0)``, which is a
     no-op because ``best`` starts at ``0.0``.  So iterating ``L <= t+1`` is
     bitwise equivalent and needs no knowledge of the future length.
-3.  ``(1-a) ** np.arange(...)`` (the EWMA bias correction) is *not* bitwise
+3.  ``scipy.signal.lfilter`` contracts its EWMA multiply-add on arm64 but not
+    on x86_64 Linux CI.  ``_lfilter_madd`` follows the active host's lfilter
+    rounding semantics, so stream and batch stay bitwise identical on both.
+4.  ``(1-a) ** np.arange(...)`` (the EWMA bias correction) is *not* bitwise
     equal to the scalar ``(1-a) ** float(t+1)``.  We therefore precompute the
     same vectorised expression into a table and index it, growing by doubling.
 
@@ -63,7 +66,7 @@ from sbr.features.m01_seq import (
     _page_hinkley,
     _sr_log,
 )
-from sbr.stream._fp import fma as _fma
+from sbr.stream._fp import lfilter_madd as _lfilter_madd
 
 _TABLE0 = 1024
 
@@ -201,9 +204,9 @@ class _Ewma:
     """Bias-corrected EWMA; identical to ``lfilter`` + the arange-power table.
 
     ``lfilter`` runs the *transposed direct form II* -- ``y = a*x + z`` then
-    ``z = (1-a)*y`` -- and contracts the multiply-add into an FMA.  Carrying
-    ``z`` and fusing here reproduces it bitwise; the previous
-    ``a*x + b*y_prev`` form rounded twice and drifted by 1 ULP.
+    ``z = (1-a)*y`` -- with architecture-dependent multiply-add contraction.
+    Carrying ``z`` and routing the multiply-add through ``_lfilter_madd``
+    reproduces that batch recursion bitwise on both arm64 and x86_64.
     """
 
     __slots__ = ("a", "b", "z", "den")
@@ -216,7 +219,7 @@ class _Ewma:
         self.den = den
 
     def push(self, x, t):
-        y = _fma(self.a, x, self.z)
+        y = _lfilter_madd(self.a, x, self.z)
         self.z = self.b * y
         return y / self.den[t]
 

@@ -49,7 +49,9 @@ class StreamM00Core:            # name: StreamM01Seq, StreamM02Dist, ...
    not available at fit time, and obviously not any future observation.
 4. **The batch module is the specification.** If you think a batch feature is
    wrong, say so in your report; do not "fix" it. A streaming module that
-   improves on batch is a parity failure.
+   improves on batch is a parity failure. For lfilter-style recursions, match
+   the active host's `scipy.signal.lfilter` multiply-add semantics through
+   `sbr.stream._fp.lfilter_madd`; do not force arm64 FMA rounding on x86_64.
 5. Float64 internally; the caller casts to float32 once at the end.
 
 ## Useful `ctx` API at the current index t

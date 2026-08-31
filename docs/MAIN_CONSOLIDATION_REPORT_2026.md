@@ -1,6 +1,6 @@
 # Main Consolidation Report — 2026
 
-Date: 2026-08-30
+Date: 2026-08-31
 Branch: `release/2026-research-consolidation`
 Target: `main` only after all required gates are evidenced.
 
@@ -10,7 +10,7 @@ The repository has entered research-to-production consolidation. The purpose is 
 
 `main` has **not** been moved by this consolidation at the time of this report.
 
-The current best external model is **RT-1257**, official TS-AUC **0.6290**, versus the RT-600 reference at **0.6268** (+0.0022). RT-1257 is not yet being called the formal production anchor because its tracked local Crunch-test record predates the final packaging build.
+The current best external model is **RT-1257**, official TS-AUC **0.6290**, versus the RT-600 reference at **0.6268** (+0.0022). A fresh local post-build Crunch test now passes against the final entrypoint hash, but RT-1257 is not yet being called the formal production anchor until the latest consolidation head passes GitHub CI and the owner promotion/tag step is made deliberately.
 
 The consolidation has also corrected two important scientific/provenance misunderstandings:
 
@@ -105,16 +105,18 @@ Observed ledger generations:
 
 The consolidation therefore imported the latest verified Deep Ensemble LOCAL ledger generation rather than silently treating `research/current` as canonical.
 
-### OPEN — RT-1258/RT-1259 binding rows still need canonical RESULTS filing
+### PASS — RT-1258/RT-1259 binding rows filed in canonical RESULTS.csv
 
-`H4_GPU_TABULAR_RESULT.md` explicitly instructed the LOCAL lane to file RT-1258 and RT-1259 after the binding run. Those rows were not found at the inspected branch heads.
+`H4_GPU_TABULAR_RESULT.md` explicitly instructed the LOCAL lane to file RT-1258 and RT-1259 after the binding run. Those rows were not found at the inspected branch heads, so PR #14 follow-up appended them to canonical `research/RESULTS.csv` after `RT-1265`.
 
 The numerical result is fully documented:
 
 - RT-1258 TabM: marginal_vs_clone +0.000040946994511; 3/5 folds positive; E2-E0 -0.0007899234; standalone mean 0.6006475014; KILL.
 - RT-1259 RealMLP: marginal_vs_clone -0.003223743533063; 0/5 positive; standalone mean 0.5599057458; KILL.
 
-This consolidation will not invent missing ledger metadata merely to make the file look complete. Until the rows are filed with a documented provenance convention, this gate remains **OPEN** and is called out explicitly rather than silently repaired.
+The filed rows use recovered metadata from `3f94d55:research/reports/deep_ensemble_frontier_2026/crunch/H4_GPU_TABULAR_RESULT.json`: `git_sha=b3a16bc`, `train_series=8000`, and the exact five per-fold standalone TS-AUC values. The `persistence` field remains blank because no source artifact defines a persistence tag/category for these GPU arms. Persisted model/OOF artifact hashes were not recovered because the H4 JSON says the authoritative artifacts require Crunch dashboard access.
+
+The follow-up also restored the RT-1200/RT-1201 CSV quoting style to match the historical prefix rather than moving the causal-representation-frontier audit baseline.
 
 ## 5. Independent-review finding: TabM / RealMLP ID pairs
 
@@ -149,7 +151,7 @@ A real GitHub Actions run triggered by consolidation PR #13 provides execution e
 
 Therefore the feared LightGBM/Numba/PyArrow import-install failure is not the current blocker.
 
-### OPEN — full CI still not green
+### LOCAL PASS / GITHUB PENDING — full CI command set
 
 The actual blocker is repository-wide `ruff check .` against a tree containing large historical research surfaces. The consolidation workflow has been changed to:
 
@@ -158,7 +160,17 @@ The actual blocker is repository-wide `ruff check .` against a tree containing l
 - run `research/scripts/check_research_hygiene.py` separately;
 - then run pytest.
 
-This revised workflow must execute on GitHub Actions before any CI PASS claim is made.
+PR #14 follow-up also corrected the FMA/lfilter parity assumption that made x86_64 Linux CI stricter than macOS/arm64. The stream code now uses `sbr.stream._fp.lfilter_madd`, which follows the active host's `scipy.signal.lfilter` multiply-add contract: single-rounded FMA on the supported arm64 build, ordinary two-rounded `a * b + c` on x86_64 Linux.
+
+Local CI-equivalent validation after the follow-up changes:
+
+- import smoke for `lightgbm`, `numba`, `pyarrow`, `catboost`, and `sbr`: PASS
+- `ruff check src tests scripts`: PASS
+- `python research/scripts/check_research_hygiene.py`: PASS, 275 experiment rows and no duplicate IDs
+- focused parity/audit subset: PASS, 63 passed / 2 skipped
+- `pytest -q`: PASS, 692 passed / 79 skipped / 88 warnings
+
+The revised workflow must still execute on GitHub Actions for the pushed PR head before any remote CI PASS claim is made.
 
 ## 7. RT-1257 deployment hygiene
 
@@ -176,13 +188,24 @@ Submission #16 is recorded at 0.6290 official TS-AUC, versus RT-600 0.6268.
 
 A direct Git comparison shows three tracked commits and no `src/sbr` model/feature/calibration/inference changes. The changed tracked files are deployment evidence, dependency declaration, build-submission packaging logic, and generated build metadata. The source-code gap is therefore verified as packaging/deployment-only.
 
-### UNVERIFIED — fresh post-build Crunch test
+### PASS — fresh post-build Crunch test
 
-The tracked `engineering/reports/rt1257_deployment/CRUNCH_TEST.json` predates the final build and lacks the final entrypoint hash. It cannot be used as evidence that the exact shipped/post-packaging build passed the local Crunch test.
+PR #14 follow-up ran a fresh local Crunch test against the shipped/post-packaging RT-1257 entrypoint and regenerated `engineering/reports/rt1257_deployment/CRUNCH_TEST.json`.
 
-### BLOCKED — formal production promotion
+Evidence captured:
 
-Because the fresh artifact test is missing, no `rt1257-production-0.6290` production tag has been created and `STATUS.md` retains RT-600 as the formal production anchor.
+- tested_at_utc: 2026-08-31T01:07:46Z
+- Crunch CLI: 11.11.0
+- entrypoint SHA-256: `05eafb66f4589f5b426f4af43779f428f7a90f2d64b423530d6f315a798e888b`
+- build manifest SHA-256: `8e27b96c0b7cb4ac6998ff89c37ac180cf54a5253a3141d2e096e52feac6b344`
+- result: PASSED
+- determinism_check: passed
+- prediction rows: 50,983
+- prediction SHA-256: `cd6c5fe9f376ef4c5e620e77f5f94cf4bb77843d1e12820a02256e08e7a80b1b`
+
+### PENDING — formal production promotion
+
+No `rt1257-production-0.6290` production tag has been created and `STATUS.md` retains RT-600 as the formal production anchor. The fresh local test is now closed; formal promotion still depends on the latest PR head passing GitHub CI and the owner/tag/status promotion step being made explicitly.
 
 ## 8. Canonical current-state documents
 
@@ -206,7 +229,7 @@ The new documents explicitly distinguish EXTERNAL_CHAMPION, REFERENCE, ACTIVE_CO
 
 | Model | Consolidated status |
 | --- | --- |
-| RT-1257 | EXTERNAL_CHAMPION; production promotion blocked pending fresh Crunch test |
+| RT-1257 | EXTERNAL_CHAMPION; fresh local Crunch test passed; production promotion pending CI/tag/owner gate |
 | RT-600 | REFERENCE / FORMAL_PRODUCTION_ANCHOR |
 | RT-1254 / CAT-413 | ACTIVE_COMPONENT |
 | RT-1255 / CAT-300 | ACTIVE_COMPONENT |
@@ -256,7 +279,7 @@ Do not delete branches merely because their science is classified KILL.
 | RT-1250+ stale-trunk ledger defect identified | **PASS** | `research/current` lacks RT-1250 |
 | Later CatBoost / RT-1260..1265 ledger generation imported | **PASS** | curated Deep Ensemble import |
 | RT-1258/RT-1259 binding results documented | **PASS** | H4 result imported |
-| RT-1258/RT-1259 rows filed in canonical RESULTS.csv | **OPEN** | rows absent at inspected branch heads; do not invent metadata |
+| RT-1258/RT-1259 rows filed in canonical RESULTS.csv | **PASS** | append-only follow-up rows; unrecovered metadata left blank |
 | RT-1264 corrected classification | **PASS** | CSA-04R / RT-1265 evidence |
 | TabM/RealMLP ID relationship resolved | **PASS** | FULL_OOF_PREREG + H4 evidence |
 | MODEL_REGISTRY created | **PASS** | current-state classifications |
@@ -268,14 +291,14 @@ Do not delete branches merely because their science is classified KILL.
 | RT-600 preserved | **PASS** | reference/frozen lineage retained |
 | RT-1257 external provenance | **PASS** | submission #16 record |
 | Manifest/build tracked-code gap classified | **PASS** | direct Git compare, packaging-only tracked diff |
-| Fresh post-build RT-1257 Crunch test | **UNVERIFIED** | tracked test predates final build |
-| RT-1257 formal production promotion | **BLOCKED** | depends on fresh test and final validation |
+| Fresh post-build RT-1257 Crunch test | **PASS** | `CRUNCH_TEST.json` regenerated from 2026-08-31 local run |
+| RT-1257 formal production promotion | **PENDING** | depends on GitHub CI and explicit owner/tag/status promotion |
 | CI dependency installation | **PASS** | actual PR #13 GitHub Actions install step |
-| CI runtime import smoke test | **PENDING RUN** | revised workflow authored, not yet executed |
-| Maintained-code Ruff | **PENDING RUN** | revised scope authored |
-| Research ledger hygiene script | **PENDING RUN** | revised workflow authored |
-| pytest full intended suite | **UNVERIFIED** | prior run skipped at Ruff |
-| production causality/prefix/independence/determinism gate | **PARTIAL / NEEDS FINAL RUN** | historical evidence exists; consolidation CI/clean artifact confirmation pending |
+| CI runtime import smoke test | **LOCAL PASS / GITHUB PENDING** | local command passed after editable install |
+| Maintained-code Ruff | **LOCAL PASS / GITHUB PENDING** | `ruff check src tests scripts` |
+| Research ledger hygiene script | **PASS** | local script reports 275 rows and no duplicate IDs |
+| pytest full intended suite | **LOCAL PASS / GITHUB PENDING** | `pytest -q`: 692 passed, 79 skipped, 88 warnings |
+| production causality/prefix/independence/determinism gate | **LOCAL PASS / GITHUB PENDING** | test suite passes locally; real-store CRF tests skip where competition store is absent |
 | branch tags created for new late milestones | **OPEN** | defer until validation / available safe tag operation |
 | branch deletion | **NOT STARTED BY DESIGN** | must occur only after final merge and reachability check |
 
@@ -283,19 +306,16 @@ Do not delete branches merely because their science is classified KILL.
 
 The consolidation branch must not be merged to `main` while any required item below is unresolved:
 
-1. Revised GitHub CI has not yet executed to completion.
-2. pytest has not yet run under the consolidated GitHub environment.
-3. RT-1258/RT-1259 binding rows are still absent from canonical `RESULTS.csv` and need a provenance-safe filing operation.
-4. RT-1257 still lacks a fresh tracked Crunch-test record tied to the final/post-packaging build and entrypoint hash.
-5. Formal RT-1257 production promotion/tagging therefore remains blocked.
-6. Final branch/tag pruning must wait until after validation and a last unique-history audit.
+1. Revised GitHub CI for the latest PR head has not yet executed to completion.
+2. Formal RT-1257 production promotion/tagging/status change has not been made by the owner; RT-600 remains the formal production anchor until then.
+3. Final branch/tag pruning must wait until after validation and a last unique-history audit.
 
 ## 13. Scientific operating state after consolidation
 
 The intended hierarchy is now explicit:
 
 - external champion: RT-1257, 0.6290
-- formal production/reference anchor pending final RT-1257 artifact gate: RT-600, 0.6268
+- formal production/reference anchor pending final RT-1257 promotion: RT-600, 0.6268
 - champion components: CAT-300 / RT-1255 and CAT-413 / RT-1254
 - research-alive residual CatBoost slots: CAT-412, CAT-415, CAT-414, CAT-411
 - parked signal: RT-995 / T2
@@ -307,4 +327,4 @@ Future serious research should optimize **marginal information relative to RT-12
 
 ## 14. Integrity principle
 
-No PASS in this report means “probably.” PASS is used only where repository/GitHub evidence was directly checked. Items that require a fresh local competition environment, unavailable generated artifacts, or an actual CI run remain UNVERIFIED, PENDING, OPEN, or BLOCKED.
+No PASS in this report means "probably." PASS is used only where repository, local command, or available GitHub evidence was directly checked. Items that require unavailable generated artifacts, a future GitHub Actions run, or an owner promotion step remain UNVERIFIED, PENDING, OPEN, or BLOCKED.

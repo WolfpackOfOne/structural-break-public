@@ -36,6 +36,7 @@ import sys
 
 import numpy as np
 import pytest
+from conftest import skip_on_missing_store
 
 torch = pytest.importorskip("torch")
 
@@ -52,7 +53,8 @@ TOL = 1e-8
 @pytest.fixture(scope="module")
 def store():
     from sbr.store import load_store
-    return load_store(f"{os.environ.get('SBR_ROOT', ROOT)}/cache/store")
+    root = os.environ.get("SBR_ROOT", ROOT)
+    return skip_on_missing_store(load_store, f"{root}/cache/store")
 
 
 @pytest.fixture(scope="module")
@@ -65,7 +67,7 @@ def spread(store):
 @pytest.fixture(scope="module")
 def data():
     from sbr.pipeline import Data
-    return Data()
+    return skip_on_missing_store(Data)
 
 
 @pytest.fixture(autouse=True)

@@ -16,7 +16,7 @@ The system must emit a continuous structural-break score at each online time ste
 
 RT-1257 is the first recorded external improvement beyond the RT-600 anchor in this research program. It was selected using internal evidence before the external score was known; the leaderboard result is treated as validation, not as a tuning oracle.
 
-**Production-status nuance:** RT-1257 is the best externally measured deployable system, but RT-600 remains the formal production anchor during consolidation because the tracked RT-1257 local Crunch-test record predates the final packaging build. The build/manifest source gap has been verified as packaging/dependency/report-only at the tracked-code level, but a fresh post-build Crunch test is still required before formal anchor promotion.
+**Production-status nuance:** RT-1257 is the best externally measured deployable system, but RT-600 remains the formal production anchor during consolidation. The build/manifest source gap has been verified as packaging/dependency/report-only at the tracked-code level, and a fresh local post-build Crunch test passed on 2026-08-31 against entrypoint SHA `05eafb66f4589f5b426f4af43779f428f7a90f2d64b423530d6f315a798e888b`. Formal anchor promotion still waits on final consolidated validation, GitHub CI, and owner tagging/promotion.
 
 ## RT-1257 architecture
 

@@ -1,5 +1,6 @@
 {
   "cli_version": "crunch, version 11.11.0",
+  "tested_at_utc": "2026-08-31T01:07:46Z",
   "project": {
     "competitionName": "structural-break-real-time",
     "projectName": "treaming-detector-v1",
@@ -8,20 +9,64 @@
   },
   "result": "PASSED",
   "determinism_check": "passed",
+  "determinism_tolerance": 1e-08,
   "infer_parallelism": 1,
-  "duration_reported": "00:02:46",
-  "wall_time_s_time_command": 172.68,
-  "memory_reported": "before=\"230.62 MB\" after=\"1.6 GB\" consumed=\"1.37 GB\"",
-  "maximum_resident_set_size_bytes": 2748055552,
-  "peak_memory_footprint_bytes": 2348125688,
-  "model_directory": "/tmp/rt1257_crunch_resources.R3WXJN",
+  "duration_reported": "00:03:19",
+  "wall_time_s_time_command": 206.41,
+  "memory_reported": "before=\"256.82 MB\" after=\"1.71 GB\" consumed=\"1.46 GB\"",
+  "maximum_resident_set_size_bytes": 4141531136,
+  "peak_memory_footprint_bytes": 3687763736,
+  "model_directory": "/tmp/rt1257_crunch_resources.pr14-followup-20260831-01",
   "main_file": "/path/to/workspace/structural-break-rt1257-deployment/submissions/RT1257_deployable.py",
-  "prediction_path": "/path/to/workspace/structural-break-claude-wave3/prediction/prediction.parquet",
+  "source_worktree": "/path/to/workspace/structural-break-rt1257-deployment",
+  "artifact_identity": {
+    "build_manifest_path": "/path/to/workspace/structural-break-2026-research-consolidation/submissions/RT1257_deployable.build.json",
+    "build_manifest_sha256": "8e27b96c0b7cb4ac6998ff89c37ac180cf54a5253a3141d2e096e52feac6b344",
+    "built_at": "2026-08-29T12:52:38Z",
+    "code_git_sha": "e50098a42f28b1007746cb20bbabc157e285b036",
+    "manifest_code_git_sha": "6b4fafacd30711bebf2bf977c3c390641f3ae522",
+    "manifest_matches_build_sha": false,
+    "entrypoint_sha256": "05eafb66f4589f5b426f4af43779f428f7a90f2d64b423530d6f315a798e888b",
+    "entrypoint_bytes": 24006505,
+    "notebook_sha256": "2461c7002fce3d0a0057f99acfa6749940bc7e2d3fc764351ee21e6bcb3de2e1",
+    "notebook_bytes": 24009226,
+    "source_zip_sha256": "c8e35854675b038103cec6b6da827e1186bf8235bef6a8d3d8d6e00691429676",
+    "model_zip_sha256": "952422d7ddb5a5d60719e909d1f0669c612952c72a26fc1859035dfae0381f0a",
+    "feature_manifest_sha256": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced",
+    "model_manifest_sha256": "ba4bee741d3d16ccc874724757167b9a7478005c14587bb329b845efca126d4c"
+  },
+  "prediction_path": "/path/to/workspace/structural-break-rt1257-deployment/prediction/prediction.parquet",
   "prediction_rows": 50983,
   "prediction_columns": [
     "prediction"
   ],
-  "prediction_sha256": "6241c1ebc76f1719830fde3478a9bbd9edd13dc74089ad5f667ab5a2a7c0f11a",
+  "prediction_sha256": "cd6c5fe9f376ef4c5e620e77f5f94cf4bb77843d1e12820a02256e08e7a80b1b",
+  "model_files": {
+    "manifest.json": {
+      "sha256": "ba4bee741d3d16ccc874724757167b9a7478005c14587bb329b845efca126d4c"
+    },
+    "model.cbm.0": {
+      "sha256": "d5922e5395586d2d71a0b8fd73a8b07d1f9e6ede6077b53488a2c3987d109759"
+    },
+    "model.cbm.4": {
+      "sha256": "5f49e7f224ee0e2676aa11b1c237ce98fd8a302bddbe1543c725b2b58686cf5e"
+    },
+    "model.txt.1": {
+      "sha256": "31bd0b7a8734fdd258d048faee7af8f62d0e7b4930f404d07d93897099853211"
+    },
+    "model.txt.2": {
+      "sha256": "7f732c73f81bb20cb1f142c4c035e03a6a8db6191a218af36dfede63ecafe125"
+    },
+    "model.txt.3": {
+      "sha256": "009c2e880ae0c3aa22f1ea632cb8256563239749dcf03c72dca7a08cf8131092"
+    },
+    "model.txt.5": {
+      "sha256": "261b3bcf4a7e2cdda306cc909e236e07cec56411e5e7e73f9c40f099e9f8e953"
+    },
+    "model.txt.6": {
+      "sha256": "c1edd219d7501232ccc127f84fd51c66a690ec882c00d2f5ba2d2b0ef2207c39"
+    }
+  },
   "data_files": {
     "X_train.parquet": {
       "bytes": 218514418,

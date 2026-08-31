@@ -30,7 +30,7 @@ RT-1257 is the RT-600 seven-slot architecture with exactly two learner swaps: RT
 
 **RT-600** — official TS-AUC 0.6268.
 
-Retained permanently as the homogeneous seven-LightGBM reference and, until RT-1257's post-build Crunch-test record is refreshed, the formal production anchor.
+Retained permanently as the homogeneous seven-LightGBM reference and, until final RT-1257 production promotion is explicitly completed, the formal production anchor. A fresh local post-build RT-1257 Crunch test was captured on 2026-08-31; final consolidated validation/CI and owner tag/promotion remain pending.
 
 Key evidence:
 - `research/FINAL_ARCHITECTURE_FREEZE.md`

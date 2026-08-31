@@ -1035,8 +1035,29 @@ budget without any shrink (TabM `3.63606h`, RealMLP `0.90924h`, combined
 `4.545298927912005h` for both learners' five folds) — so `RT-1258`/`RT-1259`
 are freshly numbered rather than reopening `RT-1250`/`RT-1252`.
 
-Both candidates must complete full 5-fold OOF before either is evaluated.
-Result not yet filed; no score exists at allocation time.
+Both candidates completed full 5-fold OOF in Crunch submission `76588`, task
+`run-d0890cc5`, and are filed in canonical `research/RESULTS.csv` as append-only
+rows after `RT-1265` to preserve the historical-row rule. This is a bookkeeping
+recovery of already-preregistered arms, not a new experiment and not ID reuse.
+
+Recovered ledger metadata:
+
+- `git_sha`: `b3a16bc`, the H4 submission git SHA recorded in the reachable
+  machine-readable result at commit `3f94d55`.
+- `train_series`: `8000`, from the `FULL_OOF_PREREG.md` canonical dev-fold
+  contract and the adjacent full-OOF ledger convention.
+- `per_fold_ts_auc`: recovered from
+  `3f94d55:research/reports/deep_ensemble_frontier_2026/crunch/H4_GPU_TABULAR_RESULT.json`.
+
+Unrecoverable ledger metadata:
+
+- `persistence` remains blank for both rows. The GPU full-OOF preregistration,
+  H4 markdown, and reachable H4 JSON do not define a persistence tag/category
+  for these arms; the pending recovery CSV also left it blank. Filling `none`
+  after the fact would be a convention choice, not recovered run metadata.
+- Persisted model/OOF artifact hashes were not recovered. The H4 JSON records
+  that the authoritative `GPU_TABULAR_OOF_RESULTS.json` and OOF arrays live as
+  Crunch submission artifacts and that only dashboard access can retrieve them.
 
 ## Deep Ensemble Frontier 2026 -- LOCAL Lane CSA-04
 

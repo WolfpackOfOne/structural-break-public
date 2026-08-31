@@ -20,7 +20,7 @@ This file answers **what matters now**. It does not replace `RESULTS.csv` (the q
 
 | Model | Alias / family | Role | Key evidence | Current status |
 | --- | --- | --- | --- | --- |
-| **RT-1257** | CAT-300 + five incumbent LightGBM specialists + CAT-413 | Best measured deployable system | Official submission #16 TS-AUC **0.6290**, vs RT-600 0.6268 (**+0.0022**). Internal E2-E0 +0.002026322; marginal_vs_clone +0.002407205; 5/5 positive. | **EXTERNAL_CHAMPION — production promotion blocked pending fresh post-build Crunch test** |
+| **RT-1257** | CAT-300 + five incumbent LightGBM specialists + CAT-413 | Best measured deployable system | Official submission #16 TS-AUC **0.6290**, vs RT-600 0.6268 (**+0.0022**). Internal E2-E0 +0.002026322; marginal_vs_clone +0.002407205; 5/5 positive. Fresh local post-build Crunch test passed on 2026-08-31. | **EXTERNAL_CHAMPION — production promotion pending final CI/tag/owner gate** |
 | **RT-600** | Seven LightGBM specialists + fold-pure smooth time-conditional CDF calibration | Pure-LightGBM reference and current formal production anchor | Official external TS-AUC **0.6268**; frozen/reliability-tested lineage. | **REFERENCE / FORMAL_PRODUCTION_ANCHOR** |
 | **RT-1254** | CAT-413 | Replaces RT-413 inside RT-1257 | standalone 0.620440244; fixed-slot E2-E0 +0.001244347; marginal_vs_clone +0.001087151; 5/5 positive; dominant net +93. | **ACTIVE_COMPONENT** |
 | **RT-1255** | CAT-300 | Replaces RT-300 inside RT-1257 | standalone 0.620242061; fixed-slot E2-E0 +0.001126876; marginal_vs_clone +0.001029459; 5/5 positive; dominant net +75. | **ACTIVE_COMPONENT** |
@@ -61,7 +61,7 @@ RT-1250 and RT-1252 are the original Learner Diversity feasibility records. They
 
 ## Production status
 
-RT-1257 is the current **external champion** at 0.6290. RT-600 remains the formal production anchor until RT-1257's tracked local-test record is refreshed against the shipped/post-packaging build. The repository has verified that the manifest/build-SHA gap spans packaging, dependency declaration, and engineering evidence changes rather than `src/sbr` model/feature source changes, but that does not substitute for the required fresh Crunch test.
+RT-1257 is the current **external champion** at 0.6290. RT-600 remains the formal production anchor until final RT-1257 production promotion is explicitly completed. The repository has verified that the manifest/build-SHA gap spans packaging, dependency declaration, and engineering evidence changes rather than `src/sbr` model/feature source changes, and the PR #14 follow-up recorded a fresh local post-build Crunch test PASS against the final entrypoint. The remaining gate is final consolidated validation/CI plus owner tag/promotion.
 
 ## Future comparison rule
 

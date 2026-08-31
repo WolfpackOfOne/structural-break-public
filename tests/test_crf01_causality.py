@@ -33,6 +33,7 @@ import sys
 
 import numpy as np
 import pytest
+from conftest import skip_on_missing_store
 
 torch = pytest.importorskip("torch")
 
@@ -51,7 +52,7 @@ CUTS = (3, 10, 37, 111)
 def store():
     from sbr.store import load_store
     root = os.environ.get("SBR_ROOT", ROOT)
-    return load_store(f"{root}/cache/store")
+    return skip_on_missing_store(load_store, f"{root}/cache/store")
 
 
 @pytest.fixture(scope="module")
@@ -80,7 +81,7 @@ def _isolate_cache(tmp_path, monkeypatch):
 @pytest.fixture(scope="module")
 def data():
     from sbr.pipeline import Data
-    return Data()
+    return skip_on_missing_store(Data)
 
 
 # ============================================================ P1 / P2  fold purity

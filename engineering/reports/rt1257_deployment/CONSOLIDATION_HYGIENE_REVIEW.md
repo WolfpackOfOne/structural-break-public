@@ -1,6 +1,6 @@
 # RT-1257 Consolidation Hygiene Review
 
-Date: 2026-08-30
+Date: 2026-08-31
 Purpose: determine what can be verified from repository/GitHub evidence before RT-1257 is called the formal production anchor.
 
 ## Executive status
@@ -11,9 +11,9 @@ Purpose: determine what can be verified from repository/GitHub evidence before R
 
 **Manifest/build SHA gap is packaging-only in tracked source:** VERIFIED at Git-diff level. The model-manifest code SHA is `6b4fafacd30711bebf2bf977c3c390641f3ae522`; the shipped-build code SHA is `e50098a42f28b1007746cb20bbabc157e285b036`. The latter is three tracked commits ahead. The compare changes engineering evidence, `requirements.txt`, `research/scripts/build_submission.py`, and generated build metadata; it does **not** change `src/sbr` model, feature, calibration, metric, or inference source.
 
-**Fresh Crunch test against shipped/post-packaging build:** **UNVERIFIED / REQUIRED.** The tracked `engineering/reports/rt1257_deployment/CRUNCH_TEST.json` predates the packaging fixes and does not include the entrypoint SHA recorded by the later build manifest.
+**Fresh Crunch test against shipped/post-packaging build:** **VERIFIED / PASSED.** PR #14 follow-up ran `crunch test` with Crunch CLI 11.11.0 on 2026-08-31T01:07:46Z against entrypoint SHA `05eafb66f4589f5b426f4af43779f428f7a90f2d64b423530d6f315a798e888b`. The runner completed inference, saved 50,983 predictions, and passed the determinism check.
 
-**Formal production promotion:** **BLOCKED** until the fresh Crunch test is captured. RT-600 therefore remains the formal production anchor during consolidation.
+**Formal production promotion:** **PENDING FINAL VALIDATION / OWNER PROMOTION.** The fresh local Crunch-test gap is closed, but RT-600 remains the formal production anchor until the latest consolidation head passes GitHub CI and the production tag/status change are deliberately made.
 
 ## Artifact identity evidence
 
@@ -49,21 +49,27 @@ GitHub comparison from `6b4faf...` to `e50098a...` shows three commits. The trac
 
 No `src/sbr` predictive source changed. The dependency/build changes add the deployment requirements and packaging behavior needed for the hybrid artifact. This supports the statement that the tracked SHA gap is packaging/deployment-only.
 
-This verification does **not** prove that the exact post-packaging artifact has passed `crunch test`; it only narrows what changed in version control.
+This verification narrowed what changed in version control. The fresh Crunch-test record below supplies the artifact-level test evidence that was missing from the original consolidation review.
 
-## Stale Crunch-test record
+## Fresh post-build Crunch-test record
 
-The tracked `CRUNCH_TEST.json` records:
+PR #14 follow-up regenerated `engineering/reports/rt1257_deployment/CRUNCH_TEST.json` from a fresh local `crunch test` run against the shipped/post-packaging entrypoint:
 
+- command: `crunch test --main-file submissions/RT1257_deployable.py --model-directory /tmp/rt1257_crunch_resources.pr14-followup-20260831-01`
+- source worktree: `/path/to/workspace/structural-break-rt1257-deployment`
 - competition: `structural-break-real-time`
 - result: PASSED
 - determinism_check: passed
-- duration: 00:02:46
-- reported memory consumed: 1.37 GB
+- duration: 00:03:19
+- reported memory consumed: 1.46 GB
+- maximum resident set size: 4,141,531,136 bytes
+- entrypoint SHA-256: `05eafb66f4589f5b426f4af43779f428f7a90f2d64b423530d6f315a798e888b`
+- notebook SHA-256: `2461c7002fce3d0a0057f99acfa6749940bc7e2d3fc764351ee21e6bcb3de2e1`
+- build manifest SHA-256: `8e27b96c0b7cb4ac6998ff89c37ac180cf54a5253a3141d2e096e52feac6b344`
 - prediction rows: 50,983
-- prediction SHA-256: `6241c1ebc76f1719830fde3478a9bbd9edd13dc74089ad5f667ab5a2a7c0f11a`
+- prediction SHA-256: `cd6c5fe9f376ef4c5e620e77f5f94cf4bb77843d1e12820a02256e08e7a80b1b`
 
-However, `SUBMISSION_16.md` explicitly states that this test record predates the final packaging fixes and 2026-08-29 build, and that it lacks the entrypoint hash required to tie it to the shipped artifact. Therefore its PASS must not be cited as a post-build RT-1257 qualification.
+The prior stale record's prediction hash `6241c1ebc76f1719830fde3478a9bbd9edd13dc74089ad5f667ab5a2a7c0f11a` is superseded for the post-build gate and must not be cited as the current artifact qualification.
 
 ## Submitted working-tree provenance
 
@@ -81,18 +87,27 @@ Current repository evidence does **not** support that specific failure theory:
 - the advanced RT-1257 lineage's `requirements.txt` declares LightGBM and CatBoost; the RT-600 runtime generation also declares LightGBM/Numba/PyArrow through its runtime requirements.
 - a real GitHub Actions run triggered by consolidation PR #13 completed the dependency-install step successfully on Ubuntu.
 
-That run then failed at the repository-wide Ruff step before pytest, so full test execution remains **UNVERIFIED** until the CI lint scope is corrected and pytest is reached.
+That run then failed at the repository-wide Ruff step before pytest. PR #14 follow-up corrected the maintained lint/test surface and added explicit missing-store skips for CRF real-data tests that require the non-redistributable competition store.
+
+Local CI-equivalent validation after the follow-up changes:
+
+- import smoke for `lightgbm`, `numba`, `pyarrow`, `catboost`, and `sbr`: PASS
+- `ruff check src tests scripts`: PASS
+- `python research/scripts/check_research_hygiene.py`: PASS, 275 experiment rows and no duplicate IDs
+- `pytest -q`: PASS, 692 passed / 79 skipped / 88 warnings
+
+GitHub Actions must still run on the pushed PR head before any remote CI PASS claim is made.
 
 ## Required promotion gate
 
 Before changing the formal production anchor from RT-600 to RT-1257:
 
-1. Build RT-1257 from a clean tracked checkout using the canonical build script.
-2. Record the new source/build/model/manifest/entrypoint hashes.
-3. Run `crunch test` against that exact build.
-4. Regenerate `engineering/reports/rt1257_deployment/CRUNCH_TEST.json` so it identifies the entrypoint hash/build manifest it tested.
-5. Re-run deterministic/prefix/series-independence/streaming-parity/production-contract tests in the clean environment.
-6. Ensure GitHub CI reaches and passes the intended production test set.
-7. Only then create the production promotion tag and change `STATUS.md` from “external champion” + “RT-600 formal anchor” to “RT-1257 production champion.”
+1. Build RT-1257 from a clean tracked checkout using the canonical build script. Existing final build identity is recorded; a new clean rebuild was not performed in this follow-up.
+2. Record the new source/build/model/manifest/entrypoint hashes. DONE in `CRUNCH_TEST.json`.
+3. Run `crunch test` against that exact build. DONE locally on 2026-08-31.
+4. Regenerate `engineering/reports/rt1257_deployment/CRUNCH_TEST.json` so it identifies the entrypoint hash/build manifest it tested. DONE.
+5. Re-run deterministic/prefix/series-independence/streaming-parity/production-contract tests in the clean environment. DONE locally through `pytest -q`; real-store CRF tests skip when the non-redistributable store is absent.
+6. Ensure GitHub CI reaches and passes the intended production test set. PENDING until the PR head is pushed and Actions completes.
+7. Only then create the production promotion tag and change `STATUS.md` from "external champion" + "RT-600 formal anchor" to "RT-1257 production champion." NOT DONE.
 
-Until those gates are evidenced, no consolidation document may claim RT-1257 is CI-verified or formally production-promoted.
+Until the remaining gates are evidenced, no consolidation document may claim RT-1257 is GitHub-CI-verified or formally production-promoted.

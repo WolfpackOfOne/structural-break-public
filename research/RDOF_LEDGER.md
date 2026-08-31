@@ -1480,7 +1480,17 @@ budget?
 
 Allocated IDs: `RT-1258` GPU-01 TabM, `RT-1259` GPU-02 RealMLP. Both must
 complete full 5-fold OOF before either is evaluated; neither may stop early
-except on unrecoverable technical failure. Result not yet filed.
+except on unrecoverable technical failure.
+
+Filed result: both completed full 5-fold OOF in Crunch submission `76588`, task
+`run-d0890cc5`, and both are **KILL** under the frozen gate. `RT-1258` TabM:
+standalone mean TS-AUC `0.6006475013889048`, `marginal_vs_clone =
++0.000040946994511`, `3/5` positive folds, `E2-E0 = -0.0007899234`. `RT-1259`
+RealMLP: standalone mean TS-AUC `0.5599057457666973`,
+`marginal_vs_clone = -0.003223743533063`, `0/5` positive folds. The canonical
+`research/RESULTS.csv` rows were appended during PR #14 follow-up bookkeeping;
+no new degree of freedom, parameter change, model combination, or RT ID was
+introduced.
 
 ## Deep Ensemble Frontier 2026 -- LOCAL Lane CSA-04  (PRE-REGISTERED 2026-08-28)
 
