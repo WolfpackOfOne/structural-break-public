@@ -1,0 +1,245 @@
+{
+  "branch": "research/new-avenues-pilots-2026",
+  "candidate": "relay score-state transform of RT-600 evidence",
+  "cleanup_incorporated": true,
+  "constants": {
+    "component_center": [
+      0.0,
+      0.02059048932215588,
+      0.0,
+      2.0
+    ],
+    "component_scale": [
+      58.913926812787594,
+      0.030527459469028302,
+      94.48140708137416,
+      1.4826
+    ],
+    "components": [
+      "operate_integral",
+      "thermal_replica",
+      "picked_dwell",
+      "recloser_cycles"
+    ],
+    "dropout_q65": 0.5894284969069895,
+    "high_pickup_q90": 0.8231570128520622,
+    "pickup_q80": 0.7104679690803514,
+    "reset_rate": 0.25,
+    "tau_charge": 8.0,
+    "tau_cool": 32.0
+  },
+  "diagnostic_pack": {
+    "age_buckets": {
+      "0-5": {
+        "candidate": 0.5029256406201985,
+        "rt600": 0.5152445330859063
+      },
+      "100-1000000000": {
+        "candidate": 0.6590561396887454,
+        "rt600": 0.675917278353309
+      },
+      "20-50": {
+        "candidate": 0.5676322696842286,
+        "rt600": 0.5894557799021534
+      },
+      "5-20": {
+        "candidate": 0.5266207790440424,
+        "rt600": 0.5520505250854593
+      },
+      "50-100": {
+        "candidate": 0.5970426348870815,
+        "rt600": 0.6169058332601237
+      }
+    },
+    "dominant_cell": {
+      "candidate": 0.6582295961436627,
+      "rt600": 0.6777110899011463
+    },
+    "fold": 0,
+    "label": "RT-1200",
+    "mature_vs_neverbreak": {
+      "candidate": 0.6558591182202723,
+      "rt600": 0.676800868805288
+    },
+    "mature_vs_prebreak": {
+      "candidate": 0.6648441355984896,
+      "rt600": 0.6802509546650244
+    },
+    "t_buckets": {
+      "0-20": {
+        "candidate": 0.47689828080229224,
+        "rt600": 0.5300204619017298
+      },
+      "100-200": {
+        "candidate": 0.6243533230515474,
+        "rt600": 0.6390075342102901
+      },
+      "20-50": {
+        "candidate": 0.5369783577711615,
+        "rt600": 0.5680248975917097
+      },
+      "200-400": {
+        "candidate": 0.6252099154894889,
+        "rt600": 0.6359029050927087
+      },
+      "400-1000000000": {
+        "candidate": 0.6339955489924496,
+        "rt600": 0.666690084227326
+      },
+      "50-100": {
+        "candidate": 0.5781523276409127,
+        "rt600": 0.5790183020058499
+      }
+    },
+    "whole_fold": {
+      "candidate": 0.6196105599887116,
+      "rt600": 0.6382763032336511
+    },
+    "within_t_rank_corr_rt600": 0.7745811809431761
+  },
+  "ensemble_marginal": {
+    "fold": 0,
+    "gain_vs_base": 0.00010343574934423838,
+    "marginal_vs_clone": -0.00020663334475445883,
+    "rt600_7stream": 0.6382763032336511,
+    "rt600_plus_RT-1200": 0.6383797389829954,
+    "rt600_plus_seedclone": 0.6385863723277498
+  },
+  "exp_id": "RT-1200",
+  "generated": "2026-08-24",
+  "oof_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1200.npy",
+  "pair_flow": {
+    "cell_never_break_neg": {
+      "damage": 1481,
+      "net_pair_lift": -350,
+      "repairs": 1131,
+      "total_pairs_sampled": 15582
+    },
+    "cell_pre_break_neg": {
+      "damage": 1243,
+      "net_pair_lift": -320,
+      "repairs": 923,
+      "total_pairs_sampled": 13378
+    },
+    "dominant_cell": {
+      "damage": 1476,
+      "net_pair_lift": -318,
+      "repairs": 1158,
+      "total_pairs_sampled": 15598
+    },
+    "whole_fold": {
+      "damage": 2361,
+      "net_pair_lift": -918,
+      "repairs": 1443,
+      "total_pairs_sampled": 19562
+    }
+  },
+  "post_cleanup_reproduction": {
+    "changed": false,
+    "cleanup_sha": "aca2c4f9b68ad6315956f7c499ebefb2ae311f7b",
+    "final_status": "FINAL SCREEN RESULT",
+    "merge_commit": "81aa56c",
+    "notes": "Exact original pilot runner rerun after aca2c4f merge; no retuning, no new RT ID, no lockbox/test data.",
+    "numeric_tolerance": 1e-12,
+    "old_vs_clean": {
+      "dominant": {
+        "changed": false,
+        "clean": 0.6582295961436627,
+        "delta": 0.0,
+        "old": 0.6582295961436627
+      },
+      "dominant_damage": {
+        "changed": false,
+        "clean": 1476,
+        "delta": 0,
+        "old": 1476
+      },
+      "dominant_net": {
+        "changed": false,
+        "clean": -318,
+        "delta": 0,
+        "old": -318
+      },
+      "dominant_repairs": {
+        "changed": false,
+        "clean": 1158,
+        "delta": 0,
+        "old": 1158
+      },
+      "e0": {
+        "changed": false,
+        "clean": 0.6382763032336511,
+        "delta": 0.0,
+        "old": 0.6382763032336511
+      },
+      "e1": {
+        "changed": false,
+        "clean": 0.6385863723277498,
+        "delta": 0.0,
+        "old": 0.6385863723277498
+      },
+      "e2": {
+        "changed": false,
+        "clean": 0.6383797389829954,
+        "delta": 0.0,
+        "old": 0.6383797389829954
+      },
+      "marginal_vs_clone": {
+        "changed": false,
+        "clean": -0.00020663334475445883,
+        "delta": 0.0,
+        "old": -0.00020663334475445883
+      },
+      "mature_vs_never": {
+        "changed": false,
+        "clean": 0.6558591182202723,
+        "delta": 0.0,
+        "old": 0.6558591182202723
+      },
+      "mature_vs_pre": {
+        "changed": false,
+        "clean": 0.6648441355984896,
+        "delta": 0.0,
+        "old": 0.6648441355984896
+      },
+      "rho": {
+        "changed": false,
+        "clean": 0.7745811809431761,
+        "delta": 0.0,
+        "old": 0.7745811809431761
+      },
+      "standalone": {
+        "changed": false,
+        "clean": 0.6196105599887116,
+        "delta": 0.0,
+        "old": 0.6196105599887116
+      }
+    },
+    "verification": {
+      "message": "ok",
+      "ok": true,
+      "prefixes_checked": 29,
+      "series_checked": 8
+    }
+  },
+  "prefix_verification": {
+    "message": "ok",
+    "ok": true,
+    "prefixes_checked": 29,
+    "series_checked": 8
+  },
+  "result_status": "FINAL SCREEN RESULT",
+  "rt600_reproduction": {
+    "mean": 0.6258112639463216,
+    "per_fold": [
+      0.6382763032336511,
+      0.6204018503410609,
+      0.6339302291124634,
+      0.6175075054046519,
+      0.6189404316397805
+    ],
+    "pooled": 0.6256269256734708
+  },
+  "runtime_s": 64.33798789978027,
+  "verdict": "KILL"
+}

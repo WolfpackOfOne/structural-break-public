@@ -1,0 +1,25 @@
+{
+  "pair_repair_t2_vs_e0": {
+    "total_pairs_sampled": 9860,
+    "repairs": 708,
+    "damage": 723,
+    "net_pair_lift": -15
+  },
+  "pair_repair_seedclone_vs_e0": {
+    "total_pairs_sampled": 9860,
+    "repairs": 665,
+    "damage": 731,
+    "net_pair_lift": -66
+  },
+  "correlations": {
+    "RT-300": 0.912203761381564,
+    "RT-410": 0.8742212776945919,
+    "RT-411": 0.8557004817118002,
+    "RT-412": 0.883013660351992,
+    "RT-413": 0.7147350349617368,
+    "RT-414": 0.8785318355854748,
+    "RT-415": 0.9031587195099772,
+    "E0_blend": 0.6739977663609952,
+    "seedclone_RT401": 0.9098779409696325
+  }
+}

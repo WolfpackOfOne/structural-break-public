@@ -1,0 +1,68 @@
+{
+  "phase": "validate",
+  "artifact": "/path/to/workspace/structural-break-rt1257-deployment/models/rt1257_final",
+  "manifest_sha256": "ba4bee741d3d16ccc874724757167b9a7478005c14587bb329b845efca126d4c",
+  "model_hashes": {
+    "model.cbm.0": "d5922e5395586d2d71a0b8fd73a8b07d1f9e6ede6077b53488a2c3987d109759",
+    "model.txt.1": "31bd0b7a8734fdd258d048faee7af8f62d0e7b4930f404d07d93897099853211",
+    "model.txt.2": "7f732c73f81bb20cb1f142c4c035e03a6a8db6191a218af36dfede63ecafe125",
+    "model.txt.3": "009c2e880ae0c3aa22f1ea632cb8256563239749dcf03c72dca7a08cf8131092",
+    "model.cbm.4": "5f49e7f224ee0e2676aa11b1c237ce98fd8a302bddbe1543c725b2b58686cf5e",
+    "model.txt.5": "261b3bcf4a7e2cdda306cc909e236e07cec56411e5e7e73f9c40f099e9f8e953",
+    "model.txt.6": "c1edd219d7501232ccc127f84fd51c66a690ec882c00d2f5ba2d2b0ef2207c39"
+  },
+  "source_zip_sha256": "c8e35854675b038103cec6b6da827e1186bf8235bef6a8d3d8d6e00691429676",
+  "local_harness": {
+    "runtime_s": 22.083391904830933,
+    "n_series": 20,
+    "n_points": 8232,
+    "ms_per_point": 2.6826277824138645,
+    "deterministic": true,
+    "order_independent": true,
+    "future_poison_safe": true,
+    "all_finite": true,
+    "in_range": true,
+    "ts_auc_diagnostic_in_sample_do_not_quote": 0.9362426035502959,
+    "PASS": true
+  },
+  "validation_wall_s": 73.63654685020447,
+  "determinism_exact": true,
+  "prefix_invariance_sample": true,
+  "finite": true,
+  "in_range": true,
+  "score_min": 0.006680762415413419,
+  "score_max": 0.99609375,
+  "key_mapping": {
+    "series_ids": [
+      0,
+      1,
+      2,
+      137,
+      999,
+      2025,
+      4242,
+      7777,
+      6505,
+      306,
+      1937,
+      2925,
+      9975,
+      6902,
+      9153,
+      4410,
+      1053,
+      9066,
+      7846,
+      439
+    ],
+    "output_rows": 8232,
+    "expected_rows": 8232,
+    "row_mapping_ok": true
+  },
+  "catboost_save_load_max_abs": {
+    "CAT-300": 0.0,
+    "CAT-413": 0.0
+  },
+  "results_sha256": "f257ab77aeb170e34811f73268827a0f0e4ba4011bc8111f485e1c81d896d114",
+  "results_unchanged": true
+}

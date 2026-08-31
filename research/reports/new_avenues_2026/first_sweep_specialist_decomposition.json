@@ -1,0 +1,73 @@
+{
+  "notice": "POSTHOC_DESCRIPTIVE_NOT_PROMOTION_EVIDENCE",
+  "partitions": {
+    "all_specialists_wrong": {
+      "mean_candidate_repairs": 1.6547553600879603,
+      "pairs": 5457,
+      "repaired_by_any_candidate": 4553,
+      "repaired_by_any_candidate_rate": 0.8343412131207624,
+      "repaired_by_rt1216": 241,
+      "repaired_by_rt1216_rate": 0.04416345977643394,
+      "share_of_rt600_wrong": 0.3369974680417464
+    },
+    "majority_specialists_correct_4_to_7": {
+      "mean_candidate_repairs": 5.700779727095517,
+      "pairs": 1026,
+      "repaired_by_any_candidate": 1024,
+      "repaired_by_any_candidate_rate": 0.9980506822612085,
+      "repaired_by_rt1216": 514,
+      "repaired_by_rt1216_rate": 0.5009746588693957,
+      "share_of_rt600_wrong": 0.06336071141851417
+    },
+    "minority_specialists_correct_1_to_3": {
+      "mean_candidate_repairs": 3.5621009268795056,
+      "pairs": 9710,
+      "repaired_by_any_candidate": 9291,
+      "repaired_by_any_candidate_rate": 0.9568486096807415,
+      "repaired_by_rt1216": 2361,
+      "repaired_by_rt1216_rate": 0.2431513903192585,
+      "share_of_rt600_wrong": 0.5996418205397394
+    }
+  },
+  "rt600_wrong_pairs": 16193,
+  "sample": "dominant_cell deterministic same-t pairs; RT600 wrong subset only",
+  "specialist_correct_count_histogram": {
+    "0": 5457,
+    "1": 4113,
+    "2": 3375,
+    "3": 2222,
+    "4": 904,
+    "5": 118,
+    "6": 4,
+    "7": 0
+  },
+  "specialists": [
+    "RT-300",
+    "RT-410",
+    "RT-411",
+    "RT-412",
+    "RT-413",
+    "RT-414",
+    "RT-415"
+  ],
+  "supplementary": {
+    "at_least_one_specialist_correct": {
+      "mean_candidate_repairs": 3.7664865871833086,
+      "pairs": 10736,
+      "repaired_by_any_candidate": 10315,
+      "repaired_by_any_candidate_rate": 0.9607861400894188,
+      "repaired_by_rt1216": 2875,
+      "repaired_by_rt1216_rate": 0.267790611028316,
+      "share_of_rt600_wrong": 0.6630025319582535
+    },
+    "near_split_3_or_4_specialists_correct": {
+      "mean_candidate_repairs": 5.14427383237364,
+      "pairs": 3126,
+      "repaired_by_any_candidate": 3096,
+      "repaired_by_any_candidate_rate": 0.9904030710172744,
+      "repaired_by_rt1216": 1319,
+      "repaired_by_rt1216_rate": 0.4219449776071657,
+      "share_of_rt600_wrong": 0.19304637806459582
+    }
+  }
+}

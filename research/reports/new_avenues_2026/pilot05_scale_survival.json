@@ -1,0 +1,594 @@
+{
+  "RT-1204": {
+    "diagnostic_pack": {
+      "age_buckets": {
+        "0-5": {
+          "candidate": 0.5125010069126418,
+          "rt600": 0.5152445330859063
+        },
+        "100-1000000000": {
+          "candidate": 0.6700641960493995,
+          "rt600": 0.675917278353309
+        },
+        "20-50": {
+          "candidate": 0.5752165479744623,
+          "rt600": 0.5894557799021534
+        },
+        "5-20": {
+          "candidate": 0.5371502511313271,
+          "rt600": 0.5520505250854593
+        },
+        "50-100": {
+          "candidate": 0.6046549684723694,
+          "rt600": 0.6169058332601237
+        }
+      },
+      "dominant_cell": {
+        "candidate": 0.6702178499122973,
+        "rt600": 0.6777110899011463
+      },
+      "fold": 0,
+      "label": "RT-1204",
+      "mature_vs_neverbreak": {
+        "candidate": 0.6660915548201617,
+        "rt600": 0.676800868805288
+      },
+      "mature_vs_prebreak": {
+        "candidate": 0.6817317903796917,
+        "rt600": 0.6802509546650244
+      },
+      "t_buckets": {
+        "0-20": {
+          "candidate": 0.5274585787435,
+          "rt600": 0.5300204619017298
+        },
+        "100-200": {
+          "candidate": 0.6296067056523406,
+          "rt600": 0.6390075342102901
+        },
+        "20-50": {
+          "candidate": 0.5548274318577949,
+          "rt600": 0.5680248975917097
+        },
+        "200-400": {
+          "candidate": 0.6274212064860648,
+          "rt600": 0.6359029050927087
+        },
+        "400-1000000000": {
+          "candidate": 0.6583684718588806,
+          "rt600": 0.666690084227326
+        },
+        "50-100": {
+          "candidate": 0.5691217208622514,
+          "rt600": 0.5790183020058499
+        }
+      },
+      "whole_fold": {
+        "candidate": 0.6294443792513317,
+        "rt600": 0.6382763032336511
+      },
+      "within_t_rank_corr_rt600": 0.8859803485661977
+    },
+    "ensemble_marginal": {
+      "fold": 0,
+      "gain_vs_base": 7.412083203695019e-05,
+      "marginal_vs_clone": -0.00023594826206174702,
+      "rt600_7stream": 0.6382763032336511,
+      "rt600_plus_RT-1204": 0.6383504240656881,
+      "rt600_plus_seedclone": 0.6385863723277498
+    },
+    "pair_flow": {
+      "cell_never_break_neg": {
+        "damage": 1022,
+        "net_pair_lift": -198,
+        "repairs": 824,
+        "total_pairs_sampled": 15582
+      },
+      "cell_pre_break_neg": {
+        "damage": 751,
+        "net_pair_lift": 95,
+        "repairs": 846,
+        "total_pairs_sampled": 13378
+      },
+      "dominant_cell": {
+        "damage": 1005,
+        "net_pair_lift": -131,
+        "repairs": 874,
+        "total_pairs_sampled": 15598
+      },
+      "whole_fold": {
+        "damage": 1487,
+        "net_pair_lift": -258,
+        "repairs": 1229,
+        "total_pairs_sampled": 19562
+      }
+    },
+    "training": {
+      "fit_summaries": [
+        {
+          "fold": 0,
+          "runtime_s": 98.5,
+          "train_rows": 400000,
+          "ts_auc_scored": 0.6294443792513317,
+          "valid_rows": 806334
+        },
+        {
+          "fold": 1,
+          "runtime_s": 192.9,
+          "train_rows": 400000,
+          "valid_rows": 812939
+        },
+        {
+          "fold": 2,
+          "runtime_s": 285.1,
+          "train_rows": 400000,
+          "valid_rows": 806691
+        },
+        {
+          "fold": 3,
+          "runtime_s": 378.7,
+          "train_rows": 400000,
+          "valid_rows": 802506
+        },
+        {
+          "fold": 4,
+          "runtime_s": 475.9,
+          "train_rows": 400000,
+          "valid_rows": 804054
+        }
+      ],
+      "foldpure_oof_support_note": "Folds 1-4 were predicted only to provide fold-pure SCDF calibration support for the existing ensemble marginal path; no TS-AUC was computed or used for those folds.",
+      "importance_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1204.importance.csv",
+      "oof_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1204.npy",
+      "result_row": {
+        "agent": "codex-new-avenues",
+        "causal_verified": "harness.verify + prefix-invariance@module + future-mutation",
+        "date": "2026-08-24 15:23",
+        "experiment_id": "RT-1204",
+        "falsification_condition": "KILL if summary marginal_vs_clone < +0.0010, or if individual-scale control matches within +0.0005.",
+        "feature_set": "m00_core,m01_seq,m02_dist,m03_dyn,m04_resid,m06_loc,m07_bayes,m13_scale_surv",
+        "fold_std": 0.0,
+        "folds": "0",
+        "git_sha": "c3b555c",
+        "hypothesis": "Pilot 5 tests whether persistent breaks survive dyadic temporal coarse-graining on an AR(2) residual-square stream. Cross-scale count/largest-scale/slope summaries should add ensemble alpha.",
+        "lockbox_touched": "no",
+        "mean_oof_ts_auc": 0.6294443792513317,
+        "model": "lgbm",
+        "n_features": 505,
+        "notes": "Pilot 5 summary arm. Fold-0 screen only; folds 1-4 generated only as fold-pure SCDF calibration support.",
+        "objective": "binary",
+        "per_fold_ts_auc": "0.62944",
+        "persistence": "none",
+        "pooled_oof_ts_auc": 0.6294443792513317,
+        "protocol": "pilot_fold0_only",
+        "random_seed": 0,
+        "sample_mode": "uniform",
+        "status": "recorded",
+        "test_reduced_touched": "no",
+        "train_rows": 400000,
+        "train_series": 8000,
+        "training_runtime_s": 476.0
+      }
+    }
+  },
+  "RT-1205": {
+    "diagnostic_pack": {
+      "age_buckets": {
+        "0-5": {
+          "candidate": 0.5094239564655726,
+          "rt600": 0.5152445330859063
+        },
+        "100-1000000000": {
+          "candidate": 0.6614816348847674,
+          "rt600": 0.675917278353309
+        },
+        "20-50": {
+          "candidate": 0.5746519232652209,
+          "rt600": 0.5894557799021534
+        },
+        "5-20": {
+          "candidate": 0.5397976518038421,
+          "rt600": 0.5520505250854593
+        },
+        "50-100": {
+          "candidate": 0.6080789950426375,
+          "rt600": 0.6169058332601237
+        }
+      },
+      "dominant_cell": {
+        "candidate": 0.6643875733921781,
+        "rt600": 0.6777110899011463
+      },
+      "fold": 0,
+      "label": "RT-1205",
+      "mature_vs_neverbreak": {
+        "candidate": 0.6629211082195573,
+        "rt600": 0.676800868805288
+      },
+      "mature_vs_prebreak": {
+        "candidate": 0.6684795717388899,
+        "rt600": 0.6802509546650244
+      },
+      "t_buckets": {
+        "0-20": {
+          "candidate": 0.5203483166189111,
+          "rt600": 0.5300204619017298
+        },
+        "100-200": {
+          "candidate": 0.6174729720576052,
+          "rt600": 0.6390075342102901
+        },
+        "20-50": {
+          "candidate": 0.5589854373376557,
+          "rt600": 0.5680248975917097
+        },
+        "200-400": {
+          "candidate": 0.6233514475554747,
+          "rt600": 0.6359029050927087
+        },
+        "400-1000000000": {
+          "candidate": 0.6571888789656298,
+          "rt600": 0.666690084227326
+        },
+        "50-100": {
+          "candidate": 0.5677688318743064,
+          "rt600": 0.5790183020058499
+        }
+      },
+      "whole_fold": {
+        "candidate": 0.6252377490721925,
+        "rt600": 0.6382763032336511
+      },
+      "within_t_rank_corr_rt600": 0.8870224736247405
+    },
+    "ensemble_marginal": {
+      "fold": 0,
+      "gain_vs_base": -0.0003964420300569538,
+      "marginal_vs_clone": -0.000706511124155651,
+      "rt600_7stream": 0.6382763032336511,
+      "rt600_plus_RT-1205": 0.6378798612035942,
+      "rt600_plus_seedclone": 0.6385863723277498
+    },
+    "pair_flow": {
+      "cell_never_break_neg": {
+        "damage": 1020,
+        "net_pair_lift": -202,
+        "repairs": 818,
+        "total_pairs_sampled": 15582
+      },
+      "cell_pre_break_neg": {
+        "damage": 920,
+        "net_pair_lift": -233,
+        "repairs": 687,
+        "total_pairs_sampled": 13378
+      },
+      "dominant_cell": {
+        "damage": 1046,
+        "net_pair_lift": -175,
+        "repairs": 871,
+        "total_pairs_sampled": 15598
+      },
+      "whole_fold": {
+        "damage": 1475,
+        "net_pair_lift": -233,
+        "repairs": 1242,
+        "total_pairs_sampled": 19562
+      }
+    },
+    "training": {
+      "fit_summaries": [
+        {
+          "fold": 0,
+          "runtime_s": 95.8,
+          "train_rows": 400000,
+          "ts_auc_scored": 0.6252377490721925,
+          "valid_rows": 806334
+        },
+        {
+          "fold": 1,
+          "runtime_s": 192.2,
+          "train_rows": 400000,
+          "valid_rows": 812939
+        },
+        {
+          "fold": 2,
+          "runtime_s": 287.2,
+          "train_rows": 400000,
+          "valid_rows": 806691
+        },
+        {
+          "fold": 3,
+          "runtime_s": 382.6,
+          "train_rows": 400000,
+          "valid_rows": 802506
+        },
+        {
+          "fold": 4,
+          "runtime_s": 475.4,
+          "train_rows": 400000,
+          "valid_rows": 804054
+        }
+      ],
+      "foldpure_oof_support_note": "Folds 1-4 were predicted only to provide fold-pure SCDF calibration support for the existing ensemble marginal path; no TS-AUC was computed or used for those folds.",
+      "importance_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1205.importance.csv",
+      "oof_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1205.npy",
+      "result_row": {
+        "agent": "codex-new-avenues",
+        "causal_verified": "harness.verify + prefix-invariance@module + future-mutation",
+        "date": "2026-08-24 15:31",
+        "experiment_id": "RT-1205",
+        "falsification_condition": "Control must not match or exceed the summary arm; if it does, scale-survival hypothesis is killed.",
+        "feature_set": "m00_core,m01_seq,m02_dist,m03_dyn,m04_resid,m06_loc,m07_bayes,m13_scale_indiv",
+        "fold_std": 0.0,
+        "folds": "0",
+        "git_sha": "c3b555c",
+        "hypothesis": "Pilot 5 tests whether persistent breaks survive dyadic temporal coarse-graining on an AR(2) residual-square stream. Individual per-scale surprises are the binding control for generic extra-window alpha.",
+        "lockbox_touched": "no",
+        "mean_oof_ts_auc": 0.6252377490721925,
+        "model": "lgbm",
+        "n_features": 506,
+        "notes": "Pilot 5 individual-scale control. Fold-0 screen only; folds 1-4 generated only as fold-pure SCDF calibration support.",
+        "objective": "binary",
+        "per_fold_ts_auc": "0.62524",
+        "persistence": "none",
+        "pooled_oof_ts_auc": 0.6252377490721925,
+        "protocol": "pilot_fold0_only",
+        "random_seed": 0,
+        "sample_mode": "uniform",
+        "status": "recorded",
+        "test_reduced_touched": "no",
+        "train_rows": 400000,
+        "train_series": 8000,
+        "training_runtime_s": 475.5
+      }
+    }
+  },
+  "branch": "research/new-avenues-pilots-2026",
+  "causal_checks": {
+    "deterministic_replay_ok": true,
+    "first_valid_nan_semantics": {
+      "b1_row0_finite": true,
+      "b2_row0_nan": true,
+      "b32_row30_nan": true,
+      "b32_row31_finite": true,
+      "slope_row0_nan": true,
+      "slope_row1_finite": true
+    },
+    "future_mutation_prefix_ok": true,
+    "harness_verify_individual": {
+      "message": "ok",
+      "ok": true
+    },
+    "harness_verify_summary": {
+      "message": "ok",
+      "ok": true
+    },
+    "module_prefix_invariance": {
+      "m13_scale_indiv": [
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 8245
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 4119
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 6325
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 574
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 502
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 2088
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 318
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 655
+        }
+      ],
+      "m13_scale_surv": [
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 8245
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 4119
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 6325
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 574
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 502
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 2088
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 318
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 655
+        }
+      ]
+    },
+    "scales": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32
+    ],
+    "thresholds": {
+      "q01": 2.0,
+      "q05": 1.301029995664
+    }
+  },
+  "continuation_status": "KILL",
+  "exp_ids": [
+    "RT-1204",
+    "RT-1205"
+  ],
+  "feature_build_runtime_s": 844.9632289409637,
+  "feature_cache": {
+    "m13_scale_indiv": {
+      "cols": [
+        "surprise_b1",
+        "surprise_b2",
+        "surprise_b4",
+        "surprise_b8",
+        "surprise_b16",
+        "surprise_b32"
+      ],
+      "dev_series": 8000,
+      "lockbox_rows_filled": 0,
+      "module": "m13_scale_indiv",
+      "runtime_s": 406.6302490234375,
+      "shape": [
+        5036517,
+        6
+      ]
+    },
+    "m13_scale_surv": {
+      "cols": [
+        "survival_count_q05",
+        "survival_count_q01",
+        "largest_surviving_scale_q05",
+        "largest_surviving_scale_q01",
+        "slope_logscale"
+      ],
+      "dev_series": 8000,
+      "lockbox_rows_filled": 0,
+      "module": "m13_scale_surv",
+      "runtime_s": 438.33297991752625,
+      "shape": [
+        5036517,
+        5
+      ]
+    }
+  },
+  "feature_definitions": {
+    "individual_cols": [
+      "surprise_b1",
+      "surprise_b2",
+      "surprise_b4",
+      "surprise_b8",
+      "surprise_b16",
+      "surprise_b32"
+    ],
+    "null": "per-scale two-sided empirical historical block-mean null",
+    "residual_stream": "AR(2) residual squared, standardized by historical residual sigma",
+    "scales": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32
+    ],
+    "summary_cols": [
+      "survival_count_q05",
+      "survival_count_q01",
+      "largest_surviving_scale_q05",
+      "largest_surviving_scale_q01",
+      "slope_logscale"
+    ],
+    "thresholds": {
+      "q01": 2.0,
+      "q05": 1.301029995664
+    }
+  },
+  "feature_modules": [
+    "m13_scale_surv",
+    "m13_scale_indiv"
+  ],
+  "gate_failures": [
+    {
+      "gate": "primary_marginal_vs_clone",
+      "message": "summary marginal_vs_clone is below +0.0010",
+      "observed": -0.00023594826206174702,
+      "threshold": 0.001
+    },
+    {
+      "gate": "summary_control_distinguishability",
+      "message": "summary-control gap is below the preregistered +0.0005 distinguishability floor",
+      "observed_summary_minus_control": 0.00047056286209390397,
+      "threshold": 0.0005
+    }
+  ],
+  "generated": "2026-08-24",
+  "head_sha": "c3b555c",
+  "interpretation": "Explicit scale-survival count / largest-scale / log-scale decay summaries on the frozen dyadic AR(2) residual-square coarse-grained stream failed the primary Pilot 5 marginal gate and missed the preregistered summary-vs-individual distinguishability floor. This falsifies this E1/E4 functional under the preregistered fold-0 screen; it does not falsify all multiscale representations or all residual-scale detectors.",
+  "prereg_sha": "094c50f",
+  "rt600_sentinel": {
+    "diffs": {
+      "dominant_cell": -2.943492131479708e-06,
+      "fold0_e0": -3.696766348815217e-06,
+      "fold0_e1_seedclone": -3.627672250150482e-06,
+      "mean": 1.2639463216057578e-06,
+      "pooled": -7.432652926464556e-08
+    },
+    "dominant_cell": 0.6642770565078685,
+    "expected": {
+      "dominant_cell": 0.66428,
+      "fold0_e0": 0.63828,
+      "fold0_e1_seedclone": 0.63859,
+      "mean": 0.62581,
+      "pooled": 0.625627
+    },
+    "fold0_e0": 0.6382763032336511,
+    "fold0_e1_seedclone": 0.6385863723277498,
+    "mean": 0.6258112639463216,
+    "ok": true,
+    "per_fold": [
+      0.6382763032336511,
+      0.6204018503410609,
+      0.6339302291124634,
+      0.6175075054046519,
+      0.6189404316397805
+    ],
+    "pooled": 0.6256269256734708
+  },
+  "runtime_s": 1998.6231269836426,
+  "summary_minus_control_marginal": 0.00047056286209390397,
+  "verdict": "KILL",
+  "verdict_reason": "summary marginal_vs_clone is below +0.0010"
+}

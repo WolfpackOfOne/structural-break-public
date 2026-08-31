@@ -1,0 +1,21 @@
+{
+  "note": "no TS-AUC computed for either artifact",
+  "artifact_a": "/private/tmp/claude-501/-Users-graham-Documents-crunch-2026/8c37fb0f-cbc0-408d-a011-5940ff1eb942/scratchpad/old_preds.npz",
+  "artifact_b": "/private/tmp/claude-501/-Users-graham-Documents-crunch-2026/8c37fb0f-cbc0-408d-a011-5940ff1eb942/scratchpad/new_preds.npz",
+  "n_series": 67,
+  "n_predictions_compared": 38723,
+  "n_predictions_changed": 1,
+  "pct_changed": 0.0025824445420034605,
+  "max_abs_prediction_delta": 0.0005580357142856984,
+  "mean_abs_prediction_delta": 1.4410962846001045e-08,
+  "series_with_any_change": 1,
+  "per_series_changed": [
+    {
+      "series": 5509,
+      "n_changed": 1,
+      "max_abs_delta": 0.0005580357142856984
+    }
+  ],
+  "same_t_pairs_compared": 953123,
+  "same_t_pair_order_flips": 0
+}

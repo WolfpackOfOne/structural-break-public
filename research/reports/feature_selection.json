@@ -1,0 +1,8 @@
+{
+  "all_500": 0.6268941976160893,
+  "top_300": 0.6264536641331045,
+  "top_200": 0.6211059065561052,
+  "top_120": 0.6188472033524922,
+  "top_60": 0.6095217328215061,
+  "note": "importance ranking and all refits use folds 1-4 only; fold 0 is a held-out score for each candidate k"
+}

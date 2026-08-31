@@ -1,0 +1,58 @@
+{
+  "schema": "rt600_runtime_contract/1",
+  "model_dir": "/path/to/workspace/structural-break-claude-wave3/models/final10k_ensemble",
+  "n_boosters": 7,
+  "benchmark": {
+    "hist~1000_online~1000": {
+      "n_series": 3,
+      "n_points": 2872,
+      "wall_s": 4.9285205830819905,
+      "s_per_series": 1.6428401943606634,
+      "ms_per_point": 1.7160586988447042
+    },
+    "hist~5000_online~1000": {
+      "n_series": 3,
+      "n_points": 2893,
+      "wall_s": 5.208124750060961,
+      "s_per_series": 1.7360415833536536,
+      "ms_per_point": 1.8002505185139857
+    },
+    "hist~3000_online~500": {
+      "n_series": 3,
+      "n_points": 1606,
+      "wall_s": 3.0082928331103176,
+      "s_per_series": 1.0027642777034391,
+      "ms_per_point": 1.8731586756602225
+    },
+    "short_online_10_20": {
+      "n_series": 3,
+      "n_points": 51,
+      "wall_s": 0.4691487078089267,
+      "s_per_series": 0.15638290260297558,
+      "ms_per_point": 9.198994270763269
+    }
+  },
+  "peak_rss_mb": 525.25,
+  "rss_growth_mb": 138.40625,
+  "mean_ms_per_point": 3.647115540945545,
+  "extrapolated_10k_hours": 5.105961757323763,
+  "output_contract": {
+    "nan": 0,
+    "inf": 0,
+    "oob": 0,
+    "count": 0,
+    "n": 13615,
+    "min": 0.030568998554394204,
+    "max": 0.9860875090776533,
+    "all_finite": true
+  },
+  "determinism_same_process": {
+    "repeats": 5,
+    "distinct_hashes": 1,
+    "hash": "fd67650fe52d5211"
+  },
+  "series_independence_predictions": {
+    "n": 2964,
+    "mismatches": 0
+  }
+}

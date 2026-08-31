@@ -1,0 +1,55 @@
+{
+  "experiment_id": "RT-250",
+  "canonical_name": "deployable seven-stream ensemble (smooth time-conditional CDF, equal average)",
+  "legacy_informal_name": "RT-150",
+  "id_collision_note": "RT-150_f1 in RESULTS.csv is the REJECTED DGP-gating run (0.60619) on both branches; RT-250 was verified unused on every branch before allocation",
+  "streams": [
+    "RT-100R",
+    "RT-120R",
+    "RT-121R",
+    "RT-122R",
+    "RT-123R",
+    "RT-124R",
+    "RT-125R"
+  ],
+  "calibration": {
+    "kind": "scdf",
+    "class": "sbr.production.calibration.SmoothTimeCDFCal",
+    "n_anchor": 12,
+    "grid": 256,
+    "min_n": 400,
+    "cross_fitting": "fold k's map fitted on OOF of folds != k",
+    "time_coordinate": "log(max(t,1))  -- see W4-E3, audited in wave 4"
+  },
+  "blend_rule": "equal-weight arithmetic mean of the seven calibrated values",
+  "per_fold_ts_auc": [
+    0.6380624336732135,
+    0.6206630712995883,
+    0.6343850027527818,
+    0.616848250457383,
+    0.6195155142716098
+  ],
+  "mean_oof_ts_auc": 0.6258948544909153,
+  "family_selection": "nested CV over {raw, logitmean, gcdf, bcdf, scdf}; scdf picked on 5/5 outer folds, so this IS the nested-confirmation number",
+  "paired_vs_RT100": {
+    "mean_delta": 0.010567028846891922,
+    "ci95": [
+      0.007633010836665552,
+      0.013204162552698438
+    ],
+    "fraction_positive": 1.0,
+    "n_replicates": 200,
+    "resampled": "series"
+  },
+  "platform": "Linux/x86-64 (wave 2)",
+  "evidence_on_disk": "research/reports/deployable_ensemble_v2.json",
+  "built_artifact": "models/rt150_ensemble (name retained: it is what the Crunch-tested tarball is called)",
+  "crunch_test": "research/reports/crunch_test_rt150.md -- PASSED, determinism passed, INFER_PARALLELISM=1",
+  "manifest_code_git_sha": "b5ea9d1d9cd87f06f574c5a78e4c850f41ef852f",
+  "manifest_code_git_sha_status": "NOT RESOLVABLE in this repository or on origin -- provenance chain is BROKEN; the final artifact must be rebuilt from a reachable commit",
+  "folds_parquet_sha256": "ba4f71fee8fcb30cc808234584a924ff0b0f0529e5bbd1fcbd0b4b780ebcc312",
+  "folds_canonical_id_fold_csv_sha256": "6e114f80240c0ff069266c6d65b660e500723ce9bf2ca7633596d9e392d6b9e9",
+  "oof_vectors_status": "NOT ON DISK -- the seven stream OOF .npy files did not survive the container that produced them; wave 4 reconstructs them on macOS as RT-300/RT-410..RT-415",
+  "lockbox_touched": false,
+  "test_reduced_touched": false
+}

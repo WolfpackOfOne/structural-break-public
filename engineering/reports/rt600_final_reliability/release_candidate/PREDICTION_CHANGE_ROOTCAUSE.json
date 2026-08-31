@@ -1,0 +1,40 @@
+{
+  "schema": "rt600_release_candidate/prediction_change_rootcause/1",
+  "trigger": "the packaged prediction-equivalence battery returned 1 changed prediction out of 38,723, where the audit had measured 0 on its own 67-series sample. Section 9 of the release brief requires this to be investigated for packaging/build differences before proceeding.",
+  "changed_prediction": {
+    "series": 5509,
+    "n_online": 908,
+    "t": 42,
+    "shipped_artifact_199db8c9": 0.6489955357142857,
+    "rebuilt_artifact_e5381d51": 0.6484375,
+    "abs_delta": 0.0005580357142856984
+  },
+  "packaging_ruled_out": {
+    "test": "same 67 series run from src/sbr vs from the notebook's unpacked payload",
+    "n_predictions": 38723,
+    "n_differing": 0,
+    "bitwise_identical": true,
+    "conclusion": "the build contributes nothing; the change is in src/sbr"
+  },
+  "feature_level_root_cause": {
+    "method": "series 5509 streamed through the shipped-era source tree (git 73b56620) and through HEAD, all 500 columns x 908 rows compared bitwise",
+    "cells_compared": 454000,
+    "cells_differing": 1,
+    "column": "m06_loc::loc_p_rsq_stab",
+    "row": 42,
+    "shipped_stream_value": 4.2146848e-08,
+    "rebuilt_stream_value": 0.0,
+    "batch_reference_value": 0.0,
+    "training_cache_value": 0.0,
+    "training_cache_path": "cache/features/m06_loc.npy (the array RT-600 was fitted on)",
+    "verdict": "this is the m06_loc scalar-square defect the audit root-caused: a Python scalar x**2 goes through libm pow where numpy's array **2 is a squaring multiply, and m06's rolling variance is a cumsum difference that very nearly cancels, so one ULP is visible in the emitted float32. The rebuilt artifact agrees with the batch reference AND with the feature cache the frozen model was trained on; the shipped artifact does not. The change moves the served features TOWARD the trained-on semantics.",
+    "no_column_outside_the_audited_fix_set_differs": true
+  },
+  "pair_order_impact": {
+    "same_t_pairs_compared": 953123,
+    "order_flips": 0
+  },
+  "classification": "BUGFIX-PREDICTION-CHANGING, as already declared",
+  "revises": "the audit's 'rows whose prediction changed: 0' is sample-specific. On this sample the rate is 1 in 38,723 (0.0026%). The audit's mechanism explanation stands -- LightGBM bins at max_bin=127 and a 1-ULP float32 move almost never crosses a bin boundary -- but 'almost never' is not 'never', and this is what it looks like when it does.",
+  "no_ts_auc_computed": true
+}

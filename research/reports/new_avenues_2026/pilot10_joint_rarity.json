@@ -1,0 +1,622 @@
+{
+  "RT-1210": {
+    "diagnostic_pack": {
+      "age_buckets": {
+        "0-5": {
+          "candidate": 0.5134680159793307,
+          "rt600": 0.5152445330859063
+        },
+        "100-1000000000": {
+          "candidate": 0.6623676248816546,
+          "rt600": 0.675917278353309
+        },
+        "20-50": {
+          "candidate": 0.5779295238950258,
+          "rt600": 0.5894557799021534
+        },
+        "5-20": {
+          "candidate": 0.5445819465666499,
+          "rt600": 0.5520505250854593
+        },
+        "50-100": {
+          "candidate": 0.6048278187884469,
+          "rt600": 0.6169058332601237
+        }
+      },
+      "dominant_cell": {
+        "candidate": 0.6637581264890128,
+        "rt600": 0.6777110899011463
+      },
+      "fold": 0,
+      "label": "RT-1210",
+      "mature_vs_neverbreak": {
+        "candidate": 0.6595926059847496,
+        "rt600": 0.676800868805288
+      },
+      "mature_vs_prebreak": {
+        "candidate": 0.6753815208490547,
+        "rt600": 0.6802509546650244
+      },
+      "t_buckets": {
+        "0-20": {
+          "candidate": 0.5490339461954792,
+          "rt600": 0.5300204619017298
+        },
+        "100-200": {
+          "candidate": 0.6197909914599712,
+          "rt600": 0.6390075342102901
+        },
+        "20-50": {
+          "candidate": 0.570691073693277,
+          "rt600": 0.5680248975917097
+        },
+        "200-400": {
+          "candidate": 0.6295668682074891,
+          "rt600": 0.6359029050927087
+        },
+        "400-1000000000": {
+          "candidate": 0.6475690889406148,
+          "rt600": 0.666690084227326
+        },
+        "50-100": {
+          "candidate": 0.5742064424837868,
+          "rt600": 0.5790183020058499
+        }
+      },
+      "whole_fold": {
+        "candidate": 0.6261209264484071,
+        "rt600": 0.6382763032336511
+      },
+      "within_t_rank_corr_rt600": 0.877884680428554
+    },
+    "ensemble_marginal": {
+      "fold": 0,
+      "gain_vs_base": -0.00021147336547222562,
+      "marginal_vs_clone": -0.0005215424595709228,
+      "rt600_7stream": 0.6382763032336511,
+      "rt600_plus_RT-1210": 0.6380648298681789,
+      "rt600_plus_seedclone": 0.6385863723277498
+    },
+    "pair_flow": {
+      "cell_never_break_neg": {
+        "damage": 1188,
+        "net_pair_lift": -334,
+        "repairs": 854,
+        "total_pairs_sampled": 15582
+      },
+      "cell_pre_break_neg": {
+        "damage": 949,
+        "net_pair_lift": -212,
+        "repairs": 737,
+        "total_pairs_sampled": 13378
+      },
+      "dominant_cell": {
+        "damage": 1139,
+        "net_pair_lift": -237,
+        "repairs": 902,
+        "total_pairs_sampled": 15598
+      },
+      "whole_fold": {
+        "damage": 1494,
+        "net_pair_lift": -234,
+        "repairs": 1260,
+        "total_pairs_sampled": 19562
+      }
+    },
+    "training": {
+      "fit_summaries": [
+        {
+          "fold": 0,
+          "runtime_s": 103.0,
+          "train_rows": 400000,
+          "ts_auc_scored": 0.6261209264484071,
+          "valid_rows": 806334
+        },
+        {
+          "fold": 1,
+          "runtime_s": 205.1,
+          "train_rows": 400000,
+          "valid_rows": 812939
+        },
+        {
+          "fold": 2,
+          "runtime_s": 303.8,
+          "train_rows": 400000,
+          "valid_rows": 806691
+        },
+        {
+          "fold": 3,
+          "runtime_s": 401.8,
+          "train_rows": 400000,
+          "valid_rows": 802506
+        },
+        {
+          "fold": 4,
+          "runtime_s": 500.9,
+          "train_rows": 400000,
+          "valid_rows": 804054
+        }
+      ],
+      "foldpure_oof_support_note": "Folds 1-4 were predicted only to provide fold-pure SCDF calibration support for the existing ensemble marginal path; no TS-AUC was computed or used for those folds.",
+      "importance_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1210.importance.csv",
+      "oof_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1210.npy",
+      "result_row": {
+        "agent": "codex-new-avenues",
+        "causal_verified": "harness.verify + prefix-invariance@module + future-mutation",
+        "date": "2026-08-24 17:35",
+        "experiment_id": "RT-1210",
+        "falsification_condition": "KILL if candidate marginal_vs_clone < +0.0010, or if dwell-only control matches within +0.0005 or beats dominant-cell AUC.",
+        "feature_set": "m00_core,m01_seq,m02_dist,m03_dyn,m04_resid,m06_loc,m07_bayes,m16_joint_rarity",
+        "fold_std": 0.0,
+        "folds": "0",
+        "git_sha": "6edb292",
+        "hypothesis": "Pilot 10 tests whether the non-factorized joint rarity of residual excursion size and dwell duration carries information beyond dwell duration alone. Joint size-duration rarity should add ensemble alpha.",
+        "lockbox_touched": "no",
+        "mean_oof_ts_auc": 0.6261209264484071,
+        "model": "lgbm",
+        "n_features": 506,
+        "notes": "Pilot 10 joint size-duration rarity arm. Fold-0 screen only; folds 1-4 generated only as fold-pure SCDF calibration support.",
+        "objective": "binary",
+        "per_fold_ts_auc": "0.62612",
+        "persistence": "none",
+        "pooled_oof_ts_auc": 0.6261209264484071,
+        "protocol": "pilot_fold0_only",
+        "random_seed": 0,
+        "sample_mode": "uniform",
+        "status": "recorded",
+        "test_reduced_touched": "no",
+        "train_rows": 400000,
+        "train_series": 8000,
+        "training_runtime_s": 501.0
+      }
+    }
+  },
+  "RT-1211": {
+    "diagnostic_pack": {
+      "age_buckets": {
+        "0-5": {
+          "candidate": 0.5135423534805365,
+          "rt600": 0.5152445330859063
+        },
+        "100-1000000000": {
+          "candidate": 0.663054978411534,
+          "rt600": 0.675917278353309
+        },
+        "20-50": {
+          "candidate": 0.5767429956111578,
+          "rt600": 0.5894557799021534
+        },
+        "5-20": {
+          "candidate": 0.5525893310517384,
+          "rt600": 0.5520505250854593
+        },
+        "50-100": {
+          "candidate": 0.6055857865446095,
+          "rt600": 0.6169058332601237
+        }
+      },
+      "dominant_cell": {
+        "candidate": 0.6646541789733722,
+        "rt600": 0.6777110899011463
+      },
+      "fold": 0,
+      "label": "RT-1211",
+      "mature_vs_neverbreak": {
+        "candidate": 0.6625307790086742,
+        "rt600": 0.676800868805288
+      },
+      "mature_vs_prebreak": {
+        "candidate": 0.6705792764848415,
+        "rt600": 0.6802509546650244
+      },
+      "t_buckets": {
+        "0-20": {
+          "candidate": 0.5355156598217128,
+          "rt600": 0.5300204619017298
+        },
+        "100-200": {
+          "candidate": 0.6261610141896142,
+          "rt600": 0.6390075342102901
+        },
+        "20-50": {
+          "candidate": 0.5550531454943743,
+          "rt600": 0.5680248975917097
+        },
+        "200-400": {
+          "candidate": 0.6269638843993233,
+          "rt600": 0.6359029050927087
+        },
+        "400-1000000000": {
+          "candidate": 0.6527825945464284,
+          "rt600": 0.666690084227326
+        },
+        "50-100": {
+          "candidate": 0.5716156410360231,
+          "rt600": 0.5790183020058499
+        }
+      },
+      "whole_fold": {
+        "candidate": 0.6271413610964836,
+        "rt600": 0.6382763032336511
+      },
+      "within_t_rank_corr_rt600": 0.870366809017101
+    },
+    "ensemble_marginal": {
+      "fold": 0,
+      "gain_vs_base": 7.338438679516113e-05,
+      "marginal_vs_clone": -0.00023668470730353608,
+      "rt600_7stream": 0.6382763032336511,
+      "rt600_plus_RT-1211": 0.6383496876204463,
+      "rt600_plus_seedclone": 0.6385863723277498
+    },
+    "pair_flow": {
+      "cell_never_break_neg": {
+        "damage": 1131,
+        "net_pair_lift": -205,
+        "repairs": 926,
+        "total_pairs_sampled": 15582
+      },
+      "cell_pre_break_neg": {
+        "damage": 1052,
+        "net_pair_lift": -253,
+        "repairs": 799,
+        "total_pairs_sampled": 13378
+      },
+      "dominant_cell": {
+        "damage": 1146,
+        "net_pair_lift": -205,
+        "repairs": 941,
+        "total_pairs_sampled": 15598
+      },
+      "whole_fold": {
+        "damage": 1639,
+        "net_pair_lift": -314,
+        "repairs": 1325,
+        "total_pairs_sampled": 19562
+      }
+    },
+    "training": {
+      "fit_summaries": [
+        {
+          "fold": 0,
+          "runtime_s": 98.6,
+          "train_rows": 400000,
+          "ts_auc_scored": 0.6271413610964836,
+          "valid_rows": 806334
+        },
+        {
+          "fold": 1,
+          "runtime_s": 195.9,
+          "train_rows": 400000,
+          "valid_rows": 812939
+        },
+        {
+          "fold": 2,
+          "runtime_s": 294.4,
+          "train_rows": 400000,
+          "valid_rows": 806691
+        },
+        {
+          "fold": 3,
+          "runtime_s": 391.6,
+          "train_rows": 400000,
+          "valid_rows": 802506
+        },
+        {
+          "fold": 4,
+          "runtime_s": 489.2,
+          "train_rows": 400000,
+          "valid_rows": 804054
+        }
+      ],
+      "foldpure_oof_support_note": "Folds 1-4 were predicted only to provide fold-pure SCDF calibration support for the existing ensemble marginal path; no TS-AUC was computed or used for those folds.",
+      "importance_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1211.importance.csv",
+      "oof_artifact": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1211.npy",
+      "result_row": {
+        "agent": "codex-new-avenues",
+        "causal_verified": "harness.verify + prefix-invariance@module + future-mutation",
+        "date": "2026-08-24 17:43",
+        "experiment_id": "RT-1211",
+        "falsification_condition": "Control must not match or exceed the joint-rarity arm; if it does, I1 joint machinery is killed.",
+        "feature_set": "m00_core,m01_seq,m02_dist,m03_dyn,m04_resid,m06_loc,m07_bayes,m16_dwell_rarity",
+        "fold_std": 0.0,
+        "folds": "0",
+        "git_sha": "6edb292",
+        "hypothesis": "Pilot 10 tests whether the non-factorized joint rarity of residual excursion size and dwell duration carries information beyond dwell duration alone. Dwell-only rarity is the binding control for generic run-length information.",
+        "lockbox_touched": "no",
+        "mean_oof_ts_auc": 0.6271413610964836,
+        "model": "lgbm",
+        "n_features": 506,
+        "notes": "Pilot 10 dwell-only rarity control. Fold-0 screen only; folds 1-4 generated only as fold-pure SCDF calibration support.",
+        "objective": "binary",
+        "per_fold_ts_auc": "0.62714",
+        "persistence": "none",
+        "pooled_oof_ts_auc": 0.6271413610964836,
+        "protocol": "pilot_fold0_only",
+        "random_seed": 0,
+        "sample_mode": "uniform",
+        "status": "recorded",
+        "test_reduced_touched": "no",
+        "train_rows": 400000,
+        "train_series": 8000,
+        "training_runtime_s": 489.3
+      }
+    }
+  },
+  "branch": "research/new-avenues-pilots-2026",
+  "candidate_minus_control_dominant_auc": -0.000896052484359422,
+  "candidate_minus_control_marginal": -0.00028485775226738674,
+  "causal_checks": {
+    "candidate_cols": [
+      "joint_live_w32",
+      "joint_max_w32",
+      "joint_live_w64",
+      "joint_max_w64",
+      "joint_live_w128",
+      "joint_max_w128"
+    ],
+    "control_cols": [
+      "dwell_live_w32",
+      "dwell_max_w32",
+      "dwell_live_w64",
+      "dwell_max_w64",
+      "dwell_live_w128",
+      "dwell_max_w128"
+    ],
+    "deterministic_replay_ok": true,
+    "first_valid_nan_semantics": {
+      "candidate_row126_w128_all_nan": true,
+      "candidate_row127_all_finite": true,
+      "candidate_row31_w32_finite": true,
+      "candidate_row62_w64_all_nan": true,
+      "candidate_row63_w32_w64_finite": true,
+      "candidate_rows_before_31_all_nan": true,
+      "control_row126_w128_all_nan": true,
+      "control_row127_all_finite": true,
+      "control_row31_w32_finite": true,
+      "control_row62_w64_all_nan": true,
+      "control_row63_w32_w64_finite": true,
+      "control_rows_before_31_all_nan": true
+    },
+    "future_mutation_prefix_ok": true,
+    "harness_verify_candidate": {
+      "message": "ok",
+      "ok": true
+    },
+    "harness_verify_dwell": {
+      "message": "ok",
+      "ok": true
+    },
+    "joint_surprise_ge_dwell_surprise": true,
+    "m07_bayes_parity_note": "Pilot 10 does not recompute m07_bayes::bo_p_lt25_z; it uses the existing cached base-bank features and independent AR(2) residual-square streams.",
+    "min_historical_endpoints": 16,
+    "module_prefix_invariance": {
+      "m16_dwell_rarity": [
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 8245
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 4119
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 6325
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 574
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 502
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 2088
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 318
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 655
+        }
+      ],
+      "m16_joint_rarity": [
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 8245
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 4119
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 6325
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 574
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 502
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 2088
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 318
+        },
+        {
+          "message": "ok",
+          "ok": true,
+          "series": 655
+        }
+      ]
+    },
+    "threshold_quantile": 0.9,
+    "windows": [
+      32,
+      64,
+      128
+    ]
+  },
+  "continuation_status": "KILL",
+  "exp_ids": [
+    "RT-1210",
+    "RT-1211"
+  ],
+  "feature_build_runtime_s": 390.7030577659607,
+  "feature_cache": {
+    "m16_dwell_rarity": {
+      "cols": [
+        "dwell_live_w32",
+        "dwell_max_w32",
+        "dwell_live_w64",
+        "dwell_max_w64",
+        "dwell_live_w128",
+        "dwell_max_w128"
+      ],
+      "dev_series": 8000,
+      "lockbox_rows_filled": 0,
+      "module": "m16_dwell_rarity",
+      "shape": [
+        5036517,
+        6
+      ]
+    },
+    "m16_joint_rarity": {
+      "cols": [
+        "joint_live_w32",
+        "joint_max_w32",
+        "joint_live_w64",
+        "joint_max_w64",
+        "joint_live_w128",
+        "joint_max_w128"
+      ],
+      "dev_series": 8000,
+      "lockbox_rows_filled": 0,
+      "module": "m16_joint_rarity",
+      "shape": [
+        5036517,
+        6
+      ]
+    },
+    "runtime_s": 390.7030577659607
+  },
+  "feature_definitions": {
+    "candidate_cols": [
+      "joint_live_w32",
+      "joint_max_w32",
+      "joint_live_w64",
+      "joint_max_w64",
+      "joint_live_w128",
+      "joint_max_w128"
+    ],
+    "control_cols": [
+      "dwell_live_w32",
+      "dwell_max_w32",
+      "dwell_live_w64",
+      "dwell_max_w64",
+      "dwell_live_w128",
+      "dwell_max_w128"
+    ],
+    "min_historical_endpoints": 16,
+    "threshold_quantile": 0.9,
+    "windows": [
+      32,
+      64,
+      128
+    ]
+  },
+  "feature_modules": [
+    "m16_joint_rarity",
+    "m16_dwell_rarity"
+  ],
+  "gate_failures": [
+    {
+      "gate": "primary_marginal_vs_clone",
+      "message": "candidate marginal_vs_clone is below +0.0010",
+      "observed": -0.0005215424595709228,
+      "threshold": 0.001
+    },
+    {
+      "gate": "dwell_control_not_worse",
+      "message": "dwell-only control matches or exceeds joint-rarity candidate",
+      "observed_candidate_minus_control": -0.00028485775226738674,
+      "threshold": "control < candidate"
+    },
+    {
+      "gate": "dominant_cell_i1_beats_a1",
+      "message": "joint-rarity candidate does not beat dwell-only control on the dominant cell",
+      "observed_candidate_minus_control": -0.000896052484359422,
+      "threshold": "candidate dominant AUC > dwell control dominant AUC"
+    }
+  ],
+  "generated": "2026-08-24",
+  "head_sha": "6edb292",
+  "interpretation": "The preregistered joint size-duration rarity block failed a Pilot 10 binding gate. This falsifies the I1 endpoint-null construction under the fixed AR(2) residual-square channel, windows 32/64/128, q90 excursion band, historical joint endpoint table, matched dwell-only control, and Mode-A fold-0 ABL screen; it does not falsify all large-deviation or scan-statistic approaches.",
+  "prereg_sha": "58ee792",
+  "rt1201_secondary_reference": {
+    "available": true,
+    "dominant_cell_auc": 0.6101579099132464,
+    "exp_id": "RT-1201",
+    "marginal_vs_clone": 0.0003014699051322456,
+    "note": "Secondary reference only; RT-1211 is the matched Mode-A dwell control.",
+    "within_t_rank_corr_rt600": 0.38170592359325234
+  },
+  "rt600_sentinel": {
+    "diffs": {
+      "dominant_cell": -2.943492131479708e-06,
+      "fold0_e0": -3.696766348815217e-06,
+      "fold0_e1_seedclone": -3.627672250150482e-06,
+      "mean": 1.2639463216057578e-06,
+      "pooled": -7.432652926464556e-08
+    },
+    "dominant_cell": 0.6642770565078685,
+    "expected": {
+      "dominant_cell": 0.66428,
+      "fold0_e0": 0.63828,
+      "fold0_e1_seedclone": 0.63859,
+      "mean": 0.62581,
+      "pooled": 0.625627
+    },
+    "fold0_e0": 0.6382763032336511,
+    "fold0_e1_seedclone": 0.6385863723277498,
+    "mean": 0.6258112639463216,
+    "ok": true,
+    "per_fold": [
+      0.6382763032336511,
+      0.6204018503410609,
+      0.6339302291124634,
+      0.6175075054046519,
+      0.6189404316397805
+    ],
+    "pooled": 0.6256269256734708
+  },
+  "runtime_s": 1580.61896109581,
+  "verdict": "KILL",
+  "verdict_reason": "candidate marginal_vs_clone is below +0.0010"
+}

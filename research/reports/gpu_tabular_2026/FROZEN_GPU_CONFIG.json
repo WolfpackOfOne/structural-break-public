@@ -1,0 +1,364 @@
+{
+  "base_git_sha": "0bcb7ae119e138ba3e47a8c0d807e6c3e3dfa560",
+  "benchmark_submission_git_sha": "0bcb7ae119e138ba3e47a8c0d807e6c3e3dfa560",
+  "benchmark_submission_git_sha_note": "Actual git commit containing submissions/G_gpu_tabular_benchmark.py (\"Add Crunch GPU tabular benchmark submission\"), already pushed to origin/research/gpu-tabular-2026. This is the authoritative source commit for the benchmarked file, NOT the cloud JSON's embedded_fallback SHA below.",
+  "branch": "research/gpu-tabular-2026",
+  "cloud_reported_embedded_fallback_git_sha": "e39a69c9eca8d35cbbf42211151f8e77ee3a3a96",
+  "cloud_reported_embedded_fallback_git_sha_note": "git_sha_source=embedded_fallback in the cloud benchmark JSON reported this SHA (\"Build GPU tabular learner package\"). This commit exists but does NOT contain submissions/G_gpu_tabular_benchmark.py (that file was added in the NEXT commit, benchmark_submission_git_sha above). Do not treat this as the benchmark-submission commit; it reflects a stale/earlier tree state at the time the fallback constant was embedded, most likely because the Crunch-uploaded code tree had no .git directory.",
+  "created_at": "2026-08-27T15:24:12-0400",
+  "created_by": "research/scripts/gpu_tabular/benchmark_gpu.py (Crunch cloud RTX 4090 run; frozen file hand-assembled from the cloud benchmark JSON since no_write_config=True prevented the cloud job itself from writing this file)",
+  "crunch_provenance": {
+    "submission_id": 76357,
+    "task_id": "run-3e834e0f"
+  },
+  "feature_preparation_benchmark": {
+    "feature_build_seconds": 272,
+    "online_rows": 3226190,
+    "outer_training_series": 6383
+  },
+  "hardware": {
+    "cuda": "12.8",
+    "gpu": "NVIDIA GeForce RTX 4090",
+    "os": "Linux x86_64",
+    "python": "3.11",
+    "torch": "2.10.0+cu128",
+    "vram_gb": 25.25
+  },
+  "learners": {
+    "realmlp": {
+      "attempts": [
+        {
+          "benchmark": {
+            "batches_per_second": null,
+            "note": "batches_per_second/rows_per_second were not separately reported by the cloud benchmark JSON; only seconds_per_epoch, preprocessing, RAM, and VRAM were recorded.",
+            "rows_per_second": null,
+            "seconds_per_epoch": 2.498
+          },
+          "config": {
+            "data": {
+              "max_train_rows": 1000000
+            },
+            "model": {
+              "hidden_sizes": [
+                256,
+                256,
+                256
+              ],
+              "lr": 0.04,
+              "n_cv": 1,
+              "n_refit": 0,
+              "use_ls": false,
+              "val_fraction": 0.2,
+              "val_metric_name": "cross_entropy",
+              "variant": "RealMLP_TD_Classifier"
+            },
+            "preprocessing": {
+              "mode": "median_iqr",
+              "n_quantiles_max": 1000,
+              "noise_std": 0.0
+            },
+            "seed": 1,
+            "training": {
+              "batch_size": 8192,
+              "early_stopping": true,
+              "max_epochs": 256,
+              "min_epochs_for_quota_selection": 8,
+              "n_threads": 16,
+              "predict_batch_size": 32768,
+              "verbosity": 2
+            }
+          },
+          "peak_ram_gb": 18.958,
+          "peak_vram_gb": 4.349,
+          "projection": {
+            "authoritative_projected_5fold_hours": 0.90924,
+            "authoritative_projected_5fold_seconds": 3273.264,
+            "fits_budget_at_configured_max_epochs": true,
+            "max_epochs_fit_under_budget": 1939,
+            "note": "authoritative_projected_5fold_hours is the RTX 4090 cloud-benchmarked figure (submission 76357 / task run-3e834e0f); projected_5fold_runtime_hours is the generic formula recomputation from common.config_runtime_projection for cross-check and may differ slightly due to rounding/formula assumptions.",
+            "per_learner_budget_seconds": 24300.0,
+            "projected_5fold_runtime_hours": 0.9092333333333334,
+            "projected_5fold_runtime_seconds": 3273.2400000000002,
+            "projected_runtime_per_fold_hours": 0.18184666666666668,
+            "projected_runtime_per_fold_seconds": 654.648,
+            "quota_fraction_for_scored_training": 0.9,
+            "quota_hours_total": 15.0,
+            "quota_learners": 2
+          },
+          "status": "BENCHMARKED_NO_SCORE"
+        }
+      ],
+      "benchmark_epochs": 3,
+      "device": {
+        "cuda_available": true,
+        "cuda_device_capability": null,
+        "cuda_runtime_version": "12.8",
+        "device": "cuda:0",
+        "device_name": "NVIDIA GeForce RTX 4090",
+        "os": "Linux x86_64",
+        "python": "3.11",
+        "torch_version": "2.10.0+cu128",
+        "total_vram_gb": 25.25
+      },
+      "fold_benchmarked": 0,
+      "learner": "GPU-02 RealMLP",
+      "peak_ram_gb": 18.958,
+      "peak_vram_gb": 4.349,
+      "preprocessing_seconds": 15.16,
+      "reductions_required": false,
+      "score_computed": false,
+      "selected_benchmark": {
+        "batches_per_second": null,
+        "note": "batches_per_second/rows_per_second were not separately reported by the cloud benchmark JSON; only seconds_per_epoch, preprocessing, RAM, and VRAM were recorded.",
+        "rows_per_second": null,
+        "seconds_per_epoch": 2.498
+      },
+      "selected_config": {
+        "data": {
+          "max_train_rows": 1000000
+        },
+        "model": {
+          "hidden_sizes": [
+            256,
+            256,
+            256
+          ],
+          "lr": 0.04,
+          "n_cv": 1,
+          "n_refit": 0,
+          "use_ls": false,
+          "val_fraction": 0.2,
+          "val_metric_name": "cross_entropy",
+          "variant": "RealMLP_TD_Classifier"
+        },
+        "preprocessing": {
+          "mode": "median_iqr",
+          "n_quantiles_max": 1000,
+          "noise_std": 0.0
+        },
+        "seed": 1,
+        "training": {
+          "batch_size": 8192,
+          "early_stopping": true,
+          "max_epochs": 256,
+          "min_epochs_for_quota_selection": 8,
+          "n_threads": 16,
+          "predict_batch_size": 32768,
+          "verbosity": 2
+        }
+      },
+      "selected_runtime_projection": {
+        "authoritative_projected_5fold_hours": 0.90924,
+        "authoritative_projected_5fold_seconds": 3273.264,
+        "fits_budget_at_configured_max_epochs": true,
+        "max_epochs_fit_under_budget": 1939,
+        "note": "authoritative_projected_5fold_hours is the RTX 4090 cloud-benchmarked figure (submission 76357 / task run-3e834e0f); projected_5fold_runtime_hours is the generic formula recomputation from common.config_runtime_projection for cross-check and may differ slightly due to rounding/formula assumptions.",
+        "per_learner_budget_seconds": 24300.0,
+        "projected_5fold_runtime_hours": 0.9092333333333334,
+        "projected_5fold_runtime_seconds": 3273.2400000000002,
+        "projected_runtime_per_fold_hours": 0.18184666666666668,
+        "projected_runtime_per_fold_seconds": 654.648,
+        "quota_fraction_for_scored_training": 0.9,
+        "quota_hours_total": 15.0,
+        "quota_learners": 2
+      },
+      "selection_basis": "runtime_vram_only_no_ts_auc",
+      "source": "crunch_cloud_rtx4090_benchmark",
+      "status": "BENCHMARKED_NO_SCORE"
+    },
+    "tabm": {
+      "attempts": [
+        {
+          "benchmark": {
+            "batches_per_second": null,
+            "note": "batches_per_second/rows_per_second were not separately reported by the cloud benchmark JSON; only seconds_per_epoch, preprocessing, RAM, and VRAM were recorded.",
+            "rows_per_second": null,
+            "seconds_per_epoch": 9.86997
+          },
+          "config": {
+            "data": {
+              "max_train_rows": 1000000
+            },
+            "model": {
+              "arch_type": "tabm",
+              "d_block": 512,
+              "dropout": 0.1,
+              "k": 32,
+              "n_blocks": 3,
+              "num_embeddings": null
+            },
+            "optimizer": {
+              "grad_clip_norm": 1.0,
+              "lr": 0.002,
+              "weight_decay": 0.0003
+            },
+            "preprocessing": {
+              "mode": "quantile_normal",
+              "n_quantiles_max": 1000,
+              "noise_std": 1e-05
+            },
+            "seed": 1,
+            "training": {
+              "amp": false,
+              "batch_size": 8192,
+              "early_stopping_patience": 16,
+              "eval_batch_size": 32768,
+              "inner_val_fraction": 0.05,
+              "inner_val_max_rows": 100000,
+              "max_epochs": 256,
+              "min_epochs_for_quota_selection": 8,
+              "num_workers": 0,
+              "torch_threads": 16
+            }
+          },
+          "peak_ram_gb": 18.958,
+          "peak_vram_gb": 7.486,
+          "projection": {
+            "authoritative_projected_5fold_hours": 3.63606,
+            "authoritative_projected_5fold_seconds": 13089.816,
+            "fits_budget_at_configured_max_epochs": true,
+            "max_epochs_fit_under_budget": 483,
+            "note": "authoritative_projected_5fold_hours is the RTX 4090 cloud-benchmarked figure (submission 76357 / task run-3e834e0f); projected_5fold_runtime_hours is the generic formula recomputation from common.config_runtime_projection for cross-check and may differ slightly due to rounding/formula assumptions.",
+            "per_learner_budget_seconds": 24300.0,
+            "projected_5fold_runtime_hours": 3.636058777777778,
+            "projected_5fold_runtime_seconds": 13089.8116,
+            "projected_runtime_per_fold_hours": 0.7272117555555556,
+            "projected_runtime_per_fold_seconds": 2617.96232,
+            "quota_fraction_for_scored_training": 0.9,
+            "quota_hours_total": 15.0,
+            "quota_learners": 2
+          },
+          "status": "BENCHMARKED_NO_SCORE"
+        }
+      ],
+      "benchmark_epochs": 3,
+      "device": {
+        "cuda_available": true,
+        "cuda_device_capability": null,
+        "cuda_runtime_version": "12.8",
+        "device": "cuda:0",
+        "device_name": "NVIDIA GeForce RTX 4090",
+        "os": "Linux x86_64",
+        "python": "3.11",
+        "torch_version": "2.10.0+cu128",
+        "total_vram_gb": 25.25
+      },
+      "fold_benchmarked": 0,
+      "learner": "GPU-01 TabM",
+      "peak_ram_gb": 18.958,
+      "peak_vram_gb": 7.486,
+      "preprocessing_seconds": 91.25,
+      "reductions_required": false,
+      "score_computed": false,
+      "selected_benchmark": {
+        "batches_per_second": null,
+        "note": "batches_per_second/rows_per_second were not separately reported by the cloud benchmark JSON; only seconds_per_epoch, preprocessing, RAM, and VRAM were recorded.",
+        "rows_per_second": null,
+        "seconds_per_epoch": 9.86997
+      },
+      "selected_config": {
+        "data": {
+          "max_train_rows": 1000000
+        },
+        "model": {
+          "arch_type": "tabm",
+          "d_block": 512,
+          "dropout": 0.1,
+          "k": 32,
+          "n_blocks": 3,
+          "num_embeddings": null
+        },
+        "optimizer": {
+          "grad_clip_norm": 1.0,
+          "lr": 0.002,
+          "weight_decay": 0.0003
+        },
+        "preprocessing": {
+          "mode": "quantile_normal",
+          "n_quantiles_max": 1000,
+          "noise_std": 1e-05
+        },
+        "seed": 1,
+        "training": {
+          "amp": false,
+          "batch_size": 8192,
+          "early_stopping_patience": 16,
+          "eval_batch_size": 32768,
+          "inner_val_fraction": 0.05,
+          "inner_val_max_rows": 100000,
+          "max_epochs": 256,
+          "min_epochs_for_quota_selection": 8,
+          "num_workers": 0,
+          "torch_threads": 16
+        }
+      },
+      "selected_runtime_projection": {
+        "authoritative_projected_5fold_hours": 3.63606,
+        "authoritative_projected_5fold_seconds": 13089.816,
+        "fits_budget_at_configured_max_epochs": true,
+        "max_epochs_fit_under_budget": 483,
+        "note": "authoritative_projected_5fold_hours is the RTX 4090 cloud-benchmarked figure (submission 76357 / task run-3e834e0f); projected_5fold_runtime_hours is the generic formula recomputation from common.config_runtime_projection for cross-check and may differ slightly due to rounding/formula assumptions.",
+        "per_learner_budget_seconds": 24300.0,
+        "projected_5fold_runtime_hours": 3.636058777777778,
+        "projected_5fold_runtime_seconds": 13089.8116,
+        "projected_runtime_per_fold_hours": 0.7272117555555556,
+        "projected_runtime_per_fold_seconds": 2617.96232,
+        "quota_fraction_for_scored_training": 0.9,
+        "quota_hours_total": 15.0,
+        "quota_learners": 2
+      },
+      "selection_basis": "runtime_vram_only_no_ts_auc",
+      "source": "crunch_cloud_rtx4090_benchmark",
+      "status": "BENCHMARKED_NO_SCORE"
+    }
+  },
+  "matched_contract": {
+    "calibration": "SCDF_NSEEN",
+    "feature_modules": [
+      "m00_core",
+      "m01_seq",
+      "m02_dist",
+      "m03_dyn",
+      "m04_resid",
+      "m06_loc",
+      "m07_bayes"
+    ],
+    "folds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "matched_lgbm_control": "RT-401",
+    "max_train_rows_per_fold": 1000000,
+    "no_test_or_lockbox": true,
+    "rt600_specialists": [
+      "RT-300",
+      "RT-410",
+      "RT-411",
+      "RT-412",
+      "RT-413",
+      "RT-414",
+      "RT-415"
+    ]
+  },
+  "package_versions": {
+    "numpy": "1.26.4",
+    "pandas": "3.0.5",
+    "psutil": "7.2.2",
+    "pyarrow": "25.0.1",
+    "pytabkit": "1.7.3",
+    "rtdl_num_embeddings": "0.0.12",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.17.1",
+    "tabm": "0.0.3",
+    "torch": "2.10.0+cu128"
+  },
+  "program": "GPU TABULAR 2026",
+  "projected_combined_hours": 4.545298927912005,
+  "score_computed": false,
+  "score_computed_during_benchmark": false,
+  "seed": 1,
+  "updated_at": "2026-08-27T15:24:12-0400"
+}

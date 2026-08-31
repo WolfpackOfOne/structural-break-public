@@ -1,0 +1,8 @@
+{
+  "lockbox_ts_auc": 0.6079083949890315,
+  "dev_mean_oof": 0.6151034246587253,
+  "gap": -0.007195029669693764,
+  "n_lockbox_series": 2000,
+  "n_lockbox_rows": 1003993,
+  "runtime_s": 360
+}

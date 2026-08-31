@@ -1,0 +1,84 @@
+# STATUS
+
+Concise canonical pointer to the current state of the 2026 ADIA Lab / CrunchDAO Structural Break Challenge — Real-Time Edition research program.
+
+## External champion
+
+**RT-1257 — official TS-AUC 0.6290 (submission #16, 2026-08-29).**
+
+This is the best external score currently recorded in the repository. It improves on RT-600's 0.6268 by **+0.0022**.
+
+RT-1257 preserves the seven RT-600 specialist slots and replaces exactly two learners:
+
+- RT-300 LightGBM -> **RT-1255 / CAT-300**
+- RT-410 LightGBM
+- RT-411 LightGBM
+- RT-412 LightGBM
+- RT-413 LightGBM -> **RT-1254 / CAT-413**
+- RT-414 LightGBM
+- RT-415 LightGBM
+
+The internal evidence that licensed RT-1257 was E2-E0 **+0.002026322**, marginal_vs_clone **+0.002407205**, and 5/5 positive folds. The realized external +0.0022 landed between those two internal estimates. This is one useful external calibration point, not a license to tune on the leaderboard.
+
+## Formal production anchor
+
+**RT-600 — official TS-AUC 0.6268.**
+
+RT-600 remains the formal production anchor during consolidation. RT-1257's build/manifest SHA split has been checked and the intervening tracked changes are packaging, dependency-declaration, and engineering-evidence changes rather than `src/sbr` model/feature changes. A fresh local Crunch test against the shipped/post-packaging entrypoint was recorded on 2026-08-31 and passed with determinism, and PR #14 CI passed. Formal RT-1257 production promotion is deliberately deferred to a separate owner tag/status action.
+
+See `engineering/reports/rt1257_deployment/CONSOLIDATION_HYGIENE_REVIEW.md`.
+
+## Current research-alive models
+
+1. **RT-1261 / CAT-412** — strongest remaining additional CatBoost slot question. The corrected k=3 composition (CAT-413 + CAT-300 + CAT-412) is nominally +0.000338234 over RT-1257, below the 0.0011 paired-bootstrap noise floor, so it is not a new champion.
+2. **RT-1263 / CAT-415** — research-alive individual specialist; no corrected evidence that it improves RT-1257 in a larger equal-replacement hybrid.
+3. **RT-1262 / CAT-414** — research-alive individual specialist; same caveat.
+4. **RT-1260 / CAT-411** — research-alive by the original individual gate, but weaker corrected E2-E0 / mature-vs-never evidence.
+
+## Parked model
+
+**RT-995 / T2** — causal teacher-distilled LightGBM. It demonstrated substantial standalone teacher signal but only small marginal ensemble alpha over a matched seed clone. Preserve it as a scientific success about privileged-information transfer, but do not fund ordinary additive promotion work without a new complementarity mechanism.
+
+## Important corrected classifications
+
+- **RT-1264** — **SUPERSEDED**, not research-alive. Its original five-slot best-k conclusion used an E2-E1 selection endpoint whose clone control worsened with k.
+- **RT-1265 / CSA-04R** — corrected reanalysis. Fixed E2-E0 + preregistered parsimony selects k*=2, CAT-413 + CAT-300, exactly RT-1257; verdict NOT_DISTINGUISHABLE; no new OOF vector.
+- **RT-1250 TabM / RT-1252 RealMLP** — INFEASIBLE original Learner Diversity arms; no binding predictive verdict.
+- **RT-1258 TabM / RT-1259 RealMLP** — distinct fresh GPU-authorized arms after hardware removed the feasibility blocker; both completed five folds and are KILL.
+- **RT-1256 / CAT-410** — KILL.
+
+## Canonical research records
+
+Read these first:
+
+- `MODEL_REGISTRY.md` — current model set and classifications.
+- `INDEX.md` — navigation across the research program.
+- `RESULTS.csv` — quantitative ledger.
+- `EXPERIMENT_ID_MAP.md` — RT-ID mapping and provenance.
+- `NEGATIVE_RESULTS_INDEX.md` — concise failed-idea lookup.
+- `FAILED_EXPERIMENTS.md` — detailed negative evidence.
+- `LESSONS_LEARNED.md` — cross-program synthesis.
+- `RDOF_LEDGER.md` — degrees-of-freedom accounting.
+- `PROTOCOL.md` — historical binding protocol.
+
+## Ledger consolidation finding
+
+The pre-consolidation `research/current` branch was not a complete canonical ledger: its `RESULTS.csv` omitted the later RT-1250+ champion lineage. The consolidation imported the later CatBoost / Deep Ensemble generation containing RT-1250..RT-1257 and RT-1260..RT-1265. A follow-up then filed the binding RT-1258/RT-1259 H4 results into canonical `RESULTS.csv` without inventing missing metadata.
+
+PR #14 follow-up bookkeeping filed RT-1258/RT-1259 as append-only rows in canonical `RESULTS.csv` using recovered metadata from the reachable H4 JSON at commit `3f94d55`: `git_sha=b3a16bc`, `train_series=8000`, and both per-fold standalone TS-AUC vectors. The `persistence` field remains blank because no source artifact defines a persistence tag/category for these GPU arms.
+
+The exact pre-consolidation `research/current` ledger is preserved at `archive/2026-08-30/RESULTS_SNAPSHOT.csv`.
+
+## Current research standard
+
+A serious new candidate must ultimately answer:
+
+**Does it add complementary information to RT-1257?**
+
+Use RT-1257 as the primary ensemble baseline and RT-600 as the permanent homogeneous LightGBM reference. Prefer matched-control ensemble marginal tests over standalone AUC, and inspect fold consistency, pair flow, dominant-cell repair, mature-vs-never behavior, causality, runtime, and deployment complexity before promotion.
+
+## Consolidation state
+
+Work is occurring on `release/2026-research-consolidation`; `main` has not been moved. The 2026-08-31 branch/tag pruning audit is recorded in `archive/2026-08-31/BRANCH_TAG_PRUNING_AUDIT.md`. No historical branch should be deleted unless that audit classifies it as reachable/tag-protected, or a later owner-approved tag/import decision preserves it first.
+
+_Last updated: 2026-08-31 during PR #14 branch/tag audit follow-up._

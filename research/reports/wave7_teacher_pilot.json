@@ -1,0 +1,55 @@
+{
+  "experiment": "W7 teacher pilot",
+  "prereg": "research/WAVE7_TEACHER_PREREG.md",
+  "val_fold": 0,
+  "armB_fold0_cell_auc": 0.6638108917990431,
+  "armC_fold0_cell_auc": 0.7165782044731226,
+  "future_gap_fold0": 0.052767312674079525,
+  "cell_pair_weight_fraction": 0.5050467365450515,
+  "results": {
+    "T0_RT990": {
+      "experiment_id": "RT-990",
+      "cell_ts_auc": 0.6638108917990431,
+      "cell_ts_auc_never_break_only": 0.6638363248552263,
+      "cell_ts_auc_pre_break_only": 0.6637399238512213,
+      "whole_fold0_ts_auc": 0.6265641785501449
+    },
+    "T1_RT992": {
+      "experiment_id": "RT-992",
+      "cell_ts_auc": 0.6816943193557988,
+      "cell_ts_auc_never_break_only": 0.6801782385777847,
+      "cell_ts_auc_pre_break_only": 0.6859247642057286,
+      "whole_fold0_ts_auc": 0.6427736167766711
+    },
+    "T2_RT993": {
+      "experiment_id": "RT-993",
+      "cell_ts_auc": 0.6843913943784629,
+      "cell_ts_auc_never_break_only": 0.6852262414222342,
+      "cell_ts_auc_pre_break_only": 0.6820618520295202,
+      "whole_fold0_ts_auc": 0.6432699295748774
+    }
+  },
+  "deltas": {
+    "T1_RT992": {
+      "cell_delta": 0.01788342755675576,
+      "whole_fold0_delta": 0.016209438226526207,
+      "translated_aggregate_delta": 0.00903196672577934,
+      "distillation_efficiency": 0.33891109193325464,
+      "bucket": "meaningful"
+    },
+    "T2_RT993": {
+      "cell_delta": 0.02058050257941979,
+      "whole_fold0_delta": 0.016705751024732485,
+      "translated_aggregate_delta": 0.010394115664192979,
+      "distillation_efficiency": 0.39002370097064637,
+      "bucket": "large"
+    }
+  },
+  "best_arm": "T2_RT993",
+  "gate_A": true,
+  "gate_B": true,
+  "gate_C": true,
+  "verdict": "CONTINUE",
+  "STATUS": "MECHANISM-POSITIVE SCREEN. OUTER-FOLD CONTAMINATED. NOT PROMOTION EVIDENCE.",
+  "contamination_note": "Q (global RT-991 OOF) is row/series cross-fitted but NOT outer-fold cross-fitted: fold-1 student-training rows in this fold-0-outer pilot received Q from a teacher trained on folds {0,2,3,4}, which includes outer fold 0. See research/WAVE7_TEACHER_NESTED_PREREG.md and research/reports/wave7_teacher_nested.md."
+}

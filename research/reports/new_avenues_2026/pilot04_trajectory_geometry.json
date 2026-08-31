@@ -1,0 +1,463 @@
+{
+  "RT-1202": {
+    "diagnostic_pack": {
+      "age_buckets": {
+        "0-5": {
+          "candidate": 0.5087270734693188,
+          "rt600": 0.5152445330859063
+        },
+        "100-1000000000": {
+          "candidate": 0.5025032814145647,
+          "rt600": 0.675917278353309
+        },
+        "20-50": {
+          "candidate": 0.4914465223564767,
+          "rt600": 0.5894557799021534
+        },
+        "5-20": {
+          "candidate": 0.5072994975227533,
+          "rt600": 0.5520505250854593
+        },
+        "50-100": {
+          "candidate": 0.4902856625124185,
+          "rt600": 0.6169058332601237
+        }
+      },
+      "dominant_cell": {
+        "candidate": 0.5003078121537549,
+        "rt600": 0.6777110899011463
+      },
+      "fold": 0,
+      "label": "RT-1202",
+      "mature_vs_neverbreak": {
+        "candidate": 0.5014101310507508,
+        "rt600": 0.676800868805288
+      },
+      "mature_vs_prebreak": {
+        "candidate": 0.4972319211007167,
+        "rt600": 0.6802509546650244
+      },
+      "t_buckets": {
+        "0-20": {
+          "candidate": 0.4744197210283349,
+          "rt600": 0.5300204619017298
+        },
+        "100-200": {
+          "candidate": 0.5076666900700754,
+          "rt600": 0.6390075342102901
+        },
+        "20-50": {
+          "candidate": 0.47148897669702744,
+          "rt600": 0.5680248975917097
+        },
+        "200-400": {
+          "candidate": 0.4888210641468093,
+          "rt600": 0.6359029050927087
+        },
+        "400-1000000000": {
+          "candidate": 0.5055252330250362,
+          "rt600": 0.666690084227326
+        },
+        "50-100": {
+          "candidate": 0.517935666534207,
+          "rt600": 0.5790183020058499
+        }
+      },
+      "whole_fold": {
+        "candidate": 0.4993241154717414,
+        "rt600": 0.6382763032336511
+      },
+      "within_t_rank_corr_rt600": 0.003912508286385561
+    },
+    "ensemble_marginal": {
+      "fold": 0,
+      "gain_vs_base": -0.0022767882469612033,
+      "marginal_vs_clone": -0.0025868573410599005,
+      "rt600_7stream": 0.6382763032336511,
+      "rt600_plus_RT-1202": 0.6359995149866899,
+      "rt600_plus_seedclone": 0.6385863723277498
+    },
+    "pair_flow": {
+      "cell_never_break_neg": {
+        "damage": 5393,
+        "net_pair_lift": -2872,
+        "repairs": 2521,
+        "total_pairs_sampled": 15582
+      },
+      "cell_pre_break_neg": {
+        "damage": 4614,
+        "net_pair_lift": -2616,
+        "repairs": 1998,
+        "total_pairs_sampled": 13378
+      },
+      "dominant_cell": {
+        "damage": 5434,
+        "net_pair_lift": -2974,
+        "repairs": 2460,
+        "total_pairs_sampled": 15598
+      },
+      "whole_fold": {
+        "damage": 6546,
+        "net_pair_lift": -3259,
+        "repairs": 3287,
+        "total_pairs_sampled": 19562
+      }
+    }
+  },
+  "RT-1203": {
+    "diagnostic_pack": {
+      "age_buckets": {
+        "0-5": {
+          "candidate": 0.49417532114297763,
+          "rt600": 0.5152445330859063
+        },
+        "100-1000000000": {
+          "candidate": 0.4937325675355278,
+          "rt600": 0.675917278353309
+        },
+        "20-50": {
+          "candidate": 0.48873139388460174,
+          "rt600": 0.5894557799021534
+        },
+        "5-20": {
+          "candidate": 0.497679092853185,
+          "rt600": 0.5520505250854593
+        },
+        "50-100": {
+          "candidate": 0.4962326805217502,
+          "rt600": 0.6169058332601237
+        }
+      },
+      "dominant_cell": {
+        "candidate": 0.4896501628018786,
+        "rt600": 0.6777110899011463
+      },
+      "fold": 0,
+      "label": "RT-1203",
+      "mature_vs_neverbreak": {
+        "candidate": 0.486356248528824,
+        "rt600": 0.676800868805288
+      },
+      "mature_vs_prebreak": {
+        "candidate": 0.4988414426298617,
+        "rt600": 0.6802509546650244
+      },
+      "t_buckets": {
+        "0-20": {
+          "candidate": 0.5011918145760373,
+          "rt600": 0.5300204619017298
+        },
+        "100-200": {
+          "candidate": 0.5003984826399324,
+          "rt600": 0.6390075342102901
+        },
+        "20-50": {
+          "candidate": 0.5177755317092689,
+          "rt600": 0.5680248975917097
+        },
+        "200-400": {
+          "candidate": 0.4808194500851921,
+          "rt600": 0.6359029050927087
+        },
+        "400-1000000000": {
+          "candidate": 0.49869603177714245,
+          "rt600": 0.666690084227326
+        },
+        "50-100": {
+          "candidate": 0.5075822698041806,
+          "rt600": 0.5790183020058499
+        }
+      },
+      "whole_fold": {
+        "candidate": 0.49382375251781835,
+        "rt600": 0.6382763032336511
+      },
+      "within_t_rank_corr_rt600": 0.007449944711364755
+    },
+    "ensemble_marginal": {
+      "fold": 0,
+      "gain_vs_base": -0.002731559671285355,
+      "marginal_vs_clone": -0.0030416287653840524,
+      "rt600_7stream": 0.6382763032336511,
+      "rt600_plus_RT-1203": 0.6355447435623658,
+      "rt600_plus_seedclone": 0.6385863723277498
+    },
+    "pair_flow": {
+      "cell_never_break_neg": {
+        "damage": 5522,
+        "net_pair_lift": -3114,
+        "repairs": 2408,
+        "total_pairs_sampled": 15582
+      },
+      "cell_pre_break_neg": {
+        "damage": 4572,
+        "net_pair_lift": -2552,
+        "repairs": 2020,
+        "total_pairs_sampled": 13378
+      },
+      "dominant_cell": {
+        "damage": 5487,
+        "net_pair_lift": -3130,
+        "repairs": 2357,
+        "total_pairs_sampled": 15598
+      },
+      "whole_fold": {
+        "damage": 6471,
+        "net_pair_lift": -3186,
+        "repairs": 3285,
+        "total_pairs_sampled": 19562
+      }
+    }
+  },
+  "branch": "research/new-avenues-pilots-2026",
+  "candidate": "trajectory geometry NN provenance plus history-boundary arc-rate",
+  "cleanup_incorporated": true,
+  "constants": {
+    "boundary_band": "last quarter of historical subsequence indices",
+    "component_order": [
+      "prov16",
+      "arc16",
+      "prov64",
+      "arc64"
+    ],
+    "control_scalar": {
+      "feature_center": [
+        -0.1269419938325882,
+        0.24912281334400177,
+        -0.06207498162984848,
+        0.25
+      ],
+      "feature_scale": [
+        0.12529467046260834,
+        0.028165390715003014,
+        0.06078295409679413,
+        0.029520785436034203
+      ]
+    },
+    "history_reference_sampling": "evenly_spaced",
+    "max_hist_refs": 2000,
+    "prior_online_rule": "nearest prior online subsequence ending at or before t-m",
+    "real_scalar": {
+      "feature_center": [
+        -0.1269419938325882,
+        0.25,
+        -0.06207498162984848,
+        0.2461538463830948
+      ],
+      "feature_scale": [
+        0.12529467046260834,
+        0.045069970190525055,
+        0.06078295409679413,
+        0.09435909241437912
+      ]
+    },
+    "shuffle_seed": 0,
+    "windows": [
+      16,
+      64
+    ]
+  },
+  "control": "same provenance with shuffled historical arc-order",
+  "exp_ids": [
+    "RT-1202",
+    "RT-1203"
+  ],
+  "feature_build_runtime_s": 165.63198328018188,
+  "feature_columns": [
+    "prov16",
+    "arc16",
+    "prov64",
+    "arc64"
+  ],
+  "generated": "2026-08-24",
+  "marginal_difference_real_minus_control": 0.00045477142432415185,
+  "oof_artifacts": {
+    "RT-1202": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1202.npy",
+    "RT-1203": "/path/to/workspace/structural-break-new-avenues-pilots/research/oof/RT-1203.npy"
+  },
+  "post_cleanup_reproduction": {
+    "changed": false,
+    "cleanup_sha": "aca2c4f9b68ad6315956f7c499ebefb2ae311f7b",
+    "final_status": "FINAL SCREEN RESULT",
+    "merge_commit": "81aa56c",
+    "notes": "Exact original Pilot 4 runner rerun after aca2c4f merge for both real and shuffled-order control scalars; no retuning, no new RT ID, no lockbox/test data.",
+    "numeric_tolerance": 1e-12,
+    "old_vs_clean": {
+      "RT-1202": {
+        "dominant": {
+          "changed": false,
+          "clean": 0.5003078121537549,
+          "delta": 0.0,
+          "old": 0.5003078121537549
+        },
+        "dominant_damage": {
+          "changed": false,
+          "clean": 5434,
+          "delta": 0,
+          "old": 5434
+        },
+        "dominant_net": {
+          "changed": false,
+          "clean": -2974,
+          "delta": 0,
+          "old": -2974
+        },
+        "dominant_repairs": {
+          "changed": false,
+          "clean": 2460,
+          "delta": 0,
+          "old": 2460
+        },
+        "e0": {
+          "changed": false,
+          "clean": 0.6382763032336511,
+          "delta": 0.0,
+          "old": 0.6382763032336511
+        },
+        "e1": {
+          "changed": false,
+          "clean": 0.6385863723277498,
+          "delta": 0.0,
+          "old": 0.6385863723277498
+        },
+        "e2": {
+          "changed": false,
+          "clean": 0.6359995149866899,
+          "delta": 0.0,
+          "old": 0.6359995149866899
+        },
+        "marginal_vs_clone": {
+          "changed": false,
+          "clean": -0.0025868573410599005,
+          "delta": 0.0,
+          "old": -0.0025868573410599005
+        },
+        "mature_vs_never": {
+          "changed": false,
+          "clean": 0.5014101310507508,
+          "delta": 0.0,
+          "old": 0.5014101310507508
+        },
+        "mature_vs_pre": {
+          "changed": false,
+          "clean": 0.4972319211007167,
+          "delta": 0.0,
+          "old": 0.4972319211007167
+        },
+        "rho": {
+          "changed": false,
+          "clean": 0.003912508286385561,
+          "delta": 0.0,
+          "old": 0.003912508286385561
+        },
+        "standalone": {
+          "changed": false,
+          "clean": 0.4993241154717414,
+          "delta": 0.0,
+          "old": 0.4993241154717414
+        }
+      },
+      "RT-1203": {
+        "dominant": {
+          "changed": false,
+          "clean": 0.4896501628018786,
+          "delta": 0.0,
+          "old": 0.4896501628018786
+        },
+        "dominant_damage": {
+          "changed": false,
+          "clean": 5487,
+          "delta": 0,
+          "old": 5487
+        },
+        "dominant_net": {
+          "changed": false,
+          "clean": -3130,
+          "delta": 0,
+          "old": -3130
+        },
+        "dominant_repairs": {
+          "changed": false,
+          "clean": 2357,
+          "delta": 0,
+          "old": 2357
+        },
+        "e0": {
+          "changed": false,
+          "clean": 0.6382763032336511,
+          "delta": 0.0,
+          "old": 0.6382763032336511
+        },
+        "e1": {
+          "changed": false,
+          "clean": 0.6385863723277498,
+          "delta": 0.0,
+          "old": 0.6385863723277498
+        },
+        "e2": {
+          "changed": false,
+          "clean": 0.6355447435623658,
+          "delta": 0.0,
+          "old": 0.6355447435623658
+        },
+        "marginal_vs_clone": {
+          "changed": false,
+          "clean": -0.0030416287653840524,
+          "delta": 0.0,
+          "old": -0.0030416287653840524
+        },
+        "mature_vs_never": {
+          "changed": false,
+          "clean": 0.486356248528824,
+          "delta": 0.0,
+          "old": 0.486356248528824
+        },
+        "mature_vs_pre": {
+          "changed": false,
+          "clean": 0.4988414426298617,
+          "delta": 0.0,
+          "old": 0.4988414426298617
+        },
+        "rho": {
+          "changed": false,
+          "clean": 0.007449944711364755,
+          "delta": 0.0,
+          "old": 0.007449944711364755
+        },
+        "standalone": {
+          "changed": false,
+          "clean": 0.49382375251781835,
+          "delta": 0.0,
+          "old": 0.49382375251781835
+        }
+      }
+    },
+    "verification": {
+      "message": "ok",
+      "ok": true,
+      "prefixes_checked": 29,
+      "series_checked": 8
+    }
+  },
+  "prefix_verification": {
+    "message": "ok",
+    "ok": true,
+    "prefixes_checked": 29,
+    "series_checked": 8
+  },
+  "result_status": "FINAL SCREEN RESULT",
+  "rt600_reproduction": {
+    "mean": 0.6258112639463216,
+    "per_fold": [
+      0.6382763032336511,
+      0.6204018503410609,
+      0.6339302291124634,
+      0.6175075054046519,
+      0.6189404316397805
+    ],
+    "pooled": 0.6256269256734708
+  },
+  "runtime_s": 311.39803290367126,
+  "verdict": "KILL",
+  "verdict_reason": "real marginal_vs_clone is below +0.0010"
+}

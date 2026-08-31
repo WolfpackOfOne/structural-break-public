@@ -1,0 +1,222 @@
+{
+  "experiment_id": "RT-600",
+  "what": "FINAL competition artifact: 7-stream deployable ensemble, all 10,000 labelled series",
+  "frozen_by": "research/FINAL_ARCHITECTURE_FREEZE.md",
+  "code_git_sha": "73b566202bc0670d114c25ec9d0abcb277443a2f",
+  "model_code_git_sha": "41ab0695a906834361298b4a61c3636909ceb79c",
+  "src_sbr_identical_between_them": true,
+  "embedded_source_clean": true,
+  "hashes": {
+    "source_zip_sha256": "199db8c9f5db7e1429f6ae09fa018d43cc58c5eb47b5c623a017799537a413a0",
+    "model_zip_sha256": "6c8960ddc7331afecfc6980974f2879401a1eb583f15f5cad34c2ea03299ea8c",
+    "model_manifest_sha256": "1483a59a268ded18b6af804a5f0eb0b191376a1dc86526f286751bf1613ec940",
+    "feature_manifest_sha256": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced",
+    "notebook_sha256": "8332b698b6dbe91376c79d2051c5d294f515f77dea835a278b858b45bda73cc5",
+    "python_entrypoint_sha256": "660c88c104c990626a5758f8d36af49c87273a587e399d86bbc353cc9bba2647",
+    "folds_final10k_sha256": "bf0cdf642bde018a632663ae7d211714a173fb64ef824b15416caf2649e0c716",
+    "notebook_bytes": 28049853,
+    "python_entrypoint_bytes": 28047061
+  },
+  "training": {
+    "n_series": 10000,
+    "partition": "folds_final10k",
+    "includes_former_lockbox": true,
+    "row_budget_rule": "1.25x dev, nearest thousand, pre-declared before the freeze",
+    "streams": [
+      {
+        "experiment": "RT-100R",
+        "seed": 0,
+        "max_train_rows": 1250000,
+        "n_columns": 500
+      },
+      {
+        "experiment": "RT-120R",
+        "seed": 0,
+        "max_train_rows": 1125000,
+        "n_columns": 261
+      },
+      {
+        "experiment": "RT-121R",
+        "seed": 1,
+        "max_train_rows": 1125000,
+        "n_columns": 239
+      },
+      {
+        "experiment": "RT-122R",
+        "seed": 7,
+        "max_train_rows": 1125000,
+        "n_columns": 500
+      },
+      {
+        "experiment": "RT-123R",
+        "seed": 0,
+        "max_train_rows": 875000,
+        "n_columns": 500
+      },
+      {
+        "experiment": "RT-124R",
+        "seed": 3,
+        "max_train_rows": 875000,
+        "n_columns": 170
+      },
+      {
+        "experiment": "RT-125R",
+        "seed": 11,
+        "max_train_rows": 875000,
+        "n_columns": 500
+      }
+    ]
+  },
+  "calibration": {
+    "kind": "scdf",
+    "time_coord": "log_n_seen",
+    "n_anchor": 12,
+    "grid": 256,
+    "min_n": 400,
+    "fitted_on": "cross-fitted OOF over folds_final10k, all 10,000 series"
+  },
+  "dependencies": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "pandas": "3.0.5",
+    "scipy": "1.17.1",
+    "scikit-learn": "1.9.0",
+    "lightgbm": "4.7.0",
+    "numba": "0.67.0",
+    "pyarrow": "25.0.1",
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "machine": "arm64"
+  },
+  "local_harness": {
+    "runtime_s": 20.002827167510986,
+    "n_series": 20,
+    "n_points": 10476,
+    "ms_per_point": 1.9093954913622553,
+    "deterministic": true,
+    "order_independent": true,
+    "future_poison_safe": true,
+    "all_finite": true,
+    "in_range": true,
+    "ts_auc_diagnostic_in_sample_do_not_quote": 0.9595016840482085,
+    "PASS": true,
+    "notebook": "/path/to/workspace/structural-break-claude-wave3/submissions/C_ensemble_deployable.ipynb"
+  },
+  "crunch_test": {
+    "cli_version": "11.11.0",
+    "result": "PASSED",
+    "exit_code": 0,
+    "infer_parallelism": 1,
+    "determinism_check": "passed (tolerance 1e-08)",
+    "duration": "00:01:43",
+    "memory_consumed": "1.81 GB",
+    "log": "research/reports/final_crunch_test.md"
+  },
+  "lockbox": {
+    "touched_for_evaluation": false,
+    "note": "the 2,000-series lockbox is FINAL-FIT TRAINING DATA here; no wave-4 score was taken from it"
+  },
+  "test_reduced_touched_for_research": false,
+  "zip_determinism": {
+    "content_addressed": true,
+    "note": "pack_dir stamps every member with the 1980 zip epoch and fixed permissions, so source_zip_sha256 and model_zip_sha256 depend on contents and paths only. Before this fix they encoded checkout mtimes and could never have matched a rebuild."
+  },
+  "clean_checkout_reproduction": {
+    "performed": true,
+    "method": "fresh git clone of the branch into a new directory",
+    "source_zip_reproduces": true,
+    "model_zip_reproduces_from_committed_notebook": true,
+    "manifest_code_git_sha_reachable_in_clone": true,
+    "trained_on_n_series": 10000,
+    "calibration_time_coord": "log_n_seen",
+    "caveat": "the notebook and .py themselves are NOT bit-reproducible across builds: the boot cell embeds a build timestamp. The source and model zip hashes are the reproducible identities and are what to verify."
+  },
+  "release_candidate": {
+    "id": "RT-600-RC1",
+    "what": "the RT-600 artifact REBUILT so the shipped payload contains the audited reliability fixes. Same experiment, same model, same calibration, same features: no new experiment id, no new score, no model selection.",
+    "why": "the notebook embeds a frozen zip of src/sbr, so editing src/sbr on engineering/rt600-final-reliability-2026 did not change the deployed artifact. The hashes at the top of this file describe the 2026-08-21 freeze and are LEFT UNCHANGED as the historical record; these describe what is in submissions/ now.",
+    "authorised_by": "repository owner, 2026-08-26, engineering-only release authorisation (release action 2 of 2)",
+    "built_at": "2026-08-26T18:28:02Z",
+    "source_commit": "60b399e3b845de8ee14a94f0b23a33f06f2889ea",
+    "build_command": "python research/scripts/build_submission.py --model <models/final10k_ensemble> --out submissions/C_ensemble_deployable.ipynb --title \"Structural Break Real-Time: 7-stream deployable ensemble, all 10,000 series\"",
+    "embedded_source_clean": true,
+    "hashes": {
+      "source_zip_sha256": "e5381d518faa51ccadb36898bfab987e788c8a3fcafb91920b9af8b779f83d6d",
+      "model_zip_sha256": "6c8960ddc7331afecfc6980974f2879401a1eb583f15f5cad34c2ea03299ea8c",
+      "model_manifest_sha256": "1483a59a268ded18b6af804a5f0eb0b191376a1dc86526f286751bf1613ec940",
+      "feature_manifest_sha256": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced",
+      "notebook_sha256": "a32f638c3ad2483d8205789e370e828078639b9a4781fb5bc35699a19188b433",
+      "python_entrypoint_sha256": "42668f521ebcd7df0f05423dbeba5617e2217a39ee2f9dbabf23cbb92ea35ac2",
+      "notebook_bytes": 28104109,
+      "python_entrypoint_bytes": 28101317
+    },
+    "changed_vs_freeze": {
+      "source_zip_sha256": {
+        "from": "199db8c9f5db7e1429f6ae09fa018d43cc58c5eb47b5c623a017799537a413a0",
+        "to": "e5381d518faa51ccadb36898bfab987e788c8a3fcafb91920b9af8b779f83d6d"
+      },
+      "model_zip_sha256": {
+        "unchanged": "6c8960ddc7331afecfc6980974f2879401a1eb583f15f5cad34c2ea03299ea8c",
+        "note": "BYTE-IDENTICAL. The model artifacts are not rebuilt and are not scientifically touched; the packer re-emitted them from the same directory to the same bytes."
+      },
+      "feature_manifest_sha256": {
+        "unchanged": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced",
+        "note": "the RT-600 500-column manifest is unmoved, so ProductionModel.load still accepts this model."
+      },
+      "notebook_sha256": {
+        "from": "8332b698b6dbe91376c79d2051c5d294f515f77dea835a278b858b45bda73cc5",
+        "to": "a32f638c3ad2483d8205789e370e828078639b9a4781fb5bc35699a19188b433",
+        "note": "the notebook and .py are not bit-reproducible across builds -- the boot cell embeds a build timestamp. The zip hashes are the reproducible identities."
+      }
+    },
+    "payload_contents": {
+      "n_files": 44,
+      "added_vs_freeze": [
+        "sbr/stream/_fp.py  -- the arm64 FMA emulation the parity fix needs",
+        "sbr/features/m10_persist.py",
+        "sbr/features/m11_focus.py",
+        "sbr/features/m12_rdep.py",
+        "sbr/features/m13_scale_survival.py",
+        "sbr/features/m14_spectral_impulse.py",
+        "sbr/features/m15_ordinal_irrev.py",
+        "sbr/features/m16_joint_rarity.py",
+        "sbr/features/m17_observers.py",
+        "sbr/features/m18_weighted_ctm.py",
+        "sbr/stream/s_m12_rdep.py"
+      ],
+      "added_note": "m10-m18 and s_m12_rdep are post-freeze feature modules that arrived in src/sbr with the branch base (8165876, the CRF tip). They are NOT hand added: the canonical builder packs src/sbr whole, and filtering it by hand is exactly the class of error the builder exists to prevent. They do not change inference: PRODUCTION_MODULES is still the frozen seven, MODULE_ORDER was appended to rather than reordered, and the RT-600 feature manifest sha is unchanged. Only m12_rdep/s_m12_rdep are even imported at run time (via sbr.stream.engine) and neither is instantiated. None imports torch or any dependency not already required.",
+      "removed_vs_freeze": [],
+      "changed_vs_freeze": [
+        "sbr/features/m07_bayes.py",
+        "sbr/production/model.py",
+        "sbr/stream/engine.py",
+        "sbr/stream/s_m01_seq.py",
+        "sbr/stream/s_m02_dist.py",
+        "sbr/stream/s_m04_resid.py",
+        "sbr/stream/s_m06_loc.py",
+        "sbr/stream/s_m07_bayes.py"
+      ],
+      "audited_absences": {
+        "crf_training_code": false,
+        "torch_import": false,
+        "research_caches_or_npy": false,
+        "pycache_or_pyc": false,
+        "unit_test_checkpoints": false,
+        "experimental_model_artifacts": false
+      }
+    },
+    "environment": {
+      "python": "3.11.6",
+      "numpy": "2.4.6",
+      "pandas": "3.0.5",
+      "scipy": "1.17.1",
+      "scikit-learn": "1.9.0",
+      "lightgbm": "4.7.0",
+      "numba": "0.67.0",
+      "pyarrow": "25.0.1",
+      "platform": "macOS-26.5.2-arm64-arm-64bit",
+      "machine": "arm64"
+    },
+    "validation": "engineering/reports/rt600_final_reliability/RT600_DEPLOYMENT_READINESS.md, section 'Release candidate'",
+    "status": "READY_FOR_OWNER_REVIEW -- not deployed, not merged to production/rt600. The owner makes the merge decision."
+  }
+}

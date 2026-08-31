@@ -1,0 +1,29 @@
+{
+  "built_at": "2026-08-29T12:52:38Z",
+  "code_git_sha": "e50098a42f28b1007746cb20bbabc157e285b036",
+  "embedded_source_clean": true,
+  "embedded_source_dirty_paths": [],
+  "worktree_other_changes": [
+    "M submissions/RT1257_deployable.build.json",
+    "?? engineering/reports/rt1257_deployment/oof/",
+    "?? submissions/RT1257_deployable.py"
+  ],
+  "model_directory": "/path/to/workspace/structural-break-rt1257-deployment/models/rt1257_final",
+  "source_zip_sha256": "c8e35854675b038103cec6b6da827e1186bf8235bef6a8d3d8d6e00691429676",
+  "model_zip_sha256": "952422d7ddb5a5d60719e909d1f0669c612952c72a26fc1859035dfae0381f0a",
+  "feature_manifest_sha256": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced",
+  "model_manifest_sha256": "ba4bee741d3d16ccc874724757167b9a7478005c14587bb329b845efca126d4c",
+  "notebook": {
+    "path": "/path/to/workspace/structural-break-rt1257-deployment/submissions/RT1257_deployable.ipynb",
+    "sha256": "2461c7002fce3d0a0057f99acfa6749940bc7e2d3fc764351ee21e6bcb3de2e1",
+    "bytes": 24009226
+  },
+  "python_entrypoint": {
+    "path": "/path/to/workspace/structural-break-rt1257-deployment/submissions/RT1257_deployable.py",
+    "sha256": "05eafb66f4589f5b426f4af43779f428f7a90f2d64b423530d6f315a798e888b",
+    "bytes": 24006505
+  },
+  "infer_parallelism": 1,
+  "manifest_code_git_sha": "6b4fafacd30711bebf2bf977c3c390641f3ae522",
+  "manifest_matches_build_sha": false
+}

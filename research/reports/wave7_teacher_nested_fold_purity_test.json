@@ -1,0 +1,7 @@
+{
+  "new_scheme_failures": [],
+  "new_scheme_passed": true,
+  "old_scheme_contaminated_checks": 20,
+  "total_checks": 20,
+  "old_scheme_sentinel_catches_defect": true
+}

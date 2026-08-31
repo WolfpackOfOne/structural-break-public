@@ -1,0 +1,41 @@
+{
+  "purpose": "FINAL-FIT ONLY. Never used for model selection.",
+  "seed": 20260920,
+  "n_folds": 5,
+  "n_series": 10000,
+  "includes_former_lockbox": true,
+  "canonical_folds_untouched": true,
+  "sha256_id_fold": "6e9ebaf7cffada5bbf9e1d1f930f34c0b1fb2ce05287b46ab1303f6e89d8da65",
+  "per_fold": {
+    "0": {
+      "n_series": 2021,
+      "break_rate": 0.4997525977238991,
+      "mean_n_online": 505.58931222167246,
+      "n_online_rows": 1021796
+    },
+    "1": {
+      "n_series": 2008,
+      "break_rate": 0.49800796812749004,
+      "mean_n_online": 500.8899402390438,
+      "n_online_rows": 1005787
+    },
+    "2": {
+      "n_series": 1997,
+      "break_rate": 0.49624436654982473,
+      "mean_n_online": 502.3765648472709,
+      "n_online_rows": 1003246
+    },
+    "3": {
+      "n_series": 1988,
+      "break_rate": 0.4949698189134809,
+      "mean_n_online": 503.26056338028167,
+      "n_online_rows": 1000482
+    },
+    "4": {
+      "n_series": 1986,
+      "break_rate": 0.4944612286002014,
+      "mean_n_online": 506.1460221550856,
+      "n_online_rows": 1005206
+    }
+  }
+}

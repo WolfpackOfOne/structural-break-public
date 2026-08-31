@@ -1,0 +1,96 @@
+{
+  "generated_at": "2026-08-19T04:04:20Z",
+  "code": {
+    "git_sha": "e98f5b969416585216502ed2d00075c6e86d7da9",
+    "git_sha_short": "e98f5b9",
+    "branch": "research/wave2-2026",
+    "checkpoint_tag": "research-checkpoint-20260818-1",
+    "checkpoint_sha": "e98f5b969416585216502ed2d00075c6e86d7da9",
+    "dirty": true
+  },
+  "environment": {
+    "python": "3.11.15",
+    "platform": "Linux-6.18.5-fc-v20-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "n_cpu": 2,
+    "numpy": "2.4.4",
+    "pandas": "3.0.2",
+    "scipy": "1.17.1",
+    "scikit_learn": "1.8.0",
+    "lightgbm": "4.7.0",
+    "pyarrow": "25.0.1",
+    "numpy_blas": "scipy-openblas"
+  },
+  "data": {
+    "raw_sha256": {
+      "X_train.parquet": "2aa61853ce0c3a8f6cdfe137ccde9a59f97cf0872779d2063b549c60a7b7ed54",
+      "y_train.parquet": "fff57b37cd0083040b46c5ec3e4d3c1da009ef18b1b1bc43096131c77c25e916",
+      "y_train_index.parquet": "3b0ab253817b9828b8ab3393caed472125963fff3ad2a63de71ea89d12c6dd07"
+    },
+    "store_meta_sha256": "d09ec076b43018bb26765fa1bcc9856eb3fe7f2d39397af4ee7dceffe3439272",
+    "store_values_sha256": "10c22b007a6d0084e76a596f37f2d460ed5bc6143fada7e9605eeed0924bc06b",
+    "store_values_bytes": 140145984
+  },
+  "folds": {
+    "folds.parquet": "ba4f71fee8fcb30cc808234584a924ff0b0f0529e5bbd1fcbd0b4b780ebcc312",
+    "folds_alt1.parquet": "cfab82516ebbc9858efd51df78f066e39fb5f8f71d7bc127c599d30005dd523c",
+    "folds_alt2.parquet": "26eb0a9e244f7d63f669e3271d209ecab48dfbf998f3f4686b239b30d6c5e884",
+    "folds_alt3.parquet": "ae0bef0db6286f0e09ed497ae1e58e05f5cbe928ed29e5ea992d78d2365f999b",
+    "folds_screen.parquet": "0eaf19381ce866eb48fde2685a7f308e35fa5725b8bb0cd92e34e3218b8c3661",
+    "canonical_id_fold_sha256": "6e114f80240c0ff069266c6d65b660e500723ce9bf2ca7633596d9e392d6b9e9"
+  },
+  "features": {
+    "modules": [
+      "m00_core",
+      "m01_seq",
+      "m02_dist",
+      "m03_dyn",
+      "m04_resid",
+      "m06_loc",
+      "m07_bayes"
+    ],
+    "n_columns_per_module": {
+      "m00_core": 151,
+      "m01_seq": 60,
+      "m02_dist": 59,
+      "m03_dyn": 60,
+      "m04_resid": 60,
+      "m06_loc": 60,
+      "m07_bayes": 50
+    },
+    "n_columns_total": 500,
+    "batch_feature_manifest_sha256": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced"
+  },
+  "streaming": {
+    "n_features": 500,
+    "stream_feature_manifest_sha256": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced",
+    "module_order": [
+      "m00_core",
+      "m01_seq",
+      "m02_dist",
+      "m03_dyn",
+      "m04_resid",
+      "m06_loc",
+      "m07_bayes"
+    ]
+  },
+  "source": {
+    "n_files": 29,
+    "sbr_source_sha256": "40b31e94ef97fe12370461645b14d960fba70147c4ea7f72fcf901e69904fba0"
+  },
+  "seeds": {
+    "fold_seed": 20260818,
+    "alt_fold_seeds": [
+      20260901,
+      20260902,
+      20260903
+    ],
+    "model_seeds_protocol": [
+      0,
+      1,
+      7,
+      42,
+      2026
+    ]
+  }
+}

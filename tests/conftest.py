@@ -43,3 +43,18 @@ def break_index() -> int:
 def unlabelled_df(mean_shift_df: pd.DataFrame) -> pd.DataFrame:
     """A test-style series without the label column."""
     return mean_shift_df[["timestamp", "value"]].copy()
+
+
+def skip_on_missing_store(fn, *args, **kwargs):
+    """Call ``fn(*args, **kwargs)``; skip the test on a missing real store.
+
+    Several parity/causality tests validate against the real, non-redistributable
+    competition data (see ``data/README.md``); that data is deliberately never
+    committed, so a call that needs it (e.g. ``load_store()``, ``pipeline.Data()``)
+    must skip -- not fail -- in any environment, CI included, that doesn't have
+    it locally.
+    """
+    try:
+        return fn(*args, **kwargs)
+    except FileNotFoundError as e:
+        pytest.skip(f"real competition-data store unavailable: {e}")

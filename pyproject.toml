@@ -17,6 +17,15 @@ dependencies = [
     "joblib>=1.1",
 ]
 
+[project.optional-dependencies]
+# The 2026 Real-Time research pipeline (src/sbr + research/). Kept out of the
+# core dependency set so the baseline package stays light.
+research = [
+    "pyarrow>=12",
+    "lightgbm>=4.0",
+    "numba>=0.57",
+]
+
 [project.urls]
 Homepage = "https://github.com/WolfpackOfOne/structural-break"
 

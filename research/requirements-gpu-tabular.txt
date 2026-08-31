@@ -1,0 +1,7 @@
+# Optional dependencies for reproducing the 2026 GPU tabular experiments.
+# These are intentionally separate from requirements.txt because RT-1258/RT-1259
+# are completed negative research arms, not production dependencies.
+torch
+tabm
+pytabkit
+rtdl_num_embeddings

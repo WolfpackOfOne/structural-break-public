@@ -1,0 +1,15 @@
+{
+  "runtime_s": 178.77588152885437,
+  "n_series": 25,
+  "n_points": 12727,
+  "ms_per_point": 14.046977412497396,
+  "deterministic": true,
+  "order_independent": true,
+  "future_poison_safe": true,
+  "all_finite": true,
+  "in_range": true,
+  "ts_auc": 0.8621495327102804,
+  "PASS": true,
+  "stream_vs_batch_max_abs": 0.0,
+  "stream_equals_batch": true
+}

@@ -1,0 +1,310 @@
+{
+  "calibration": "SCDF_NSEEN",
+  "combination": {
+    "reason": "requires at least two learners with marginal_vs_clone >= +0.0010",
+    "run": false
+  },
+  "git_sha": "c91950b",
+  "learners": {
+    "catboost": {
+      "dominant_cell_auc": 0.6587302499102088,
+      "ensemble": {
+        "E0_original_rt600": {
+          "scores": {
+            "mean_ts_auc": 0.6258113418832281,
+            "per_fold_ts_auc": [
+              0.638276215299891,
+              0.6204019581662752,
+              0.6339304299070194,
+              0.6175075878311903,
+              0.6189405182117643
+            ]
+          }
+        },
+        "E1_clone_replacement": {
+          "scores": {
+            "mean_ts_auc": 0.6249804715244457,
+            "per_fold_ts_auc": [
+              0.6378415513953996,
+              0.6201218318534933,
+              0.6335605588981115,
+              0.6170046248406685,
+              0.6163737906345554
+            ]
+          }
+        },
+        "E2_candidate_replacement": {
+          "scores": {
+            "mean_ts_auc": 0.6260902718246774,
+            "per_fold_ts_auc": [
+              0.6397521981205068,
+              0.6207786994653142,
+              0.6348877439814676,
+              0.6175239719790233,
+              0.617508745577075
+            ]
+          }
+        },
+        "candidate_choices": [
+          {
+            "inner_fold_ts_auc": [
+              0.620796253410215,
+              0.6348738631281827,
+              0.6194059609298957,
+              0.6204874993367834
+            ],
+            "inner_mean_ts_auc": 0.6238908942012692,
+            "outer_fold": 0,
+            "replaced": "RT-413",
+            "replacement": "RT-1251"
+          },
+          {
+            "inner_fold_ts_auc": [
+              0.639747064987255,
+              0.6349018479398147,
+              0.6194356906836244,
+              0.6204717394717477
+            ],
+            "inner_mean_ts_auc": 0.6286390857706105,
+            "outer_fold": 1,
+            "replaced": "RT-413",
+            "replacement": "RT-1251"
+          },
+          {
+            "inner_fold_ts_auc": [
+              0.6397365935419775,
+              0.6207690383261059,
+              0.6194121204403091,
+              0.6204600560179453
+            ],
+            "inner_mean_ts_auc": 0.6250944520815844,
+            "outer_fold": 2,
+            "replaced": "RT-413",
+            "replacement": "RT-1251"
+          },
+          {
+            "inner_fold_ts_auc": [
+              0.6403364556706349,
+              0.6215902926655945,
+              0.6345005377092288,
+              0.6208980199195661
+            ],
+            "inner_mean_ts_auc": 0.629331326491256,
+            "outer_fold": 3,
+            "replaced": "RT-300",
+            "replacement": "RT-1251"
+          },
+          {
+            "inner_fold_ts_auc": [
+              0.6421173194934975,
+              0.6210101103462398,
+              0.6356756841295486,
+              0.6192445847543949
+            ],
+            "inner_mean_ts_auc": 0.6295119246809202,
+            "outer_fold": 4,
+            "replaced": "RT-410",
+            "replacement": "RT-1251"
+          }
+        ],
+        "clone_choices": [
+          {
+            "inner_fold_ts_auc": [
+              0.6200918169079842,
+              0.6338627138022318,
+              0.6188367307491789,
+              0.6192333573566824
+            ],
+            "inner_mean_ts_auc": 0.6230061547040193,
+            "outer_fold": 0,
+            "replaced": "RT-413",
+            "replacement": "RT-401"
+          },
+          {
+            "inner_fold_ts_auc": [
+              0.640121314734581,
+              0.6346948510631295,
+              0.6186326576267983,
+              0.6163639251924111
+            ],
+            "inner_mean_ts_auc": 0.6274531871542299,
+            "outer_fold": 1,
+            "replaced": "RT-410",
+            "replacement": "RT-401"
+          },
+          {
+            "inner_fold_ts_auc": [
+              0.6384072182830585,
+              0.6208108709151109,
+              0.6169867832417706,
+              0.6197210549809484
+            ],
+            "inner_mean_ts_auc": 0.6239814818552221,
+            "outer_fold": 2,
+            "replaced": "RT-300",
+            "replacement": "RT-401"
+          },
+          {
+            "inner_fold_ts_auc": [
+              0.6384023452871807,
+              0.6208013211952909,
+              0.6335419742464323,
+              0.619718691189393
+            ],
+            "inner_mean_ts_auc": 0.6281160829795742,
+            "outer_fold": 3,
+            "replaced": "RT-300",
+            "replacement": "RT-401"
+          },
+          {
+            "inner_fold_ts_auc": [
+              0.6401373956209779,
+              0.6201291531855497,
+              0.6346861871498817,
+              0.6186411588002337
+            ],
+            "inner_mean_ts_auc": 0.6283984736891608,
+            "outer_fold": 4,
+            "replaced": "RT-410",
+            "replacement": "RT-401"
+          }
+        ],
+        "fold_deltas_vs_clone": [
+          0.0019106467251072123,
+          0.0006568676118208217,
+          0.0013271850833561638,
+          0.0005193471383547754,
+          0.0011349549425195837
+        ],
+        "marginal_vs_clone": 0.001109800300231667,
+        "positive_folds_vs_clone": 5
+      },
+      "id": "RT-1251",
+      "learner": "CatBoost",
+      "matched_lgbm_standalone": {
+        "fold_std": 0.009128964135352469,
+        "mean_ts_auc": 0.6166091440793047,
+        "per_fold_ts_auc": [
+          0.629121929816578,
+          0.6122929844839732,
+          0.6257276227649177,
+          0.6100055888939682,
+          0.6058975944370861
+        ],
+        "pooled_ts_auc": 0.6164484374290561
+      },
+      "pair_flow_vs_e0": {
+        "dominant_cell": {
+          "damage": 727,
+          "damage_rate": 0.014408022513773832,
+          "net_pair_lift": 88,
+          "repairs": 815,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 813,
+          "damage_rate": 0.016114326488543565,
+          "net_pair_lift": 61,
+          "repairs": 874,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 636,
+          "damage_rate": 0.014443712670042923,
+          "net_pair_lift": 61,
+          "repairs": 697,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 1131,
+          "damage_rate": 0.017897268728043803,
+          "net_pair_lift": -1,
+          "repairs": 1130,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "pair_flow_vs_matched_lgbm": {
+        "dominant_cell": {
+          "damage": 4337,
+          "damage_rate": 0.08595267351064251,
+          "net_pair_lift": 103,
+          "repairs": 4440,
+          "total_pairs_sampled": 50458
+        },
+        "mature_vs_never": {
+          "damage": 4408,
+          "damage_rate": 0.08737017363038135,
+          "net_pair_lift": -91,
+          "repairs": 4317,
+          "total_pairs_sampled": 50452
+        },
+        "mature_vs_prebreak": {
+          "damage": 3531,
+          "damage_rate": 0.08018985760679491,
+          "net_pair_lift": 434,
+          "repairs": 3965,
+          "total_pairs_sampled": 44033
+        },
+        "whole": {
+          "damage": 6026,
+          "damage_rate": 0.09535715416020508,
+          "net_pair_lift": 161,
+          "repairs": 6187,
+          "total_pairs_sampled": 63194
+        }
+      },
+      "rho_vs_matched_lgbm": 0.7364678109351089,
+      "runtime_s": 10316.88073515892,
+      "standalone": {
+        "fold_std": 0.011085069364636371,
+        "mean_ts_auc": 0.6204076650206014,
+        "per_fold_ts_auc": [
+          0.6381615606683078,
+          0.615628043523921,
+          0.628191639692583,
+          0.6104193813566082,
+          0.6096376998615872
+        ],
+        "pooled_ts_auc": 0.6202615784963038
+      },
+      "standalone_delta_vs_matched_lgbm": 0.0037985209412967347,
+      "status": "SCORED",
+      "verdict": "INTERESTING"
+    },
+    "realmlp": {
+      "id": "RT-1252",
+      "learner": "RealMLP",
+      "reason": "pytabkit 1.7.3 RealMLP_TD defaults require hidden_sizes=[256]*3, 256 epochs, batch_size=256 and full matrix preprocessing/copies. At 1,000,000 rows/fold this is about 3,907 batches/epoch/fold and roughly five million batch steps over five folds. Full-scale run is not feasible without shrinking or retuning, both forbidden.",
+      "runtime_s": 0.0,
+      "status": "INFEASIBLE",
+      "verdict": "INFEASIBLE"
+    },
+    "tabm": {
+      "id": "RT-1250",
+      "learner": "TabM",
+      "reason": "tabm 0.0.3 / pytabkit TabM_D defaults require k=32, d_block=512, batch_size=256, quantile_tabr preprocessing, patience=16 and up to 1e9 epochs. At 1,000,000 rows/fold this is at least 3,907 batches per epoch and >=17 validation epochs per fold, five folds. Full-scale run is not feasible without shrinking or retuning, both forbidden.",
+      "runtime_s": 0.0,
+      "status": "INFEASIBLE",
+      "verdict": "INFEASIBLE"
+    }
+  },
+  "matched_lgbm_control": "RT-401",
+  "max_train_rows": 1000000,
+  "pair_seed": 20260827,
+  "pairs_per_t": 64,
+  "program": "LEARNER DIVERSITY 2026",
+  "runtime_s": 13253.69857096672,
+  "seed": 1,
+  "versions": {
+    "catboost": "1.2.10",
+    "lightgbm": "4.7.0",
+    "numpy": "2.4.6",
+    "pandas": "3.0.5",
+    "pytabkit": "1.7.3",
+    "rtdl_num_embeddings": "0.0.12",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.17.1",
+    "tabm": "0.0.3",
+    "torch": "2.13.0"
+  }
+}

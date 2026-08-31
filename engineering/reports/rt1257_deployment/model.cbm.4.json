@@ -1,0 +1,47 @@
+{
+  "member": "CAT-413",
+  "id": "RT-1254",
+  "replaces": "RT-413",
+  "path": "/path/to/workspace/structural-break-rt1257-deployment/models/rt1257_final/model.cbm.4",
+  "sha256": "5f49e7f224ee0e2676aa11b1c237ce98fd8a302bddbe1543c725b2b58686cf5e",
+  "params": {
+    "iterations": 600,
+    "learning_rate": 0.05,
+    "depth": 6,
+    "l2_leaf_reg": 5.0,
+    "loss_function": "Logloss",
+    "eval_metric": "Logloss",
+    "bootstrap_type": "Bernoulli",
+    "subsample": 0.7,
+    "rsm": 0.7,
+    "border_count": 127,
+    "thread_count": 2,
+    "allow_writing_files": false,
+    "verbose": false,
+    "random_seed": 0
+  },
+  "training_spec": {
+    "id": "RT-1254",
+    "slot": 4,
+    "replaces": "RT-413",
+    "modules": [
+      "m00_core",
+      "m01_seq",
+      "m02_dist",
+      "m03_dyn",
+      "m04_resid",
+      "m06_loc",
+      "m07_bayes"
+    ],
+    "seed": 0,
+    "dev_max_train_rows": 700000,
+    "final_max_train_rows": 875000,
+    "sample_mode": "uniform",
+    "model_file": "model.cbm.4"
+  },
+  "train_rows": 875000,
+  "n_features": 500,
+  "runtime_s": 354.8820960521698,
+  "save_load_repro_max_abs": 0.0,
+  "status": "trained"
+}

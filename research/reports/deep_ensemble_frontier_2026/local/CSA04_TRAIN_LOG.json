@@ -1,0 +1,287 @@
+{
+  "arms": {
+    "CAT-411": {
+      "catboost_params": {
+        "allow_writing_files": false,
+        "bootstrap_type": "Bernoulli",
+        "border_count": 127,
+        "depth": 6,
+        "eval_metric": "Logloss",
+        "iterations": 600,
+        "l2_leaf_reg": 5.0,
+        "learning_rate": 0.05,
+        "loss_function": "Logloss",
+        "random_seed": 1,
+        "rsm": 0.7,
+        "subsample": 0.7,
+        "thread_count": 2,
+        "verbose": false
+      },
+      "folds": [
+        {
+          "fold": 0,
+          "runtime_s": 205.77828311920166,
+          "train_rows": 900000,
+          "valid_rows": 806334
+        },
+        {
+          "fold": 1,
+          "runtime_s": 216.6768970489502,
+          "train_rows": 900000,
+          "valid_rows": 812939
+        },
+        {
+          "fold": 2,
+          "runtime_s": 207.23553109169006,
+          "train_rows": 900000,
+          "valid_rows": 806691
+        },
+        {
+          "fold": 3,
+          "runtime_s": 201.61310720443726,
+          "train_rows": 900000,
+          "valid_rows": 802506
+        },
+        {
+          "fold": 4,
+          "runtime_s": 206.01629185676575,
+          "train_rows": 900000,
+          "valid_rows": 804054
+        }
+      ],
+      "id": "RT-1260",
+      "name": "CAT-411",
+      "oof_path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1260.npy",
+      "runtime_s": 1037.465772151947,
+      "status": "TRAINED_NOT_SCORED",
+      "training_spec": {
+        "incumbent_objective": "binary",
+        "max_train_rows": 900000,
+        "modules": [
+          "m02_dist",
+          "m03_dyn",
+          "m04_resid",
+          "m06_loc"
+        ],
+        "replaced": "RT-411",
+        "sample_mode": "uniform",
+        "seed": 1
+      }
+    },
+    "CAT-412": {
+      "catboost_params": {
+        "allow_writing_files": false,
+        "bootstrap_type": "Bernoulli",
+        "border_count": 127,
+        "depth": 6,
+        "eval_metric": "Logloss",
+        "iterations": 600,
+        "l2_leaf_reg": 5.0,
+        "learning_rate": 0.05,
+        "loss_function": "Logloss",
+        "random_seed": 7,
+        "rsm": 0.7,
+        "subsample": 0.7,
+        "thread_count": 2,
+        "verbose": false
+      },
+      "folds": [
+        {
+          "fold": 0,
+          "runtime_s": 376.32373309135437,
+          "train_rows": 838053,
+          "valid_rows": 806334
+        },
+        {
+          "fold": 1,
+          "runtime_s": 372.0573990345001,
+          "train_rows": 837521,
+          "valid_rows": 812939
+        },
+        {
+          "fold": 2,
+          "runtime_s": 372.77779364585876,
+          "train_rows": 838748,
+          "valid_rows": 806691
+        },
+        {
+          "fold": 3,
+          "runtime_s": 376.6429178714752,
+          "train_rows": 840757,
+          "valid_rows": 802506
+        },
+        {
+          "fold": 4,
+          "runtime_s": 372.68605613708496,
+          "train_rows": 839877,
+          "valid_rows": 804054
+        }
+      ],
+      "id": "RT-1261",
+      "name": "CAT-412",
+      "oof_path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1261.npy",
+      "runtime_s": 1870.6156160831451,
+      "status": "TRAINED_NOT_SCORED",
+      "training_spec": {
+        "incumbent_objective": "binary_extra_trees_per_series",
+        "max_train_rows": 900000,
+        "modules": [
+          "m00_core",
+          "m01_seq",
+          "m02_dist",
+          "m03_dyn",
+          "m04_resid",
+          "m06_loc",
+          "m07_bayes"
+        ],
+        "replaced": "RT-412",
+        "sample_mode": "per_series",
+        "seed": 7
+      }
+    },
+    "CAT-414": {
+      "catboost_params": {
+        "allow_writing_files": false,
+        "bootstrap_type": "Bernoulli",
+        "border_count": 127,
+        "depth": 6,
+        "eval_metric": "Logloss",
+        "iterations": 600,
+        "l2_leaf_reg": 5.0,
+        "learning_rate": 0.05,
+        "loss_function": "Logloss",
+        "random_seed": 3,
+        "rsm": 0.7,
+        "subsample": 0.7,
+        "thread_count": 2,
+        "verbose": false
+      },
+      "folds": [
+        {
+          "fold": 0,
+          "runtime_s": 131.18853497505188,
+          "train_rows": 700000,
+          "valid_rows": 806334
+        },
+        {
+          "fold": 1,
+          "runtime_s": 131.25474619865417,
+          "train_rows": 700000,
+          "valid_rows": 812939
+        },
+        {
+          "fold": 2,
+          "runtime_s": 131.17136693000793,
+          "train_rows": 700000,
+          "valid_rows": 806691
+        },
+        {
+          "fold": 3,
+          "runtime_s": 129.34734082221985,
+          "train_rows": 700000,
+          "valid_rows": 802506
+        },
+        {
+          "fold": 4,
+          "runtime_s": 125.85257124900818,
+          "train_rows": 700000,
+          "valid_rows": 804054
+        }
+      ],
+      "id": "RT-1262",
+      "name": "CAT-414",
+      "oof_path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1262.npy",
+      "runtime_s": 648.93217420578,
+      "status": "TRAINED_NOT_SCORED",
+      "training_spec": {
+        "incumbent_objective": "binary",
+        "max_train_rows": 700000,
+        "modules": [
+          "m07_bayes",
+          "m06_loc",
+          "m01_seq"
+        ],
+        "replaced": "RT-414",
+        "sample_mode": "uniform",
+        "seed": 3
+      }
+    },
+    "CAT-415": {
+      "catboost_params": {
+        "allow_writing_files": false,
+        "bootstrap_type": "Bernoulli",
+        "border_count": 127,
+        "depth": 6,
+        "eval_metric": "Logloss",
+        "iterations": 600,
+        "l2_leaf_reg": 5.0,
+        "learning_rate": 0.05,
+        "loss_function": "Logloss",
+        "random_seed": 11,
+        "rsm": 0.7,
+        "subsample": 0.7,
+        "thread_count": 2,
+        "verbose": false
+      },
+      "folds": [
+        {
+          "fold": 0,
+          "runtime_s": 312.6629910469055,
+          "train_rows": 700000,
+          "valid_rows": 806334
+        },
+        {
+          "fold": 1,
+          "runtime_s": 308.3112440109253,
+          "train_rows": 700000,
+          "valid_rows": 812939
+        },
+        {
+          "fold": 2,
+          "runtime_s": 308.6354179382324,
+          "train_rows": 700000,
+          "valid_rows": 806691
+        },
+        {
+          "fold": 3,
+          "runtime_s": 303.1396780014038,
+          "train_rows": 700000,
+          "valid_rows": 802506
+        },
+        {
+          "fold": 4,
+          "runtime_s": 305.8561370372772,
+          "train_rows": 700000,
+          "valid_rows": 804054
+        }
+      ],
+      "id": "RT-1263",
+      "name": "CAT-415",
+      "oof_path": "/path/to/workspace/structural-break-deep-ensemble-frontier-local-2026/research/oof/RT-1263.npy",
+      "runtime_s": 1538.6993069648743,
+      "status": "TRAINED_NOT_SCORED",
+      "training_spec": {
+        "caveat": "GOSS has no CatBoost analogue; frozen Bernoulli bootstrap is used.",
+        "incumbent_objective": "binary_goss",
+        "max_train_rows": 700000,
+        "modules": [
+          "m00_core",
+          "m01_seq",
+          "m02_dist",
+          "m03_dyn",
+          "m04_resid",
+          "m06_loc",
+          "m07_bayes"
+        ],
+        "replaced": "RT-415",
+        "sample_mode": "uniform",
+        "seed": 11
+      }
+    }
+  },
+  "git_sha": "5a116d9",
+  "note": "No TS-AUC, pair-flow, replacement gain, or rank correlation is computed during training.",
+  "program": "DEEP_ENSEMBLE_FRONTIER_2026",
+  "score_free_log": true,
+  "stage": "CSA-04 train"
+}
