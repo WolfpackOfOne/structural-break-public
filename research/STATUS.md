@@ -104,6 +104,31 @@ research conclusions.
   [`reports/armc_residual_student/armc_residual_student.md`](reports/armc_residual_student/armc_residual_student.md),
   and the roll-up
   [`reports/grok_response_followup.md`](reports/grok_response_followup.md).
+- **Confirmation run — held (2026-08-31):** the residual student was re-run end
+  to end under a different training subsample (`--seed 20260901`, five outer
+  folds plus `--merge-analyze`, ~41 min) into
+  [`reports/armc_residual_student_confirm_s20260901/armc_residual_student.md`](reports/armc_residual_student_confirm_s20260901/armc_residual_student.md).
+  Every gate holds and the numbers move by roughly 1% of the `+0.0011`
+  paired-bootstrap noise floor: marginal vs seed-clone blend **+0.001965** (was
+  `+0.001951`), whole-dev gain vs `RT-600` **+0.001987** (was `+0.001973`),
+  dominant-cell gain **+0.003345** (was `+0.003140`), never-break net rate
+  **+0.003706** (was `+0.003409`), and pre-break damage rate **0.013104** (was
+  `0.013672`), further inside the `0.015000` gate. `RT1257 + residual_student`
+  is **+0.001416** over `RT-1257` (was `+0.001396`). The per-fold marginal
+  reproduces its shape — `+0.000234 / +0.002739 / +0.001200 / +0.004217 /
+  +0.001371`, **5/5 positive**, `t = 2.82` against `2.64`, sd tightening
+  `0.001644 -> 0.001550` — so the fold-1/3 concentration neither washed out nor
+  grew. On the dominant cell the standalone student-vs-Arm-B contrast improved
+  to **4/5 positive** (f4 flipped `-0.001718 -> +0.002385`); whole-dev
+  standalone remains **2/5** and unstable. What this does **not** test: both
+  runs use the same `research/folds/folds.parquet`, so fold concentration
+  itself is still untested. An alternate-partition leg needs the seven
+  specialists refit under `folds_alt*.parquet` first, because their OOF is
+  cross-fitted on the canonical partition and `folds_alt1` agrees with it on
+  only `0.198375` of labels. Note also that the caveat paragraph inside the
+  generated report is emitted unconditionally by the script template and is not
+  a fresh assessment of this run. Still **PROMOTE for confirmation only**, no
+  RT ID allocated, `RESULTS.csv` untouched.
 - **Active research branch:** this worktree is
   `grok-response-issues-20260830`, a follow-up branch for addressing
   `agent_05_grok46.md`. It was branched from
@@ -273,9 +298,10 @@ research conclusions.
   [`FINAL_ARCHITECTURE_FREEZE.md`](FINAL_ARCHITECTURE_FREEZE.md),
   [`FINAL_REPRODUCIBILITY_MANIFEST.json`](FINAL_REPRODUCIBILITY_MANIFEST.json).
 
-_Last updated: 2026-08-30 on `grok-response-issues-20260830`: RT-1257 remains
+_Last updated: 2026-08-31 on `grok-response-issues-20260830`: RT-1257 remains
 the best external read; production `RT-600` remains unchanged; Arm-C horizon
 residualization plus the nested residual student produced a confirmation-only
-score candidate. Update
+score candidate, and its confirmation run held every gate on a fresh training
+subsample. Update
 this file whenever the production anchor, external score, or active research
 conclusion changes — see `AGENTS.md` at the repo root for the update rule._

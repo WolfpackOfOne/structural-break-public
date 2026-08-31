@@ -1,0 +1,278 @@
+{
+  "experiment": "armc_residual_student",
+  "outer_fold": 1,
+  "date": "2026-08-30T21:40:43",
+  "data_root": "/path/to/workspace/structural-break-wave8",
+  "folds_path": "/path/to/workspace/structural-break-multi-agent-frontier-20260829/research/folds/folds.parquet",
+  "feature_dir": "/path/to/workspace/structural-break-wave8/cache/features",
+  "oof_dir": "/path/to/workspace/structural-break-wave8/research/oof",
+  "output_path": "/path/to/workspace/structural-break-multi-agent-frontier-20260829/research/reports/armc_residual_student_confirm_s20260901/armc_residual_student_outer1.npy",
+  "teacher_meta": {
+    "outer_fold": 1,
+    "parts": [
+      {
+        "outer_fold": 1,
+        "inner_fold": 0,
+        "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer1_inner0.npy",
+        "sha256": "57b2944b5a564123b9b72fc3e828aec1bebf82c5970cb88cf9443da2cf743033",
+        "finite_target_rows": 806334,
+        "target_rows": 806334,
+        "finite_non_target_rows": 0
+      },
+      {
+        "outer_fold": 1,
+        "inner_fold": 2,
+        "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer1_inner2.npy",
+        "sha256": "1d1d42cb4d43966725d1972411125fb7cc95ec80561db3e2655786938a4dce43",
+        "finite_target_rows": 806691,
+        "target_rows": 806691,
+        "finite_non_target_rows": 0
+      },
+      {
+        "outer_fold": 1,
+        "inner_fold": 3,
+        "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer1_inner3.npy",
+        "sha256": "d4632a2a2275bf83151fa4036c69cb92d0ea825fb686422e89449bb0dd01220f",
+        "finite_target_rows": 802506,
+        "target_rows": 802506,
+        "finite_non_target_rows": 0
+      },
+      {
+        "outer_fold": 1,
+        "inner_fold": 4,
+        "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer1_inner4.npy",
+        "sha256": "e011fa61077ed83910688770697400c2fcfa0df4a099bc6ec50f3dbd9c22b100",
+        "finite_target_rows": 804054,
+        "target_rows": 804054,
+        "finite_non_target_rows": 0
+      }
+    ]
+  },
+  "student": {
+    "modules": [
+      "m00_core",
+      "m01_seq",
+      "m02_dist",
+      "m03_dyn",
+      "m04_resid",
+      "m06_loc",
+      "m07_bayes"
+    ],
+    "n_features": 500,
+    "forbidden_feature_tokens": [
+      "tau",
+      "cut",
+      "boundary",
+      "break_at",
+      "changepoint_true",
+      "has_break",
+      "n_online",
+      "n_hist",
+      "final_row",
+      "eligible",
+      "availability",
+      "pad"
+    ],
+    "params": {
+      "objective": "regression",
+      "metric": "l2",
+      "learning_rate": 0.05,
+      "num_leaves": 127,
+      "min_data_in_leaf": 150,
+      "feature_fraction": 1.0,
+      "bagging_fraction": 0.8,
+      "bagging_freq": 1,
+      "lambda_l2": 5.0,
+      "max_bin": 127,
+      "num_threads": 2,
+      "verbose": -1,
+      "rounds": 900
+    },
+    "max_train_rows": 1000000,
+    "sampled_train_rows": 1000000,
+    "available_train_rows": 3219585,
+    "validation_rows": 812939,
+    "target": "nested fold-pure residual logit(Q) - horizon_projection(logit(Q))"
+  },
+  "target_stats": {
+    "outer_fold": 1,
+    "t_groups": 999,
+    "fitted_fold_groups": 3996,
+    "fallback_fold_groups": 5,
+    "skipped_fold_groups": 0,
+    "skipped_predictions": 0,
+    "target_rows": 3219585,
+    "mean": -5.619794206853986e-05,
+    "std": 1.9063798497520679,
+    "q01": -3.668827561320855,
+    "q50": -0.22739585215533487,
+    "q99": 6.026798706646409
+  },
+  "scores": {
+    "whole_fold_ts_auc": 0.6225893076535077,
+    "dominant_cell_ts_auc": 0.673433694459522
+  },
+  "top_feature_importance": [
+    {
+      "feature": "m06_loc::loc_h_rsq_gap",
+      "gain": 3045129.893796921
+    },
+    {
+      "feature": "m07_bayes::ab_var_z",
+      "gain": 2547045.9611091614
+    },
+    {
+      "feature": "m07_bayes::bf0_all",
+      "gain": 1316353.927119255
+    },
+    {
+      "feature": "m07_bayes::ab_post_lvr",
+      "gain": 1024475.6419801712
+    },
+    {
+      "feature": "m06_loc::loc_h_rsq_q",
+      "gain": 936084.5634784698
+    },
+    {
+      "feature": "m07_bayes::ev_pow_pk",
+      "gain": 490733.64244937897
+    },
+    {
+      "feature": "m07_bayes::bo_lo_change_pk",
+      "gain": 406643.25336265564
+    },
+    {
+      "feature": "m07_bayes::abz_var_z",
+      "gain": 369048.5439147949
+    },
+    {
+      "feature": "m07_bayes::ab_var",
+      "gain": 336212.69089126587
+    },
+    {
+      "feature": "m06_loc::fx_h_rsq_128",
+      "gain": 313648.01813316345
+    },
+    {
+      "feature": "m01_seq::gle_pkr",
+      "gain": 280147.25076293945
+    },
+    {
+      "feature": "m00_core::w8_sur_tail_x",
+      "gain": 250082.09585285187
+    },
+    {
+      "feature": "m01_seq::cz100_pkr",
+      "gain": 248215.04697799683
+    },
+    {
+      "feature": "m01_seq::sq50_pk",
+      "gain": 222154.36136436462
+    },
+    {
+      "feature": "m01_seq::phd_pkr",
+      "gain": 219113.16127967834
+    },
+    {
+      "feature": "m04_resid::ar5_e_abs",
+      "gain": 216301.91125297546
+    },
+    {
+      "feature": "m01_seq::phu_pkr",
+      "gain": 212320.5756444931
+    },
+    {
+      "feature": "m04_resid::volM_e_acf1sq",
+      "gain": 202020.90398693085
+    },
+    {
+      "feature": "m01_seq::cz50_pk",
+      "gain": 201534.22583198547
+    },
+    {
+      "feature": "m04_resid::cmb_e_var",
+      "gain": 191699.48645877838
+    },
+    {
+      "feature": "m01_seq::xc_max_pk",
+      "gain": 187565.35632896423
+    },
+    {
+      "feature": "m07_bayes::ab_fast_z",
+      "gain": 187002.61281108856
+    },
+    {
+      "feature": "m02_dist::tl_exp_asym01",
+      "gain": 177907.9246082306
+    },
+    {
+      "feature": "m01_seq::glz_pk",
+      "gain": 177133.89295768738
+    },
+    {
+      "feature": "m06_loc::fx_h_rsq_384",
+      "gain": 176838.10834121704
+    },
+    {
+      "feature": "m01_seq::ce25_pkr",
+      "gain": 175224.39716148376
+    },
+    {
+      "feature": "m07_bayes::abz_lpo_z",
+      "gain": 174607.12603664398
+    },
+    {
+      "feature": "m02_dist::rk_cusum_u_raw",
+      "gain": 173427.01511192322
+    },
+    {
+      "feature": "m01_seq::ce50_pk",
+      "gain": 164928.14358329773
+    },
+    {
+      "feature": "m07_bayes::ev_pow_z",
+      "gain": 158102.0126543045
+    },
+    {
+      "feature": "m03_dyn::hw_r12",
+      "gain": 154016.98455524445
+    },
+    {
+      "feature": "m07_bayes::ab_lpo_pk_z",
+      "gain": 146922.89875602722
+    },
+    {
+      "feature": "m03_dyn::az_x_exp_l20_z",
+      "gain": 142259.27714252472
+    },
+    {
+      "feature": "m07_bayes::abz_lpo",
+      "gain": 139657.81073093414
+    },
+    {
+      "feature": "m02_dist::rk_cusum_r_raw",
+      "gain": 134681.838637352
+    },
+    {
+      "feature": "m01_seq::srz_pkr",
+      "gain": 131748.07375526428
+    },
+    {
+      "feature": "m03_dyn::az_ae_exp_l1_z",
+      "gain": 126908.15968894958
+    },
+    {
+      "feature": "m00_core::w16_sur_tail_x",
+      "gain": 122786.30902290344
+    },
+    {
+      "feature": "m06_loc::loc_h_rsq_sz",
+      "gain": 121160.96245479584
+    },
+    {
+      "feature": "m01_seq::cz25_pkr",
+      "gain": 120600.35361862183
+    }
+  ],
+  "runtime_s": 455.4
+}

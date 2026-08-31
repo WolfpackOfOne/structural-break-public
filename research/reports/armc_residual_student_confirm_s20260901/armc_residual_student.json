@@ -1,0 +1,2765 @@
+{
+  "experiment": "armc_residual_student",
+  "date": "2026-08-30T22:06:27",
+  "purpose": "Nested causal student for the real complement in Arm-C after fixed-t horizon residualization.",
+  "inputs": {
+    "data_root": "/path/to/workspace/structural-break-wave8",
+    "folds_path": "/path/to/workspace/structural-break-multi-agent-frontier-20260829/research/folds/folds.parquet",
+    "feature_dir": "/path/to/workspace/structural-break-wave8/cache/features",
+    "oof_dir": "/path/to/workspace/structural-break-wave8/research/oof",
+    "student_oof": "/path/to/workspace/structural-break-multi-agent-frontier-20260829/research/reports/armc_residual_student_confirm_s20260901/armc_residual_student_oof.npy",
+    "rt990_sha256": "872902e7ac6525a98787997607348d8d54f31d1d7e3002aad971cec2ac1b7c41",
+    "rt991_sha256": "e0b726eaa360fb612e4b983a1c23823f69e6fd999bac5a97ce225a3b155940e5"
+  },
+  "causality_contract": {
+    "student_features": "existing 500 causal feature bank only",
+    "target": "nested fold-pure Arm-C teacher residual; target is never a feature",
+    "no_added_features": true,
+    "no_t_h_eligibility_filter": true,
+    "forbidden_feature_tokens": [
+      "tau",
+      "cut",
+      "boundary",
+      "break_at",
+      "changepoint_true",
+      "has_break",
+      "n_online",
+      "n_hist",
+      "final_row",
+      "eligible",
+      "availability",
+      "pad"
+    ],
+    "fold_purity": {
+      "checked_outer_inner_pairs": 20,
+      "new_nested_passed": true,
+      "old_global_oof_contaminated_checks": 20,
+      "old_global_oof_total_checks": 20,
+      "old_global_oof_sentinel_catches_defect": true
+    }
+  },
+  "population": {
+    "row_count_total": 5036517,
+    "row_count_dev": 4032524,
+    "row_count_dominant_cell": 2392213,
+    "row_count_dominant_never_break_only": 1955421,
+    "row_count_dominant_pre_break_only": 1104487
+  },
+  "fold_summaries": [
+    {
+      "experiment": "armc_residual_student",
+      "outer_fold": 0,
+      "date": "2026-08-30T21:33:06",
+      "data_root": "/path/to/workspace/structural-break-wave8",
+      "folds_path": "/path/to/workspace/structural-break-multi-agent-frontier-20260829/research/folds/folds.parquet",
+      "feature_dir": "/path/to/workspace/structural-break-wave8/cache/features",
+      "oof_dir": "/path/to/workspace/structural-break-wave8/research/oof",
+      "output_path": "/path/to/workspace/structural-break-multi-agent-frontier-20260829/research/reports/armc_residual_student_confirm_s20260901/armc_residual_student_outer0.npy",
+      "teacher_meta": {
+        "outer_fold": 0,
+        "parts": [
+          {
+            "outer_fold": 0,
+            "inner_fold": 1,
+            "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer0_inner1.npy",
+            "sha256": "cdd56390d2acb4aced0b6469a1a07d84546df62e292387e0054f5845b8c8c250",
+            "finite_target_rows": 812939,
+            "target_rows": 812939,
+            "finite_non_target_rows": 0
+          },
+          {
+            "outer_fold": 0,
+            "inner_fold": 2,
+            "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer0_inner2.npy",
+            "sha256": "be445aa5e59e7dae8161eb877bea459ca9f37287c853551da53f9f9ad28f4751",
+            "finite_target_rows": 806691,
+            "target_rows": 806691,
+            "finite_non_target_rows": 0
+          },
+          {
+            "outer_fold": 0,
+            "inner_fold": 3,
+            "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer0_inner3.npy",
+            "sha256": "79fdda9359c6bcdadb8c5bcd72ae39f9a60c7f80dc04d93038f78ec4c68dfe0d",
+            "finite_target_rows": 802506,
+            "target_rows": 802506,
+            "finite_non_target_rows": 0
+          },
+          {
+            "outer_fold": 0,
+            "inner_fold": 4,
+            "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer0_inner4.npy",
+            "sha256": "bf16eb46c7fa7e8aa35296863704f74195ade4ce2d03478f57eec6d74174afde",
+            "finite_target_rows": 804054,
+            "target_rows": 804054,
+            "finite_non_target_rows": 0
+          }
+        ]
+      },
+      "student": {
+        "modules": [
+          "m00_core",
+          "m01_seq",
+          "m02_dist",
+          "m03_dyn",
+          "m04_resid",
+          "m06_loc",
+          "m07_bayes"
+        ],
+        "n_features": 500,
+        "forbidden_feature_tokens": [
+          "tau",
+          "cut",
+          "boundary",
+          "break_at",
+          "changepoint_true",
+          "has_break",
+          "n_online",
+          "n_hist",
+          "final_row",
+          "eligible",
+          "availability",
+          "pad"
+        ],
+        "params": {
+          "objective": "regression",
+          "metric": "l2",
+          "learning_rate": 0.05,
+          "num_leaves": 127,
+          "min_data_in_leaf": 150,
+          "feature_fraction": 1.0,
+          "bagging_fraction": 0.8,
+          "bagging_freq": 1,
+          "lambda_l2": 5.0,
+          "max_bin": 127,
+          "num_threads": 2,
+          "verbose": -1,
+          "rounds": 900
+        },
+        "max_train_rows": 1000000,
+        "sampled_train_rows": 1000000,
+        "available_train_rows": 3226190,
+        "validation_rows": 806334,
+        "target": "nested fold-pure residual logit(Q) - horizon_projection(logit(Q))"
+      },
+      "target_stats": {
+        "outer_fold": 0,
+        "t_groups": 999,
+        "fitted_fold_groups": 3996,
+        "fallback_fold_groups": 5,
+        "skipped_fold_groups": 0,
+        "skipped_predictions": 0,
+        "target_rows": 3226190,
+        "mean": -0.0006440364728594593,
+        "std": 1.9177715754371487,
+        "q01": -3.7233836327581065,
+        "q50": -0.21714507365541097,
+        "q99": 5.96878281493393
+      },
+      "scores": {
+        "whole_fold_ts_auc": 0.6168072133939414,
+        "dominant_cell_ts_auc": 0.6566479864505185
+      },
+      "top_feature_importance": [
+        {
+          "feature": "m07_bayes::ab_var_z",
+          "gain": 3944680.424226761
+        },
+        {
+          "feature": "m07_bayes::bf0_all",
+          "gain": 1399674.2613515854
+        },
+        {
+          "feature": "m06_loc::loc_h_rsq_gap",
+          "gain": 1285743.4467315674
+        },
+        {
+          "feature": "m07_bayes::ab_post_lvr",
+          "gain": 943680.2779884338
+        },
+        {
+          "feature": "m06_loc::fx_h_rsq_128",
+          "gain": 766797.4323101044
+        },
+        {
+          "feature": "m06_loc::loc_h_rsq_q",
+          "gain": 738297.7238235474
+        },
+        {
+          "feature": "m07_bayes::ev_pow_pk",
+          "gain": 539130.9870700836
+        },
+        {
+          "feature": "m07_bayes::ab_var",
+          "gain": 480789.44065761566
+        },
+        {
+          "feature": "m07_bayes::bo_lo_change_pk",
+          "gain": 407304.5795402527
+        },
+        {
+          "feature": "m07_bayes::abz_var_z",
+          "gain": 335397.39350509644
+        },
+        {
+          "feature": "m01_seq::gle_pkr",
+          "gain": 291368.39208316803
+        },
+        {
+          "feature": "m00_core::w8_sur_tail_x",
+          "gain": 270964.5460729599
+        },
+        {
+          "feature": "m01_seq::cz100_pkr",
+          "gain": 267511.65737247467
+        },
+        {
+          "feature": "m01_seq::phd_pkr",
+          "gain": 229966.31007003784
+        },
+        {
+          "feature": "m06_loc::fx_h_rsq_384",
+          "gain": 215066.3503484726
+        },
+        {
+          "feature": "m01_seq::sq50_pk",
+          "gain": 211295.8166027069
+        },
+        {
+          "feature": "m01_seq::xc_max_pk",
+          "gain": 210422.88556575775
+        },
+        {
+          "feature": "m02_dist::rk_cusum_u_raw",
+          "gain": 207068.33836078644
+        },
+        {
+          "feature": "m01_seq::phu_pkr",
+          "gain": 204197.69534778595
+        },
+        {
+          "feature": "m01_seq::glz_pk",
+          "gain": 203789.21422195435
+        },
+        {
+          "feature": "m04_resid::volM_e_acf1sq",
+          "gain": 199980.9141998291
+        },
+        {
+          "feature": "m01_seq::cz50_pk",
+          "gain": 193245.12842559814
+        },
+        {
+          "feature": "m07_bayes::abz_lpo_z",
+          "gain": 180995.83332252502
+        },
+        {
+          "feature": "m07_bayes::ab_lpo_pk_z",
+          "gain": 178239.4028301239
+        },
+        {
+          "feature": "m02_dist::tl_exp_asym01",
+          "gain": 178229.90147209167
+        },
+        {
+          "feature": "m01_seq::ce50_pk",
+          "gain": 174778.69458580017
+        },
+        {
+          "feature": "m07_bayes::ab_fast_z",
+          "gain": 166747.1213092804
+        },
+        {
+          "feature": "m01_seq::srz_pkr",
+          "gain": 164037.1508283615
+        },
+        {
+          "feature": "m03_dyn::az_x_exp_l20_z",
+          "gain": 150099.97177696228
+        },
+        {
+          "feature": "m03_dyn::hw_r12",
+          "gain": 145720.19677639008
+        },
+        {
+          "feature": "m06_loc::fx_h_rlab_128",
+          "gain": 142271.84708595276
+        },
+        {
+          "feature": "m06_loc::loc_h_rsq_sz",
+          "gain": 140172.3770160675
+        },
+        {
+          "feature": "m03_dyn::az_x_exp_l2_z",
+          "gain": 137237.8802947998
+        },
+        {
+          "feature": "m07_bayes::ab_pfam_var",
+          "gain": 128429.85847091675
+        },
+        {
+          "feature": "m03_dyn::hw_r24",
+          "gain": 127544.91122436523
+        },
+        {
+          "feature": "m04_resid::raw_e_acf1sq",
+          "gain": 125811.84193992615
+        },
+        {
+          "feature": "m07_bayes::bf0_var",
+          "gain": 125676.38191795349
+        },
+        {
+          "feature": "m04_resid::ar5_e_abs",
+          "gain": 124891.45272159576
+        },
+        {
+          "feature": "m04_resid::volG_e_acf1sq",
+          "gain": 122170.61212730408
+        },
+        {
+          "feature": "m02_dist::rk_cusum_r_raw",
+          "gain": 121814.2308473587
+        }
+      ],
+      "runtime_s": 486.0
+    },
+    {
+      "experiment": "armc_residual_student",
+      "outer_fold": 1,
+      "date": "2026-08-30T21:40:43",
+      "data_root": "/path/to/workspace/structural-break-wave8",
+      "folds_path": "/path/to/workspace/structural-break-multi-agent-frontier-20260829/research/folds/folds.parquet",
+      "feature_dir": "/path/to/workspace/structural-break-wave8/cache/features",
+      "oof_dir": "/path/to/workspace/structural-break-wave8/research/oof",
+      "output_path": "/path/to/workspace/structural-break-multi-agent-frontier-20260829/research/reports/armc_residual_student_confirm_s20260901/armc_residual_student_outer1.npy",
+      "teacher_meta": {
+        "outer_fold": 1,
+        "parts": [
+          {
+            "outer_fold": 1,
+            "inner_fold": 0,
+            "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer1_inner0.npy",
+            "sha256": "57b2944b5a564123b9b72fc3e828aec1bebf82c5970cb88cf9443da2cf743033",
+            "finite_target_rows": 806334,
+            "target_rows": 806334,
+            "finite_non_target_rows": 0
+          },
+          {
+            "outer_fold": 1,
+            "inner_fold": 2,
+            "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer1_inner2.npy",
+            "sha256": "1d1d42cb4d43966725d1972411125fb7cc95ec80561db3e2655786938a4dce43",
+            "finite_target_rows": 806691,
+            "target_rows": 806691,
+            "finite_non_target_rows": 0
+          },
+          {
+            "outer_fold": 1,
+            "inner_fold": 3,
+            "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer1_inner3.npy",
+            "sha256": "d4632a2a2275bf83151fa4036c69cb92d0ea825fb686422e89449bb0dd01220f",
+            "finite_target_rows": 802506,
+            "target_rows": 802506,
+            "finite_non_target_rows": 0
+          },
+          {
+            "outer_fold": 1,
+            "inner_fold": 4,
+            "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer1_inner4.npy",
+            "sha256": "e011fa61077ed83910688770697400c2fcfa0df4a099bc6ec50f3dbd9c22b100",
+            "finite_target_rows": 804054,
+            "target_rows": 804054,
+            "finite_non_target_rows": 0
+          }
+        ]
+      },
+      "student": {
+        "modules": [
+          "m00_core",
+          "m01_seq",
+          "m02_dist",
+          "m03_dyn",
+          "m04_resid",
+          "m06_loc",
+          "m07_bayes"
+        ],
+        "n_features": 500,
+        "forbidden_feature_tokens": [
+          "tau",
+          "cut",
+          "boundary",
+          "break_at",
+          "changepoint_true",
+          "has_break",
+          "n_online",
+          "n_hist",
+          "final_row",
+          "eligible",
+          "availability",
+          "pad"
+        ],
+        "params": {
+          "objective": "regression",
+          "metric": "l2",
+          "learning_rate": 0.05,
+          "num_leaves": 127,
+          "min_data_in_leaf": 150,
+          "feature_fraction": 1.0,
+          "bagging_fraction": 0.8,
+          "bagging_freq": 1,
+          "lambda_l2": 5.0,
+          "max_bin": 127,
+          "num_threads": 2,
+          "verbose": -1,
+          "rounds": 900
+        },
+        "max_train_rows": 1000000,
+        "sampled_train_rows": 1000000,
+        "available_train_rows": 3219585,
+        "validation_rows": 812939,
+        "target": "nested fold-pure residual logit(Q) - horizon_projection(logit(Q))"
+      },
+      "target_stats": {
+        "outer_fold": 1,
+        "t_groups": 999,
+        "fitted_fold_groups": 3996,
+        "fallback_fold_groups": 5,
+        "skipped_fold_groups": 0,
+        "skipped_predictions": 0,
+        "target_rows": 3219585,
+        "mean": -5.619794206853986e-05,
+        "std": 1.9063798497520679,
+        "q01": -3.668827561320855,
+        "q50": -0.22739585215533487,
+        "q99": 6.026798706646409
+      },
+      "scores": {
+        "whole_fold_ts_auc": 0.6225893076535077,
+        "dominant_cell_ts_auc": 0.673433694459522
+      },
+      "top_feature_importance": [
+        {
+          "feature": "m06_loc::loc_h_rsq_gap",
+          "gain": 3045129.893796921
+        },
+        {
+          "feature": "m07_bayes::ab_var_z",
+          "gain": 2547045.9611091614
+        },
+        {
+          "feature": "m07_bayes::bf0_all",
+          "gain": 1316353.927119255
+        },
+        {
+          "feature": "m07_bayes::ab_post_lvr",
+          "gain": 1024475.6419801712
+        },
+        {
+          "feature": "m06_loc::loc_h_rsq_q",
+          "gain": 936084.5634784698
+        },
+        {
+          "feature": "m07_bayes::ev_pow_pk",
+          "gain": 490733.64244937897
+        },
+        {
+          "feature": "m07_bayes::bo_lo_change_pk",
+          "gain": 406643.25336265564
+        },
+        {
+          "feature": "m07_bayes::abz_var_z",
+          "gain": 369048.5439147949
+        },
+        {
+          "feature": "m07_bayes::ab_var",
+          "gain": 336212.69089126587
+        },
+        {
+          "feature": "m06_loc::fx_h_rsq_128",
+          "gain": 313648.01813316345
+        },
+        {
+          "feature": "m01_seq::gle_pkr",
+          "gain": 280147.25076293945
+        },
+        {
+          "feature": "m00_core::w8_sur_tail_x",
+          "gain": 250082.09585285187
+        },
+        {
+          "feature": "m01_seq::cz100_pkr",
+          "gain": 248215.04697799683
+        },
+        {
+          "feature": "m01_seq::sq50_pk",
+          "gain": 222154.36136436462
+        },
+        {
+          "feature": "m01_seq::phd_pkr",
+          "gain": 219113.16127967834
+        },
+        {
+          "feature": "m04_resid::ar5_e_abs",
+          "gain": 216301.91125297546
+        },
+        {
+          "feature": "m01_seq::phu_pkr",
+          "gain": 212320.5756444931
+        },
+        {
+          "feature": "m04_resid::volM_e_acf1sq",
+          "gain": 202020.90398693085
+        },
+        {
+          "feature": "m01_seq::cz50_pk",
+          "gain": 201534.22583198547
+        },
+        {
+          "feature": "m04_resid::cmb_e_var",
+          "gain": 191699.48645877838
+        },
+        {
+          "feature": "m01_seq::xc_max_pk",
+          "gain": 187565.35632896423
+        },
+        {
+          "feature": "m07_bayes::ab_fast_z",
+          "gain": 187002.61281108856
+        },
+        {
+          "feature": "m02_dist::tl_exp_asym01",
+          "gain": 177907.9246082306
+        },
+        {
+          "feature": "m01_seq::glz_pk",
+          "gain": 177133.89295768738
+        },
+        {
+          "feature": "m06_loc::fx_h_rsq_384",
+          "gain": 176838.10834121704
+        },
+        {
+          "feature": "m01_seq::ce25_pkr",
+          "gain": 175224.39716148376
+        },
+        {
+          "feature": "m07_bayes::abz_lpo_z",
+          "gain": 174607.12603664398
+        },
+        {
+          "feature": "m02_dist::rk_cusum_u_raw",
+          "gain": 173427.01511192322
+        },
+        {
+          "feature": "m01_seq::ce50_pk",
+          "gain": 164928.14358329773
+        },
+        {
+          "feature": "m07_bayes::ev_pow_z",
+          "gain": 158102.0126543045
+        },
+        {
+          "feature": "m03_dyn::hw_r12",
+          "gain": 154016.98455524445
+        },
+        {
+          "feature": "m07_bayes::ab_lpo_pk_z",
+          "gain": 146922.89875602722
+        },
+        {
+          "feature": "m03_dyn::az_x_exp_l20_z",
+          "gain": 142259.27714252472
+        },
+        {
+          "feature": "m07_bayes::abz_lpo",
+          "gain": 139657.81073093414
+        },
+        {
+          "feature": "m02_dist::rk_cusum_r_raw",
+          "gain": 134681.838637352
+        },
+        {
+          "feature": "m01_seq::srz_pkr",
+          "gain": 131748.07375526428
+        },
+        {
+          "feature": "m03_dyn::az_ae_exp_l1_z",
+          "gain": 126908.15968894958
+        },
+        {
+          "feature": "m00_core::w16_sur_tail_x",
+          "gain": 122786.30902290344
+        },
+        {
+          "feature": "m06_loc::loc_h_rsq_sz",
+          "gain": 121160.96245479584
+        },
+        {
+          "feature": "m01_seq::cz25_pkr",
+          "gain": 120600.35361862183
+        }
+      ],
+      "runtime_s": 455.4
+    },
+    {
+      "experiment": "armc_residual_student",
+      "outer_fold": 2,
+      "date": "2026-08-30T21:48:32",
+      "data_root": "/path/to/workspace/structural-break-wave8",
+      "folds_path": "/path/to/workspace/structural-break-multi-agent-frontier-20260829/research/folds/folds.parquet",
+      "feature_dir": "/path/to/workspace/structural-break-wave8/cache/features",
+      "oof_dir": "/path/to/workspace/structural-break-wave8/research/oof",
+      "output_path": "/path/to/workspace/structural-break-multi-agent-frontier-20260829/research/reports/armc_residual_student_confirm_s20260901/armc_residual_student_outer2.npy",
+      "teacher_meta": {
+        "outer_fold": 2,
+        "parts": [
+          {
+            "outer_fold": 2,
+            "inner_fold": 0,
+            "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer2_inner0.npy",
+            "sha256": "289cf2e0cfe76b6b76e0d8b3ca6425c16e17f5fd16a3876ff2b1555d92696396",
+            "finite_target_rows": 806334,
+            "target_rows": 806334,
+            "finite_non_target_rows": 0
+          },
+          {
+            "outer_fold": 2,
+            "inner_fold": 1,
+            "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer2_inner1.npy",
+            "sha256": "a7e9ed0cfb8fac2c413fb3678cac404d2376feb4411d89cd22613319e1c492f4",
+            "finite_target_rows": 812939,
+            "target_rows": 812939,
+            "finite_non_target_rows": 0
+          },
+          {
+            "outer_fold": 2,
+            "inner_fold": 3,
+            "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer2_inner3.npy",
+            "sha256": "5ecd1e12f853dbc4562c8e45d50bc608cb3e6f5773636a0394bca17a552284ff",
+            "finite_target_rows": 802506,
+            "target_rows": 802506,
+            "finite_non_target_rows": 0
+          },
+          {
+            "outer_fold": 2,
+            "inner_fold": 4,
+            "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer2_inner4.npy",
+            "sha256": "f746b75a92b0b25ed0af10c6bc3ecc110fa4da4ce2552280a94baeda17880cb2",
+            "finite_target_rows": 804054,
+            "target_rows": 804054,
+            "finite_non_target_rows": 0
+          }
+        ]
+      },
+      "student": {
+        "modules": [
+          "m00_core",
+          "m01_seq",
+          "m02_dist",
+          "m03_dyn",
+          "m04_resid",
+          "m06_loc",
+          "m07_bayes"
+        ],
+        "n_features": 500,
+        "forbidden_feature_tokens": [
+          "tau",
+          "cut",
+          "boundary",
+          "break_at",
+          "changepoint_true",
+          "has_break",
+          "n_online",
+          "n_hist",
+          "final_row",
+          "eligible",
+          "availability",
+          "pad"
+        ],
+        "params": {
+          "objective": "regression",
+          "metric": "l2",
+          "learning_rate": 0.05,
+          "num_leaves": 127,
+          "min_data_in_leaf": 150,
+          "feature_fraction": 1.0,
+          "bagging_fraction": 0.8,
+          "bagging_freq": 1,
+          "lambda_l2": 5.0,
+          "max_bin": 127,
+          "num_threads": 2,
+          "verbose": -1,
+          "rounds": 900
+        },
+        "max_train_rows": 1000000,
+        "sampled_train_rows": 1000000,
+        "available_train_rows": 3225833,
+        "validation_rows": 806691,
+        "target": "nested fold-pure residual logit(Q) - horizon_projection(logit(Q))"
+      },
+      "target_stats": {
+        "outer_fold": 2,
+        "t_groups": 999,
+        "fitted_fold_groups": 3996,
+        "fallback_fold_groups": 5,
+        "skipped_fold_groups": 0,
+        "skipped_predictions": 0,
+        "target_rows": 3225833,
+        "mean": -0.0004066758183111507,
+        "std": 1.900771128383969,
+        "q01": -3.702105400124346,
+        "q50": -0.2053965388247646,
+        "q99": 5.992921497374313
+      },
+      "scores": {
+        "whole_fold_ts_auc": 0.6168304606114817,
+        "dominant_cell_ts_auc": 0.6680095577616549
+      },
+      "top_feature_importance": [
+        {
+          "feature": "m06_loc::loc_h_rsq_gap",
+          "gain": 3071740.021911621
+        },
+        {
+          "feature": "m07_bayes::ab_var_z",
+          "gain": 2248101.8426971436
+        },
+        {
+          "feature": "m07_bayes::bf0_all",
+          "gain": 1238993.7477769852
+        },
+        {
+          "feature": "m07_bayes::ab_post_lvr",
+          "gain": 761411.1202068329
+        },
+        {
+          "feature": "m06_loc::loc_h_rsq_q",
+          "gain": 700527.8380889893
+        },
+        {
+          "feature": "m07_bayes::bo_lo_change_pk",
+          "gain": 488384.58545970917
+        },
+        {
+          "feature": "m07_bayes::ev_pow_pk",
+          "gain": 486197.083650589
+        },
+        {
+          "feature": "m06_loc::fx_h_rsq_128",
+          "gain": 481147.575879097
+        },
+        {
+          "feature": "m07_bayes::ab_var",
+          "gain": 443592.9647426605
+        },
+        {
+          "feature": "m07_bayes::abz_var_z",
+          "gain": 303306.73931598663
+        },
+        {
+          "feature": "m01_seq::gle_pkr",
+          "gain": 292905.9415836334
+        },
+        {
+          "feature": "m00_core::w8_sur_tail_x",
+          "gain": 285875.2397966385
+        },
+        {
+          "feature": "m01_seq::cz100_pkr",
+          "gain": 246829.48677444458
+        },
+        {
+          "feature": "m01_seq::sq50_pk",
+          "gain": 230645.9577331543
+        },
+        {
+          "feature": "m06_loc::fx_h_rsq_384",
+          "gain": 209050.3947057724
+        },
+        {
+          "feature": "m01_seq::glz_pk",
+          "gain": 204058.36351776123
+        },
+        {
+          "feature": "m01_seq::phd_pkr",
+          "gain": 202211.25944328308
+        },
+        {
+          "feature": "m02_dist::tl_exp_asym01",
+          "gain": 193565.4424238205
+        },
+        {
+          "feature": "m02_dist::rk_cusum_u_raw",
+          "gain": 192198.98733711243
+        },
+        {
+          "feature": "m07_bayes::ab_fast_z",
+          "gain": 190361.01819705963
+        },
+        {
+          "feature": "m01_seq::xc_max_pk",
+          "gain": 183855.14893436432
+        },
+        {
+          "feature": "m01_seq::cz50_pk",
+          "gain": 182226.64222335815
+        },
+        {
+          "feature": "m04_resid::volM_e_acf1sq",
+          "gain": 177830.7263469696
+        },
+        {
+          "feature": "m07_bayes::abz_lpo_z",
+          "gain": 176666.43180179596
+        },
+        {
+          "feature": "m07_bayes::ab_lpo_pk_z",
+          "gain": 173526.0909357071
+        },
+        {
+          "feature": "m01_seq::ce50_pk",
+          "gain": 171084.7037343979
+        },
+        {
+          "feature": "m02_dist::rk_cusum_r_raw",
+          "gain": 170983.89697742462
+        },
+        {
+          "feature": "m01_seq::srz_pkr",
+          "gain": 167970.85430431366
+        },
+        {
+          "feature": "m07_bayes::bf0_var",
+          "gain": 167530.14139556885
+        },
+        {
+          "feature": "m01_seq::phu_pkr",
+          "gain": 162005.1162776947
+        },
+        {
+          "feature": "m01_seq::cz25_pkr",
+          "gain": 153465.69313144684
+        },
+        {
+          "feature": "m01_seq::ce25_pkr",
+          "gain": 149384.2426738739
+        },
+        {
+          "feature": "m03_dyn::hw_r12",
+          "gain": 140172.5275297165
+        },
+        {
+          "feature": "m04_resid::ar5_e_abs",
+          "gain": 133801.52658176422
+        },
+        {
+          "feature": "m04_resid::cmb_e_var",
+          "gain": 131126.64735889435
+        },
+        {
+          "feature": "m06_loc::fx_h_rlab_384",
+          "gain": 130843.82448577881
+        },
+        {
+          "feature": "m07_bayes::abz_lpo",
+          "gain": 130839.5126619339
+        },
+        {
+          "feature": "m03_dyn::az_e_exp_l10_z",
+          "gain": 130765.09691905975
+        },
+        {
+          "feature": "m00_core::w16_sur_tail_x",
+          "gain": 127423.70982170105
+        },
+        {
+          "feature": "m03_dyn::az_sg_exp_l1_z",
+          "gain": 127134.14313411713
+        }
+      ],
+      "runtime_s": 465.9
+    },
+    {
+      "experiment": "armc_residual_student",
+      "outer_fold": 3,
+      "date": "2026-08-30T21:56:25",
+      "data_root": "/path/to/workspace/structural-break-wave8",
+      "folds_path": "/path/to/workspace/structural-break-multi-agent-frontier-20260829/research/folds/folds.parquet",
+      "feature_dir": "/path/to/workspace/structural-break-wave8/cache/features",
+      "oof_dir": "/path/to/workspace/structural-break-wave8/research/oof",
+      "output_path": "/path/to/workspace/structural-break-multi-agent-frontier-20260829/research/reports/armc_residual_student_confirm_s20260901/armc_residual_student_outer3.npy",
+      "teacher_meta": {
+        "outer_fold": 3,
+        "parts": [
+          {
+            "outer_fold": 3,
+            "inner_fold": 0,
+            "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer3_inner0.npy",
+            "sha256": "018a97c35acaa898b68422832950b7e51762c10151220c29ba620ed77d596dad",
+            "finite_target_rows": 806334,
+            "target_rows": 806334,
+            "finite_non_target_rows": 0
+          },
+          {
+            "outer_fold": 3,
+            "inner_fold": 1,
+            "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer3_inner1.npy",
+            "sha256": "47b0a5b182064f5eab8253646a70fe71ab00b7dcd9341147a1d2fcd90b87bed1",
+            "finite_target_rows": 812939,
+            "target_rows": 812939,
+            "finite_non_target_rows": 0
+          },
+          {
+            "outer_fold": 3,
+            "inner_fold": 2,
+            "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer3_inner2.npy",
+            "sha256": "2508fe1014aa1b054b0dfb9e0bf0ff2642d1702b5ed19116908421212133d299",
+            "finite_target_rows": 806691,
+            "target_rows": 806691,
+            "finite_non_target_rows": 0
+          },
+          {
+            "outer_fold": 3,
+            "inner_fold": 4,
+            "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer3_inner4.npy",
+            "sha256": "cc3978e726c3a8091ce13bc7f1ebaeb80d59cee59eb7fc056beacd2290a1bcf7",
+            "finite_target_rows": 804054,
+            "target_rows": 804054,
+            "finite_non_target_rows": 0
+          }
+        ]
+      },
+      "student": {
+        "modules": [
+          "m00_core",
+          "m01_seq",
+          "m02_dist",
+          "m03_dyn",
+          "m04_resid",
+          "m06_loc",
+          "m07_bayes"
+        ],
+        "n_features": 500,
+        "forbidden_feature_tokens": [
+          "tau",
+          "cut",
+          "boundary",
+          "break_at",
+          "changepoint_true",
+          "has_break",
+          "n_online",
+          "n_hist",
+          "final_row",
+          "eligible",
+          "availability",
+          "pad"
+        ],
+        "params": {
+          "objective": "regression",
+          "metric": "l2",
+          "learning_rate": 0.05,
+          "num_leaves": 127,
+          "min_data_in_leaf": 150,
+          "feature_fraction": 1.0,
+          "bagging_fraction": 0.8,
+          "bagging_freq": 1,
+          "lambda_l2": 5.0,
+          "max_bin": 127,
+          "num_threads": 2,
+          "verbose": -1,
+          "rounds": 900
+        },
+        "max_train_rows": 1000000,
+        "sampled_train_rows": 1000000,
+        "available_train_rows": 3230018,
+        "validation_rows": 802506,
+        "target": "nested fold-pure residual logit(Q) - horizon_projection(logit(Q))"
+      },
+      "target_stats": {
+        "outer_fold": 3,
+        "t_groups": 999,
+        "fitted_fold_groups": 3996,
+        "fallback_fold_groups": 5,
+        "skipped_fold_groups": 0,
+        "skipped_predictions": 0,
+        "target_rows": 3230018,
+        "mean": -0.00022073004042315726,
+        "std": 1.9274657980387613,
+        "q01": -3.634225687764672,
+        "q50": -0.2235473112591646,
+        "q99": 6.02333728719635
+      },
+      "scores": {
+        "whole_fold_ts_auc": 0.6195749053602839,
+        "dominant_cell_ts_auc": 0.6550843026658683
+      },
+      "top_feature_importance": [
+        {
+          "feature": "m06_loc::loc_h_rsq_gap",
+          "gain": 3722069.3576955795
+        },
+        {
+          "feature": "m07_bayes::ab_var_z",
+          "gain": 1854417.1599636078
+        },
+        {
+          "feature": "m07_bayes::bf0_all",
+          "gain": 1305594.927157402
+        },
+        {
+          "feature": "m06_loc::loc_h_rsq_q",
+          "gain": 1024572.03424263
+        },
+        {
+          "feature": "m07_bayes::ab_post_lvr",
+          "gain": 870809.2636947632
+        },
+        {
+          "feature": "m07_bayes::ev_pow_pk",
+          "gain": 497593.43438243866
+        },
+        {
+          "feature": "m07_bayes::bo_lo_change_pk",
+          "gain": 451490.5610847473
+        },
+        {
+          "feature": "m07_bayes::ab_var",
+          "gain": 440858.11329078674
+        },
+        {
+          "feature": "m01_seq::gle_pkr",
+          "gain": 289891.9437150955
+        },
+        {
+          "feature": "m04_resid::volM_e_acf1sq",
+          "gain": 284578.7904176712
+        },
+        {
+          "feature": "m01_seq::cz100_pkr",
+          "gain": 272072.95491600037
+        },
+        {
+          "feature": "m07_bayes::abz_var_z",
+          "gain": 258328.2739019394
+        },
+        {
+          "feature": "m04_resid::raw_e_llr",
+          "gain": 247185.76570510864
+        },
+        {
+          "feature": "m00_core::w8_sur_tail_x",
+          "gain": 238442.09599781036
+        },
+        {
+          "feature": "m06_loc::fx_h_rsq_128",
+          "gain": 230637.01374816895
+        },
+        {
+          "feature": "m01_seq::sq50_pk",
+          "gain": 226970.71382427216
+        },
+        {
+          "feature": "m01_seq::phd_pkr",
+          "gain": 224302.6235074997
+        },
+        {
+          "feature": "m01_seq::phu_pkr",
+          "gain": 208128.2869157791
+        },
+        {
+          "feature": "m02_dist::tl_exp_asym01",
+          "gain": 194332.9945306778
+        },
+        {
+          "feature": "m02_dist::rk_cusum_u_raw",
+          "gain": 188819.05736541748
+        },
+        {
+          "feature": "m04_resid::cmb_e_var",
+          "gain": 184482.0277633667
+        },
+        {
+          "feature": "m07_bayes::bf0_var",
+          "gain": 184311.1809310913
+        },
+        {
+          "feature": "m01_seq::xc_max_pk",
+          "gain": 181896.60162830353
+        },
+        {
+          "feature": "m01_seq::ce50_pk",
+          "gain": 177369.60528755188
+        },
+        {
+          "feature": "m01_seq::glz_pk",
+          "gain": 172561.8367805481
+        },
+        {
+          "feature": "m04_resid::ar5_e_abs",
+          "gain": 168325.96177768707
+        },
+        {
+          "feature": "m01_seq::cz50_pk",
+          "gain": 167522.8578262329
+        },
+        {
+          "feature": "m07_bayes::abz_lpo_z",
+          "gain": 166519.59283924103
+        },
+        {
+          "feature": "m07_bayes::ab_fast_z",
+          "gain": 163374.50193214417
+        },
+        {
+          "feature": "m01_seq::srz_pkr",
+          "gain": 147030.46399116516
+        },
+        {
+          "feature": "m07_bayes::ab_lpo_pk_z",
+          "gain": 145701.1655435562
+        },
+        {
+          "feature": "m01_seq::ce25_pkr",
+          "gain": 141980.54602241516
+        },
+        {
+          "feature": "m07_bayes::abz_lpo",
+          "gain": 139223.5896911621
+        },
+        {
+          "feature": "m01_seq::cz25_pkr",
+          "gain": 137696.3437385559
+        },
+        {
+          "feature": "m03_dyn::az_sg_exp_l1_z",
+          "gain": 137565.325548172
+        },
+        {
+          "feature": "m03_dyn::az_e2_exp_l1_z",
+          "gain": 137263.1876115799
+        },
+        {
+          "feature": "m02_dist::rk_cusum_r_raw",
+          "gain": 136587.21686458588
+        },
+        {
+          "feature": "m03_dyn::hw_r12",
+          "gain": 136304.80746555328
+        },
+        {
+          "feature": "m07_bayes::ab_pfam_var",
+          "gain": 135738.60483455658
+        },
+        {
+          "feature": "m04_resid::volG_e_acf1sq",
+          "gain": 133593.41910552979
+        }
+      ],
+      "runtime_s": 470.7
+    },
+    {
+      "experiment": "armc_residual_student",
+      "outer_fold": 4,
+      "date": "2026-08-30T22:04:23",
+      "data_root": "/path/to/workspace/structural-break-wave8",
+      "folds_path": "/path/to/workspace/structural-break-multi-agent-frontier-20260829/research/folds/folds.parquet",
+      "feature_dir": "/path/to/workspace/structural-break-wave8/cache/features",
+      "oof_dir": "/path/to/workspace/structural-break-wave8/research/oof",
+      "output_path": "/path/to/workspace/structural-break-multi-agent-frontier-20260829/research/reports/armc_residual_student_confirm_s20260901/armc_residual_student_outer4.npy",
+      "teacher_meta": {
+        "outer_fold": 4,
+        "parts": [
+          {
+            "outer_fold": 4,
+            "inner_fold": 0,
+            "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer4_inner0.npy",
+            "sha256": "7855e3be12889e6819cff676c1f4085bb6704dc551187438123764c99ba75e7e",
+            "finite_target_rows": 806334,
+            "target_rows": 806334,
+            "finite_non_target_rows": 0
+          },
+          {
+            "outer_fold": 4,
+            "inner_fold": 1,
+            "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer4_inner1.npy",
+            "sha256": "c2ba909ae459c84739ea259250ec7bb7d03ab08fc92a73e0afe4078af3d21de6",
+            "finite_target_rows": 812939,
+            "target_rows": 812939,
+            "finite_non_target_rows": 0
+          },
+          {
+            "outer_fold": 4,
+            "inner_fold": 2,
+            "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer4_inner2.npy",
+            "sha256": "259b2e9a016b3baaacd2f60b3d6e0dc3bd7d0c84ab14d0cd21810fb50004ac8e",
+            "finite_target_rows": 806691,
+            "target_rows": 806691,
+            "finite_non_target_rows": 0
+          },
+          {
+            "outer_fold": 4,
+            "inner_fold": 3,
+            "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer4_inner3.npy",
+            "sha256": "18c3259957cc2c0dc0c1bdf230143e716c68c4a3f9f4e33c25339aaa5550b652",
+            "finite_target_rows": 802506,
+            "target_rows": 802506,
+            "finite_non_target_rows": 0
+          }
+        ]
+      },
+      "student": {
+        "modules": [
+          "m00_core",
+          "m01_seq",
+          "m02_dist",
+          "m03_dyn",
+          "m04_resid",
+          "m06_loc",
+          "m07_bayes"
+        ],
+        "n_features": 500,
+        "forbidden_feature_tokens": [
+          "tau",
+          "cut",
+          "boundary",
+          "break_at",
+          "changepoint_true",
+          "has_break",
+          "n_online",
+          "n_hist",
+          "final_row",
+          "eligible",
+          "availability",
+          "pad"
+        ],
+        "params": {
+          "objective": "regression",
+          "metric": "l2",
+          "learning_rate": 0.05,
+          "num_leaves": 127,
+          "min_data_in_leaf": 150,
+          "feature_fraction": 1.0,
+          "bagging_fraction": 0.8,
+          "bagging_freq": 1,
+          "lambda_l2": 5.0,
+          "max_bin": 127,
+          "num_threads": 2,
+          "verbose": -1,
+          "rounds": 900
+        },
+        "max_train_rows": 1000000,
+        "sampled_train_rows": 1000000,
+        "available_train_rows": 3228470,
+        "validation_rows": 804054,
+        "target": "nested fold-pure residual logit(Q) - horizon_projection(logit(Q))"
+      },
+      "target_stats": {
+        "outer_fold": 4,
+        "t_groups": 999,
+        "fitted_fold_groups": 3996,
+        "fallback_fold_groups": 8,
+        "skipped_fold_groups": 0,
+        "skipped_predictions": 0,
+        "target_rows": 3228470,
+        "mean": -0.00035063813100264787,
+        "std": 1.9331896930972063,
+        "q01": -3.740549320572377,
+        "q50": -0.23344981020546718,
+        "q99": 6.10776043755948
+      },
+      "scores": {
+        "whole_fold_ts_auc": 0.602235964633824,
+        "dominant_cell_ts_auc": 0.6377434688269504
+      },
+      "top_feature_importance": [
+        {
+          "feature": "m07_bayes::ab_var_z",
+          "gain": 3844698.3914842606
+        },
+        {
+          "feature": "m06_loc::loc_h_rsq_gap",
+          "gain": 2399053.5302734375
+        },
+        {
+          "feature": "m07_bayes::bf0_all",
+          "gain": 1199797.8032102585
+        },
+        {
+          "feature": "m07_bayes::ab_post_lvr",
+          "gain": 1043052.4929361343
+        },
+        {
+          "feature": "m06_loc::loc_h_rsq_q",
+          "gain": 677588.0284147263
+        },
+        {
+          "feature": "m07_bayes::ab_var",
+          "gain": 512027.2227077484
+        },
+        {
+          "feature": "m07_bayes::ev_pow_pk",
+          "gain": 474173.7851819992
+        },
+        {
+          "feature": "m07_bayes::bo_lo_change_pk",
+          "gain": 409292.9127731323
+        },
+        {
+          "feature": "m06_loc::fx_h_rsq_128",
+          "gain": 385311.22155094147
+        },
+        {
+          "feature": "m07_bayes::abz_var_z",
+          "gain": 294710.4155483246
+        },
+        {
+          "feature": "m02_dist::rk_cusum_u_raw",
+          "gain": 288985.7208442688
+        },
+        {
+          "feature": "m01_seq::gle_pkr",
+          "gain": 279128.7175064087
+        },
+        {
+          "feature": "m01_seq::cz100_pkr",
+          "gain": 275433.6424732208
+        },
+        {
+          "feature": "m01_seq::phu_pkr",
+          "gain": 261264.74399662018
+        },
+        {
+          "feature": "m00_core::w8_sur_tail_x",
+          "gain": 224527.5651216507
+        },
+        {
+          "feature": "m01_seq::sq50_pk",
+          "gain": 213466.22078323364
+        },
+        {
+          "feature": "m01_seq::xc_max_pk",
+          "gain": 204290.21940994263
+        },
+        {
+          "feature": "m07_bayes::abz_lpo_z",
+          "gain": 202594.17885112762
+        },
+        {
+          "feature": "m01_seq::glz_pk",
+          "gain": 202447.38712120056
+        },
+        {
+          "feature": "m01_seq::phd_pkr",
+          "gain": 197115.69022274017
+        },
+        {
+          "feature": "m01_seq::cz50_pk",
+          "gain": 188372.76682567596
+        },
+        {
+          "feature": "m01_seq::ce50_pk",
+          "gain": 186466.35805988312
+        },
+        {
+          "feature": "m04_resid::volM_e_acf1sq",
+          "gain": 181444.73121452332
+        },
+        {
+          "feature": "m03_dyn::hw_r12",
+          "gain": 178441.227309227
+        },
+        {
+          "feature": "m02_dist::tl_exp_asym01",
+          "gain": 175272.95602607727
+        },
+        {
+          "feature": "m06_loc::fx_h_rlab_384",
+          "gain": 168002.24890518188
+        },
+        {
+          "feature": "m01_seq::srz_pkr",
+          "gain": 167498.17834472656
+        },
+        {
+          "feature": "m02_dist::rk_cusum_r_raw",
+          "gain": 163782.76318740845
+        },
+        {
+          "feature": "m07_bayes::ab_fast_z",
+          "gain": 160756.08766937256
+        },
+        {
+          "feature": "m00_core::w16_sur_tail_x",
+          "gain": 150380.83419513702
+        },
+        {
+          "feature": "m03_dyn::az_x_exp_l20_z",
+          "gain": 145103.40121650696
+        },
+        {
+          "feature": "m04_resid::cmb_e_var",
+          "gain": 144642.73209381104
+        },
+        {
+          "feature": "m04_resid::ar5_e_abs",
+          "gain": 142441.37297058105
+        },
+        {
+          "feature": "m01_seq::ce25_pkr",
+          "gain": 138672.65575408936
+        },
+        {
+          "feature": "m00_core::exp_z_abslag1",
+          "gain": 136080.1934452057
+        },
+        {
+          "feature": "m01_seq::cz25_pkr",
+          "gain": 135936.07101154327
+        },
+        {
+          "feature": "m07_bayes::ab_pfam_var",
+          "gain": 133531.01604652405
+        },
+        {
+          "feature": "m03_dyn::az_e2_exp_l1_z",
+          "gain": 132041.37088680267
+        },
+        {
+          "feature": "m04_resid::raw_e_llr",
+          "gain": 128693.19290828705
+        },
+        {
+          "feature": "m06_loc::fx_h_rsq_384",
+          "gain": 125626.41098880768
+        }
+      ],
+      "runtime_s": 475.8
+    }
+  ],
+  "scores": {
+    "Arm_B_RT990_raw": {
+      "whole_dev": {
+        "ts_auc": 0.6117729628045286,
+        "n_rows": 4032524,
+        "per_fold": {
+          "0": 0.6265641785501449,
+          "1": 0.6061721783645558,
+          "2": 0.6175339294646058,
+          "3": 0.6031804729432453,
+          "4": 0.6058075106420305
+        }
+      },
+      "dominant_cell": {
+        "ts_auc": 0.6474914699065645,
+        "n_rows": 2392213,
+        "per_fold": {
+          "0": 0.6638108917990431,
+          "1": 0.6417581971640154,
+          "2": 0.6611862762245441,
+          "3": 0.6347778679496264,
+          "4": 0.6353582989309843
+        }
+      },
+      "dominant_never_break_only": {
+        "ts_auc": 0.6491193139088536,
+        "n_rows": 1955421,
+        "per_fold": {
+          "0": 0.6638363248552263,
+          "1": 0.6471336882332429,
+          "2": 0.6523288407068676,
+          "3": 0.6429186198804758,
+          "4": 0.6388311764699217
+        }
+      },
+      "dominant_pre_break_only": {
+        "ts_auc": 0.6427985944022969,
+        "n_rows": 1104487,
+        "per_fold": {
+          "0": 0.6637399238512213,
+          "1": 0.6257875501168256,
+          "2": 0.6865499656441234,
+          "3": 0.6114894075067843,
+          "4": 0.6251649815242863
+        }
+      }
+    },
+    "Arm_C_RT991_raw": {
+      "whole_dev": {
+        "ts_auc": 0.7198927656572055,
+        "n_rows": 4032524,
+        "per_fold": {
+          "0": 0.718028090850054,
+          "1": 0.7272414308408823,
+          "2": 0.7247855080946718,
+          "3": 0.7155660382130181,
+          "4": 0.7145484301442985
+        }
+      },
+      "dominant_cell": {
+        "ts_auc": 0.7185884164543739,
+        "n_rows": 2392213,
+        "per_fold": {
+          "0": 0.7165782044731226,
+          "1": 0.7222174389917636,
+          "2": 0.7270706660294787,
+          "3": 0.7108146672635784,
+          "4": 0.7171597386263122
+        }
+      },
+      "dominant_never_break_only": {
+        "ts_auc": 0.7143883871286614,
+        "n_rows": 1955421,
+        "per_fold": {
+          "0": 0.713434165126899,
+          "1": 0.7217853013204427,
+          "2": 0.7210770693966106,
+          "3": 0.7083468335808568,
+          "4": 0.7082558587964086
+        }
+      },
+      "dominant_pre_break_only": {
+        "ts_auc": 0.7306965881908086,
+        "n_rows": 1104487,
+        "per_fold": {
+          "0": 0.7253512759697682,
+          "1": 0.7235013250843235,
+          "2": 0.744233616095434,
+          "3": 0.7178744631629951,
+          "4": 0.7432937074287573
+        }
+      }
+    },
+    "RT600_7stream": {
+      "whole_dev": {
+        "ts_auc": 0.6256269345441687,
+        "n_rows": 4032524,
+        "per_fold": {
+          "0": 0.638276215299891,
+          "1": 0.6204019581662752,
+          "2": 0.6339304299070194,
+          "3": 0.6175075878311903,
+          "4": 0.6189405182117643
+        }
+      },
+      "dominant_cell": {
+        "ts_auc": 0.6642770992472101,
+        "n_rows": 2392213,
+        "per_fold": {
+          "0": 0.6777110028296777,
+          "1": 0.6587117124203369,
+          "2": 0.6822401354803915,
+          "3": 0.6525808208410008,
+          "4": 0.6494259427009165
+        }
+      },
+      "dominant_never_break_only": {
+        "ts_auc": 0.6654308804622359,
+        "n_rows": 1955421,
+        "per_fold": {
+          "0": 0.6768008195237858,
+          "1": 0.6612034250766818,
+          "2": 0.6733791235646183,
+          "3": 0.6618203414694203,
+          "4": 0.6533560507383915
+        }
+      },
+      "dominant_pre_break_only": {
+        "ts_auc": 0.6609508888771348,
+        "n_rows": 1104487,
+        "per_fold": {
+          "0": 0.6802507621451054,
+          "1": 0.6513088048784923,
+          "2": 0.7076140660866426,
+          "3": 0.6261490842528404,
+          "4": 0.6378905982439232
+        }
+      }
+    },
+    "RT600_plus_seedclone": {
+      "whole_dev": {
+        "ts_auc": 0.6256492289736159,
+        "n_rows": 4032524,
+        "per_fold": {
+          "0": 0.6385865078922968,
+          "1": 0.6204868094216436,
+          "2": 0.6341589898879638,
+          "3": 0.6176448654841981,
+          "4": 0.6183143882215368
+        }
+      },
+      "dominant_cell": {
+        "ts_auc": 0.6643087711484742,
+        "n_rows": 2392213,
+        "per_fold": {
+          "0": 0.6784542593983854,
+          "1": 0.6581427448916732,
+          "2": 0.6827864458928526,
+          "3": 0.6528923566397069,
+          "4": 0.6486323884790036
+        }
+      },
+      "dominant_never_break_only": {
+        "ts_auc": 0.665410631136824,
+        "n_rows": 1955421,
+        "per_fold": {
+          "0": 0.676973285069264,
+          "1": 0.6608860581336907,
+          "2": 0.6741457649078514,
+          "3": 0.6619898238104557,
+          "4": 0.6525948206137273
+        }
+      },
+      "dominant_pre_break_only": {
+        "ts_auc": 0.6611322433354972,
+        "n_rows": 1104487,
+        "per_fold": {
+          "0": 0.6825867438374511,
+          "1": 0.6499923290573036,
+          "2": 0.7075294483612159,
+          "3": 0.6268669960666658,
+          "4": 0.6370021688703682
+        }
+      }
+    },
+    "Residual_student_raw": {
+      "whole_dev": {
+        "ts_auc": 0.6154726479407907,
+        "n_rows": 4032524,
+        "per_fold": {
+          "0": 0.6168072133939414,
+          "1": 0.6225893076535077,
+          "2": 0.6168304606114817,
+          "3": 0.6195749053602839,
+          "4": 0.602235964633824
+        }
+      },
+      "dominant_cell": {
+        "ts_auc": 0.657979131449742,
+        "n_rows": 2392213,
+        "per_fold": {
+          "0": 0.6566479864505185,
+          "1": 0.673433694459522,
+          "2": 0.6680095577616549,
+          "3": 0.6550843026658683,
+          "4": 0.6377434688269504
+        }
+      },
+      "dominant_never_break_only": {
+        "ts_auc": 0.6597568974922143,
+        "n_rows": 1955421,
+        "per_fold": {
+          "0": 0.6536411844962838,
+          "1": 0.6749051222209856,
+          "2": 0.6625864591971511,
+          "3": 0.66475702077619,
+          "4": 0.6439979025745105
+        }
+      },
+      "dominant_pre_break_only": {
+        "ts_auc": 0.652854049008608,
+        "n_rows": 1104487,
+        "per_fold": {
+          "0": 0.665038113168379,
+          "1": 0.6690620653132472,
+          "2": 0.6835388593758003,
+          "3": 0.6274133067922123,
+          "4": 0.6193859460887462
+        }
+      }
+    },
+    "RT600_plus_residual_student": {
+      "whole_dev": {
+        "ts_auc": 0.6276139631951945,
+        "n_rows": 4032524,
+        "per_fold": {
+          "0": 0.638820759765568,
+          "1": 0.6232258034881586,
+          "2": 0.635359138948918,
+          "3": 0.6218623392134552,
+          "4": 0.6196852894596758
+        }
+      },
+      "dominant_cell": {
+        "ts_auc": 0.6676218555302247,
+        "n_rows": 2392213,
+        "per_fold": {
+          "0": 0.6788109621818137,
+          "1": 0.6640577678079896,
+          "2": 0.6852964809937638,
+          "3": 0.6579786824965521,
+          "4": 0.6516676447899895
+        }
+      },
+      "dominant_never_break_only": {
+        "ts_auc": 0.6688903971578914,
+        "n_rows": 1955421,
+        "per_fold": {
+          "0": 0.6774855958546608,
+          "1": 0.6664072273828192,
+          "2": 0.6765070321563138,
+          "3": 0.6676877826691505,
+          "4": 0.6563360503563404
+        }
+      },
+      "dominant_pre_break_only": {
+        "ts_auc": 0.6639648049023699,
+        "n_rows": 1104487,
+        "per_fold": {
+          "0": 0.6825092408186013,
+          "1": 0.6570774958406445,
+          "2": 0.7104654873091318,
+          "3": 0.6302036075125931,
+          "4": 0.6379653074091072
+        }
+      }
+    }
+  },
+  "deltas": {
+    "Arm_C_vs_Arm_B": {
+      "whole_dev": {
+        "ts_auc_delta": 0.10811980285267686,
+        "per_fold_delta": {
+          "0": 0.09146391229990913,
+          "1": 0.1210692524763265,
+          "2": 0.10725157863006596,
+          "3": 0.11238556526977284,
+          "4": 0.10874091950226794
+        }
+      },
+      "dominant_cell": {
+        "ts_auc_delta": 0.0710969465478094,
+        "per_fold_delta": {
+          "0": 0.052767312674079525,
+          "1": 0.08045924182774822,
+          "2": 0.0658843898049346,
+          "3": 0.07603679931395202,
+          "4": 0.08180143969532794
+        }
+      },
+      "dominant_never_break_only": {
+        "ts_auc_delta": 0.0652690732198078,
+        "per_fold_delta": {
+          "0": 0.04959784027167269,
+          "1": 0.07465161308719981,
+          "2": 0.06874822868974306,
+          "3": 0.06542821370038099,
+          "4": 0.06942468232648691
+        }
+      },
+      "dominant_pre_break_only": {
+        "ts_auc_delta": 0.08789799378851171,
+        "per_fold_delta": {
+          "0": 0.06161135211854696,
+          "1": 0.09771377496749789,
+          "2": 0.05768365045131063,
+          "3": 0.10638505565621081,
+          "4": 0.11812872590447099
+        }
+      }
+    },
+    "Student_raw_vs_Arm_B": {
+      "whole_dev": {
+        "ts_auc_delta": 0.0036996851362620653,
+        "per_fold_delta": {
+          "0": -0.009756965156203501,
+          "1": 0.016417129288951893,
+          "2": -0.0007034688531241118,
+          "3": 0.01639443241703864,
+          "4": -0.0035715460082065276
+        }
+      },
+      "dominant_cell": {
+        "ts_auc_delta": 0.010487661543177484,
+        "per_fold_delta": {
+          "0": -0.007162905348524595,
+          "1": 0.03167549729550656,
+          "2": 0.00682328153711087,
+          "3": 0.020306434716241828,
+          "4": 0.002385169895966155
+        }
+      },
+      "dominant_never_break_only": {
+        "ts_auc_delta": 0.010637583583360755,
+        "per_fold_delta": {
+          "0": -0.010195140358942423,
+          "1": 0.027771433987742733,
+          "2": 0.010257618490283504,
+          "3": 0.021838400895714205,
+          "4": 0.0051667261045887924
+        }
+      },
+      "dominant_pre_break_only": {
+        "ts_auc_delta": 0.010055454606311076,
+        "per_fold_delta": {
+          "0": 0.0012981893171577497,
+          "1": 0.04327451519642156,
+          "2": -0.003011106268323127,
+          "3": 0.015923899285428034,
+          "4": -0.005779035435540147
+        }
+      }
+    },
+    "Student_blend_vs_RT600": {
+      "whole_dev": {
+        "ts_auc_delta": 0.001987028651025735,
+        "per_fold_delta": {
+          "0": 0.0005445444656769771,
+          "1": 0.0028238453218834003,
+          "2": 0.0014287090418986237,
+          "3": 0.004354751382264932,
+          "4": 0.0007447712479115021
+        }
+      },
+      "dominant_cell": {
+        "ts_auc_delta": 0.0033447562830145605,
+        "per_fold_delta": {
+          "0": 0.0010999593521360262,
+          "1": 0.0053460553876527594,
+          "2": 0.003056345513372305,
+          "3": 0.005397861655551339,
+          "4": 0.002241702089073039
+        }
+      },
+      "dominant_never_break_only": {
+        "ts_auc_delta": 0.0034595166956555845,
+        "per_fold_delta": {
+          "0": 0.0006847763308750476,
+          "1": 0.005203802306137373,
+          "2": 0.0031279085916955385,
+          "3": 0.005867441199730261,
+          "4": 0.002979999617948814
+        }
+      },
+      "dominant_pre_break_only": {
+        "ts_auc_delta": 0.0030139160252350417,
+        "per_fold_delta": {
+          "0": 0.002258478673495934,
+          "1": 0.0057686909621521565,
+          "2": 0.00285142122248927,
+          "3": 0.00405452325975264,
+          "4": 7.470916518392823e-05
+        }
+      }
+    },
+    "Student_blend_vs_seedclone_blend": {
+      "whole_dev": {
+        "ts_auc_delta": 0.0019647342215786123,
+        "per_fold_delta": {
+          "0": 0.00023425187327119623,
+          "1": 0.0027389940665150103,
+          "2": 0.0012001490609542254,
+          "3": 0.004217473729257182,
+          "4": 0.0013709012381389885
+        }
+      },
+      "dominant_cell": {
+        "ts_auc_delta": 0.0033130843817504863,
+        "per_fold_delta": {
+          "0": 0.00035670278342825323,
+          "1": 0.005915022916316404,
+          "2": 0.00251003510091119,
+          "3": 0.0050863258568452085,
+          "4": 0.00303525631098589
+        }
+      },
+      "dominant_never_break_only": {
+        "ts_auc_delta": 0.0034797660210674763,
+        "per_fold_delta": {
+          "0": 0.000512310785396819,
+          "1": 0.005521169249128488,
+          "2": 0.0023612672484624175,
+          "3": 0.00569795885869484,
+          "4": 0.003741229742613039
+        }
+      },
+      "dominant_pre_break_only": {
+        "ts_auc_delta": 0.0028325615668726156,
+        "per_fold_delta": {
+          "0": -7.750301884978938e-05,
+          "1": 0.007085166783340813,
+          "2": 0.002936038947915942,
+          "3": 0.003336611445927229,
+          "4": 0.0009631385387389724
+        }
+      }
+    }
+  },
+  "per_fold_contrasts": {
+    "Student_raw_vs_Arm_B::whole_dev": {
+      "cut": "whole_dev",
+      "per_fold": {
+        "0": -0.009756965156203501,
+        "1": 0.016417129288951893,
+        "2": -0.0007034688531241118,
+        "3": 0.01639443241703864,
+        "4": -0.0035715460082065276
+      },
+      "positive_folds": 2,
+      "n_folds": 5,
+      "mean": 0.0037559163376912784,
+      "sd": 0.012002230928703932,
+      "min": -0.009756965156203501,
+      "max": 0.016417129288951893,
+      "t_stat": 0.6997435975668791
+    },
+    "Student_raw_vs_Arm_B::dominant_cell": {
+      "cut": "dominant_cell",
+      "per_fold": {
+        "0": -0.007162905348524595,
+        "1": 0.03167549729550656,
+        "2": 0.00682328153711087,
+        "3": 0.020306434716241828,
+        "4": 0.002385169895966155
+      },
+      "positive_folds": 4,
+      "n_folds": 5,
+      "mean": 0.010805495619260164,
+      "sd": 0.01529254852299483,
+      "min": -0.007162905348524595,
+      "max": 0.03167549729550656,
+      "t_stat": 1.5799735864111002
+    },
+    "Student_blend_vs_RT600::whole_dev": {
+      "cut": "whole_dev",
+      "per_fold": {
+        "0": 0.0005445444656769771,
+        "1": 0.0028238453218834003,
+        "2": 0.0014287090418986237,
+        "3": 0.004354751382264932,
+        "4": 0.0007447712479115021
+      },
+      "positive_folds": 5,
+      "n_folds": 5,
+      "mean": 0.001979324291927087,
+      "sd": 0.001600137584195164,
+      "min": 0.0005445444656769771,
+      "max": 0.004354751382264932,
+      "t_stat": 2.765951946870708
+    },
+    "Student_blend_vs_RT600::dominant_cell": {
+      "cut": "dominant_cell",
+      "per_fold": {
+        "0": 0.0010999593521360262,
+        "1": 0.0053460553876527594,
+        "2": 0.003056345513372305,
+        "3": 0.005397861655551339,
+        "4": 0.002241702089073039
+      },
+      "positive_folds": 5,
+      "n_folds": 5,
+      "mean": 0.0034283847995570937,
+      "sd": 0.0019055506894838053,
+      "min": 0.0010999593521360262,
+      "max": 0.005397861655551339,
+      "t_stat": 4.023037281109181
+    },
+    "Student_blend_vs_seedclone_blend::whole_dev": {
+      "cut": "whole_dev",
+      "per_fold": {
+        "0": 0.00023425187327119623,
+        "1": 0.0027389940665150103,
+        "2": 0.0012001490609542254,
+        "3": 0.004217473729257182,
+        "4": 0.0013709012381389885
+      },
+      "positive_folds": 5,
+      "n_folds": 5,
+      "mean": 0.0019523539936273204,
+      "sd": 0.001549624509727079,
+      "min": 0.00023425187327119623,
+      "max": 0.004217473729257182,
+      "t_stat": 2.817196177842303
+    },
+    "Student_blend_vs_seedclone_blend::dominant_cell": {
+      "cut": "dominant_cell",
+      "per_fold": {
+        "0": 0.00035670278342825323,
+        "1": 0.005915022916316404,
+        "2": 0.00251003510091119,
+        "3": 0.0050863258568452085,
+        "4": 0.00303525631098589
+      },
+      "positive_folds": 5,
+      "n_folds": 5,
+      "mean": 0.003380668593697389,
+      "sd": 0.0021996533861833967,
+      "min": 0.00035670278342825323,
+      "max": 0.005915022916316404,
+      "t_stat": 3.4366345317805957
+    }
+  },
+  "gain_scope": {
+    "neverbreak_net_rate_vs_rt600": 0.0037064933005629113,
+    "prebreak_net_rate_vs_rt600": 0.0015442963232121364,
+    "whole_dev_damage_rate_vs_rt600": 0.014906478463145235,
+    "gate_scope": "dominant_pre_break_only",
+    "note": "The pre-break pair net is ~0 while the never-break pair net is positive: this is a never-break-cut gain, not a broad one. The damage-rate gate is applied to the dominant pre-break cut only; the whole-dev damage rate is reported here because it sits above the same numeric threshold and must not be read as gated."
+  },
+  "within_t_rank_rho": {
+    "student_raw_vs_Arm_B_RT990": 0.6054881490314641,
+    "student_raw_vs_RT600": 0.693948880992399,
+    "Arm_C_RT991_vs_Arm_B_RT990": 0.4137099542057281,
+    "student_blend_vs_seedclone_blend": 0.9910265713965025
+  },
+  "pair_flow_vs_rt600": {
+    "whole_dev": {
+      "total_pairs_sampled": 63194,
+      "used_t_groups": 999,
+      "repairs": 1126,
+      "damage": 942,
+      "net_pair_lift": 184,
+      "repair_rate": 0.017818147292464476,
+      "damage_rate": 0.014906478463145235,
+      "net_rate": 0.0029116688293192392,
+      "sample_base_auc": 0.6358831534639364,
+      "sample_candidate_auc": 0.6387948222932557,
+      "both_right": 39242,
+      "both_wrong": 21884
+    },
+    "dominant_cell": {
+      "total_pairs_sampled": 50458,
+      "used_t_groups": 799,
+      "repairs": 820,
+      "damage": 655,
+      "net_pair_lift": 165,
+      "repair_rate": 0.016251139561615602,
+      "damage_rate": 0.012981093186412463,
+      "net_rate": 0.0032700463752031394,
+      "sample_base_auc": 0.6716477070038448,
+      "sample_candidate_auc": 0.6749177533790479,
+      "both_right": 33235,
+      "both_wrong": 15748
+    },
+    "dominant_never_break_only": {
+      "total_pairs_sampled": 50452,
+      "used_t_groups": 799,
+      "repairs": 843,
+      "damage": 656,
+      "net_pair_lift": 187,
+      "repair_rate": 0.01670895108221676,
+      "damage_rate": 0.01300245778165385,
+      "net_rate": 0.0037064933005629113,
+      "sample_base_auc": 0.6736898438119401,
+      "sample_candidate_auc": 0.677396337112503,
+      "both_right": 33333,
+      "both_wrong": 15620
+    },
+    "dominant_pre_break_only": {
+      "total_pairs_sampled": 44033,
+      "used_t_groups": 784,
+      "repairs": 645,
+      "damage": 577,
+      "net_pair_lift": 68,
+      "repair_rate": 0.014648104830468058,
+      "damage_rate": 0.013103808507255921,
+      "net_rate": 0.0015442963232121364,
+      "sample_base_auc": 0.6775600118093248,
+      "sample_candidate_auc": 0.679104308132537,
+      "both_right": 29258,
+      "both_wrong": 13553
+    }
+  },
+  "pair_flow_vs_seedclone_blend": {
+    "whole_dev": {
+      "total_pairs_sampled": 63194,
+      "used_t_groups": 999,
+      "repairs": 1275,
+      "damage": 1104,
+      "net_pair_lift": 171,
+      "repair_rate": 0.020175966072728424,
+      "damage_rate": 0.017470012975915435,
+      "net_rate": 0.0027059530968129887,
+      "sample_base_auc": 0.6360888691964427,
+      "sample_candidate_auc": 0.6387948222932557,
+      "both_right": 39093,
+      "both_wrong": 21722
+    },
+    "dominant_cell": {
+      "total_pairs_sampled": 50458,
+      "used_t_groups": 799,
+      "repairs": 918,
+      "damage": 784,
+      "net_pair_lift": 134,
+      "repair_rate": 0.018193348923857464,
+      "damage_rate": 0.015537674897934917,
+      "net_rate": 0.0026556740259225495,
+      "sample_base_auc": 0.6722620793531253,
+      "sample_candidate_auc": 0.6749177533790479,
+      "both_right": 33137,
+      "both_wrong": 15619
+    },
+    "dominant_never_break_only": {
+      "total_pairs_sampled": 50452,
+      "used_t_groups": 799,
+      "repairs": 969,
+      "damage": 765,
+      "net_pair_lift": 204,
+      "repair_rate": 0.019206374375644177,
+      "damage_rate": 0.015162927138666455,
+      "net_rate": 0.004043447236977722,
+      "sample_base_auc": 0.6733528898755252,
+      "sample_candidate_auc": 0.677396337112503,
+      "both_right": 33207,
+      "both_wrong": 15511
+    },
+    "dominant_pre_break_only": {
+      "total_pairs_sampled": 44033,
+      "used_t_groups": 784,
+      "repairs": 737,
+      "damage": 627,
+      "net_pair_lift": 110,
+      "repair_rate": 0.01673744691481389,
+      "damage_rate": 0.014239320509617787,
+      "net_rate": 0.002498126405196103,
+      "sample_base_auc": 0.6766061817273409,
+      "sample_candidate_auc": 0.679104308132537,
+      "both_right": 29166,
+      "both_wrong": 13503
+    }
+  },
+  "rt1257_combo": {
+    "catboost_oof_dir": "/path/to/workspace/structural-break-learner-diversity-2026/research/oof",
+    "cat300_path": "/path/to/workspace/structural-break-learner-diversity-2026/research/oof/RT-1255.npy",
+    "cat413_path": "/path/to/workspace/structural-break-learner-diversity-2026/research/oof/RT-1254.npy",
+    "cat300_sha256": "26a6d8474f4edfe5df9cd83b5d835cb3ba13cd39a2917473f95ec881df1ca8ac",
+    "cat413_sha256": "3025da0531aab9af2c65235106e4c426328c808aaea8a3d53c00375a842ad5cf",
+    "scores": {
+      "RT600_7stream": {
+        "whole_dev": {
+          "ts_auc": 0.6256269345441687,
+          "n_rows": 4032524,
+          "per_fold": {
+            "0": 0.638276215299891,
+            "1": 0.6204019581662752,
+            "2": 0.6339304299070194,
+            "3": 0.6175075878311903,
+            "4": 0.6189405182117643
+          }
+        },
+        "dominant_cell": {
+          "ts_auc": 0.6642770992472101,
+          "n_rows": 2392213,
+          "per_fold": {
+            "0": 0.6777110028296777,
+            "1": 0.6587117124203369,
+            "2": 0.6822401354803915,
+            "3": 0.6525808208410008,
+            "4": 0.6494259427009165
+          }
+        },
+        "dominant_never_break_only": {
+          "ts_auc": 0.6654308804622359,
+          "n_rows": 1955421,
+          "per_fold": {
+            "0": 0.6768008195237858,
+            "1": 0.6612034250766818,
+            "2": 0.6733791235646183,
+            "3": 0.6618203414694203,
+            "4": 0.6533560507383915
+          }
+        },
+        "dominant_pre_break_only": {
+          "ts_auc": 0.6609508888771348,
+          "n_rows": 1104487,
+          "per_fold": {
+            "0": 0.6802507621451054,
+            "1": 0.6513088048784923,
+            "2": 0.7076140660866426,
+            "3": 0.6261490842528404,
+            "4": 0.6378905982439232
+          }
+        }
+      },
+      "RT1257_catboost_hybrid": {
+        "whole_dev": {
+          "ts_auc": 0.6275779836443426,
+          "n_rows": 4032524,
+          "per_fold": {
+            "0": 0.6404303396152772,
+            "1": 0.620692694480152,
+            "2": 0.6351380232402147,
+            "3": 0.6207459541776635,
+            "4": 0.622181306546185
+          }
+        },
+        "dominant_cell": {
+          "ts_auc": 0.6666581120654388,
+          "n_rows": 2392213,
+          "per_fold": {
+            "0": 0.680628702442108,
+            "1": 0.6597402611897579,
+            "2": 0.6828955343519543,
+            "3": 0.6561399824989158,
+            "4": 0.6535215694021457
+          }
+        },
+        "dominant_never_break_only": {
+          "ts_auc": 0.6674920759265627,
+          "n_rows": 1955421,
+          "per_fold": {
+            "0": 0.6799670574840929,
+            "1": 0.6607618386390103,
+            "2": 0.6734370819876537,
+            "3": 0.6660194324264985,
+            "4": 0.6574018679442895
+          }
+        },
+        "dominant_pre_break_only": {
+          "ts_auc": 0.6642538960780291,
+          "n_rows": 1104487,
+          "per_fold": {
+            "0": 0.6824749447701607,
+            "1": 0.6567051425999836,
+            "2": 0.7099802642017223,
+            "3": 0.627877583547331,
+            "4": 0.642132421864015
+          }
+        }
+      },
+      "RT1257_clone_control": {
+        "whole_dev": {
+          "ts_auc": 0.6252251889137025,
+          "n_rows": 4032524,
+          "per_fold": {
+            "0": 0.6372651492611827,
+            "1": 0.6204114899152263,
+            "2": 0.6325444789502865,
+            "3": 0.6178966186123694,
+            "4": 0.6190345579700758
+          }
+        },
+        "dominant_cell": {
+          "ts_auc": 0.6634630778434508,
+          "n_rows": 2392213,
+          "per_fold": {
+            "0": 0.6767127066732009,
+            "1": 0.6575812109658047,
+            "2": 0.6811965338356013,
+            "3": 0.6516784791491659,
+            "4": 0.6495686395342181
+          }
+        },
+        "dominant_never_break_only": {
+          "ts_auc": 0.664379223360674,
+          "n_rows": 1955421,
+          "per_fold": {
+            "0": 0.6753765841070742,
+            "1": 0.6601451400083758,
+            "2": 0.6724143178169533,
+            "3": 0.6604588356660293,
+            "4": 0.6531906078449032
+          }
+        },
+        "dominant_pre_break_only": {
+          "ts_auc": 0.6608219421756133,
+          "n_rows": 1104487,
+          "per_fold": {
+            "0": 0.6804409993279955,
+            "1": 0.649963747693035,
+            "2": 0.7063448286290672,
+            "3": 0.6265602852582377,
+            "4": 0.6389377226032652
+          }
+        }
+      },
+      "RT1257_plus_residual_student": {
+        "whole_dev": {
+          "ts_auc": 0.6289981090537223,
+          "n_rows": 4032524,
+          "per_fold": {
+            "0": 0.6402807313140136,
+            "1": 0.6232441589338197,
+            "2": 0.6360341990907918,
+            "3": 0.6244624506466419,
+            "4": 0.6222470711418149
+          }
+        },
+        "dominant_cell": {
+          "ts_auc": 0.6693692719534188,
+          "n_rows": 2392213,
+          "per_fold": {
+            "0": 0.6808908310986199,
+            "1": 0.6646743061017973,
+            "2": 0.6854430676910662,
+            "3": 0.6607357642993047,
+            "4": 0.655090055868453
+          }
+        },
+        "dominant_never_break_only": {
+          "ts_auc": 0.6703525192593901,
+          "n_rows": 1955421,
+          "per_fold": {
+            "0": 0.6797261793571102,
+            "1": 0.6657774278508981,
+            "2": 0.6761365905828114,
+            "3": 0.6710078423054677,
+            "4": 0.6597118168863823
+          }
+        },
+        "dominant_pre_break_only": {
+          "ts_auc": 0.6665346900215251,
+          "n_rows": 1104487,
+          "per_fold": {
+            "0": 0.6841406546128295,
+            "1": 0.6613969184402644,
+            "2": 0.7120926091405221,
+            "3": 0.6313501640077902,
+            "4": 0.6415246259028257
+          }
+        }
+      },
+      "clone_plus_seed_control": {
+        "whole_dev": {
+          "ts_auc": 0.6253103595893861,
+          "n_rows": 4032524,
+          "per_fold": {
+            "0": 0.63869100251067,
+            "1": 0.6201322837109404,
+            "2": 0.6322249776275821,
+            "3": 0.618448992565988,
+            "4": 0.6180853865046111
+          }
+        },
+        "dominant_cell": {
+          "ts_auc": 0.6635343805310416,
+          "n_rows": 2392213,
+          "per_fold": {
+            "0": 0.6783625731418477,
+            "1": 0.656505935671018,
+            "2": 0.6802367128336657,
+            "3": 0.653033705501057,
+            "4": 0.6490397071711826
+          }
+        },
+        "dominant_never_break_only": {
+          "ts_auc": 0.6644773977741818,
+          "n_rows": 1955421,
+          "per_fold": {
+            "0": 0.676963547044408,
+            "1": 0.658865105451067,
+            "2": 0.6716039520596988,
+            "3": 0.661973343162181,
+            "4": 0.6528773934182909
+          }
+        },
+        "dominant_pre_break_only": {
+          "ts_auc": 0.6608157769583338,
+          "n_rows": 1104487,
+          "per_fold": {
+            "0": 0.6822663906921129,
+            "1": 0.6494968145700181,
+            "2": 0.7049570353996563,
+            "3": 0.6274598519046232,
+            "4": 0.637775631894845
+          }
+        }
+      }
+    },
+    "mean_scores": {
+      "RT600_7stream": {
+        "mean_ts_auc": 0.6258113418832281,
+        "per_fold_ts_auc": {
+          "0": 0.638276215299891,
+          "1": 0.6204019581662752,
+          "2": 0.6339304299070194,
+          "3": 0.6175075878311903,
+          "4": 0.6189405182117643
+        }
+      },
+      "RT1257_catboost_hybrid": {
+        "mean_ts_auc": 0.6278376636118985,
+        "per_fold_ts_auc": {
+          "0": 0.6404303396152772,
+          "1": 0.620692694480152,
+          "2": 0.6351380232402147,
+          "3": 0.6207459541776635,
+          "4": 0.622181306546185
+        }
+      },
+      "RT1257_clone_control": {
+        "mean_ts_auc": 0.6254304589418282,
+        "per_fold_ts_auc": {
+          "0": 0.6372651492611827,
+          "1": 0.6204114899152263,
+          "2": 0.6325444789502865,
+          "3": 0.6178966186123694,
+          "4": 0.6190345579700758
+        }
+      },
+      "RT1257_plus_residual_student": {
+        "mean_ts_auc": 0.6292537222254164,
+        "per_fold_ts_auc": {
+          "0": 0.6402807313140136,
+          "1": 0.6232441589338197,
+          "2": 0.6360341990907918,
+          "3": 0.6244624506466419,
+          "4": 0.6222470711418149
+        }
+      },
+      "clone_plus_seed_control": {
+        "mean_ts_auc": 0.6255165285839583,
+        "per_fold_ts_auc": {
+          "0": 0.63869100251067,
+          "1": 0.6201322837109404,
+          "2": 0.6322249776275821,
+          "3": 0.618448992565988,
+          "4": 0.6180853865046111
+        }
+      }
+    },
+    "deltas": {
+      "RT1257_vs_RT600": {
+        "whole_dev": {
+          "ts_auc_delta": 0.0019510491001738517,
+          "per_fold_delta": {
+            "0": 0.0021541243153861966,
+            "1": 0.00029073631387677157,
+            "2": 0.0012075933331953115,
+            "3": 0.0032383663464732315,
+            "4": 0.0032407883344206523
+          }
+        },
+        "dominant_cell": {
+          "ts_auc_delta": 0.002381012818228667,
+          "per_fold_delta": {
+            "0": 0.00291769961243038,
+            "1": 0.001028548769421045,
+            "2": 0.0006553988715627401,
+            "3": 0.003559161657915033,
+            "4": 0.004095626701229205
+          }
+        },
+        "dominant_never_break_only": {
+          "ts_auc_delta": 0.002061195464326815,
+          "per_fold_delta": {
+            "0": 0.003166237960307128,
+            "1": -0.0004415864376715595,
+            "2": 5.795842303546461e-05,
+            "3": 0.004199090957078266,
+            "4": 0.004045817205897917
+          }
+        },
+        "dominant_pre_break_only": {
+          "ts_auc_delta": 0.00330300720089427,
+          "per_fold_delta": {
+            "0": 0.0022241826250553043,
+            "1": 0.0053963377214912844,
+            "2": 0.002366198115079765,
+            "3": 0.001728499294490593,
+            "4": 0.004241823620091734
+          }
+        }
+      },
+      "RT1257_vs_clone_control": {
+        "whole_dev": {
+          "ts_auc_delta": 0.0023527947306400954,
+          "per_fold_delta": {
+            "0": 0.0031651903540944604,
+            "1": 0.00028120456492564117,
+            "2": 0.0025935442899281957,
+            "3": 0.0028493355652940977,
+            "4": 0.003146748576109193
+          }
+        },
+        "dominant_cell": {
+          "ts_auc_delta": 0.003195034221987969,
+          "per_fold_delta": {
+            "0": 0.00391599576890711,
+            "1": 0.0021590502239532405,
+            "2": 0.0016990005163529665,
+            "3": 0.004461503349749929,
+            "4": 0.003952929867927613
+          }
+        },
+        "dominant_never_break_only": {
+          "ts_auc_delta": 0.0031128525658886685,
+          "per_fold_delta": {
+            "0": 0.004590473377018678,
+            "1": 0.0006166986306345157,
+            "2": 0.001022764170700463,
+            "3": 0.005560596760469272,
+            "4": 0.004211260099386216
+          }
+        },
+        "dominant_pre_break_only": {
+          "ts_auc_delta": 0.0034319539024157963,
+          "per_fold_delta": {
+            "0": 0.002033945442165175,
+            "1": 0.0067413949069485835,
+            "2": 0.00363543557265511,
+            "3": 0.0013172982890933271,
+            "4": 0.003194699260749778
+          }
+        }
+      },
+      "RT1257_plus_student_vs_RT1257": {
+        "whole_dev": {
+          "ts_auc_delta": 0.0014201254093797466,
+          "per_fold_delta": {
+            "0": -0.0001496083012635374,
+            "1": 0.002551464453667718,
+            "2": 0.0008961758505771078,
+            "3": 0.003716496468978314,
+            "4": 6.576459562990244e-05
+          }
+        },
+        "dominant_cell": {
+          "ts_auc_delta": 0.002711159887979986,
+          "per_fold_delta": {
+            "0": 0.000262128656511873,
+            "1": 0.004934044912039415,
+            "2": 0.0025475333391119515,
+            "3": 0.004595781800388887,
+            "4": 0.0015684864663073617
+          }
+        },
+        "dominant_never_break_only": {
+          "ts_auc_delta": 0.0028604433328274226,
+          "per_fold_delta": {
+            "0": -0.00024087812698270206,
+            "1": 0.005015589211887828,
+            "2": 0.0026995085951576625,
+            "3": 0.004988409878969202,
+            "4": 0.0023099489420927988
+          }
+        },
+        "dominant_pre_break_only": {
+          "ts_auc_delta": 0.0022807939434960067,
+          "per_fold_delta": {
+            "0": 0.0016657098426687833,
+            "1": 0.0046917758402807985,
+            "2": 0.0021123449387997484,
+            "3": 0.0034725804604591737,
+            "4": -0.0006077959611893169
+          }
+        }
+      },
+      "RT1257_plus_student_vs_clone_plus_seed": {
+        "whole_dev": {
+          "ts_auc_delta": 0.003687749464336254,
+          "per_fold_delta": {
+            "0": 0.0015897288033436263,
+            "1": 0.0031118752228792568,
+            "2": 0.003809221463209722,
+            "3": 0.0060134580806538995,
+            "4": 0.0041616846372037886
+          }
+        },
+        "dominant_cell": {
+          "ts_auc_delta": 0.005834891422377142,
+          "per_fold_delta": {
+            "0": 0.0025282579567722507,
+            "1": 0.008168370430779337,
+            "2": 0.005206354857400508,
+            "3": 0.007702058798247702,
+            "4": 0.006050348697270391
+          }
+        },
+        "dominant_never_break_only": {
+          "ts_auc_delta": 0.005875121485208301,
+          "per_fold_delta": {
+            "0": 0.00276263231270224,
+            "1": 0.006912322399831083,
+            "2": 0.0045326385231125865,
+            "3": 0.00903449914328669,
+            "4": 0.006834423468091377
+          }
+        },
+        "dominant_pre_break_only": {
+          "ts_auc_delta": 0.005718913063191278,
+          "per_fold_delta": {
+            "0": 0.0018742639207165457,
+            "1": 0.011900103870246315,
+            "2": 0.007135573740865819,
+            "3": 0.0038903121031670373,
+            "4": 0.003748994007980677
+          }
+        }
+      },
+      "RT1257_plus_student_vs_RT600": {
+        "whole_dev": {
+          "ts_auc_delta": 0.0033711745095535983,
+          "per_fold_delta": {
+            "0": 0.0020045160141226592,
+            "1": 0.0028422007675444894,
+            "2": 0.0021037691837724193,
+            "3": 0.006954862815451546,
+            "4": 0.0033065529300505547
+          }
+        },
+        "dominant_cell": {
+          "ts_auc_delta": 0.005092172706208653,
+          "per_fold_delta": {
+            "0": 0.003179828268942253,
+            "1": 0.00596259368146046,
+            "2": 0.0032029322106746916,
+            "3": 0.00815494345830392,
+            "4": 0.005664113167536566
+          }
+        },
+        "dominant_never_break_only": {
+          "ts_auc_delta": 0.0049216387971542375,
+          "per_fold_delta": {
+            "0": 0.0029253598333244257,
+            "1": 0.004574002774216268,
+            "2": 0.002757467018193127,
+            "3": 0.009187500836047469,
+            "4": 0.006355766147990716
+          }
+        },
+        "dominant_pre_break_only": {
+          "ts_auc_delta": 0.005583801144390277,
+          "per_fold_delta": {
+            "0": 0.0038898924677240876,
+            "1": 0.010088113561772083,
+            "2": 0.0044785430538795135,
+            "3": 0.005201079754949767,
+            "4": 0.0036340276589024167
+          }
+        }
+      }
+    },
+    "mean_deltas": {
+      "RT1257_minus_RT600": 0.002026321728670455,
+      "RT1257_minus_clone_control": 0.002407204670070273,
+      "RT1257_plus_student_minus_RT1257": 0.001416058613517901,
+      "RT1257_plus_student_minus_clone_plus_seed": 0.003737193641458081,
+      "RT1257_plus_student_minus_RT600": 0.003442380342188356
+    },
+    "pair_flow_vs_rt1257": {
+      "whole_dev": {
+        "total_pairs_sampled": 63194,
+        "used_t_groups": 999,
+        "repairs": 1124,
+        "damage": 1009,
+        "net_pair_lift": 115,
+        "repair_rate": 0.017786498718232742,
+        "damage_rate": 0.01596670569990822,
+        "net_rate": 0.0018197930183245245,
+        "sample_base_auc": 0.6385416336994019,
+        "sample_candidate_auc": 0.6403614267177263,
+        "both_right": 39343,
+        "both_wrong": 21718
+      },
+      "dominant_cell": {
+        "total_pairs_sampled": 50458,
+        "used_t_groups": 799,
+        "repairs": 781,
+        "damage": 654,
+        "net_pair_lift": 127,
+        "repair_rate": 0.01547821950929486,
+        "damage_rate": 0.012961274723532442,
+        "net_rate": 0.002516944785762416,
+        "sample_base_auc": 0.6730944547940861,
+        "sample_candidate_auc": 0.6756113995798486,
+        "both_right": 33309,
+        "both_wrong": 15714
+      },
+      "dominant_never_break_only": {
+        "total_pairs_sampled": 50452,
+        "used_t_groups": 799,
+        "repairs": 845,
+        "damage": 664,
+        "net_pair_lift": 181,
+        "repair_rate": 0.016748592721794974,
+        "damage_rate": 0.013161024339966701,
+        "net_rate": 0.0035875683818282723,
+        "sample_base_auc": 0.6744628557837152,
+        "sample_candidate_auc": 0.6780504241655435,
+        "both_right": 33364,
+        "both_wrong": 15579
+      },
+      "dominant_pre_break_only": {
+        "total_pairs_sampled": 44033,
+        "used_t_groups": 784,
+        "repairs": 678,
+        "damage": 570,
+        "net_pair_lift": 108,
+        "repair_rate": 0.015397542752026889,
+        "damage_rate": 0.01294483682692526,
+        "net_rate": 0.0024527059251016285,
+        "sample_base_auc": 0.6784230009311198,
+        "sample_candidate_auc": 0.6808757068562215,
+        "both_right": 29303,
+        "both_wrong": 13482
+      }
+    },
+    "pair_flow_vs_clone_plus_seed": {
+      "whole_dev": {
+        "total_pairs_sampled": 63194,
+        "used_t_groups": 999,
+        "repairs": 2320,
+        "damage": 1986,
+        "net_pair_lift": 334,
+        "repair_rate": 0.036712346108807796,
+        "damage_rate": 0.03142703421210875,
+        "net_rate": 0.0052853118966990536,
+        "sample_base_auc": 0.6350761148210273,
+        "sample_candidate_auc": 0.6403614267177263,
+        "both_right": 38147,
+        "both_wrong": 20741
+      },
+      "dominant_cell": {
+        "total_pairs_sampled": 50458,
+        "used_t_groups": 799,
+        "repairs": 1599,
+        "damage": 1387,
+        "net_pair_lift": 212,
+        "repair_rate": 0.03168972214515042,
+        "damage_rate": 0.027488208014586388,
+        "net_rate": 0.0042015141305640335,
+        "sample_base_auc": 0.6714098854492846,
+        "sample_candidate_auc": 0.6756113995798486,
+        "both_right": 32491,
+        "both_wrong": 14981
+      },
+      "dominant_never_break_only": {
+        "total_pairs_sampled": 50452,
+        "used_t_groups": 799,
+        "repairs": 1659,
+        "damage": 1406,
+        "net_pair_lift": 253,
+        "repair_rate": 0.032882740030127644,
+        "damage_rate": 0.027868072623483706,
+        "net_rate": 0.005014667406643939,
+        "sample_base_auc": 0.6730357567588996,
+        "sample_candidate_auc": 0.6780504241655435,
+        "both_right": 32550,
+        "both_wrong": 14837
+      },
+      "dominant_pre_break_only": {
+        "total_pairs_sampled": 44033,
+        "used_t_groups": 784,
+        "repairs": 1349,
+        "damage": 1178,
+        "net_pair_lift": 171,
+        "repair_rate": 0.030636113823723117,
+        "damage_rate": 0.026752662775645537,
+        "net_rate": 0.0038834510480775784,
+        "sample_base_auc": 0.6769922558081439,
+        "sample_candidate_auc": 0.6808757068562215,
+        "both_right": 28632,
+        "both_wrong": 12874
+      }
+    },
+    "note": "Uses original dev OOF arrays RT-1254/RT-1255 from the CatBoost specialist research directory, not the deployment final10k artifacts."
+  },
+  "oracle_retention": {
+    "oracle_residual_cell_lift_vs_Arm_B": 0.03830251872471446,
+    "student_raw_cell_lift_vs_Arm_B": 0.010487661543177484,
+    "retention_fraction": 0.27381127644773884,
+    "note": "NOT a like-for-like ratio. The denominator is the oracle residual measured on the global (fold-contaminated) RT-991 over the dominant cell; the numerator is a nested fold-pure student trained on full-population residual labels. The two estimands differ, so this fraction is an order-of-magnitude indication only and must not be quoted as a retention rate."
+  },
+  "gates": {
+    "max_prebreak_damage_rate": 0.015,
+    "observed_prebreak_damage_rate_vs_rt600": 0.013103808507255921,
+    "prebreak_damage_gate_passed": true,
+    "observed_neverbreak_net_rate_vs_rt600": 0.0037064933005629113,
+    "neverbreak_net_positive": true,
+    "whole_dev_marginal_vs_seedclone_blend": 0.0019647342215786123,
+    "whole_dev_gain_vs_rt600": 0.001987028651025735,
+    "dominant_cell_gain_vs_rt600": 0.0033447562830145605
+  },
+  "verdict": "PROMOTE for confirmation only: the nested 500-feature residual student beats the seed-clone blend marginally, has positive never-break pair net, and clears the pre-break damage gate. The light RT-1257 complementarity check is also positive: +student is +0.001416 mean whole-dev TS-AUC over the CatBoost hybrid."
+}
