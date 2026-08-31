@@ -13,7 +13,7 @@ Purpose: determine what can be verified from repository/GitHub evidence before R
 
 **Fresh Crunch test against shipped/post-packaging build:** **VERIFIED / PASSED.** PR #14 follow-up ran `crunch test` with Crunch CLI 11.11.0 on 2026-08-31T01:07:46Z against entrypoint SHA `05eafb66f4589f5b426f4af43779f428f7a90f2d64b423530d6f315a798e888b`. The runner completed inference, saved 50,983 predictions, and passed the determinism check.
 
-**Formal production promotion:** **PENDING FINAL VALIDATION / OWNER PROMOTION.** The fresh local Crunch-test gap is closed, but RT-600 remains the formal production anchor until the latest consolidation head passes GitHub CI and the production tag/status change are deliberately made.
+**Formal production promotion:** **PENDING OWNER PROMOTION.** The fresh local Crunch-test gap and PR #14 follow-up CI are closed, but RT-600 remains the formal production anchor until the production tag/status changes are deliberately made.
 
 ## Artifact identity evidence
 
@@ -96,7 +96,14 @@ Local CI-equivalent validation after the follow-up changes:
 - `python research/scripts/check_research_hygiene.py`: PASS, 275 experiment rows and no duplicate IDs
 - `pytest -q`: PASS, 692 passed / 79 skipped / 88 warnings
 
-GitHub Actions must still run on the pushed PR head before any remote CI PASS claim is made.
+GitHub Actions validation:
+
+- run: `33347734538`
+- commit: `770d62629a926e33386cac9a3058b9586dbe6710`
+- job: `test`
+- result: PASS in 2m53s
+
+Before merge, the PR check for the latest head must still be green; any later documentation-only update creates a new head that GitHub must validate separately.
 
 ## Required promotion gate
 
@@ -107,7 +114,7 @@ Before changing the formal production anchor from RT-600 to RT-1257:
 3. Run `crunch test` against that exact build. DONE locally on 2026-08-31.
 4. Regenerate `engineering/reports/rt1257_deployment/CRUNCH_TEST.json` so it identifies the entrypoint hash/build manifest it tested. DONE.
 5. Re-run deterministic/prefix/series-independence/streaming-parity/production-contract tests in the clean environment. DONE locally through `pytest -q`; real-store CRF tests skip when the non-redistributable store is absent.
-6. Ensure GitHub CI reaches and passes the intended production test set. PENDING until the PR head is pushed and Actions completes.
+6. Ensure GitHub CI reaches and passes the intended production test set. DONE for PR #14 follow-up commit `770d626` in GitHub Actions run `33347734538`.
 7. Only then create the production promotion tag and change `STATUS.md` from "external champion" + "RT-600 formal anchor" to "RT-1257 production champion." NOT DONE.
 
-Until the remaining gates are evidenced, no consolidation document may claim RT-1257 is GitHub-CI-verified or formally production-promoted.
+Until the remaining owner-promotion gate is evidenced, no consolidation document may claim RT-1257 is formally production-promoted.

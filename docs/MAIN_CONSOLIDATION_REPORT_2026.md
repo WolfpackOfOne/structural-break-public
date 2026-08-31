@@ -10,7 +10,7 @@ The repository has entered research-to-production consolidation. The purpose is 
 
 `main` has **not** been moved by this consolidation at the time of this report.
 
-The current best external model is **RT-1257**, official TS-AUC **0.6290**, versus the RT-600 reference at **0.6268** (+0.0022). A fresh local post-build Crunch test now passes against the final entrypoint hash, but RT-1257 is not yet being called the formal production anchor until the latest consolidation head passes GitHub CI and the owner promotion/tag step is made deliberately.
+The current best external model is **RT-1257**, official TS-AUC **0.6290**, versus the RT-600 reference at **0.6268** (+0.0022). A fresh local post-build Crunch test now passes against the final entrypoint hash, and the PR #14 follow-up CI passed. RT-1257 is still not being called the formal production anchor until the owner promotion/tag step is made deliberately.
 
 The consolidation has also corrected two important scientific/provenance misunderstandings:
 
@@ -151,7 +151,7 @@ A real GitHub Actions run triggered by consolidation PR #13 provides execution e
 
 Therefore the feared LightGBM/Numba/PyArrow import-install failure is not the current blocker.
 
-### LOCAL PASS / GITHUB PENDING — full CI command set
+### PASS — full CI command set
 
 The actual blocker is repository-wide `ruff check .` against a tree containing large historical research surfaces. The consolidation workflow has been changed to:
 
@@ -170,7 +170,14 @@ Local CI-equivalent validation after the follow-up changes:
 - focused parity/audit subset: PASS, 63 passed / 2 skipped
 - `pytest -q`: PASS, 692 passed / 79 skipped / 88 warnings
 
-The revised workflow must still execute on GitHub Actions for the pushed PR head before any remote CI PASS claim is made.
+GitHub Actions validation:
+
+- run: `33347734538`
+- commit: `770d62629a926e33386cac9a3058b9586dbe6710`
+- job: `test`
+- result: PASS in 2m53s
+
+Before merge, the PR check for the latest head must still be green; any later documentation-only update creates a new head that GitHub must validate separately.
 
 ## 7. RT-1257 deployment hygiene
 
@@ -205,7 +212,7 @@ Evidence captured:
 
 ### PENDING — formal production promotion
 
-No `rt1257-production-0.6290` production tag has been created and `STATUS.md` retains RT-600 as the formal production anchor. The fresh local test is now closed; formal promotion still depends on the latest PR head passing GitHub CI and the owner/tag/status promotion step being made explicitly.
+No `rt1257-production-0.6290` production tag has been created and `STATUS.md` retains RT-600 as the formal production anchor. The fresh local test and PR #14 follow-up CI are closed; formal promotion still depends on the owner/tag/status promotion step being made explicitly.
 
 ## 8. Canonical current-state documents
 
@@ -229,7 +236,7 @@ The new documents explicitly distinguish EXTERNAL_CHAMPION, REFERENCE, ACTIVE_CO
 
 | Model | Consolidated status |
 | --- | --- |
-| RT-1257 | EXTERNAL_CHAMPION; fresh local Crunch test passed; production promotion pending CI/tag/owner gate |
+| RT-1257 | EXTERNAL_CHAMPION; fresh local Crunch test passed; production promotion pending tag/owner gate |
 | RT-600 | REFERENCE / FORMAL_PRODUCTION_ANCHOR |
 | RT-1254 / CAT-413 | ACTIVE_COMPONENT |
 | RT-1255 / CAT-300 | ACTIVE_COMPONENT |
@@ -292,13 +299,13 @@ Do not delete branches merely because their science is classified KILL.
 | RT-1257 external provenance | **PASS** | submission #16 record |
 | Manifest/build tracked-code gap classified | **PASS** | direct Git compare, packaging-only tracked diff |
 | Fresh post-build RT-1257 Crunch test | **PASS** | `CRUNCH_TEST.json` regenerated from 2026-08-31 local run |
-| RT-1257 formal production promotion | **PENDING** | depends on GitHub CI and explicit owner/tag/status promotion |
+| RT-1257 formal production promotion | **PENDING** | depends on explicit owner/tag/status promotion |
 | CI dependency installation | **PASS** | actual PR #13 GitHub Actions install step |
-| CI runtime import smoke test | **LOCAL PASS / GITHUB PENDING** | local command passed after editable install |
-| Maintained-code Ruff | **LOCAL PASS / GITHUB PENDING** | `ruff check src tests scripts` |
+| CI runtime import smoke test | **PASS** | local command passed; GitHub Actions run `33347734538` passed |
+| Maintained-code Ruff | **PASS** | `ruff check src tests scripts`; GitHub Actions run `33347734538` passed |
 | Research ledger hygiene script | **PASS** | local script reports 275 rows and no duplicate IDs |
-| pytest full intended suite | **LOCAL PASS / GITHUB PENDING** | `pytest -q`: 692 passed, 79 skipped, 88 warnings |
-| production causality/prefix/independence/determinism gate | **LOCAL PASS / GITHUB PENDING** | test suite passes locally; real-store CRF tests skip where competition store is absent |
+| pytest full intended suite | **PASS** | local `pytest -q`: 692 passed, 79 skipped, 89 warnings; GitHub Actions run `33347734538` passed |
+| production causality/prefix/independence/determinism gate | **PASS** | suite passes locally and in CI; real-store CRF tests skip where competition store is absent |
 | branch tags created for new late milestones | **OPEN** | defer until validation / available safe tag operation |
 | branch deletion | **NOT STARTED BY DESIGN** | must occur only after final merge and reachability check |
 
@@ -306,9 +313,8 @@ Do not delete branches merely because their science is classified KILL.
 
 The consolidation branch must not be merged to `main` while any required item below is unresolved:
 
-1. Revised GitHub CI for the latest PR head has not yet executed to completion.
-2. Formal RT-1257 production promotion/tagging/status change has not been made by the owner; RT-600 remains the formal production anchor until then.
-3. Final branch/tag pruning must wait until after validation and a last unique-history audit.
+1. Formal RT-1257 production promotion/tagging/status change has not been made by the owner; RT-600 remains the formal production anchor until then.
+2. Final branch/tag pruning must wait until after validation and a last unique-history audit.
 
 ## 13. Scientific operating state after consolidation
 
