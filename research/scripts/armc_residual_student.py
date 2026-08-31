@@ -38,6 +38,13 @@ FOLDS = (0, 1, 2, 3, 4)
 FULL = ("m00_core", "m01_seq", "m02_dist", "m03_dyn", "m04_resid", "m06_loc", "m07_bayes")
 SPECIALISTS = ("RT-300", "RT-410", "RT-411", "RT-412", "RT-413", "RT-414", "RT-415")
 SEED_CLONE = "RT-401"
+
+#: Suffix appended to every OOF vector this script loads, set from --oof-suffix.
+#: An alternate-partition run MUST set it: pairing an alt fold partition with
+#: canonical fold-pure vectors is exactly the contamination this program exists
+#: to prevent, and the calibrated-stream cache below is keyed by stream name
+#: alone, so an unsuffixed run would silently reuse canonical calibration.
+OOF_SUFFIX = ""
 FORBIDDEN_TOKENS = (
     "tau",
     "cut",
@@ -311,7 +318,7 @@ def load_nested_teacher_q(oof_dir: Path, rows: dict[str, np.ndarray], outer_fold
     for inner_fold in FOLDS:
         if inner_fold == outer_fold:
             continue
-        path = oof_dir / f"nested_Q_outer{outer_fold}_inner{inner_fold}.npy"
+        path = oof_dir / f"nested_Q_outer{outer_fold}_inner{inner_fold}{OOF_SUFFIX}.npy"
         if not path.exists():
             raise FileNotFoundError(f"missing nested teacher checkpoint: {path}")
         part = np.load(path, mmap_mode="r")
@@ -369,7 +376,7 @@ def fold_purity_check(oof_dir: Path, rows: dict[str, np.ndarray]) -> dict:
             if old_train & {outer_fold, inner_fold}:
                 old_contaminated += 1
 
-            path = oof_dir / f"nested_Q_outer{outer_fold}_inner{inner_fold}.npy"
+            path = oof_dir / f"nested_Q_outer{outer_fold}_inner{inner_fold}{OOF_SUFFIX}.npy"
             if not path.exists():
                 failures.append(
                     {
@@ -640,10 +647,10 @@ def crossfit_calibrate(score: np.ndarray, rows: dict[str, np.ndarray]) -> np.nda
 
 
 def load_calibrated_stream(oof_dir: Path, stream: str, rows: dict[str, np.ndarray]) -> np.ndarray:
-    cached = oof_dir / f"wave5_cal_SCDF_NSEEN_{stream}.npy"
+    cached = oof_dir / f"wave5_cal_SCDF_NSEEN_{stream}{OOF_SUFFIX}.npy"
     if cached.exists():
         return np.load(cached, mmap_mode="r").astype(np.float64)
-    raw = np.load(oof_dir / f"{stream}.npy", mmap_mode="r")
+    raw = np.load(oof_dir / f"{stream}{OOF_SUFFIX}.npy", mmap_mode="r")
     return crossfit_calibrate(raw, rows)
 
 
@@ -821,8 +828,8 @@ def rt1257_combo_analysis(
     cat_dir = args.catboost_oof_dir
     if cat_dir is None:
         return None
-    cat300_path = cat_dir / "RT-1255.npy"
-    cat413_path = cat_dir / "RT-1254.npy"
+    cat300_path = cat_dir / f"RT-1255{OOF_SUFFIX}.npy"
+    cat413_path = cat_dir / f"RT-1254{OOF_SUFFIX}.npy"
     if not cat300_path.exists() or not cat413_path.exists():
         return None
 
@@ -1534,6 +1541,14 @@ def main() -> None:
         type=Path,
         default=ROOT / "research" / "reports" / "armc_residual_student",
     )
+    parser.add_argument(
+        "--oof-suffix",
+        default="",
+        help="suffix for every OOF vector loaded (e.g. '.alt1'). REQUIRED for an "
+             "alternate-partition run -- without it the alt fold partition would "
+             "be paired with canonical fold-pure vectors and canonical "
+             "calibration caches.",
+    )
     parser.add_argument("--eps", type=float, default=EPS)
     parser.add_argument("--seed", type=int, default=20260830)
     parser.add_argument("--pair-seed", type=int, default=20260830)
@@ -1548,6 +1563,23 @@ def main() -> None:
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--force-merge", action="store_true")
     args = parser.parse_args()
+
+    global OOF_SUFFIX
+    OOF_SUFFIX = args.oof_suffix
+    if OOF_SUFFIX:
+        print(f"OOF_SUFFIX={OOF_SUFFIX!r} -- loading partition-suffixed vectors",
+              flush=True)
+        # The default --out-dir is the CANONICAL report directory and several of
+        # its files are tracked.  A partition run that keeps the default would
+        # overwrite canonical results with alternate-partition ones, which is the
+        # same class of mistake as loading canonical vectors under alt folds.
+        default_out = ROOT / "research" / "reports" / "armc_residual_student"
+        if Path(args.out_dir).resolve() == default_out.resolve():
+            raise SystemExit(
+                f"REFUSING to write partition '{OOF_SUFFIX}' results into the "
+                f"canonical report directory\n  {default_out}\n"
+                f"  Pass an explicit --out-dir, e.g. "
+                f"research/reports/armc_residual_student{OOF_SUFFIX}")
 
     args.data_root = args.data_root.resolve()
     args.folds_path = args.folds_path.resolve()
