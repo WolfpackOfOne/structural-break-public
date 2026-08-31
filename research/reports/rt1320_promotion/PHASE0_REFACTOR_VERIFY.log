@@ -1,0 +1,10 @@
+A. old vs new train_inner_teacher, (outer=0, inner=1)
+   rows equal      : True  (812,939)
+   preds bitwise eq: True  max|diff| 0.000e+00
+
+B. pair booster serves BOTH roles, vs old path for each
+   pair train_folds: [2, 3, 4]
+   vs old (0,1): rows True  preds True  max|diff| 0.000e+00
+   vs old (1,0): rows True  preds True  max|diff| 0.000e+00
+
+VERDICT: REFACTOR IS BITWISE FAITHFUL

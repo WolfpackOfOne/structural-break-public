@@ -301,12 +301,42 @@ is above the 4.7 GB estimated — the estimate counted anonymous memory, the
 measurement is RSS including evictable memmap pages; a second heavy process
 alongside would not be safe. One run, one machine, no repeat.
 
-**Still blocking a real Phase 1 run**, both from §0.5/§0.7:
+**0.9 Both Phase 1 blockers cleared. — DONE 2026-08-31.**
+`wave7_teacher_nested.py` now carries:
 
-1. `cmd_inner_teacher` needs its refuse-if-exists guard. The pilot writes
-   nothing; a real run cannot.
-2. The lever-1 deduplication has to land in `build_nested_Q` as a reviewed
-   change, with the fold-purity sentinel re-run.
+1. **Refuse-if-exists guard.** `cmd_inner_teacher` and the new pair command both
+   check every `nested_Q_*` target *before* spending the fit, and exit 1 with an
+   explanatory message. `--force` overrides, deliberately explicit. Verified: a
+   re-run against an existing vector refuses, and all 20 canonical vectors are
+   untouched.
+2. **Lever-1 deduplication** as `--inner-teacher-pair F G` — fits the `{F,G}`
+   teacher once and writes *both* nested_Q vectors it supports.
+   `--list-inner-pairs` prints the ten distinct jobs. `build_nested_Q` now
+   prefers a cached vector over refitting, with a row-coverage assertion.
+3. The verified memory changes (chunked stack, free X after `ds.construct()`,
+   chunked prediction) and an opt-in `--threads`. The frozen `num_threads=2`
+   remains the default; raising it is an explicit operator choice.
+
+**Bitwise faithfulness verified against the pre-edit version loaded from git:**
+
+| check | result |
+|---|---|
+| old vs new `train_inner_teacher` (0,1) | rows equal, preds bitwise equal, `max|diff| 0.000e+00` |
+| pair booster → fold 1, vs old (0,1) | bitwise equal |
+| pair booster → fold 0, vs old (1,0) | bitwise equal |
+
+**Fold-purity sentinel re-run: PASS** — 0/20 failures under the nested scheme,
+and 20/20 contamination still detected under the old scheme, so the sentinel
+retains its power to catch the RT-992/RT-993 defect.
+
+Lint: 20 ruff findings vs 21 before, no new categories — all pre-existing and
+untouched.
+
+Artifacts: `research/scripts/rt1320_phase0_verify_refactor.py`,
+`reports/rt1320_promotion/PHASE0_REFACTOR_VERIFY.log`.
+
+**Phase 1 is now unblocked.** The alt1 run is ten `--inner-teacher-pair` jobs,
+one process each, against `folds_alt1.parquet`.
 
 Full record: `reports/rt1320_promotion/PHASE0_PILOT.md`.
 
@@ -589,7 +619,6 @@ identifies never-break false positives as null-model errors.
    weeks of quota, but the §1.4 anti-gaming clause still needs an answer:
    deciding now is what stops a marginal alt1 from being quoted as support.
 
-7. **Lever 1 implementation.** Deduplicating `build_nested_Q` from 20 fits to 10
-   is worth an exact 2x, but it edits a fold-purity-critical function. Do it as
-   its own change, with the purity sentinel re-run and the §0.5 refuse-if-exists
-   guard added at the same time?
+7. ~~**Lever 1 implementation.**~~ **DONE — see §0.9.** Landed with the
+   refuse-if-exists guard, bitwise verification against the pre-edit version,
+   and the fold-purity sentinel re-run.

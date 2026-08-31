@@ -18,25 +18,90 @@ For every OUTER validation fold f:
 No teacher that labels an outer fold's training data ever trained on that
 outer fold.
 
+The 20 ordered (outer, inner) pairs contain only C(5,2)=10 distinct training
+sets, because train_folds depends on the SET {outer, inner} and the subsample
+RNG is fixed.  `--inner-teacher-pair F G` fits each distinct teacher once and
+writes both nested_Q vectors it supports, halving the leg.  Verified bitwise in
+research/reports/rt1320_promotion/PHASE0_COST_REDUCTION.md.
+
 Usage:
     python wave7_teacher_nested.py --fold-purity-test
+    python wave7_teacher_nested.py --list-inner-pairs        # the ten jobs
+    python wave7_teacher_nested.py --inner-teacher-pair 0 1  # ... one per process
     python wave7_teacher_nested.py --outer-fold 0     # ... 1,2,3,4
     python wave7_teacher_nested.py --merge
     python wave7_teacher_nested.py --analyze-nested
 """
 from __future__ import annotations
 
-import argparse, json, time
+import argparse, gc, json, os, time
 
 import numpy as np
 
 from wave5_lib import Ctx, FOLDS, REPORTS, OOFDIR, ts_auc_flat, AGE_BUCKETS
 import sbr.pipeline as PL
-from wave7_d3r import FULL, ARM_B_PARAMS, cell_mask, score_on, bucket, last_row_lookup, augmented_stack
+from wave7_d3r import FULL, ARM_B_PARAMS, cell_mask, score_on, bucket, last_row_lookup
 
 EPS = 1e-6
 MAX_TRAIN_ROWS = 1_000_000
 FOLDS_SET = set(FOLDS)
+
+#: Row-block sizes for the memory-lean paths below.  Verified in
+#: research/reports/rt1320_promotion/PHASE0_COST_REDUCTION.md to leave output
+#: bitwise unchanged; they exist only to keep peak memory down.
+STACK_CHUNK = 100_000
+PRED_CHUNK = 200_000
+
+
+def _refuse_if_exists(path, force):
+    """A nested_Q vector is gitignored and has no version-control copy.
+
+    `cmd_inner_teacher` used to np.save over one without asking.  In a worktree
+    whose research/oof is a symlink into a sibling checkout that silently
+    destroys an input to an already-published result, which is exactly the
+    class of failure `ProductionModel._check_provenance` exists to prevent.
+    """
+    if os.path.exists(path) and not force:
+        raise SystemExit(
+            f"REFUSING TO OVERWRITE {path}\n"
+            f"  It already exists and *.npy is gitignored, so there is no copy to\n"
+            f"  restore from. Move it aside, or pass --force if you truly mean to\n"
+            f"  replace it.")
+
+
+def augmented_stack_chunked(mats, names, keep_idx, rows, final_of_row, chunk=STACK_CHUNK):
+    """`augmented_stack` without the np.concatenate transient.
+
+    The original holds own (n x 500) + fut (n x 500) + the concatenated result
+    (n x 1000) at once -- 7.45 GB at n=1e6.  Preallocating and filling in row
+    blocks holds only the result plus one block.  Pure data movement, so the
+    output is bitwise identical (verified by sha256 at n=250k and n=1e6).
+    """
+    n, k = len(rows), len(keep_idx)
+    X = np.empty((n, 2 * k), dtype=np.float32)
+    uniq, inv = np.unique(final_of_row[rows], return_inverse=True)
+    fut_u = PL._stack(mats, names, uniq, keep_idx)
+    for s0 in range(0, n, chunk):
+        e0 = min(s0 + chunk, n)
+        X[s0:e0, :k] = PL._stack(mats, names, rows[s0:e0], keep_idx)
+        X[s0:e0, k:] = fut_u[inv[s0:e0]]
+    return X
+
+
+def _predict_chunked(booster, rows, mats, names, keep_idx, final_of_row, chunk=PRED_CHUNK):
+    """Predict without materialising a second full-size feature matrix.
+
+    Per-row independent, so bitwise identical to predicting the whole matrix
+    (verified, max|diff| = 0.000e+00).
+    """
+    out = np.empty(len(rows), dtype=np.float64)
+    for s0 in range(0, len(rows), chunk):
+        e0 = min(s0 + chunk, len(rows))
+        Xc = augmented_stack_chunked(mats, names, keep_idx, rows[s0:e0], final_of_row)
+        out[s0:e0] = booster.predict(Xc)
+        del Xc
+        gc.collect()
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -78,39 +143,84 @@ def fold_purity_test():
 
 
 # ---------------------------------------------------------------------------
-def train_inner_teacher(outer_f, inner_g, d, mats, names, keep_idx, final_of_row):
-    train_folds = [x for x in FOLDS if x not in (outer_f, inner_g)]
+def _fit_pair_booster(f, g, d, mats, names, keep_idx, final_of_row, threads=None):
+    """Fit the teacher held out from BOTH fold f and fold g.
+
+    `train_folds` depends only on the SET {f, g}, and the subsample RNG is a
+    fixed default_rng(0) with no per-fold seed, so the booster for (outer=f,
+    inner=g) and the one for (outer=g, inner=f) are the SAME model -- verified
+    bitwise (identical model string, predictions equal at max|diff| = 0.000e+00)
+    in research/reports/rt1320_promotion/PHASE0_COST_REDUCTION.md.
+
+    Returns (booster, train_folds).  Callers may predict it onto either or both
+    of the two held-out folds; doing both halves the nested scheme's cost.
+    """
+    train_folds = [x for x in FOLDS if x not in (f, g)]
+    assert set(train_folds) & {f, g} == set(), \
+        f"PURITY VIOLATION: teacher for pair {{{f}, {g}}} trained on {train_folds}"
     tr_rows = d.rows_for(train_folds)
-    va_rows = d.rows_for([inner_g])
     rng = np.random.default_rng(0)
     if len(tr_rows) > MAX_TRAIN_ROWS:
         tr_rows = np.sort(rng.choice(tr_rows, MAX_TRAIN_ROWS, replace=False))
 
     p = dict(ARM_B_PARAMS)
     n_round = p.pop("n_estimators")
-    Xtr = augmented_stack(mats, names, keep_idx, tr_rows, final_of_row)
+    if threads is not None:
+        p["num_threads"] = int(threads)
+    Xtr = augmented_stack_chunked(mats, names, keep_idx, tr_rows, final_of_row)
     assert Xtr.shape[1] == 1000, f"expected 1000 cols (500 causal + 500 broadcast), got {Xtr.shape[1]}"
-    ytr = d.y[tr_rows]
 
     import lightgbm as lgb
-    ds = lgb.Dataset(Xtr, label=ytr, params=dict(p, objective="binary"),
+    ds = lgb.Dataset(Xtr, label=d.y[tr_rows], params=dict(p, objective="binary"),
                      feature_name=[f"f{i}" for i in range(Xtr.shape[1])])
+    ds.construct()          # bin now, so the float32 matrix can go
+    del Xtr
+    gc.collect()
     booster = lgb.train(dict(p), ds, num_boost_round=n_round)
-    del Xtr, ds
+    del ds
+    gc.collect()
+    return booster, train_folds
 
-    Xva = augmented_stack(mats, names, keep_idx, va_rows, final_of_row)
-    pred = booster.predict(Xva).astype(np.float64)
-    del Xva
+
+def _predict_teacher_on(booster, target_fold, d, mats, names, keep_idx, final_of_row):
+    va_rows = d.rows_for([target_fold])
+    pred = _predict_chunked(booster, va_rows, mats, names, keep_idx, final_of_row)
+    return va_rows, np.clip(pred.astype(np.float64), EPS, 1 - EPS)
+
+
+def train_inner_teacher(outer_f, inner_g, d, mats, names, keep_idx, final_of_row, threads=None):
+    """One teacher, predicting only its inner fold. Unchanged semantics."""
+    booster, train_folds = _fit_pair_booster(
+        outer_f, inner_g, d, mats, names, keep_idx, final_of_row, threads)
     assert set(train_folds) & {outer_f, inner_g} == set(), \
         f"PURITY VIOLATION: teacher for outer={outer_f} inner={inner_g} trained on {train_folds}"
-    return va_rows, np.clip(pred, EPS, 1 - EPS)
+    return _predict_teacher_on(booster, inner_g, d, mats, names, keep_idx, final_of_row)
 
 
-def build_nested_Q(outer_f, d, mats, names, keep_idx, final_of_row):
+def build_nested_Q(outer_f, d, mats, names, keep_idx, final_of_row, threads=None):
+    """Assemble Q over the four outer-training folds.
+
+    Prefers an already-computed `nested_Q_outer{f}_inner{g}.npy` on disk.  Every
+    such vector is produced by the {f, g} pair teacher, so running the ten
+    `--inner-teacher-pair` jobs first means this refits nothing.
+    """
     outer_train = [g for g in FOLDS if g != outer_f]
     Q = np.full(len(d.y), np.nan, dtype=np.float64)
     for g in outer_train:
-        va_rows, pred = train_inner_teacher(outer_f, g, d, mats, names, keep_idx, final_of_row)
+        cached = f"{OOFDIR}/nested_Q_outer{outer_f}_inner{g}.npy"
+        if os.path.exists(cached):
+            Qg = np.load(cached)
+            m = ~np.isnan(Qg)
+            va_rows = np.flatnonzero(m)
+            expect = d.rows_for([g])
+            assert np.array_equal(va_rows, expect), \
+                f"cached {cached} covers {len(va_rows)} rows, fold {g} has {len(expect)}"
+            Q[va_rows] = Qg[va_rows]
+            print(f"    inner teacher outer={outer_f} target_fold={g}: "
+                  f"{len(va_rows)} rows from cache, Q mean {Qg[va_rows].mean():.4f}", flush=True)
+            continue
+        va_rows, pred = train_inner_teacher(
+            outer_f, g, d, mats, names, keep_idx, final_of_row, threads)
         Q[va_rows] = pred
         print(f"    inner teacher outer={outer_f} target_fold={g}: "
               f"{len(va_rows)} rows labeled, Q mean {pred.mean():.4f}", flush=True)
@@ -164,20 +274,76 @@ def train_nested_student(kind, outer_f, d, mats_causal, names_causal, keep_idx_c
 # successful pilot precedent, ~5-10 min) and starts with a clean process, so
 # no cross-call memory fragmentation or accumulated feature-memmap page-cache
 # pressure from four back-to-back 1000-column trainings in one process.
-def cmd_inner_teacher(outer_f, inner_g):
+def _save_Q(path, n, va_rows, pred, force):
+    _refuse_if_exists(path, force)
+    Q = np.full(n, np.nan, dtype=np.float64)
+    Q[va_rows] = pred
+    np.save(path, Q)
+    return path
+
+
+def cmd_inner_teacher(outer_f, inner_g, force=False, threads=None):
     d = PL.Data()
     mats, names = PL.load_features(FULL)
     keep_idx = np.arange(len(names))
-    last_row_by_series = last_row_lookup(d)
-    final_of_row = last_row_by_series[d.sidx]
-    t0 = time.time()
-    va_rows, pred = train_inner_teacher(outer_f, inner_g, d, mats, names, keep_idx, final_of_row)
-    Q = np.full(len(d.y), np.nan, dtype=np.float64)
-    Q[va_rows] = pred
+    final_of_row = last_row_lookup(d)[d.sidx]
     path = f"{OOFDIR}/nested_Q_outer{outer_f}_inner{inner_g}.npy"
-    np.save(path, Q)
+    _refuse_if_exists(path, force)          # fail BEFORE spending the fit
+    t0 = time.time()
+    va_rows, pred = train_inner_teacher(
+        outer_f, inner_g, d, mats, names, keep_idx, final_of_row, threads)
+    _save_Q(path, len(d.y), va_rows, pred, force)
     print(f"  inner teacher outer={outer_f} target_fold={inner_g}: {len(va_rows)} rows, "
           f"Q mean {pred.mean():.4f}, runtime {time.time()-t0:.1f}s -> {path}")
+
+
+def cmd_inner_teacher_pair(f, g, force=False, threads=None):
+    """Fit the {f, g} teacher ONCE and write both nested_Q vectors it supports.
+
+    The nested scheme runs 20 ordered (outer, inner) pairs but they contain only
+    C(5,2)=10 distinct training sets, each fitted twice.  This is the same work
+    as two `--inner-teacher` calls, for one fit.
+    """
+    if f == g:
+        raise SystemExit("--inner-teacher-pair needs two DIFFERENT folds")
+    d = PL.Data()
+    mats, names = PL.load_features(FULL)
+    keep_idx = np.arange(len(names))
+    final_of_row = last_row_lookup(d)[d.sidx]
+    # (outer=f, inner=g) predicts fold g; (outer=g, inner=f) predicts fold f.
+    targets = [(f, g), (g, f)]
+    paths = {t: f"{OOFDIR}/nested_Q_outer{t[0]}_inner{t[1]}.npy" for t in targets}
+    for t in targets:
+        _refuse_if_exists(paths[t], force)   # fail BEFORE spending the fit
+    t0 = time.time()
+    booster, train_folds = _fit_pair_booster(
+        f, g, d, mats, names, keep_idx, final_of_row, threads)
+    t_fit = time.time() - t0
+    print(f"  pair {{{f}, {g}}} teacher trained on {train_folds} in {t_fit:.1f}s", flush=True)
+    for outer_f, inner_g in targets:
+        va_rows, pred = _predict_teacher_on(
+            booster, inner_g, d, mats, names, keep_idx, final_of_row)
+        _save_Q(paths[(outer_f, inner_g)], len(d.y), va_rows, pred, force)
+        print(f"    -> outer={outer_f} target_fold={inner_g}: {len(va_rows)} rows, "
+              f"Q mean {pred.mean():.4f} -> {paths[(outer_f, inner_g)]}", flush=True)
+    print(f"  pair {{{f}, {g}}} total {time.time()-t0:.1f}s")
+
+
+def cmd_list_inner_pairs():
+    """Print the ten distinct pair jobs, one per line.
+
+    Deliberately prints rather than runs them: the comment above
+    cmd_inner_teacher records that long-lived multi-model processes were killed
+    partway, so one process per fit remains the operational precedent.
+    """
+    seen = []
+    for f in FOLDS:
+        for g in FOLDS:
+            if f < g:
+                seen.append((f, g))
+    for f, g in seen:
+        print(f"--inner-teacher-pair {f} {g}")
+    return seen
 
 
 def cmd_train_nested_student(outer_f, kind):
@@ -205,7 +371,7 @@ def cmd_train_nested_student(outer_f, kind):
 
 
 # ---------------------------------------------------------------------------
-def run_outer_fold(f):
+def run_outer_fold(f, threads=None):
     t_start = time.time()
     d = PL.Data()
     mats_causal, names_causal = PL.load_features(FULL)
@@ -214,7 +380,7 @@ def run_outer_fold(f):
     final_of_row = last_row_by_series[d.sidx]
 
     print(f"=== outer fold {f}: building nested Q over the other 4 folds ===", flush=True)
-    Q = build_nested_Q(f, d, mats_causal, names_causal, keep_idx_causal, final_of_row)
+    Q = build_nested_Q(f, d, mats_causal, names_causal, keep_idx_causal, final_of_row, threads)
 
     oof_t1 = np.full(len(d.y), np.nan, dtype=np.float32)
     oof_t2 = np.full(len(d.y), np.nan, dtype=np.float32)
@@ -439,24 +605,42 @@ def main():
     ap.add_argument("--inner-teacher", type=int, nargs=2, metavar=("OUTER", "INNER"))
     ap.add_argument("--train-nested-student", type=int, metavar="OUTER")
     ap.add_argument("--kind", choices=["t1", "t2"])
+    ap.add_argument("--inner-teacher-pair", type=int, nargs=2, metavar=("F", "G"),
+                    help="fit the {F,G} teacher ONCE and write both nested_Q vectors")
+    ap.add_argument("--list-inner-pairs", action="store_true",
+                    help="print the ten distinct pair jobs, one per line")
     ap.add_argument("--merge", action="store_true")
     ap.add_argument("--analyze-nested", action="store_true")
+    ap.add_argument("--force", action="store_true",
+                    help="overwrite an existing nested_Q vector (it is gitignored "
+                         "and has no version-control copy -- be sure)")
+    ap.add_argument("--threads", type=int, default=None,
+                    help=f"override num_threads (frozen default "
+                         f"{ARM_B_PARAMS['num_threads']}); shown bitwise-neutral in "
+                         f"PHASE0_COST_REDUCTION.md, but opt in explicitly")
     args = ap.parse_args()
     if args.fold_purity_test:
         fold_purity_test()
+    elif args.list_inner_pairs:
+        cmd_list_inner_pairs()
+    elif args.inner_teacher_pair is not None:
+        cmd_inner_teacher_pair(*args.inner_teacher_pair, force=args.force,
+                               threads=args.threads)
     elif args.inner_teacher is not None:
-        cmd_inner_teacher(*args.inner_teacher)
+        cmd_inner_teacher(*args.inner_teacher, force=args.force, threads=args.threads)
     elif args.train_nested_student is not None:
         assert args.kind, "--train-nested-student requires --kind t1|t2"
         cmd_train_nested_student(args.train_nested_student, args.kind)
     elif args.outer_fold is not None:
-        run_outer_fold(args.outer_fold)
+        run_outer_fold(args.outer_fold, threads=args.threads)
     elif args.merge:
         merge()
     elif args.analyze_nested:
         analyze_nested()
     else:
-        raise SystemExit("pass --fold-purity-test, --outer-fold F, --merge, or --analyze-nested")
+        raise SystemExit("pass --fold-purity-test, --list-inner-pairs, "
+                         "--inner-teacher-pair F G, --outer-fold F, --merge, "
+                         "or --analyze-nested")
 
 
 if __name__ == "__main__":
