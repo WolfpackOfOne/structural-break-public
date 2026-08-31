@@ -252,35 +252,63 @@ necessity. It also brings the leg within reach of one overnight local run.
 
 Full record: `reports/rt1320_promotion/PHASE0_COST_REDUCTION.md`.
 
-**0.8 Running locally — viable but tight, and not yet ready.** Local execution is
-the preferred venue, to avoid spending Crunch quota. Measured budget for one full
-inner teacher on this 16 GB machine:
+**0.8 Running locally. — DONE 2026-08-31, PASS. Local is viable.**
 
-| stage | anonymous memory |
+One full-scale inner teacher (1,000,000 x 1000 x 900 rounds, `num_threads=8`)
+with all three §0.7 levers and both memory changes applied, predicting onto
+**both** fold 1 and fold 0 — i.e. lever 1 demonstrated in situ.
+
+Correctness gate first: chunked prediction vs whole-matrix prediction is
+**bitwise equal**, `max|diff| = 0.000e+00`; the run aborts otherwise.
+
+| stage | wall | peak RSS |
+|---|---:|---:|
+| stack (chunked) | 15.2 s | 7.34 GB |
+| Dataset construct + free X | 14.6 s | 7.56 GB |
+| **train, 900 rounds** | **383.6 s** (0.426 s/round) | 7.56 GB |
+| predict fold 1 (812,939 rows) | 17.5 s | 7.56 GB |
+| predict fold 0 (806,334 rows) | 16.8 s | 7.56 GB |
+| **one teacher, both roles** | **7.5 min** | **7.56 GB** |
+
+Swap was stable and finished better than it started (8.44 → 8.19 GB used). The
+machine stayed usable.
+
+**Revised Phase 1 cost — measured, not extrapolated:**
+
+| | |
 |---|---:|
-| feature matrix (chunked) | 3.73 GB |
-| + Dataset construction, before freeing X | ~4.7 GB |
-| after `ds.construct()` and `del X` | ~1.0 GB |
-| prediction over ~806k held-out rows | ~3.0 GB |
+| 10 distinct teachers, one partition | **1.2 h** |
+| three alt partitions | **3.7 h** |
+| + student fits (~5 min x 5 outer folds) | +0.4 h/partition |
+| **teacher + student, all three partitions** | **~4.9 h** |
 
-The chunked stack at n=1,000,000 completed in 25.6 s at 5.85 GB peak RSS — but
-**swap went from 4.84/6.14 GB to 8.90/9.22 GB used, 318 MB free**, and macOS grew
-the swapfile. That is the stack alone, before LightGBM.
+CatBoost refits for the champion lane are still unmeasured.
 
-**Two changes are needed before a local batch run, neither touching the science:**
+Against §0.5's original 39.5 h this is a **~10.5x reduction**, all from changes
+verified not to move predictions. **It fits one local evening and spends no
+Crunch quota.**
 
-1. Free the float32 matrix once `ds.construct()` has binned it (`del X`).
-2. Chunk the prediction over `va_rows` rather than materialising a second
-   3.0 GB matrix.
+**Correction to §0.7.** §0.7 put the thread lever at 2.0x and called §0.5's
+earlier "~5x" wrong. At full scale the 2.0x is itself too pessimistic — it was
+measured at 120k rows and does not transfer. The combination of levers delivers
+~6x against the §0.5 projection; the per-lever split at 1M rows is **not
+established**, because separating it needs a `num_threads=2` run at 1M that costs
+~38 min and would not change the plan.
 
-If those are not enough, build the Dataset from `lgb.Sequence` batches so the
-3.73 GB array never exists at once — more invasive, and not to be attempted
-first.
+**Caveats.** Run on the canonical partition, not `folds_alt*` (row counts are
+near-identical, so cost should carry, but it is undemonstrated). Peak RSS 7.56 GB
+is above the 4.7 GB estimated — the estimate counted anonymous memory, the
+measurement is RSS including evictable memmap pages; a second heavy process
+alongside would not be safe. One run, one machine, no repeat.
 
-**Then run ONE full-scale inner teacher as a timed pilot** before committing to a
-batch. It confirms the lever-1 and lever-2 extrapolations at real scale, and
-confirms the machine holds. Only after that pilot should a multi-hour local run
-be started.
+**Still blocking a real Phase 1 run**, both from §0.5/§0.7:
+
+1. `cmd_inner_teacher` needs its refuse-if-exists guard. The pilot writes
+   nothing; a real run cannot.
+2. The lever-1 deduplication has to land in `build_nested_Q` as a reviewed
+   change, with the fold-purity sentinel re-run.
+
+Full record: `reports/rt1320_promotion/PHASE0_PILOT.md`.
 
 ---
 
@@ -538,21 +566,16 @@ identifies never-break false positives as null-model errors.
    re-derived by paired bootstrap on the pooled multi-partition distribution
    rather than reusing the canonical 0.0011?
 3. **RT-1257 promotion.** Start it in parallel now, as recommended?
-4. **Compute — local first, Crunch cloud as fallback.** §0.7 cut the leg from
-   39.5 h to ~9.9 h, which changes the venue answer. **Local is the preferred
-   venue** and is now plausible: ~3.3 h per partition, one overnight run for all
-   three, and no quota spent.
+4. **Compute — RESOLVED: run it locally.** §0.8's full-scale pilot measured the
+   whole teacher leg at **3.7 h for three alt partitions** (~4.9 h with student
+   fits), at 7.56 GB peak with swap stable. That is one local evening and no
+   Crunch quota. Crunch cloud (submission 76357 / task `run-3e834e0f`, RTX 4090,
+   18.96 GB observed peak RAM) remains the fallback if the local machine proves
+   unreliable across a longer batch, and ~4.9 h now fits well inside one week's
+   15 h quota either way.
 
-   *Not yet ready*, per §0.8. Peak is ~5 GB anonymous on a 16 GB machine, and the
-   1M-row stack alone drove swap to 8.90/9.22 GB used. Two non-science changes
-   (free X after `ds.construct()`, chunk the prediction) are needed first, then
-   **one full-scale timed pilot** before any batch run.
-
-   *Fallback stays open:* Crunch cloud, packaged as a submission exactly as
-   RT-1258/RT-1259 were (submission 76357 / task `run-3e834e0f`), RTX 4090 box,
-   observed 18.96 GB peak RAM, Linux x86_64 / python 3.11. It bills the same
-   15 h/week quota the scoring runs use — but ~9.9 h now fits inside one week.
-   The RTX 4090 remains irrelevant to a CPU LightGBM fit.
+   *Remaining sub-question:* the CatBoost refit cost for the champion lane is
+   still unmeasured.
 
 5. **Thread count — RESOLVED, pending a full-scale repeat.** Measured 2.02x at
    8 threads (saturates there), with predictions **bitwise equal** to the frozen
