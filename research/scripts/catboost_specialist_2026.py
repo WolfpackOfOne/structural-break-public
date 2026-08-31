@@ -27,12 +27,34 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--artifact-root", default=os.environ.get("SBR_ARTIFACT_ROOT", str(DEFAULT_ARTIFACT_ROOT)))
     p.add_argument("--no-ledger", action="store_true")
     p.add_argument("--force-train", action="store_true")
+    p.add_argument("--partition", choices=("canonical", "alt1", "alt2", "alt3"),
+                   default="canonical",
+                   help="fold partition; alternates suffix every artifact .altK so "
+                        "they cannot collide with canonical vectors")
+    p.add_argument("--train-only", nargs="+", metavar="SPEC",
+                   help="train the named specialists (CAT-413 CAT-300 CAT-410), write "
+                        "their OOF vectors and stop. Skips the preregistered "
+                        "selection pipeline and the ledger entirely -- use this for "
+                        "alternate-partition robustness vectors, where re-running a "
+                        "canonical selection rule would be a protocol error.")
     return p.parse_args()
 
 
 ARGS = parse_args()
 ARTIFACT_ROOT = Path(ARGS.artifact_root).resolve()
 os.environ["SBR_ROOT"] = str(ARTIFACT_ROOT)
+
+#: Suffix for every artifact this run reads or writes. An alternate-partition
+#: vector must never share a filename with a canonical one.
+PART_SUFFIX = "" if ARGS.partition == "canonical" else f".{ARGS.partition}"
+
+if PART_SUFFIX and not ARGS.no_ledger:
+    # RESULTS.csv is the canonical quantitative ledger. An alternate-partition
+    # run is a robustness diagnostic and must not append rows to it as though it
+    # were a canonical result.
+    print(f"partition={ARGS.partition}: forcing --no-ledger "
+          "(RESULTS.csv is the canonical ledger)")
+    ARGS.no_ledger = True
 
 for _p in (REPO / "src", REPO / "research" / "scripts"):
     s = str(_p)
@@ -44,9 +66,10 @@ from scipy.stats import rankdata  # noqa: E402
 
 from sbr.metric import ts_auc_flat  # noqa: E402
 from sbr.pipeline import Data, _stack, load_features  # noqa: E402
+from wave2_lib import alt_folds  # noqa: E402
 from wave4_cal import SCDF_NSEEN  # noqa: E402
 
-REPORT_DIR = REPO / "research" / "reports" / "catboost_specialist_2026"
+REPORT_DIR = REPO / "research" / "reports" / f"catboost_specialist_2026{PART_SUFFIX}"
 RESULTS_CSV = REPO / "research" / "RESULTS.csv"
 OOF_DIR = ARTIFACT_ROOT / "research" / "oof"
 
@@ -150,10 +173,10 @@ def make_ctx() -> Ctx:
 
 
 def load_oof(names: list[str]) -> dict[str, np.ndarray]:
-    missing = [n for n in names if not (OOF_DIR / f"{n}.npy").exists()]
+    missing = [n for n in names if not (OOF_DIR / f"{n}{PART_SUFFIX}.npy").exists()]
     if missing:
-        raise SystemExit(f"MISSING OOF: {missing} in {OOF_DIR}")
-    return {n: np.load(OOF_DIR / f"{n}.npy") for n in names}
+        raise SystemExit(f"MISSING OOF: {missing} (suffix {PART_SUFFIX!r}) in {OOF_DIR}")
+    return {n: np.load(OOF_DIR / f"{n}{PART_SUFFIX}.npy") for n in names}
 
 
 class CalibratedFoldCache:
@@ -305,7 +328,7 @@ def train_cat_specialist(name: str) -> dict:
 
     spec = SPECS[name]
     exp_id = IDS[name]
-    out_path = OOF_DIR / f"{exp_id}.npy"
+    out_path = OOF_DIR / f"{exp_id}{PART_SUFFIX}.npy"
     if out_path.exists() and not ARGS.force_train:
         print(f"{name}: reusing {out_path}", flush=True)
         c = make_ctx()
@@ -681,7 +704,49 @@ def write_outputs(result: dict) -> None:
     write_final_md(result)
 
 
+def train_only(names: list[str]) -> None:
+    """Fit the named specialists, write their OOF vectors, stop.
+
+    No evaluation, no hybrid, no ledger. The selection rule in main() is
+    preregistered against the canonical partition; re-running it on a robustness
+    partition would be a protocol error, not a stronger result.
+    """
+    unknown = [n for n in names if n not in SPECS]
+    if unknown:
+        raise SystemExit(f"unknown specialist(s) {unknown}; choose from {sorted(SPECS)}")
+    out = {}
+    for name in names:
+        print(f"=== {name} ({IDS[name]}) partition={ARGS.partition} ===", flush=True)
+        r = train_cat_specialist(name)
+        out[name] = {
+            "id": r["id"], "status": r["status"],
+            "oof_path": r.get("oof_path"),
+            "runtime_s": r.get("runtime_s"),
+            "standalone": r.get("standalone"),
+        }
+    REPORT_DIR.mkdir(parents=True, exist_ok=True)
+    path = REPORT_DIR / "train_only.json"
+    path.write_text(json.dumps(
+        {"partition": ARGS.partition, "suffix": PART_SUFFIX, "git_sha": git_sha(),
+         "artifact_root": str(ARTIFACT_ROOT), "oof_dir": str(OOF_DIR),
+         "versions": env_versions(), "specialists": out}, indent=2, sort_keys=True) + "\n")
+    print(json.dumps({"wrote": str(path), "specialists": list(out)}, indent=2))
+
+
 def main() -> None:
+    if ARGS.train_only:
+        if PART_SUFFIX:
+            with alt_folds(ARGS.partition):
+                train_only(ARGS.train_only)
+        else:
+            train_only(ARGS.train_only)
+        return
+    if PART_SUFFIX:
+        raise SystemExit(
+            f"--partition {ARGS.partition} is only supported with --train-only.\n"
+            "  The evaluation pipeline below applies a selection rule preregistered\n"
+            "  against the canonical partition; re-running it on a robustness\n"
+            "  partition would be a protocol error.")
     t0 = time.time()
     c = make_ctx()
     result = {
