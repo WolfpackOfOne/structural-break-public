@@ -420,7 +420,27 @@ Staging the compute forces staging the rule. A single-partition result is
 **weaker** evidence than the four-partition mean originally drafted here, and
 that must be stated in the rule rather than discovered afterwards.
 
-**Stage 1 — alt1 alone (13.2 h). A kill gate only; it cannot pass anything.**
+**Stage 1 — alt1 alone. RUN 2026-08-31: CONTINUE.**
+
+Champion lane, addition contract, E1 = RT-1257 + one matched added RT-403 clone:
+**PRIMARY E2−E1 = +0.0021146 at 5/5 folds** (per fold +0.002143, +0.003580,
++0.001273, +0.001517, +0.002060); secondary E2−E0 +0.0018707, 5/5; control lift
+E1−E0 −0.000244.
+
+**Stronger than canonical** (+0.001516 at 4/5), and canonical's negative fold 0
+is positive here. That is the opposite of what this leg was designed to expose —
+alt1 is recorded in the freeze as the least favourable partition. Neither
+partition shows the RT-1264/CSA-04 inflation shape: the E1 control is
+flat-to-negative on both.
+
+Actual cost, far under the 13.2 h estimate once §0.7's levers landed: teachers
+71.5 min, student 29 min, the two alt1 CatBoost members 63 min.
+
+**This licenses Stage 2 and nothing else.** Full record:
+`reports/rt1320_promotion/PHASE1_ALT1_STAGE1.md`. All of it provisional pending
+Phase 2 — `causal_verified=no`.
+
+**The gate as frozen before the run — a kill gate only; it cannot pass anything.**
 
 - **KILL** — E2−E1 on alt1 is negative, *or* below +0.0000 on 3 or more folds.
   The candidate's whole case is that it survives an unfavourable draw. It does

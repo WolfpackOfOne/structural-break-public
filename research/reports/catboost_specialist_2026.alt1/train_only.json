@@ -1,0 +1,53 @@
+{
+  "artifact_root": "/path/to/workspace/structural-break-rt1320-promotion-2026",
+  "git_sha": "f35b54c",
+  "oof_dir": "/path/to/workspace/structural-break-rt1320-promotion-2026/research/oof",
+  "partition": "alt1",
+  "specialists": {
+    "CAT-300": {
+      "id": "RT-1255",
+      "oof_path": "/path/to/workspace/structural-break-rt1320-promotion-2026/research/oof/RT-1255.alt1.npy",
+      "runtime_s": 2248.53258395195,
+      "standalone": {
+        "fold_std": 0.007633204237335369,
+        "mean_ts_auc": 0.6166403950505941,
+        "per_fold_ts_auc": [
+          0.625523621656165,
+          0.6119862755932365,
+          0.62601408965225,
+          0.6075616894544089,
+          0.6121162988969102
+        ],
+        "pooled_ts_auc": 0.6162843339524817
+      },
+      "status": "SCORED"
+    },
+    "CAT-413": {
+      "id": "RT-1254",
+      "oof_path": "/path/to/workspace/structural-break-rt1320-promotion-2026/research/oof/RT-1254.alt1.npy",
+      "runtime_s": 1562.2648229599,
+      "standalone": {
+        "fold_std": 0.0071597220460316675,
+        "mean_ts_auc": 0.6158885168300403,
+        "per_fold_ts_auc": [
+          0.6204918147718931,
+          0.6197053974283465,
+          0.6237076446354359,
+          0.6040572013268867,
+          0.6114805259876391
+        ],
+        "pooled_ts_auc": 0.615519624495881
+      },
+      "status": "SCORED"
+    }
+  },
+  "suffix": ".alt1",
+  "versions": {
+    "catboost": "1.2.10",
+    "lightgbm": "4.7.0",
+    "numpy": "2.4.6",
+    "pandas": "3.0.5",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.17.1"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "contract": "addition of an 8th exchangeable member to RT-1257",
+  "E1_control_stream": "RT-403 seed clone",
+  "means": {
+    "E0": 0.6213025385377346,
+    "E1": 0.6210586134064987,
+    "E2": 0.6231732420947396
+  },
+  "PRIMARY_E2_minus_E1": 0.0021146286882408826,
+  "primary_per_fold": [
+    0.0021428326814187937,
+    0.003580436341307336,
+    0.0012726176892183805,
+    0.0015170185010495718,
+    0.0020602382282103315
+  ],
+  "primary_folds_positive": 5,
+  "SECONDARY_E2_minus_E0": 0.0018707035570048936,
+  "secondary_per_fold": [
+    0.002128273318766971,
+    0.00301000767044024,
+    0.0013270109643230832,
+    0.0005595009539380857,
+    0.0023287248775560876
+  ],
+  "secondary_folds_positive": 5,
+  "control_lift_E1_minus_E0": -0.00024392513123598912,
+  "noise_floor_paired_bootstrap": 0.0011,
+  "primary_clears_noise_floor": true
+}

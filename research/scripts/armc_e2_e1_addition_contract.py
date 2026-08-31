@@ -41,19 +41,43 @@ def main() -> None:
     ap.add_argument("--folds-path", type=Path,
                     default=REPO / "research" / "folds" / "folds.parquet")
     ap.add_argument("--noise-floor", type=float, default=0.0011)
+    ap.add_argument("--oof-suffix", default="",
+                    help="suffix for every OOF vector loaded (e.g. '.alt1'). "
+                         "REQUIRED for an alternate-partition run, together with a "
+                         "matching --folds-path, or the alt fold partition would be "
+                         "paired with canonical fold-pure vectors.")
+    ap.add_argument("--oof-dir", type=Path, default=None,
+                    help="override the OOF directory (default: A.default_data_root())")
+    ap.add_argument("--catboost-oof-dir", type=Path, default=None,
+                    help="override the CatBoost OOF directory; the default root has "
+                         "no alternate-partition vectors")
     args = ap.parse_args()
 
+    # Applied inside armc_residual_student's own loaders too.
+    A.OOF_SUFFIX = args.oof_suffix
+    if args.oof_suffix:
+        print(f"OOF_SUFFIX={args.oof_suffix!r}  folds={args.folds_path}")
+
     data_root = A.default_data_root()
-    oof_dir = data_root / "research" / "oof"
-    cat_dir = A.default_catboost_oof_dir()
+    oof_dir = args.oof_dir or (data_root / "research" / "oof")
+    cat_dir = args.catboost_oof_dir or A.default_catboost_oof_dir()
 
     rows = A.build_row_arrays(args.folds_path)
     student_raw, _ = A.merge_student_oof(args.student_dir, rows, force=False)
     student = A.crossfit_calibrate(student_raw, rows)
 
     spec = [A.load_calibrated_stream(oof_dir, s, rows) for s in A.SPECIALISTS]
-    cat300 = A.crossfit_calibrate(np.load(cat_dir / "RT-1255.npy", mmap_mode="r"), rows)
-    cat413 = A.crossfit_calibrate(np.load(cat_dir / "RT-1254.npy", mmap_mode="r"), rows)
+    cat300_path = cat_dir / f"RT-1255{args.oof_suffix}.npy"
+    cat413_path = cat_dir / f"RT-1254{args.oof_suffix}.npy"
+    for q in (cat300_path, cat413_path):
+        if not q.exists():
+            raise SystemExit(
+                f"missing CatBoost vector {q}\n"
+                "  RT-1257 cannot be built for this partition, so the champion-lane "
+                "endpoint is not computable. Fit them first with "
+                "catboost_specialist_2026.py --partition ... --train-only CAT-300 CAT-413")
+    cat300 = A.crossfit_calibrate(np.load(cat300_path, mmap_mode="r"), rows)
+    cat413 = A.crossfit_calibrate(np.load(cat413_path, mmap_mode="r"), rows)
     control = A.load_calibrated_stream(oof_dir, CONTROL_STREAM, rows)
 
     base = [cat300, spec[1], spec[2], spec[3], cat413, spec[5], spec[6]]
