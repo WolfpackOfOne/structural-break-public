@@ -177,6 +177,41 @@ Full record: `reports/rt1320_promotion/PHASE0_TIMING_PROBE.md`.
 
 ---
 
+**0.6 Close the Crunch cloud gaps before booking the run.** §0.5 made venue a
+blocker; the venue is settled in principle (see open decision 4) but three
+things must be checked first, and all three are cheap.
+
+**0.6.1 CPU core count — the one that changes the arithmetic.**
+`reports/gpu_tabular_2026/FROZEN_GPU_CONFIG.json` records GPU, VRAM, OS, python,
+torch and peak RAM for the RT-1258/RT-1259 cloud runs, but **no CPU core count**.
+The teacher is a CPU LightGBM fit at `num_threads=2`; the RTX 4090 is irrelevant
+to it. Core count therefore decides whether the 13.2 h per partition is real or
+whether a thread increase makes it materially cheaper. Record it on the next
+cloud job — it is one line of `os.cpu_count()` in a run that is happening anyway.
+
+Note the dependency: a `num_threads` change is a **protocol change**, gated on a
+determinism demonstration (§0.5). Cores make it *worth* doing; they do not make
+it *allowed*.
+
+**0.6.2 Pin provenance before the run, not after.** The repo already records
+that the Crunch-uploaded code tree **had no `.git` directory**, so the GPU
+benchmark's reported `git_sha` came from a stale embedded fallback pointing at a
+commit that does not contain the benchmarked file —
+`FROZEN_GPU_CONFIG.json` carries two long notes untangling it. That was
+survivable for a diagnostic. Phase 1 feeds a promotion decision, so the run must
+carry an explicitly injected commit SHA, the folds SHA-256, and the feature-bank
+manifest hash as data, and assert them on arrival. Reconstructing provenance
+afterwards is what `_check_provenance` exists to prevent.
+
+**0.6.3 Confirm the feature bank rebuilds in-cloud.**
+`feature_preparation_benchmark.feature_build_seconds = 272` says the cloud job
+built the 500-column bank itself in ~4.5 min rather than needing a ~10 GB upload.
+Confirm that path still works for the modules the teacher needs (`FULL` =
+m00–m04, m06, m07) and that it reproduces the tracked feature-manifest SHA. If
+it does, data access is a non-issue: `folds_alt*.parquet` are tracked in git and
+travel with the code.
+
+---
 ## 4. Phase 1 — Alternate-partition leg (the decision)
 
 **Why this is the gate.** `FINAL_ARCHITECTURE_FREEZE.md` records that the
@@ -187,29 +222,66 @@ base is one draw from the most flattering partition, and its margin over the
 noise floor is +0.0004. This is the single most likely place for the candidate
 to die, and finding that out is much cheaper than the alternative.
 
-**1.1 Regenerate the teacher on alt1/alt2/alt3.** Per partition: 20 nested inner
+**Execution is staged: alt1 first, then a decision, then maybe alt2/alt3.**
+§0.5 measured the leg at 39.5 h of inner teachers alone, and §0.6 establishes
+that the realistic venue is Crunch cloud at 15 h/week. One partition is 13.2 h
+and fits a week; three do not. alt1 is also the partition **most likely to kill
+the candidate** — it is the least favourable of the four, and the RT-600
+specialisation delta there (+0.00254) already falls below W4-E1's own +0.0030
+bar. So alt1 first is both the only affordable order and the correct one.
+
+**1.1 Regenerate the teacher, alt1 first.** Per partition: 20 nested inner
 teacher fits + the outer merge, producing `RT-991.altK.npy` and
 `nested_Q_outer{f}_inner{g}.altK.npy`. Fold-purity sentinel
-(`--fold-purity-test`) must pass on each partition before any score is read.
+(`--fold-purity-test`) must pass on the partition before any score is read.
 
-**1.2 Regenerate the student on alt1/alt2/alt3.** Five outer fits per partition
-via `--train-outer F --folds-path research/folds/folds_altK.parquet`, then
+Two preconditions, both from §0.5: `cmd_inner_teacher` needs its
+refuse-if-exists guard **before** the first production invocation, and the
+output paths must be partition-suffixed so an alt run can never collide with a
+canonical vector.
+
+**1.2 Regenerate the student on the same partition.** Five outer fits via
+`--train-outer F --folds-path research/folds/folds_altK.parquet`, then
 `--merge-analyze`. Uses the existing 500-column causal bank; adds no features.
+~5 min per outer fold, negligible against 1.1.
 
-**1.3 Regenerate the two CatBoost members on alt1/alt2/alt3.** Required for the
-champion lane. Without `RT-1254.altK` / `RT-1255.altK` there is no E0 on alt
-partitions and only the RT-600 lane can be evaluated. If this refit is judged
-too expensive, the fallback is explicit and must be recorded as a limitation,
-not quietly substituted: run the alt leg on the **RT-600 lane only**, where every
-input already exists, and accept that the champion-lane partition sensitivity
+**1.3 Regenerate the two CatBoost members on the same partition.** Required for
+the champion lane. Without `RT-1254.altK` / `RT-1255.altK` there is no E0 on alt
+partitions and only the RT-600 lane can be evaluated.
+
+If this refit is judged too expensive, the fallback is explicit and must be
+recorded as a limitation, not quietly substituted: run the alt leg on the
+**RT-600 lane only**, and accept that champion-lane partition sensitivity
 remains untested.
 
-**1.4 Endpoint — declare before looking.** For each partition K ∈
-{canonical, alt1, alt2, alt3}, compute the addition contract E0/E1/E2 exactly as
-in `armc_e2_e1_addition_contract.py`, with E1 = RT-1257 + one matched added seed
+**Note the fallback is smaller than it looks (§0.5).** It avoids the CatBoost
+refits *only*. The teacher refits — the 13.2 h — are common to both lanes,
+because the student's target derives from the nested Arm-C teacher on whichever
+partition it is fitted. Choosing the cheaper lane does not make the leg cheap.
+
+**1.4 Endpoint — a two-stage gate, declared before looking.** For each
+partition K, compute the addition contract E0/E1/E2 exactly as in
+`armc_e2_e1_addition_contract.py`, with E1 = RT-1257 + one matched added seed
 clone.
 
-Proposed decision rule (to be frozen at commit time):
+Staging the compute forces staging the rule. A single-partition result is
+**weaker** evidence than the four-partition mean originally drafted here, and
+that must be stated in the rule rather than discovered afterwards.
+
+**Stage 1 — alt1 alone (13.2 h). A kill gate only; it cannot pass anything.**
+
+- **KILL** — E2−E1 on alt1 is negative, *or* below +0.0000 on 3 or more folds.
+  The candidate's whole case is that it survives an unfavourable draw. It does
+  not. Stop; do not buy alt2/alt3.
+- **CONTINUE** — anything else. This is *not* a pass. It licenses spending the
+  next 26 h, nothing more.
+
+Stage 1 is deliberately asymmetric: alt1 can end the program but cannot
+promote. A positive alt1 on its own is one draw from a partition chosen for
+being pessimistic, which is a weak basis for a promotion and a strong basis for
+continuing.
+
+**Stage 2 — alt2 + alt3 (26.4 h), evaluated on all four partitions together.**
 
 - **PASS** — mean E2−E1 across the four partitions ≥ 0.0011, *and* E2−E1 > 0 on
   at least 3 of 4 partitions, *and* no partition worse than −0.0011.
@@ -218,8 +290,14 @@ Proposed decision rule (to be frozen at commit time):
 - **INCONCLUSIVE** — anything else. Report as such; do not select the favourable
   partitions.
 
-Report all four partitions and all per-fold vectors whatever the outcome.
-`FAILED_EXPERIMENTS.md` and `NEGATIVE_RESULTS_INDEX.md` get the row either way.
+**Anti-gaming clause.** Stage 1's CONTINUE threshold is fixed here, before alt1
+is run. If alt1 lands marginal, the response is Stage 2 or a recorded
+INCONCLUSIVE — **not** a revised Stage 1 threshold, and not a decision to stop
+at alt1 and quote it as support. Quota pressure is not a scientific argument.
+
+Report every partition run and all per-fold vectors whatever the outcome, and
+report which stage the program stopped at. `FAILED_EXPERIMENTS.md` and
+`NEGATIVE_RESULTS_INDEX.md` get the row either way.
 
 **1.5 Fold-0 diagnosis (runs alongside, does not gate).** Fold 0 is negative on
 both endpoints on canonical. Establish whether that is partition-specific noise
@@ -348,12 +426,17 @@ invitation to re-tune.
 
 So the outcome is not negotiated after the fact:
 
-- mean E2−E1 across four partitions below +0.0011; or
-- two or more partitions negative; or
-- fold 0 negative on a majority of partitions with an identifiable damage regime;
-  or
+- **Stage 1:** E2−E1 on alt1 negative, or non-positive on 3 or more folds; or
+- **Stage 2:** mean E2−E1 across four partitions below +0.0011; or
+- **Stage 2:** two or more partitions negative; or
+- fold 0 negative on a majority of partitions run, with an identifiable damage
+  regime; or
 - any causality-gate failure on the student's inference path that is not a
   test-harness bug.
+
+Stopping at Stage 1 with a CONTINUE and no Stage 2 is **not** a pass. If Stage 2
+is never funded, the recorded outcome is INCONCLUSIVE and RT-1320 stays
+`RESEARCH_ALIVE` — it does not become promotable by default.
 
 Any of these ends the promotion attempt. The candidate returns to
 `RESEARCH_ALIVE` or moves to `KILL` per the evidence, the negative result is
@@ -365,18 +448,45 @@ identifies never-break false positives as null-model errors.
 
 ## 10. Open decisions
 
-1. **Alt-partition scope.** Full champion lane (requires CatBoost refit on three
-   partitions) or RT-600 lane only (all inputs exist today, but leaves champion-lane
-   partition sensitivity untested)?
-2. **Decision rule.** Is the Phase 1.4 rule the one to freeze, or should the
-   noise floor be re-derived by paired bootstrap on the pooled four-partition
-   distribution rather than reusing the canonical 0.0011?
+1. **Alt-partition scope.** Full champion lane (adds the CatBoost refit per
+   partition) or RT-600 lane only? Note §0.5: the fallback saves the CatBoost
+   work only — the 13.2 h teacher cost is common to both lanes, so this is a
+   smaller decision than it first appeared.
+2. **Decision rule.** Is the two-stage §1.4 gate the one to freeze, and is
+   Stage 1's CONTINUE threshold right? Separately: should the noise floor be
+   re-derived by paired bootstrap on the pooled multi-partition distribution
+   rather than reusing the canonical 0.0011?
 3. **RT-1257 promotion.** Start it in parallel now, as recommended?
-4. **Compute — now a blocker, see §0.5.** Where do the teacher refits run? The
-   alt leg is 40+ h at frozen config and wants more RAM headroom than this
-   16 GB machine has once swap is counted. Local overnight runs, the box that
-   unblocked RT-1258/RT-1259, or something else? Settle before authorising
-   Phase 1.
+4. **Compute — RESOLVED IN PRINCIPLE, constrained in practice.** Run it on
+   **Crunch cloud**, packaged as a submission, exactly as RT-1258/RT-1259 were
+   (`submissions/G_gpu_tabular_benchmark.py`, submission 76357 / task
+   `run-3e834e0f`).
+
+   *What it fixes:* the memory blocker. Observed peak RAM there was **18.96 GB**,
+   against this machine's 16 GB total with swap at 5.56/7.17 GB. The ~7.45 GB
+   matrix fits with headroom. It is also Linux x86_64 / python 3.11, closer to
+   `REPRODUCIBILITY_MANIFEST.json`'s recorded research environment than this Mac.
+
+   *What it does not fix:* the quota. Crunch cloud bills the **same 15 h/week**
+   the scoring runs use — the GPU arms budgeted against it explicitly
+   (`quota_hours_total 15.0`, `quota_fraction_for_scored_training 0.9`,
+   `quota_learners 2`, `per_learner_budget_seconds 24300`). Phase 1's 39.5 h is
+   ~3 weeks of the entire quota, and spending it also costs submission capacity
+   in those weeks. **The RTX 4090 buys nothing here**: the teacher is CPU
+   LightGBM, and the GPU is only relevant if LightGBM is switched to
+   `device=gpu`, which is a determinism-gated protocol change.
+
+   *Consequence, now folded into §1.4:* run **alt1 alone first** at 13.2 h — one
+   week's quota, and the partition most likely to kill the candidate.
+
+   *Still open:* whether to spend one week's quota on alt1 at all, given it also
+   displaces a scoring submission that week.
 
 5. **Thread count.** Is a `num_threads` change in scope? It is worth ~5x here,
-   but only after a determinism demonstration; otherwise the 40 h stands.
+   but only after a determinism demonstration; otherwise the 13.2 h per
+   partition stands. Blocked on §0.6.1 (cloud core count is unrecorded).
+
+6. **Stage-2 funding.** If alt1 returns CONTINUE, is the further 26.4 h — two
+   more weeks of quota — authorised in advance, or does it return for a decision?
+   Deciding now avoids the §1.4 anti-gaming failure mode where a marginal alt1
+   gets quoted as support because Stage 2 was never funded.
