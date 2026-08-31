@@ -1,0 +1,41 @@
+[LightGBM] [Info] Number of positive: 30767, number of negative: 89233
+[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.252687 seconds.
+You can set `force_row_wise=true` to remove the overhead.
+And if memory is not enough, you can set `force_col_wise=true`.
+[LightGBM] [Info] Total Bins 124346
+[LightGBM] [Info] Number of data points in the train set: 120000, number of used features: 1000
+[LightGBM] [Info] [binary:BoostFromScore]: pavg=0.256392 -> initscore=-1.064808
+[LightGBM] [Info] Start training from score -1.064808
+num_threads= 2  train   16.0s  speedup vs 2: 1.00x
+[LightGBM] [Info] Number of positive: 30767, number of negative: 89233
+[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.129367 seconds.
+You can set `force_row_wise=true` to remove the overhead.
+And if memory is not enough, you can set `force_col_wise=true`.
+[LightGBM] [Info] Total Bins 124346
+[LightGBM] [Info] Number of data points in the train set: 120000, number of used features: 1000
+[LightGBM] [Info] [binary:BoostFromScore]: pavg=0.256392 -> initscore=-1.064808
+[LightGBM] [Info] Start training from score -1.064808
+num_threads= 4  train    9.2s  speedup vs 2: 1.74x
+[LightGBM] [Info] Number of positive: 30767, number of negative: 89233
+[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.077757 seconds.
+You can set `force_row_wise=true` to remove the overhead.
+And if memory is not enough, you can set `force_col_wise=true`.
+[LightGBM] [Info] Total Bins 124346
+[LightGBM] [Info] Number of data points in the train set: 120000, number of used features: 1000
+[LightGBM] [Info] [binary:BoostFromScore]: pavg=0.256392 -> initscore=-1.064808
+[LightGBM] [Info] Start training from score -1.064808
+num_threads= 8  train    7.9s  speedup vs 2: 2.02x
+[LightGBM] [Info] Number of positive: 30767, number of negative: 89233
+[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.066611 seconds.
+You can set `force_row_wise=true` to remove the overhead.
+And if memory is not enough, you can set `force_col_wise=true`.
+[LightGBM] [Info] Total Bins 124346
+[LightGBM] [Info] Number of data points in the train set: 120000, number of used features: 1000
+[LightGBM] [Info] [binary:BoostFromScore]: pavg=0.256392 -> initscore=-1.064808
+[LightGBM] [Info] Start training from score -1.064808
+num_threads=10  train    7.9s  speedup vs 2: 2.03x
+
+=== determinism vs the frozen num_threads=2 ===
+  nt= 4: model identical False  preds bitwise equal True   max|diff| 0.000e+00
+  nt= 8: model identical False  preds bitwise equal True   max|diff| 0.000e+00
+  nt=10: model identical False  preds bitwise equal True   max|diff| 0.000e+00

@@ -162,9 +162,10 @@ Two consequences Phase 1 must absorb:
 
 **Memory is the binding constraint.** ~7.45 GB peak on a 16 GB machine whose swap
 is already at 5.56/7.17 GB. The probe ran at 250k rows precisely to avoid
-thrashing. `num_threads=2` leaves ~5x on the table on a 10-core box, but raising
-it is a protocol change that must first be shown not to move predictions, per the
-determinism gate — not a free win.
+thrashing.
+
+~~`num_threads=2` leaves ~5x on the table.~~ **Corrected in §0.7: measured 2.0x,
+saturating at 8 threads.** The 5x was inferred from core count and was wrong.
 
 **Hazard found and not yet fixed:** `cmd_inner_teacher` calls `np.save` on
 `nested_Q_outer{f}_inner{g}.npy` with no existence check and no `--force`. With
@@ -211,7 +212,78 @@ m00–m04, m06, m07) and that it reproduces the tracked feature-manifest SHA. If
 it does, data access is a non-issue: `folds_alt*.parquet` are tracked in git and
 travel with the code.
 
+**0.7 Three levers that make Phase 1 lighter. — DONE 2026-08-31.** All three
+required to leave predictions bitwise unchanged; all three verified.
+
+| lever | effect | status |
+|---|---|---|
+| **1. Deduplicate nested teacher fits** | **exact 2x** | verified bitwise |
+| **2. `num_threads` 2 → 8** | **2.02x** | verified bitwise |
+| **3. Chunked in-place `augmented_stack`** | 7.45 → 5.85 GB peak | verified bitwise (same sha256) |
+
+**Lever 1 is the big one and it is free.** `train_folds` depends only on the
+*set* `{outer_f, inner_g}`, and the subsample RNG is a fixed `default_rng(0)`, so
+the teacher for `(0,1)` and `(1,0)` are the **same model** — verified: identical
+model string, predictions equal at `max|diff| = 0.000e+00`. `build_nested_Q`
+runs 20 ordered pairs containing only **C(5,2)=10 distinct training sets, each
+fitted twice**. Fit 10, predict each onto both held-out folds.
+
+This refactors a fold-purity-critical function: the purity sentinel must still
+pass, and §0.5's refuse-if-exists guard still applies. Not a one-line change.
+
+**Lever 2 satisfies the determinism gate** — predictions bitwise equal to the
+frozen `num_threads=2` at 4, 8 and 10; the only `model_to_string()` difference is
+the `[num_threads: N]` metadata line. Measured at reduced scale on one machine;
+**repeat at full scale before it feeds a decision**.
+
+**Revised arithmetic:**
+
+| | per partition | three alt partitions |
+|---|---:|---:|
+| as written (§0.5) | 13.2 h | 39.5 h |
+| + lever 1 | 6.6 h | 19.8 h |
+| + lever 2 | **~3.3 h** | **~9.9 h** |
+
+Extrapolations from reduced-scale measurements — targets to confirm, not facts.
+
+**Consequences.** ~9.9 h for all three alt partitions fits inside a single week's
+15 h Crunch quota, so §1.4's alt1-first staging becomes a *choice* rather than a
+necessity. It also brings the leg within reach of one overnight local run.
+
+Full record: `reports/rt1320_promotion/PHASE0_COST_REDUCTION.md`.
+
+**0.8 Running locally — viable but tight, and not yet ready.** Local execution is
+the preferred venue, to avoid spending Crunch quota. Measured budget for one full
+inner teacher on this 16 GB machine:
+
+| stage | anonymous memory |
+|---|---:|
+| feature matrix (chunked) | 3.73 GB |
+| + Dataset construction, before freeing X | ~4.7 GB |
+| after `ds.construct()` and `del X` | ~1.0 GB |
+| prediction over ~806k held-out rows | ~3.0 GB |
+
+The chunked stack at n=1,000,000 completed in 25.6 s at 5.85 GB peak RSS — but
+**swap went from 4.84/6.14 GB to 8.90/9.22 GB used, 318 MB free**, and macOS grew
+the swapfile. That is the stack alone, before LightGBM.
+
+**Two changes are needed before a local batch run, neither touching the science:**
+
+1. Free the float32 matrix once `ds.construct()` has binned it (`del X`).
+2. Chunk the prediction over `va_rows` rather than materialising a second
+   3.0 GB matrix.
+
+If those are not enough, build the Dataset from `lgb.Sequence` batches so the
+3.73 GB array never exists at once — more invasive, and not to be attempted
+first.
+
+**Then run ONE full-scale inner teacher as a timed pilot** before committing to a
+batch. It confirms the lever-1 and lever-2 extrapolations at real scale, and
+confirms the machine holds. Only after that pilot should a multi-hour local run
+be started.
+
 ---
+
 ## 4. Phase 1 — Alternate-partition leg (the decision)
 
 **Why this is the gate.** `FINAL_ARCHITECTURE_FREEZE.md` records that the
@@ -223,12 +295,21 @@ noise floor is +0.0004. This is the single most likely place for the candidate
 to die, and finding that out is much cheaper than the alternative.
 
 **Execution is staged: alt1 first, then a decision, then maybe alt2/alt3.**
-§0.5 measured the leg at 39.5 h of inner teachers alone, and §0.6 establishes
-that the realistic venue is Crunch cloud at 15 h/week. One partition is 13.2 h
-and fits a week; three do not. alt1 is also the partition **most likely to kill
-the candidate** — it is the least favourable of the four, and the RT-600
-specialisation delta there (+0.00254) already falls below W4-E1's own +0.0030
-bar. So alt1 first is both the only affordable order and the correct one.
+
+The *reason* for staging changed once §0.7 landed, and the staging survived the
+change. Originally it was forced: 39.5 h against a 15 h/week quota meant one
+partition per week and no choice about it. With levers 1 and 2 the whole leg is
+~9.9 h, which fits one week's quota or one overnight local run — so staging is no
+longer **required**.
+
+It is still **right**. alt1 is the partition most likely to kill the candidate:
+the least favourable of the four, where the RT-600 specialisation delta
+(+0.00254) already falls below W4-E1's own +0.0030 bar. Spending 3.3 h to find
+that out before spending the other 6.6 h is the same cheapest-kill-first logic
+that orders the whole plan, and it costs nothing now that the stages are hours
+rather than weeks.
+
+Keep the staging. Drop the excuse that quota forced it.
 
 **1.1 Regenerate the teacher, alt1 first.** Per partition: 20 nested inner
 teacher fits + the outer merge, producing `RT-991.altK.npy` and
@@ -457,36 +538,35 @@ identifies never-break false positives as null-model errors.
    re-derived by paired bootstrap on the pooled multi-partition distribution
    rather than reusing the canonical 0.0011?
 3. **RT-1257 promotion.** Start it in parallel now, as recommended?
-4. **Compute — RESOLVED IN PRINCIPLE, constrained in practice.** Run it on
-   **Crunch cloud**, packaged as a submission, exactly as RT-1258/RT-1259 were
-   (`submissions/G_gpu_tabular_benchmark.py`, submission 76357 / task
-   `run-3e834e0f`).
+4. **Compute — local first, Crunch cloud as fallback.** §0.7 cut the leg from
+   39.5 h to ~9.9 h, which changes the venue answer. **Local is the preferred
+   venue** and is now plausible: ~3.3 h per partition, one overnight run for all
+   three, and no quota spent.
 
-   *What it fixes:* the memory blocker. Observed peak RAM there was **18.96 GB**,
-   against this machine's 16 GB total with swap at 5.56/7.17 GB. The ~7.45 GB
-   matrix fits with headroom. It is also Linux x86_64 / python 3.11, closer to
-   `REPRODUCIBILITY_MANIFEST.json`'s recorded research environment than this Mac.
+   *Not yet ready*, per §0.8. Peak is ~5 GB anonymous on a 16 GB machine, and the
+   1M-row stack alone drove swap to 8.90/9.22 GB used. Two non-science changes
+   (free X after `ds.construct()`, chunk the prediction) are needed first, then
+   **one full-scale timed pilot** before any batch run.
 
-   *What it does not fix:* the quota. Crunch cloud bills the **same 15 h/week**
-   the scoring runs use — the GPU arms budgeted against it explicitly
-   (`quota_hours_total 15.0`, `quota_fraction_for_scored_training 0.9`,
-   `quota_learners 2`, `per_learner_budget_seconds 24300`). Phase 1's 39.5 h is
-   ~3 weeks of the entire quota, and spending it also costs submission capacity
-   in those weeks. **The RTX 4090 buys nothing here**: the teacher is CPU
-   LightGBM, and the GPU is only relevant if LightGBM is switched to
-   `device=gpu`, which is a determinism-gated protocol change.
+   *Fallback stays open:* Crunch cloud, packaged as a submission exactly as
+   RT-1258/RT-1259 were (submission 76357 / task `run-3e834e0f`), RTX 4090 box,
+   observed 18.96 GB peak RAM, Linux x86_64 / python 3.11. It bills the same
+   15 h/week quota the scoring runs use — but ~9.9 h now fits inside one week.
+   The RTX 4090 remains irrelevant to a CPU LightGBM fit.
 
-   *Consequence, now folded into §1.4:* run **alt1 alone first** at 13.2 h — one
-   week's quota, and the partition most likely to kill the candidate.
+5. **Thread count — RESOLVED, pending a full-scale repeat.** Measured 2.02x at
+   8 threads (saturates there), with predictions **bitwise equal** to the frozen
+   `num_threads=2` — the only `model_to_string()` difference is the
+   `[num_threads: N]` metadata line. That satisfies the determinism gate at
+   reduced scale. Repeat at 1M x 900 before it feeds a decision. Note the earlier
+   "~5x" in §0.5 was wrong and is corrected there.
 
-   *Still open:* whether to spend one week's quota on alt1 at all, given it also
-   displaces a scoring submission that week.
+6. **Stage-2 funding.** If alt1 returns CONTINUE, is the further ~6.6 h
+   authorised in advance? Much less pressing than when it was 26.4 h and two
+   weeks of quota, but the §1.4 anti-gaming clause still needs an answer:
+   deciding now is what stops a marginal alt1 from being quoted as support.
 
-5. **Thread count.** Is a `num_threads` change in scope? It is worth ~5x here,
-   but only after a determinism demonstration; otherwise the 13.2 h per
-   partition stands. Blocked on §0.6.1 (cloud core count is unrecorded).
-
-6. **Stage-2 funding.** If alt1 returns CONTINUE, is the further 26.4 h — two
-   more weeks of quota — authorised in advance, or does it return for a decision?
-   Deciding now avoids the §1.4 anti-gaming failure mode where a marginal alt1
-   gets quoted as support because Stage 2 was never funded.
+7. **Lever 1 implementation.** Deduplicating `build_nested_Q` from 20 fits to 10
+   is worth an exact 2x, but it edits a fold-purity-critical function. Do it as
+   its own change, with the purity sentinel re-run and the §0.5 refuse-if-exists
+   guard added at the same time?
