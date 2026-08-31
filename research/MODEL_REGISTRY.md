@@ -100,6 +100,14 @@ Outstanding before promotion is even arguable:
    `regression`-objective booster whose raw output is a residual prediction, not
    a probability; it reaches a common scale through the same SCDF calibration as
    every other member, which is rank-based and therefore tolerates that.
+**Reporting defect, fixed 2026-08-31.** The original `rt1257_combo_analysis` block
+compared RT-1257 + student against a control that cloned the CAT-300 and CAT-413
+members as well as adding a clone, and reported the resulting +0.0037 as if it
+were a champion-relative marginal. It is not an E1. The script now emits the
+protocol's primary endpoint against RT-1257 + one matched clone, and labels the
+old quantity `all_clone_control (NOT an E1)`. The two committed reports carry a
+correction header; their numbers were left as produced.
+
 5. **A fresh Crunch test and an external score.** RT-1257 itself is still not the
    formal production anchor pending its own promotion action, so an 8th member
    stacks on top of an unpromoted champion.

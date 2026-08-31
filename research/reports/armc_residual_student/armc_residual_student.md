@@ -1,5 +1,30 @@
 # Arm-C Residual Student
 
+> **CORRECTION, 2026-08-31.** The `RT-1257 Complementarity` section below reports a
+> row named `RT1257_plus_student_vs_clone_plus_seed`. **That number is not the
+> protocol's primary endpoint and must not be quoted as a champion-relative
+> marginal.** `clone_plus_seed_control` clones the CAT-300 and CAT-413 members
+> *and* adds a clone — three changes — so it scores 0.625517, below RT-600's
+> 0.625811 and well under RT-1257's 0.627838. A delta against it re-credits the
+> two CatBoost slot swaps to the student.
+>
+> The correct E1 under the `PROTOCOL_CHAMPION_2026.md` addition contract is
+> RT-1257 plus **one** matched seed clone. Against it the primary endpoint is
+> **E2-E1 = +0.001516 at 4/5 folds** (fold 0 negative), not the +0.0037 shown
+> here. Secondary E2-E0 is +0.001416, also 4/5.
+>
+> Every other number in this report — the gates, the verdict, and the whole
+> RT-600 lane including the 5/5 marginal of +0.001965 — is unaffected: those read
+> a correctly matched one-change control. Only the RT-1257 combo block was wrong.
+>
+> Corrected figures: `E2_E1_addition_contract.json` in the confirmation-run
+> directory. Generator: `research/scripts/armc_e2_e1_addition_contract.py`.
+> `armc_residual_student.py` was fixed the same day, so reports generated after
+> this date carry the primary endpoint directly and label the old control
+> `all_clone_control (NOT an E1)`. The numbers below are left exactly as they were
+> produced.
+
+
 Date: `2026-08-30T13:04:58`
 
 Nested causal student of the Arm-C residual. No RT ID was allocated and
