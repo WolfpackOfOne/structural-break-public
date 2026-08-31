@@ -1022,8 +1022,20 @@ def analyze(args: argparse.Namespace) -> dict:
     if int(finite_dev.sum()) != int(rows["dev"].sum()):
         raise ValueError("student OOF does not cover every dev-fold row")
 
-    rt990 = np.load(oof_dir / "RT-990.npy", mmap_mode="r").astype(np.float64)
-    rt991 = np.load(oof_dir / "RT-991.npy", mmap_mode="r").astype(np.float64)
+    # RT-990/RT-991 are the Arm-B/Arm-C reference vectors.  They MUST carry the
+    # partition suffix: a canonical-fitted vector scored under an alternate fold
+    # partition is fold-contaminated, because the canonical fit trained on rows
+    # that the alternate partition holds out.  If the partition's own vectors do
+    # not exist, omit the Arm-B/Arm-C reference rows entirely rather than print
+    # contaminated ones -- the blend contrasts below do not depend on them.
+    rt990_path = oof_dir / f"RT-990{OOF_SUFFIX}.npy"
+    rt991_path = oof_dir / f"RT-991{OOF_SUFFIX}.npy"
+    arm_bc_available = rt990_path.exists() and rt991_path.exists()
+    if not arm_bc_available:
+        rt990 = rt991 = None
+    else:
+        rt990 = np.load(rt990_path, mmap_mode="r").astype(np.float64)
+        rt991 = np.load(rt991_path, mmap_mode="r").astype(np.float64)
     calibrated_specialists = [load_calibrated_stream(oof_dir, stream, rows) for stream in SPECIALISTS]
     rt600 = blend(calibrated_specialists)
     seed_clone = load_calibrated_stream(oof_dir, SEED_CLONE, rows)
@@ -1032,16 +1044,18 @@ def analyze(args: argparse.Namespace) -> dict:
     rt600_plus_student = blend(calibrated_specialists + [student_cal])
 
     packs = {
-        "Arm_B_RT990_raw": score_pack(rt990, rows),
-        "Arm_C_RT991_raw": score_pack(rt991, rows),
+        **({"Arm_B_RT990_raw": score_pack(rt990, rows),
+            "Arm_C_RT991_raw": score_pack(rt991, rows)} if arm_bc_available else {}),
         "RT600_7stream": score_pack(rt600, rows),
         "RT600_plus_seedclone": score_pack(rt600_plus_clone, rows),
         "Residual_student_raw": score_pack(student_raw, rows),
         "RT600_plus_residual_student": score_pack(rt600_plus_student, rows),
     }
     deltas = {
-        "Arm_C_vs_Arm_B": delta_score_pack(packs["Arm_C_RT991_raw"], packs["Arm_B_RT990_raw"]),
-        "Student_raw_vs_Arm_B": delta_score_pack(packs["Residual_student_raw"], packs["Arm_B_RT990_raw"]),
+        **({"Arm_C_vs_Arm_B": delta_score_pack(packs["Arm_C_RT991_raw"], packs["Arm_B_RT990_raw"]),
+            "Student_raw_vs_Arm_B": delta_score_pack(packs["Residual_student_raw"],
+                                                     packs["Arm_B_RT990_raw"])}
+           if arm_bc_available else {}),
         "Student_blend_vs_RT600": delta_score_pack(packs["RT600_plus_residual_student"], packs["RT600_7stream"]),
         "Student_blend_vs_seedclone_blend": delta_score_pack(
             packs["RT600_plus_residual_student"], packs["RT600_plus_seedclone"]
@@ -1051,7 +1065,8 @@ def analyze(args: argparse.Namespace) -> dict:
     per_fold_contrasts = {
         f"{name}::{cut}": per_fold_contrast(packs, cand, anchor, cut)
         for name, cand, anchor in (
-            ("Student_raw_vs_Arm_B", "Residual_student_raw", "Arm_B_RT990_raw"),
+            *((("Student_raw_vs_Arm_B", "Residual_student_raw", "Arm_B_RT990_raw"),)
+              if arm_bc_available else ()),
             ("Student_blend_vs_RT600", "RT600_plus_residual_student", "RT600_7stream"),
             (
                 "Student_blend_vs_seedclone_blend",
@@ -1064,15 +1079,16 @@ def analyze(args: argparse.Namespace) -> dict:
 
     dominant_rows = np.flatnonzero(rows["dominant_cell"])
     rank_student = within_t_rank_vector(student_raw, dominant_rows, rows["t"])
-    rank_rt990 = within_t_rank_vector(rt990, dominant_rows, rows["t"])
     rank_rt600 = within_t_rank_vector(rt600, dominant_rows, rows["t"])
-    rank_rt991 = within_t_rank_vector(rt991, dominant_rows, rows["t"])
+    rank_rt990 = within_t_rank_vector(rt990, dominant_rows, rows["t"]) if arm_bc_available else None
+    rank_rt991 = within_t_rank_vector(rt991, dominant_rows, rows["t"]) if arm_bc_available else None
     rank_student_blend = within_t_rank_vector(rt600_plus_student, dominant_rows, rows["t"])
     rank_clone_blend = within_t_rank_vector(rt600_plus_clone, dominant_rows, rows["t"])
     rho = {
-        "student_raw_vs_Arm_B_RT990": pearson(rank_student, rank_rt990, rows["dominant_cell"]),
+        **({"student_raw_vs_Arm_B_RT990": pearson(rank_student, rank_rt990, rows["dominant_cell"]),
+            "Arm_C_RT991_vs_Arm_B_RT990": pearson(rank_rt991, rank_rt990, rows["dominant_cell"])}
+           if arm_bc_available else {}),
         "student_raw_vs_RT600": pearson(rank_student, rank_rt600, rows["dominant_cell"]),
-        "Arm_C_RT991_vs_Arm_B_RT990": pearson(rank_rt991, rank_rt990, rows["dominant_cell"]),
         "student_blend_vs_seedclone_blend": pearson(rank_student_blend, rank_clone_blend, rows["dominant_cell"]),
     }
 
@@ -1101,7 +1117,7 @@ def analyze(args: argparse.Namespace) -> dict:
     oracle_report_path = ROOT / "research" / "reports" / "armc_residualization.json"
     oracle_lift = None
     retention = None
-    if oracle_report_path.exists():
+    if oracle_report_path.exists() and arm_bc_available:
         oracle = json.loads(oracle_report_path.read_text())
         oracle_r = oracle["scores"]["T_orthogonal_residual_xfit"]["dominant_cell_ts_auc"]
         oracle_b = oracle["scores"]["Arm_B_RT990"]["dominant_cell_ts_auc"]
@@ -1156,8 +1172,16 @@ def analyze(args: argparse.Namespace) -> dict:
             "feature_dir": str(args.data_root / "cache" / "features"),
             "oof_dir": str(oof_dir),
             "student_oof": str(out_dir / "armc_residual_student_oof.npy"),
-            "rt990_sha256": sha256_file(oof_dir / "RT-990.npy"),
-            "rt991_sha256": sha256_file(oof_dir / "RT-991.npy"),
+            "arm_bc_reference": (
+                "present" if arm_bc_available else
+                f"OMITTED: RT-990{OOF_SUFFIX}.npy / RT-991{OOF_SUFFIX}.npy absent. "
+                f"Arm-B/Arm-C reference rows, Arm_C_vs_Arm_B, Student_raw_vs_Arm_B, "
+                f"the RT-990/RT-991 correlations and the oracle retention ratio are "
+                f"omitted rather than computed from canonical vectors, which would be "
+                f"fold-contaminated under this partition. The blend contrasts do not "
+                f"depend on them and are unaffected."),
+            "rt990_sha256": sha256_file(rt990_path) if arm_bc_available else None,
+            "rt991_sha256": sha256_file(rt991_path) if arm_bc_available else None,
         },
         "causality_contract": {
             "student_features": "existing 500 causal feature bank only",
@@ -1202,7 +1226,9 @@ def analyze(args: argparse.Namespace) -> dict:
         "rt1257_combo": rt1257_combo,
         "oracle_retention": {
             "oracle_residual_cell_lift_vs_Arm_B": oracle_lift,
-            "student_raw_cell_lift_vs_Arm_B": deltas["Student_raw_vs_Arm_B"]["dominant_cell"]["ts_auc_delta"],
+            "student_raw_cell_lift_vs_Arm_B": (
+                deltas["Student_raw_vs_Arm_B"]["dominant_cell"]["ts_auc_delta"]
+                if arm_bc_available else None),
             "retention_fraction": retention,
             "note": (
                 "NOT a like-for-like ratio. The denominator is the oracle residual measured on the "
@@ -1254,6 +1280,29 @@ def fmt(x: object, digits: int = 6, signed: bool = False) -> str:
     return f"{val:+.{digits}f}" if signed else f"{val:.{digits}f}"
 
 
+def _scope_narrative(scope: dict) -> list[str]:
+    """Describe WHERE the gain sits, from this run's own pair-flow numbers."""
+    nb = scope.get("neverbreak_net_rate_vs_rt600")
+    pb = scope.get("prebreak_net_rate_vs_rt600")
+    if nb is None or pb is None:
+        return []
+    if pb <= 0:
+        return ["**This is a never-break-cut gain.** The pre-break pair net is not",
+                "positive, so the residual carries no pre-break signal here. Do not",
+                "describe this result as a broad improvement."]
+    ratio = nb / pb if pb else float("inf")
+    if ratio >= 3.0:
+        return ["**This is predominantly a never-break-cut gain**: the never-break pair",
+                f"net ({fmt(nb, signed=True)}) is {ratio:.1f}x the pre-break net",
+                f"({fmt(pb, signed=True)}). Do not describe it as a broad improvement",
+                "without saying where it sits."]
+    return ["**The gain appears on both cuts here**: never-break pair net",
+            f"{fmt(nb, signed=True)} against pre-break {fmt(pb, signed=True)}",
+            f"(ratio {ratio:.1f}x). That differs from the canonical run, where the",
+            "pre-break net was approximately zero, and the difference is itself a",
+            "result worth reporting rather than smoothing over."]
+
+
 def make_markdown(result: dict[str, object]) -> str:
     scores = result["scores"]
     deltas = result["deltas"]
@@ -1296,6 +1345,8 @@ def make_markdown(result: dict[str, object]) -> str:
         "RT600_plus_seedclone",
         "RT600_plus_residual_student",
     ):
+        if name not in scores:
+            continue
         row = scores[name]
         lines.append(
             f"| {name} | {fmt(row['whole_dev']['ts_auc'])} | "
@@ -1319,6 +1370,8 @@ def make_markdown(result: dict[str, object]) -> str:
         "Student_blend_vs_RT600",
         "Student_blend_vs_seedclone_blend",
     ):
+        if name not in deltas:
+            continue
         row = deltas[name]
         lines.append(
             f"| {name} | {fmt(row['whole_dev']['ts_auc_delta'], signed=True)} | "
@@ -1362,18 +1415,40 @@ def make_markdown(result: dict[str, object]) -> str:
                 f"{fmt(row['mean'], signed=True)} | {fmt(row['sd'])} | "
                 f"{fmt(row['t_stat'], digits=2)} |"
             )
-        lines.extend(
-            [
-                "",
-                "The blend contrasts are 5/5 positive, which is the promotion-relevant",
-                "gate. The standalone `Student_raw_vs_Arm_B` contrast is not: its pooled",
-                "value is carried by two folds and is negative on others, so it describes",
-                "this fit rather than a stable property of the mechanism. The blend gain",
-                "is likewise concentrated -- folds 1 and 3 are several times the size of",
-                "folds 0 and 4 -- so the mean clears the bar with a small margin relative",
-                "to its own fold spread. Treat the confirmation run as load-bearing.",
-            ]
+        # Computed from THIS run's numbers.  This paragraph used to be hardcoded
+        # prose describing the canonical run and was emitted verbatim into every
+        # report, including alternate-partition ones it did not describe.
+        blend_row = per_fold.get("Student_blend_vs_seedclone_blend::whole_dev")
+        narrative = ["", "Read from this run's own per-fold numbers:"]
+        if blend_row:
+            vals = [blend_row["per_fold"].get(str(f)) for f in FOLDS]
+            vals = [v for v in vals if v is not None]
+            mags = [abs(v) for v in vals if v]
+            spread = (max(mags) / min(mags)) if mags and min(mags) > 0 else float("nan")
+            narrative.append(
+                f"- Blend vs seed-clone blend: {blend_row['positive_folds']}/"
+                f"{blend_row['n_folds']} folds positive, mean "
+                f"{fmt(blend_row['mean'], signed=True)}, sd {fmt(blend_row['sd'])}, "
+                f"t {fmt(blend_row['t_stat'], digits=2)}."
+            )
+            narrative.append(
+                f"- Largest fold effect is {spread:.1f}x the smallest in magnitude; "
+                f"the wider that ratio, the more the mean rests on a few folds."
+            )
+        raw_row = per_fold.get("Student_raw_vs_Arm_B::whole_dev")
+        if raw_row:
+            narrative.append(
+                f"- Standalone student vs Arm B: {raw_row['positive_folds']}/"
+                f"{raw_row['n_folds']} folds positive, t "
+                f"{fmt(raw_row['t_stat'], digits=2)}. A standalone contrast that is "
+                f"not consistently positive describes this fit, not a stable property "
+                f"of the mechanism."
+            )
+        narrative.append(
+            "- The blend contrasts, not the standalone one, are the "
+            "promotion-relevant gate."
         )
+        lines.extend(narrative)
 
     scope = result.get("gain_scope") or {}
     if scope:
@@ -1385,13 +1460,12 @@ def make_markdown(result: dict[str, object]) -> str:
                 f"- Never-break pair net vs RT-600: `{fmt(scope['neverbreak_net_rate_vs_rt600'], signed=True)}`",
                 f"- Pre-break pair net vs RT-600: `{fmt(scope['prebreak_net_rate_vs_rt600'], signed=True)}`",
                 "",
-                "**This is a never-break-cut gain.** The pre-break pair net is",
-                "approximately zero, and in the upstream residualization the",
-                "T-orthogonal residual scores *below* Arm B on the pre-break cut --",
-                "the residual carries no pre-break signal. The blend's positive",
-                "pre-break delta comes from dilution of the seven incumbent streams,",
-                "not from new pre-break information. Do not describe this result as a",
-                "broad improvement.",
+                # Computed, not asserted.  This used to be a fixed paragraph
+                # describing the canonical run ("the pre-break pair net is
+                # approximately zero"), which is false on partitions where it is
+                # not -- and it was printed directly above the numbers
+                # contradicting it.
+                *_scope_narrative(scope),
                 "",
                 f"- Whole-dev damage rate vs RT-600: `{fmt(scope['whole_dev_damage_rate_vs_rt600'])}`",
                 "",
@@ -1438,7 +1512,9 @@ def make_markdown(result: dict[str, object]) -> str:
             "",
             "## Correlation",
             "",
-            f"- Student raw vs Arm B, within-t dominant-cell rho: `{fmt(rho['student_raw_vs_Arm_B_RT990'])}`",
+            *([f"- Student raw vs Arm B, within-t dominant-cell rho: "
+               f"`{fmt(rho['student_raw_vs_Arm_B_RT990'])}`"]
+              if "student_raw_vs_Arm_B_RT990" in rho else []),
             f"- Student raw vs RT-600, within-t dominant-cell rho: `{fmt(rho['student_raw_vs_RT600'])}`",
             "",
         ]
