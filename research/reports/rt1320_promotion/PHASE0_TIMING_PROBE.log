@@ -1,0 +1,20 @@
+frozen params: {'objective': 'binary', 'n_estimators': 900, 'learning_rate': 0.05, 'num_leaves': 127, 'min_data_in_leaf': 150, 'feature_fraction': 1.0, 'bagging_fraction': 0.8, 'bagging_freq': 1, 'lambda_l2': 5.0, 'max_bin': 127, 'num_threads': 2}
+real fit  = 1,000,000 rows x 900 rounds
+probe fit = 250,000 rows x 60 rounds  (teacher outer=0 inner=1)
+
+augmented_stack   17.1s  shape (250000, 1000)  0.93 GB  rss 4.22 GB
+[LightGBM] [Info] Number of positive: 63816, number of negative: 186184
+[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.379817 seconds.
+You can set `force_row_wise=true` to remove the overhead.
+And if memory is not enough, you can set `force_col_wise=true`.
+[LightGBM] [Info] Total Bins 124344
+[LightGBM] [Info] Number of data points in the train set: 250000, number of used features: 1000
+[LightGBM] [Info] [binary:BoostFromScore]: pavg=0.255264 -> initscore=-1.070731
+[LightGBM] [Info] Start training from score -1.070731
+train 60 rounds    38.4s  = 0.640 s/round  rss 4.22 GB
+
+=== PROJECTION (linear in rows and rounds) ===
+  one inner teacher : 39.5 min  (stack 1.1 + train 38.4)
+  20 inner / partition : 13.2 h
+  60 inner / 3 alt partitions : 39.5 h
+  matrix at full scale : 3.73 GB (peak ~7.45 GB)

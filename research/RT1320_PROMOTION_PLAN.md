@@ -140,12 +140,40 @@ produces, per `REPRODUCIBILITY_MANIFEST.json` discipline — the sibling worktre
 are mutable and unversioned, which is exactly the condition that voided
 RT-1237/1238/1239.
 
-**0.5 Measure one fit before committing to sixty.** No timing evidence exists
-for the nested teacher. Run a single inner teacher fit
-(`--inner-teacher 0 1`) on canonical, record wall time and peak RSS, and
-multiply out before authorising Phase 1. Do not estimate this from the student's
-~5 min/outer-fold; the teacher is a different architecture on a different
-population.
+**0.5 Measure one fit before committing to sixty. — DONE 2026-08-31.**
+Measured at 250k rows x 60 rounds on the frozen `ARM_B_PARAMS`: **0.640 s/round**,
+peak RSS 4.22 GB. Extrapolated to the real 1,000,000 x 900 fit:
+
+| | |
+|---|---:|
+| one inner teacher | **39.5 min** |
+| 20 inner teachers, one partition | **13.2 h** |
+| 60 inner teachers, three alt partitions | **39.5 h** |
+| feature matrix / peak during concatenate | 3.73 GB / **~7.45 GB** |
+
+Two consequences Phase 1 must absorb:
+
+- **The alt leg is 40+ hours of compute, not an afternoon** — and that is inner
+  teachers alone, excluding student fits and CatBoost refits. Open decision 4
+  below is therefore a **blocker**, not a convenience.
+- **The RT-600-lane fallback does not avoid this cost.** It avoids the CatBoost
+  refits only. The teacher refits are common to both lanes, because the student's
+  target derives from the nested teacher on whichever partition it is fitted.
+
+**Memory is the binding constraint.** ~7.45 GB peak on a 16 GB machine whose swap
+is already at 5.56/7.17 GB. The probe ran at 250k rows precisely to avoid
+thrashing. `num_threads=2` leaves ~5x on the table on a 10-core box, but raising
+it is a protocol change that must first be shown not to move predictions, per the
+determinism gate — not a free win.
+
+**Hazard found and not yet fixed:** `cmd_inner_teacher` calls `np.save` on
+`nested_Q_outer{f}_inner{g}.npy` with no existence check and no `--force`. With
+`research/oof` symlinked to a sibling worktree, invoking it would silently
+overwrite the existing canonical vector, which is gitignored and unrecoverable.
+**Add a refuse-if-exists guard before Phase 1's first production invocation.**
+The probe avoided `cmd_inner_teacher` entirely and wrote nothing; verified.
+
+Full record: `reports/rt1320_promotion/PHASE0_TIMING_PROBE.md`.
 
 ---
 
@@ -344,5 +372,11 @@ identifies never-break false positives as null-model errors.
    noise floor be re-derived by paired bootstrap on the pooled four-partition
    distribution rather than reusing the canonical 0.0011?
 3. **RT-1257 promotion.** Start it in parallel now, as recommended?
-4. **Compute.** Where do the teacher refits run — local, or the GPU box that
-   unblocked RT-1258/RT-1259?
+4. **Compute — now a blocker, see §0.5.** Where do the teacher refits run? The
+   alt leg is 40+ h at frozen config and wants more RAM headroom than this
+   16 GB machine has once swap is counted. Local overnight runs, the box that
+   unblocked RT-1258/RT-1259, or something else? Settle before authorising
+   Phase 1.
+
+5. **Thread count.** Is a `num_threads` change in scope? It is worth ~5x here,
+   but only after a determinism demonstration; otherwise the 40 h stands.
