@@ -28,6 +28,7 @@ This file answers **what matters now**. It does not replace `RESULTS.csv` (the q
 | **RT-1263** | CAT-415 | Additional CatBoost slot replacement | Positive individual evidence; corrected multi-slot curve does not establish improvement over RT-1257. | **RESEARCH_ALIVE** |
 | **RT-1262** | CAT-414 | Additional CatBoost slot replacement | Positive individual evidence; corrected multi-slot curve does not establish improvement over RT-1257. | **RESEARCH_ALIVE** |
 | **RT-1260** | CAT-411 | Additional CatBoost slot replacement | Passed original clone-relative individual gate, but corrected E2-E0 is small and mature-vs-never evidence is weak. | **RESEARCH_ALIVE** |
+| **RT-1320** | M1 Arm-C residual student | First candidate to *add* an 8th member rather than swap a slot | Addition contract vs RT-1257: primary E2-E1 **+0.001516** (4/5 folds, fold 0 negative); secondary E2-E0 +0.001416. On the RT-600 lane +0.001965 at 5/5. Confirmed at a second seed. | **RESEARCH_ALIVE — clears the primary endpoint; NOT deployable, NOT a member of any promoted system** |
 | **RT-995 / T2** | Teacher-distilled causal LightGBM | Privileged-information student | Strong standalone improvement (~+0.00943 vs matched T0) but final ensemble marginal vs matched seed clone only ~+0.000237; mostly redundant. | **PARKED** |
 | **RT-1265** | CSA-04R corrected reanalysis identity | Corrected hybrid-selection result | Fixed E2-E0 + preregistered parsimony selects k*=2 = CAT-413 + CAT-300, exactly RT-1257. `delta_vs_RT1257=0`; no new OOF vector. | **SUPERSEDING_ANALYSIS / NOT_DISTINGUISHABLE** |
 | **RT-1264** | Original CSA-04 five-slot hybrid | Historical best-k result under flawed selection endpoint | Original E2-E1 endpoint was contaminated by worsening clone control as k grew. Descriptive 63-subset appendix cannot select a champion. | **SUPERSEDED BY RT-1265** |
@@ -66,3 +67,39 @@ RT-1257 is the current **external champion** at 0.6290. RT-600 remains the forma
 ## Future comparison rule
 
 Serious new candidates should be evaluated for **marginal information relative to RT-1257**, not just standalone AUC. RT-600 remains a permanent homogeneous LightGBM reference. For a candidate C, prefer a matched test of E0=RT-1257, E1=RT-1257 with an exchangeable matched control, and E2=RT-1257 with C, with E2-E1 as the primary endpoint and E2-E0, fold consistency, pair flow, dominant-cell repair, mature-vs-never repair, correlation, runtime, causality, and deployment complexity as supporting evidence.
+
+## RT-1320 — what it would take to become an ACTIVE_COMPONENT
+
+RT-1320 is the first candidate in this program that **adds** a member instead of
+replacing one, so it is worth being explicit that `RESEARCH_ALIVE` is not
+timidity. By the status vocabulary at the top of this file, `ACTIVE_COMPONENT`
+means *a member of the current external champion*. RT-1257 scored 0.6290
+externally without RT-1320 in it, so RT-1320 cannot be an active component today
+no matter how good its internal evidence is.
+
+Outstanding before promotion is even arguable:
+
+1. **Alternate-partition leg.** All evidence is on canonical `folds.parquet`, and
+   `FINAL_ARCHITECTURE_FREEZE.md` records that canonical was the most favourable
+   of the four partitions for the RT-600 specialisation delta. The leg requires
+   refitting the seven specialists under `folds_alt*.parquet` first, because
+   their OOF is cross-fitted on the canonical partition.
+2. **Causality gate.** `PROTOCOL_CHAMPION_2026.md` requires prefix invariance,
+   no total-horizon dependence, per-series independence, deterministic replay,
+   and output-contract checks before a predictive score is interpreted. The
+   student reuses the already-verified 500-column causal bank and adds no new
+   features, so much of this is inherited — but none of it has been run against
+   the student's own inference path. `causal_verified=no` in the ledger.
+3. **Final-10k fit.** Production fits use `folds_final10k.parquet` over 10,000
+   series. The nested Arm-C teacher that generates RT-1320's training target
+   exists only over the 8,000 dev series, so the target itself must be
+   regenerated at 10k before an artifact can be built.
+4. **Production artifact and manifest.** `src/sbr/production/model.py` is
+   member-count agnostic and manifest-driven, so an 8th member is an artifact and
+   calibration-payload change rather than a code redesign. The student is a
+   `regression`-objective booster whose raw output is a residual prediction, not
+   a probability; it reaches a common scale through the same SCDF calibration as
+   every other member, which is rank-based and therefore tolerates that.
+5. **A fresh Crunch test and an external score.** RT-1257 itself is still not the
+   formal production anchor pending its own promotion action, so an 8th member
+   stacks on top of an unpromoted champion.

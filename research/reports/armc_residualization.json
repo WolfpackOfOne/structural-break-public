@@ -1,0 +1,233 @@
+{
+  "experiment": "armc_horizon_residualization",
+  "date": "2026-08-30T13:06:04",
+  "purpose": "Decompose RT-991 Arm C into a within-t projection on horizon variables and a residual on the fixed W7-D0 dominant cell.",
+  "inputs": {
+    "folds_path": "/path/to/workspace/structural-break-multi-agent-frontier-20260829/research/folds/folds.parquet",
+    "oof_dir": "/path/to/workspace/structural-break-wave8/research/oof",
+    "rt300_path": "/path/to/workspace/structural-break-wave8/research/oof/RT-300.npy",
+    "rt990_path": "/path/to/workspace/structural-break-wave8/research/oof/RT-990.npy",
+    "rt991_path": "/path/to/workspace/structural-break-wave8/research/oof/RT-991.npy",
+    "rt300_sha256": "bd3e6456fef300a7d0fefacec92095724ab2401fbe046c28733c9600b96879d3",
+    "rt990_sha256": "872902e7ac6525a98787997607348d8d54f31d1d7e3002aad971cec2ac1b7c41",
+    "rt991_sha256": "e0b726eaa360fb612e4b983a1c23823f69e6fd999bac5a97ce225a3b155940e5"
+  },
+  "population": {
+    "row_count_total": 5036517,
+    "row_count_dev_finite": 4032524,
+    "row_count_dominant_cell": 2392213,
+    "row_count_never_break_only": 1955421,
+    "row_count_pre_break_only": 1104487,
+    "t_min": 200,
+    "t_max": 998,
+    "n_t_groups": 799
+  },
+  "projection": {
+    "score_scale": "logit(RT-991), clipped to [eps, 1-eps]",
+    "eps": 1e-06,
+    "formula": "logit(RT-991) ~ 1 + n_online + (n_online - t) + t / n_online, fit separately within each t",
+    "crossfit": "fold k projected by coefficients fit on dominant-cell rows from folds != k at the same t",
+    "crossfit_groups": {
+      "fitted_groups": 3995,
+      "fallback_groups": 5
+    },
+    "insample_groups": {
+      "fitted_groups": 799,
+      "fallback_groups": 0
+    },
+    "shuffled_horizon_groups": {
+      "fitted_groups": 3995,
+      "fallback_groups": 5
+    },
+    "crossfit_r2": 0.3941878524297807,
+    "insample_r2": 0.39607493276941286,
+    "shuffled_crossfit_r2": 0.19852206334475808
+  },
+  "score_order": [
+    "Arm_A_RT300",
+    "Arm_B_RT990",
+    "Arm_C_RT991",
+    "Horizon_projection_xfit",
+    "T_orthogonal_residual_xfit",
+    "Horizon_projection_insample",
+    "T_orthogonal_residual_insample",
+    "Shuffled_horizon_projection_xfit",
+    "Residual_after_shuffled_projection"
+  ],
+  "scores": {
+    "Arm_A_RT300": {
+      "dominant_cell_ts_auc": 0.6534065801457525,
+      "dominant_never_break_only_ts_auc": 0.6541323573676303,
+      "dominant_pre_break_only_ts_auc": 0.6513142530300605,
+      "per_fold_dominant_cell_ts_auc": {
+        "0": 0.6675320216210067,
+        "1": 0.6459987634892167,
+        "2": 0.6772131571275646,
+        "3": 0.6469474692522083,
+        "4": 0.6286221395712174
+      }
+    },
+    "Arm_B_RT990": {
+      "dominant_cell_ts_auc": 0.6474914699065645,
+      "dominant_never_break_only_ts_auc": 0.6491193139088536,
+      "dominant_pre_break_only_ts_auc": 0.6427985944022969,
+      "per_fold_dominant_cell_ts_auc": {
+        "0": 0.6638108917990431,
+        "1": 0.6417581971640154,
+        "2": 0.6611862762245441,
+        "3": 0.6347778679496264,
+        "4": 0.6353582989309843
+      }
+    },
+    "Arm_C_RT991": {
+      "dominant_cell_ts_auc": 0.7185884164543739,
+      "dominant_never_break_only_ts_auc": 0.7143883871286614,
+      "dominant_pre_break_only_ts_auc": 0.7306965881908086,
+      "per_fold_dominant_cell_ts_auc": {
+        "0": 0.7165782044731226,
+        "1": 0.7222174389917636,
+        "2": 0.7270706660294787,
+        "3": 0.7108146672635784,
+        "4": 0.7171597386263122
+      }
+    },
+    "Horizon_projection_xfit": {
+      "dominant_cell_ts_auc": 0.5998868862927381,
+      "dominant_never_break_only_ts_auc": 0.5648635784873296,
+      "dominant_pre_break_only_ts_auc": 0.7008548064664755,
+      "per_fold_dominant_cell_ts_auc": {
+        "0": 0.5890050865700821,
+        "1": 0.5922289316707953,
+        "2": 0.5964162690237347,
+        "3": 0.613447536862547,
+        "4": 0.6085991770123785
+      }
+    },
+    "T_orthogonal_residual_xfit": {
+      "dominant_cell_ts_auc": 0.6857939886312789,
+      "dominant_never_break_only_ts_auc": 0.703074301884556,
+      "dominant_pre_break_only_ts_auc": 0.6359769553907861,
+      "per_fold_dominant_cell_ts_auc": {
+        "0": 0.688657344891974,
+        "1": 0.6850220802328568,
+        "2": 0.6967677489784802,
+        "3": 0.6790855426066882,
+        "4": 0.6821136365553688
+      }
+    },
+    "Horizon_projection_insample": {
+      "dominant_cell_ts_auc": 0.6001035173784931,
+      "dominant_never_break_only_ts_auc": 0.5651042658378311,
+      "dominant_pre_break_only_ts_auc": 0.7010020862781557,
+      "per_fold_dominant_cell_ts_auc": {
+        "0": 0.5889351972045415,
+        "1": 0.5923015792191896,
+        "2": 0.5964523326618866,
+        "3": 0.6136170634992176,
+        "4": 0.6086025574350491
+      }
+    },
+    "T_orthogonal_residual_insample": {
+      "dominant_cell_ts_auc": 0.6860468550675859,
+      "dominant_never_break_only_ts_auc": 0.7033324916262014,
+      "dominant_pre_break_only_ts_auc": 0.6362144753877604,
+      "per_fold_dominant_cell_ts_auc": {
+        "0": 0.6894759473049277,
+        "1": 0.6856940950965137,
+        "2": 0.6975244821119573,
+        "3": 0.678313272730788,
+        "4": 0.6811589933320717
+      }
+    },
+    "Shuffled_horizon_projection_xfit": {
+      "dominant_cell_ts_auc": 0.4992995519563394,
+      "dominant_never_break_only_ts_auc": 0.49927420531942723,
+      "dominant_pre_break_only_ts_auc": 0.4993726232158172,
+      "per_fold_dominant_cell_ts_auc": {
+        "0": 0.4994146257719067,
+        "1": 0.49952712556001894,
+        "2": 0.5000276988163285,
+        "3": 0.5005358525540556,
+        "4": 0.4999973460716753
+      }
+    },
+    "Residual_after_shuffled_projection": {
+      "dominant_cell_ts_auc": 0.7184219923855777,
+      "dominant_never_break_only_ts_auc": 0.7142087134977138,
+      "dominant_pre_break_only_ts_auc": 0.7305683609919673,
+      "per_fold_dominant_cell_ts_auc": {
+        "0": 0.7165597308098474,
+        "1": 0.7221570543838803,
+        "2": 0.7269912112575405,
+        "3": 0.7107379981929722,
+        "4": 0.7171173647316085
+      }
+    }
+  },
+  "deltas_vs_B": {
+    "Arm_A_RT300": {
+      "dominant_cell_ts_auc": 0.005915110239188004,
+      "dominant_never_break_only_ts_auc": null,
+      "dominant_pre_break_only_ts_auc": null
+    },
+    "Arm_B_RT990": {
+      "dominant_cell_ts_auc": 0.0,
+      "dominant_never_break_only_ts_auc": null,
+      "dominant_pre_break_only_ts_auc": null
+    },
+    "Arm_C_RT991": {
+      "dominant_cell_ts_auc": 0.0710969465478094,
+      "dominant_never_break_only_ts_auc": null,
+      "dominant_pre_break_only_ts_auc": null
+    },
+    "Horizon_projection_xfit": {
+      "dominant_cell_ts_auc": -0.04760458361382636,
+      "dominant_never_break_only_ts_auc": null,
+      "dominant_pre_break_only_ts_auc": null
+    },
+    "T_orthogonal_residual_xfit": {
+      "dominant_cell_ts_auc": 0.03830251872471446,
+      "dominant_never_break_only_ts_auc": null,
+      "dominant_pre_break_only_ts_auc": null
+    },
+    "Horizon_projection_insample": {
+      "dominant_cell_ts_auc": -0.047387952528071375,
+      "dominant_never_break_only_ts_auc": null,
+      "dominant_pre_break_only_ts_auc": null
+    },
+    "T_orthogonal_residual_insample": {
+      "dominant_cell_ts_auc": 0.038555385161021416,
+      "dominant_never_break_only_ts_auc": null,
+      "dominant_pre_break_only_ts_auc": null
+    },
+    "Shuffled_horizon_projection_xfit": {
+      "dominant_cell_ts_auc": -0.14819191795022507,
+      "dominant_never_break_only_ts_auc": null,
+      "dominant_pre_break_only_ts_auc": null
+    },
+    "Residual_after_shuffled_projection": {
+      "dominant_cell_ts_auc": 0.07093052247901321,
+      "dominant_never_break_only_ts_auc": null,
+      "dominant_pre_break_only_ts_auc": null
+    }
+  },
+  "within_t_rank_rho_vs_B": {
+    "arm_c": 0.4137099542057281,
+    "horizon_projection_xfit": 0.025986620061467267,
+    "residual_xfit": 0.4570162648148953
+  },
+  "cut_decomposition": {
+    "residual_lift_dominant_cell": 0.03830251872471446,
+    "residual_lift_never_break_only": 0.05395498797570242,
+    "residual_lift_pre_break_only": -0.006821639011510783,
+    "note": "The gate is evaluated on the dominant cell only. Resolved by cut, the residual lift is entirely a never-break-cut effect: on the pre-break cut the T-orthogonal residual scores BELOW Arm B, so the residual carries no pre-break signal. Arm C's large raw pre-break lift is therefore endpoint/horizon information, not transferable structure."
+  },
+  "gates": {
+    "promotion_residual_lift": 0.02,
+    "kill_residual_lift": 0.01,
+    "kill_rank_rho": 0.85,
+    "observed_residual_lift": 0.03830251872471446,
+    "gate_scope": "dominant_cell"
+  },
+  "verdict": "PROMOTE diagnostic: the T-orthogonal residual keeps material dominant-cell signal beyond Arm B. Next step is a nested causal student with the Wave 7 fold-purity sentinel."
+}
