@@ -110,10 +110,23 @@ vectors and remain the real cost of Phase 1.
 
 Full record: `reports/rt1320_promotion/PHASE0_ALT_REVERIFICATION.md`.
 
-**0.3 Plumbing delta.** `wave5_lib.Ctx` already accepts `folds_file=`;
-`armc_residual_student.py` already accepts `--folds-path`. Only
-`wave7_teacher_nested.py` lacks a partition flag. One CLI argument threaded to
-`Ctx`, plus partition-suffixed output names — not a redesign.
+**0.3 Plumbing delta. — DONE 2026-08-31.** `armc_residual_student.py` already
+accepted `--folds-path`. `wave7_teacher_nested.py` now takes
+`--partition {canonical,alt1,alt2,alt3}`, implemented with the repo's existing
+`wave2_lib.alt_folds` context manager (the same mechanism `wave4_partitions.py`
+uses) rather than a second bespoke path.
+
+Every artifact the module writes is suffixed `.altK` — `nested_Q_*`,
+`RT-994/RT-995_outer*`, and the report JSONs — so an alternate-partition run
+cannot collide with a canonical vector. Matches the existing `RT-300.alt1.npy`
+convention.
+
+Verified: alt1 gives a genuinely different fold assignment (rows
+817179/811013/810608/797163/796561 vs canonical
+806334/812939/806691/802506/804054, same 4,032,524 dev total), `_qpath(0,1)`
+resolves to `nested_Q_outer0_inner1.alt1.npy`, that target does not exist so the
+guard will not trip, and the canonical vector is untouched. Canonical output
+re-confirmed bitwise faithful after the change.
 
 **0.4 Code is self-contained on this branch; data is not.** Verified: every
 script this plan needs is tracked on `main` under `research/scripts/` —

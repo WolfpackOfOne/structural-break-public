@@ -38,6 +38,7 @@ import argparse, gc, json, os, time
 
 import numpy as np
 
+from wave2_lib import alt_folds
 from wave5_lib import Ctx, FOLDS, REPORTS, OOFDIR, ts_auc_flat, AGE_BUCKETS
 import sbr.pipeline as PL
 from wave7_d3r import FULL, ARM_B_PARAMS, cell_mask, score_on, bucket, last_row_lookup
@@ -51,6 +52,21 @@ FOLDS_SET = set(FOLDS)
 #: bitwise unchanged; they exist only to keep peak memory down.
 STACK_CHUNK = 100_000
 PRED_CHUNK = 200_000
+
+PARTITIONS = ("canonical", "alt1", "alt2", "alt3")
+
+#: Set from --partition.  Every artifact this module writes is suffixed with it,
+#: so an alternate-partition run can never collide with a canonical vector.
+#: Matches the repo's existing convention (RT-300.alt1.npy).
+PART_SUFFIX = ""
+
+
+def _suffix_for(partition):
+    return "" if partition == "canonical" else f".{partition}"
+
+
+def _qpath(outer_f, inner_g):
+    return f"{OOFDIR}/nested_Q_outer{outer_f}_inner{inner_g}{PART_SUFFIX}.npy"
 
 
 def _refuse_if_exists(path, force):
@@ -207,7 +223,7 @@ def build_nested_Q(outer_f, d, mats, names, keep_idx, final_of_row, threads=None
     outer_train = [g for g in FOLDS if g != outer_f]
     Q = np.full(len(d.y), np.nan, dtype=np.float64)
     for g in outer_train:
-        cached = f"{OOFDIR}/nested_Q_outer{outer_f}_inner{g}.npy"
+        cached = _qpath(outer_f, g)
         if os.path.exists(cached):
             Qg = np.load(cached)
             m = ~np.isnan(Qg)
@@ -287,7 +303,7 @@ def cmd_inner_teacher(outer_f, inner_g, force=False, threads=None):
     mats, names = PL.load_features(FULL)
     keep_idx = np.arange(len(names))
     final_of_row = last_row_lookup(d)[d.sidx]
-    path = f"{OOFDIR}/nested_Q_outer{outer_f}_inner{inner_g}.npy"
+    path = _qpath(outer_f, inner_g)
     _refuse_if_exists(path, force)          # fail BEFORE spending the fit
     t0 = time.time()
     va_rows, pred = train_inner_teacher(
@@ -312,7 +328,7 @@ def cmd_inner_teacher_pair(f, g, force=False, threads=None):
     final_of_row = last_row_lookup(d)[d.sidx]
     # (outer=f, inner=g) predicts fold g; (outer=g, inner=f) predicts fold f.
     targets = [(f, g), (g, f)]
-    paths = {t: f"{OOFDIR}/nested_Q_outer{t[0]}_inner{t[1]}.npy" for t in targets}
+    paths = {t: _qpath(*t) for t in targets}
     for t in targets:
         _refuse_if_exists(paths[t], force)   # fail BEFORE spending the fit
     t0 = time.time()
@@ -363,9 +379,9 @@ def cmd_train_nested_student(outer_f, kind):
     exp_id = "RT-994" if kind == "t1" else "RT-995"
     oof = np.full(len(d.y), np.nan, dtype=np.float32)
     oof[va_rows] = pred
-    np.save(f"{OOFDIR}/{exp_id}_outer{outer_f}.npy", oof)
+    np.save(f"{OOFDIR}/{exp_id}_outer{outer_f}{PART_SUFFIX}.npy", oof)
     summary = {"outer_fold": outer_f, "kind": kind, "ts_auc": s, "runtime_s": round(time.time() - t0, 1)}
-    with open(f"{REPORTS}/wave7_teacher_nested_outer{outer_f}_{kind}.json", "w") as fh:
+    with open(f"{REPORTS}/wave7_teacher_nested_outer{outer_f}_{kind}{PART_SUFFIX}.json", "w") as fh:
         json.dump(summary, fh, indent=2)
     print(json.dumps(summary, indent=2))
 
@@ -390,11 +406,11 @@ def run_outer_fold(f, threads=None):
         oof[va_rows] = pred
         scores[kind] = s
 
-    np.save(f"{OOFDIR}/RT-994_outer{f}.npy", oof_t1)
-    np.save(f"{OOFDIR}/RT-995_outer{f}.npy", oof_t2)
+    np.save(f"{OOFDIR}/RT-994_outer{f}{PART_SUFFIX}.npy", oof_t1)
+    np.save(f"{OOFDIR}/RT-995_outer{f}{PART_SUFFIX}.npy", oof_t2)
     summary = {"outer_fold": f, "t1_ts_auc": scores["t1"], "t2_ts_auc": scores["t2"],
                "runtime_s": round(time.time() - t_start, 1)}
-    with open(f"{REPORTS}/wave7_teacher_nested_outer{f}.json", "w") as fh:
+    with open(f"{REPORTS}/wave7_teacher_nested_outer{f}{PART_SUFFIX}.json", "w") as fh:
         json.dump(summary, fh, indent=2)
     print(json.dumps(summary, indent=2))
     return summary
@@ -614,11 +630,27 @@ def main():
     ap.add_argument("--force", action="store_true",
                     help="overwrite an existing nested_Q vector (it is gitignored "
                          "and has no version-control copy -- be sure)")
+    ap.add_argument("--partition", choices=PARTITIONS, default="canonical",
+                    help="fold partition; alternates use wave2_lib.alt_folds and "
+                         "suffix every artifact with .altK so they cannot collide "
+                         "with canonical vectors")
     ap.add_argument("--threads", type=int, default=None,
                     help=f"override num_threads (frozen default "
                          f"{ARM_B_PARAMS['num_threads']}); shown bitwise-neutral in "
                          f"PHASE0_COST_REDUCTION.md, but opt in explicitly")
     args = ap.parse_args()
+
+    global PART_SUFFIX
+    PART_SUFFIX = _suffix_for(args.partition)
+    if args.partition != "canonical":
+        print(f"PARTITION={args.partition}  artifact suffix='{PART_SUFFIX}'", flush=True)
+        with alt_folds(args.partition):
+            _dispatch(args)
+        return
+    _dispatch(args)
+
+
+def _dispatch(args):
     if args.fold_purity_test:
         fold_purity_test()
     elif args.list_inner_pairs:
