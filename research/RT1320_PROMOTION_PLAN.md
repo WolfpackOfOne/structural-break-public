@@ -480,7 +480,26 @@ arguable regardless of the mean.
 
 ---
 
-## 5. Phase 2 — Causality gate
+## 5. Phase 2 — Causality gate — RUN 2026-08-31: research-stage PASS
+
+`tests/test_rt1320_causality.py`, seven gates, all passing; suite 718 passed /
+56 skipped / exit 0. Gates 3 and 4 verify the sentinels still **catch a planted
+defect** rather than passing on clean data.
+
+GATE 7 confirms what this section predicted: the student's output range is
+**[-4.325093, 8.671623]** — residual-valued, not a probability. Recorded, not
+asserted to [0, 1].
+
+**Not a full clearance.** Streaming prefix-invariance through a production
+inference path is NOT covered — RT-1320 has no artifact until Phase 4, and
+`verify_causality_artifacts.py` needs `SBR_MODEL_DIR`. Prefix invariance is
+*inherited* via the bank identity pinned by GATE 1: a sound argument, not an
+independent measurement. Ledger status is `causal_verified=research-stage`, not
+`yes`, and it must be re-run directly against the artifact in Phase 4.
+
+Full record: `reports/rt1320_promotion/PHASE2_CAUSALITY.md`.
+
+### Original scope
 
 `PROTOCOL_CHAMPION_2026.md`: no predictive score is interpreted until this
 passes. The ledger currently records `causal_verified=no`.
