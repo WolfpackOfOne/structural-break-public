@@ -30,7 +30,7 @@ RT-1257 is the RT-600 seven-slot architecture with exactly two learner swaps: RT
 
 **RT-600** — official TS-AUC 0.6268.
 
-Retained permanently as the homogeneous seven-LightGBM reference and, until final RT-1257 production promotion is explicitly completed, the formal production anchor. A fresh local post-build RT-1257 Crunch test was captured on 2026-08-31; final consolidated validation/CI and owner tag/promotion remain pending.
+Retained permanently as the homogeneous seven-LightGBM reference and, until final RT-1257 production promotion is explicitly completed, the formal production anchor. A fresh local post-build RT-1257 Crunch test was captured on 2026-08-31 and PR #14 CI passed; formal RT-1257 production promotion is deferred to a separate owner tag/status action.
 
 Key evidence:
 - `research/FINAL_ARCHITECTURE_FREEZE.md`
@@ -190,6 +190,7 @@ The leaderboard is used as external validation, not as a hyperparameter oracle.
 ## Reproducibility and consolidation
 
 - `research/archive/2026-08-30/` — immutable pre-consolidation branch/model/results snapshot.
+- `research/archive/2026-08-31/BRANCH_TAG_PRUNING_AUDIT.md` — final branch/tag pruning audit for PR #14.
 - `docs/MAIN_CONSOLIDATION_REPORT_2026.md` — consolidation actions, verified findings, gate status, and unresolved items.
 - `engineering/reports/rt1257_deployment/CONSOLIDATION_HYGIENE_REVIEW.md` — RT-1257 artifact/provenance review.
 

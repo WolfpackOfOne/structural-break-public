@@ -10,7 +10,7 @@ The repository has entered research-to-production consolidation. The purpose is 
 
 `main` has **not** been moved by this consolidation at the time of this report.
 
-The current best external model is **RT-1257**, official TS-AUC **0.6290**, versus the RT-600 reference at **0.6268** (+0.0022). A fresh local post-build Crunch test now passes against the final entrypoint hash, and the PR #14 follow-up CI passed. RT-1257 is still not being called the formal production anchor until the owner promotion/tag step is made deliberately.
+The current best external model is **RT-1257**, official TS-AUC **0.6290**, versus the RT-600 reference at **0.6268** (+0.0022). A fresh local post-build Crunch test now passes against the final entrypoint hash, and the PR #14 follow-up CI passed. PR #14 deliberately does **not** promote RT-1257 to the formal production anchor; RT-600 remains that anchor unless and until a separate owner promotion/tag/status action is made.
 
 The consolidation has also corrected two important scientific/provenance misunderstandings:
 
@@ -36,7 +36,7 @@ The results snapshot points to the exact pre-consolidation `research/current` RE
 
 ### PASS — branch/tag inventory performed before deletion
 
-32 pre-existing remote branch heads and 16 existing milestone tags were inventoried. No branch was deleted, rebased, force-pushed, or moved during the audit.
+At the initial 2026-08-30 snapshot, 32 pre-existing remote branch heads and 16 existing milestone tags were inventoried. No branch was deleted, rebased, force-pushed, or moved during the audit.
 
 One pre-existing open PR was found: #12, the August-24 repository-cleanup PR from `chore/repo-cleanup-2026` to `main`. It predates the RT-1257/Deep Ensemble work and was left untouched during the initial inventory.
 
@@ -210,9 +210,9 @@ Evidence captured:
 - prediction rows: 50,983
 - prediction SHA-256: `cd6c5fe9f376ef4c5e620e77f5f94cf4bb77843d1e12820a02256e08e7a80b1b`
 
-### PENDING — formal production promotion
+### DEFERRED BY DESIGN — formal production promotion
 
-No `rt1257-production-0.6290` production tag has been created and `STATUS.md` retains RT-600 as the formal production anchor. The fresh local test and PR #14 follow-up CI are closed; formal promotion still depends on the owner/tag/status promotion step being made explicitly.
+No `rt1257-production-0.6290` production tag has been created and `STATUS.md` retains RT-600 as the formal production anchor. The fresh local test and PR #14 follow-up CI are closed, but this consolidation PR keeps the formal-anchor decision conservative: RT-1257 is the external champion, while RT-600 remains the formal production anchor. A future RT-1257 production promotion would be a separate owner action.
 
 ## 8. Canonical current-state documents
 
@@ -236,7 +236,7 @@ The new documents explicitly distinguish EXTERNAL_CHAMPION, REFERENCE, ACTIVE_CO
 
 | Model | Consolidated status |
 | --- | --- |
-| RT-1257 | EXTERNAL_CHAMPION; fresh local Crunch test passed; production promotion pending tag/owner gate |
+| RT-1257 | EXTERNAL_CHAMPION; fresh local Crunch test passed; formal production promotion deferred |
 | RT-600 | REFERENCE / FORMAL_PRODUCTION_ANCHOR |
 | RT-1254 / CAT-413 | ACTIVE_COMPONENT |
 | RT-1255 / CAT-300 | ACTIVE_COMPONENT |
@@ -263,16 +263,16 @@ No historical branch has been deleted during consolidation.
 
 The curated import records the LOCAL and CRUNCH heads as parents, so their histories remain reachable from the consolidation lineage.
 
-### OPEN — final milestone tagging / branch pruning
+### PASS — final branch/tag pruning audit
 
-Historical branch deletion is intentionally deferred until:
+The final reachability audit is recorded in `research/archive/2026-08-31/BRANCH_TAG_PRUNING_AUDIT.md`. It audited 34 remote branch heads after `git fetch --all --tags --prune`:
 
-1. the consolidation validation gates pass;
-2. all required milestone tags exist;
-3. the final PR to main is ready and reviewed;
-4. each candidate branch is rechecked for unique unreachable history.
+- 15 remote heads are already reachable from the consolidation head.
+- 9 remote heads are protected by exact existing milestone tags.
+- 1 remote head is contained in a later existing milestone tag.
+- 7 remote heads are not reachable and not tagged; they are explicitly excluded from pruning unless a later owner-approved tag/import decision preserves them.
 
-Do not delete branches merely because their science is classified KILL.
+No branch deletion is required before moving `main`; branch deletion remains a separate post-merge cleanup operation. Do not delete branches merely because their science is classified KILL.
 
 ## 11. Merge-gate matrix
 
@@ -299,29 +299,31 @@ Do not delete branches merely because their science is classified KILL.
 | RT-1257 external provenance | **PASS** | submission #16 record |
 | Manifest/build tracked-code gap classified | **PASS** | direct Git compare, packaging-only tracked diff |
 | Fresh post-build RT-1257 Crunch test | **PASS** | `CRUNCH_TEST.json` regenerated from 2026-08-31 local run |
-| RT-1257 formal production promotion | **PENDING** | depends on explicit owner/tag/status promotion |
+| RT-1257 formal production promotion | **DEFERRED BY DESIGN** | PR #14 keeps RT-600 as formal anchor; RT-1257 remains external champion |
 | CI dependency installation | **PASS** | actual PR #13 GitHub Actions install step |
 | CI runtime import smoke test | **PASS** | local command passed; GitHub Actions run `33347734538` passed |
 | Maintained-code Ruff | **PASS** | `ruff check src tests scripts`; GitHub Actions run `33347734538` passed |
 | Research ledger hygiene script | **PASS** | local script reports 275 rows and no duplicate IDs |
 | pytest full intended suite | **PASS** | local `pytest -q`: 692 passed, 79 skipped, 89 warnings; GitHub Actions run `33347734538` passed |
 | production causality/prefix/independence/determinism gate | **PASS** | suite passes locally and in CI; real-store CRF tests skip where competition store is absent |
-| branch tags created for new late milestones | **OPEN** | defer until validation / available safe tag operation |
-| branch deletion | **NOT STARTED BY DESIGN** | must occur only after final merge and reachability check |
+| final branch/tag pruning audit | **PASS** | `research/archive/2026-08-31/BRANCH_TAG_PRUNING_AUDIT.md` |
+| branch deletion | **DEFERRED CLEANUP** | no deletion required before merge; unsafe branch set is explicitly excluded |
 
 ## 12. Items that block moving main
 
-The consolidation branch must not be merged to `main` while any required item below is unresolved:
+No code/provenance blocker remains that requires another PR #14 branch commit before moving `main`.
 
-1. Formal RT-1257 production promotion/tagging/status change has not been made by the owner; RT-600 remains the formal production anchor until then.
-2. Final branch/tag pruning must wait until after validation and a last unique-history audit.
+The remaining actions are deliberately out of scope for this PR:
+
+1. A future RT-1257 production promotion/tag/status change, if the owner chooses to make one.
+2. A future destructive branch-pruning cleanup, limited by the 2026-08-31 audit.
 
 ## 13. Scientific operating state after consolidation
 
 The intended hierarchy is now explicit:
 
 - external champion: RT-1257, 0.6290
-- formal production/reference anchor pending final RT-1257 promotion: RT-600, 0.6268
+- formal production/reference anchor: RT-600, 0.6268; RT-1257 promotion deferred
 - champion components: CAT-300 / RT-1255 and CAT-413 / RT-1254
 - research-alive residual CatBoost slots: CAT-412, CAT-415, CAT-414, CAT-411
 - parked signal: RT-995 / T2

@@ -13,7 +13,7 @@ Purpose: determine what can be verified from repository/GitHub evidence before R
 
 **Fresh Crunch test against shipped/post-packaging build:** **VERIFIED / PASSED.** PR #14 follow-up ran `crunch test` with Crunch CLI 11.11.0 on 2026-08-31T01:07:46Z against entrypoint SHA `05eafb66f4589f5b426f4af43779f428f7a90f2d64b423530d6f315a798e888b`. The runner completed inference, saved 50,983 predictions, and passed the determinism check.
 
-**Formal production promotion:** **PENDING OWNER PROMOTION.** The fresh local Crunch-test gap and PR #14 follow-up CI are closed, but RT-600 remains the formal production anchor until the production tag/status changes are deliberately made.
+**Formal production promotion:** **DEFERRED BY DESIGN.** The fresh local Crunch-test gap and PR #14 follow-up CI are closed, but this consolidation PR does not promote RT-1257 to the formal production anchor. RT-600 remains the formal production anchor unless and until a separate owner promotion/tag/status action is made.
 
 ## Artifact identity evidence
 
@@ -115,6 +115,6 @@ Before changing the formal production anchor from RT-600 to RT-1257:
 4. Regenerate `engineering/reports/rt1257_deployment/CRUNCH_TEST.json` so it identifies the entrypoint hash/build manifest it tested. DONE.
 5. Re-run deterministic/prefix/series-independence/streaming-parity/production-contract tests in the clean environment. DONE locally through `pytest -q`; real-store CRF tests skip when the non-redistributable store is absent.
 6. Ensure GitHub CI reaches and passes the intended production test set. DONE for PR #14 follow-up commit `770d626` in GitHub Actions run `33347734538`.
-7. Only then create the production promotion tag and change `STATUS.md` from "external champion" + "RT-600 formal anchor" to "RT-1257 production champion." NOT DONE.
+7. Only then create the production promotion tag and change `STATUS.md` from "external champion" + "RT-600 formal anchor" to "RT-1257 production champion." DEFERRED; not part of PR #14.
 
-Until the remaining owner-promotion gate is evidenced, no consolidation document may claim RT-1257 is formally production-promoted.
+No consolidation document may claim RT-1257 is formally production-promoted unless that separate owner action is later performed.

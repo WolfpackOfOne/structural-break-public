@@ -24,7 +24,7 @@ The internal evidence that licensed RT-1257 was E2-E0 **+0.002026322**, marginal
 
 **RT-600 — official TS-AUC 0.6268.**
 
-RT-600 remains the formal production anchor during consolidation. RT-1257's build/manifest SHA split has been checked and the intervening tracked changes are packaging, dependency-declaration, and engineering-evidence changes rather than `src/sbr` model/feature changes. A fresh local Crunch test against the shipped/post-packaging entrypoint was recorded on 2026-08-31 and passed with determinism. Formal production promotion has not been made yet; it still requires the final consolidated validation/CI gate and owner tag/promotion step.
+RT-600 remains the formal production anchor during consolidation. RT-1257's build/manifest SHA split has been checked and the intervening tracked changes are packaging, dependency-declaration, and engineering-evidence changes rather than `src/sbr` model/feature changes. A fresh local Crunch test against the shipped/post-packaging entrypoint was recorded on 2026-08-31 and passed with determinism, and PR #14 CI passed. Formal RT-1257 production promotion is deliberately deferred to a separate owner tag/status action.
 
 See `engineering/reports/rt1257_deployment/CONSOLIDATION_HYGIENE_REVIEW.md`.
 
@@ -79,6 +79,6 @@ Use RT-1257 as the primary ensemble baseline and RT-600 as the permanent homogen
 
 ## Consolidation state
 
-Work is occurring on `release/2026-research-consolidation`; `main` has not been moved. No historical branch should be deleted until the final consolidation gate passes and its unique history is proven reachable or tagged.
+Work is occurring on `release/2026-research-consolidation`; `main` has not been moved. The 2026-08-31 branch/tag pruning audit is recorded in `archive/2026-08-31/BRANCH_TAG_PRUNING_AUDIT.md`. No historical branch should be deleted unless that audit classifies it as reachable/tag-protected, or a later owner-approved tag/import decision preserves it first.
 
-_Last updated: 2026-08-31 during PR #14 consolidation follow-up._
+_Last updated: 2026-08-31 during PR #14 branch/tag audit follow-up._
