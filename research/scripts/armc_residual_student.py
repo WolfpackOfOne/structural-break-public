@@ -866,7 +866,25 @@ def rt1257_combo_analysis(
             student_cal,
         ]
     )
-    clone_plus_seed = blend(
+    # PROTOCOL_CHAMPION_2026 E1 for the ADDITION contract: RT-1257 with one
+    # matched exchangeable seed clone added, i.e. exactly one change from E0.
+    rt1257_plus_seedclone = blend(
+        [
+            cat300,
+            calibrated_specialists[1],
+            calibrated_specialists[2],
+            calibrated_specialists[3],
+            cat413,
+            calibrated_specialists[5],
+            calibrated_specialists[6],
+            clone_extra,
+        ]
+    )
+    # NOT an E1. This clones the CAT-300 and CAT-413 members *and* adds a clone,
+    # so it sits at RT-600 grade rather than RT-1257 grade and a delta against it
+    # re-credits the two CatBoost swaps to whatever is being tested. Retained
+    # only as a fully-cloned floor; see `endpoint_note` below.
+    all_clone_control = blend(
         [
             clone300,
             calibrated_specialists[1],
@@ -884,7 +902,8 @@ def rt1257_combo_analysis(
         "RT1257_catboost_hybrid": score_pack(rt1257, rows),
         "RT1257_clone_control": score_pack(rt1257_clone, rows),
         "RT1257_plus_residual_student": score_pack(rt1257_plus_student, rows),
-        "clone_plus_seed_control": score_pack(clone_plus_seed, rows),
+        "RT1257_plus_seedclone": score_pack(rt1257_plus_seedclone, rows),
+        "all_clone_control": score_pack(all_clone_control, rows),
     }
     means = {
         name: mean_fold_ts_auc(vec, rows)
@@ -893,7 +912,8 @@ def rt1257_combo_analysis(
             ("RT1257_catboost_hybrid", rt1257),
             ("RT1257_clone_control", rt1257_clone),
             ("RT1257_plus_residual_student", rt1257_plus_student),
-            ("clone_plus_seed_control", clone_plus_seed),
+            ("RT1257_plus_seedclone", rt1257_plus_seedclone),
+            ("all_clone_control", all_clone_control),
         )
     }
     pair_flow_vs_rt1257 = pair_flow_by_split(
@@ -903,8 +923,15 @@ def rt1257_combo_analysis(
         n_pairs_per_t=args.pairs_per_t,
         seed=args.pair_seed,
     )
-    pair_flow_vs_clone_plus_seed = pair_flow_by_split(
-        clone_plus_seed,
+    pair_flow_vs_rt1257_plus_seedclone = pair_flow_by_split(
+        rt1257_plus_seedclone,
+        rt1257_plus_student,
+        rows,
+        n_pairs_per_t=args.pairs_per_t,
+        seed=args.pair_seed,
+    )
+    pair_flow_vs_all_clone_control = pair_flow_by_split(
+        all_clone_control,
         rt1257_plus_student,
         rows,
         n_pairs_per_t=args.pairs_per_t,
@@ -925,8 +952,11 @@ def rt1257_combo_analysis(
             "RT1257_plus_student_vs_RT1257": delta_score_pack(
                 packs["RT1257_plus_residual_student"], packs["RT1257_catboost_hybrid"]
             ),
-            "RT1257_plus_student_vs_clone_plus_seed": delta_score_pack(
-                packs["RT1257_plus_residual_student"], packs["clone_plus_seed_control"]
+            "PRIMARY_RT1257_plus_student_vs_RT1257_plus_seedclone": delta_score_pack(
+                packs["RT1257_plus_residual_student"], packs["RT1257_plus_seedclone"]
+            ),
+            "RT1257_plus_student_vs_all_clone_control": delta_score_pack(
+                packs["RT1257_plus_residual_student"], packs["all_clone_control"]
             ),
             "RT1257_plus_student_vs_RT600": delta_score_pack(
                 packs["RT1257_plus_residual_student"], packs["RT600_7stream"]
@@ -939,16 +969,37 @@ def rt1257_combo_analysis(
             - means["RT1257_clone_control"]["mean_ts_auc"],
             "RT1257_plus_student_minus_RT1257": means["RT1257_plus_residual_student"]["mean_ts_auc"]
             - means["RT1257_catboost_hybrid"]["mean_ts_auc"],
-            "RT1257_plus_student_minus_clone_plus_seed": means["RT1257_plus_residual_student"]["mean_ts_auc"]
-            - means["clone_plus_seed_control"]["mean_ts_auc"],
+            "PRIMARY_RT1257_plus_student_minus_RT1257_plus_seedclone": means[
+                "RT1257_plus_residual_student"
+            ]["mean_ts_auc"]
+            - means["RT1257_plus_seedclone"]["mean_ts_auc"],
+            "control_lift_RT1257_plus_seedclone_minus_RT1257": means[
+                "RT1257_plus_seedclone"
+            ]["mean_ts_auc"]
+            - means["RT1257_catboost_hybrid"]["mean_ts_auc"],
+            "RT1257_plus_student_minus_all_clone_control": means[
+                "RT1257_plus_residual_student"
+            ]["mean_ts_auc"]
+            - means["all_clone_control"]["mean_ts_auc"],
             "RT1257_plus_student_minus_RT600": means["RT1257_plus_residual_student"]["mean_ts_auc"]
             - means["RT600_7stream"]["mean_ts_auc"],
         },
         "pair_flow_vs_rt1257": pair_flow_vs_rt1257,
-        "pair_flow_vs_clone_plus_seed": pair_flow_vs_clone_plus_seed,
+        "pair_flow_vs_rt1257_plus_seedclone": pair_flow_vs_rt1257_plus_seedclone,
+        "pair_flow_vs_all_clone_control": pair_flow_vs_all_clone_control,
         "note": (
             "Uses original dev OOF arrays RT-1254/RT-1255 from the CatBoost specialist "
             "research directory, not the deployment final10k artifacts."
+        ),
+        "endpoint_note": (
+            "PRIMARY endpoint under PROTOCOL_CHAMPION_2026 is E2-E1 where E1 is "
+            "RT1257_plus_seedclone -- RT-1257 with one matched exchangeable clone added, "
+            "exactly one change from E0. all_clone_control is NOT an E1: it clones the "
+            "CAT-300 and CAT-413 members as well as adding a clone, so it sits at RT-600 "
+            "grade and a delta against it re-credits the two CatBoost slot swaps to the "
+            "candidate. Reports before 2026-08-31 quoted that delta as if it were a "
+            "champion-relative marginal; it is not. See "
+            "research/scripts/armc_e2_e1_addition_contract.py."
         ),
     }
 
@@ -1405,8 +1456,9 @@ def make_markdown(result: dict[str, object]) -> str:
         for name in (
             "RT600_7stream",
             "RT1257_catboost_hybrid",
+            "RT1257_plus_seedclone",
             "RT1257_plus_residual_student",
-            "clone_plus_seed_control",
+            "all_clone_control",
         ):
             row = combo_scores[name]
             lines.append(
@@ -1416,6 +1468,10 @@ def make_markdown(result: dict[str, object]) -> str:
                 f"{fmt(row['dominant_never_break_only']['ts_auc'])} | "
                 f"{fmt(row['dominant_pre_break_only']['ts_auc'])} |"
             )
+        _pri = combo_deltas["PRIMARY_RT1257_plus_student_vs_RT1257_plus_seedclone"]
+        _pri_mean = combo_mean_deltas["PRIMARY_RT1257_plus_student_minus_RT1257_plus_seedclone"]
+        _acc = combo_deltas["RT1257_plus_student_vs_all_clone_control"]
+        _acc_mean = combo_mean_deltas["RT1257_plus_student_minus_all_clone_control"]
         lines.extend(
             [
                 "",
@@ -1425,14 +1481,21 @@ def make_markdown(result: dict[str, object]) -> str:
                 f"{fmt(combo_mean_deltas['RT1257_plus_student_minus_RT1257'], signed=True)} | "
                 f"{fmt(combo_deltas['RT1257_plus_student_vs_RT1257']['whole_dev']['ts_auc_delta'], signed=True)} | "
                 f"{fmt(combo_deltas['RT1257_plus_student_vs_RT1257']['dominant_cell']['ts_auc_delta'], signed=True)} |",
-                f"| RT1257_plus_student_vs_clone_plus_seed | "
-                f"{fmt(combo_mean_deltas['RT1257_plus_student_minus_clone_plus_seed'], signed=True)} | "
-                f"{fmt(combo_deltas['RT1257_plus_student_vs_clone_plus_seed']['whole_dev']['ts_auc_delta'], signed=True)} | "
-                f"{fmt(combo_deltas['RT1257_plus_student_vs_clone_plus_seed']['dominant_cell']['ts_auc_delta'], signed=True)} |",
+                f"| **PRIMARY** RT1257_plus_student_vs_RT1257_plus_seedclone | "
+                f"{fmt(_pri_mean, signed=True)} | "
+                f"{fmt(_pri['whole_dev']['ts_auc_delta'], signed=True)} | "
+                f"{fmt(_pri['dominant_cell']['ts_auc_delta'], signed=True)} |",
+                f"| RT1257_plus_student_vs_all_clone_control (NOT an E1) | "
+                f"{fmt(_acc_mean, signed=True)} | "
+                f"{fmt(_acc['whole_dev']['ts_auc_delta'], signed=True)} | "
+                f"{fmt(_acc['dominant_cell']['ts_auc_delta'], signed=True)} |",
                 f"| RT1257_plus_student_vs_RT600 | "
                 f"{fmt(combo_mean_deltas['RT1257_plus_student_minus_RT600'], signed=True)} | "
                 f"{fmt(combo_deltas['RT1257_plus_student_vs_RT600']['whole_dev']['ts_auc_delta'], signed=True)} | "
                 f"{fmt(combo_deltas['RT1257_plus_student_vs_RT600']['dominant_cell']['ts_auc_delta'], signed=True)} |",
+                "",
+                "",
+                combo["endpoint_note"],
                 "",
                 "Pair flow of `RT1257 + residual_student` vs `RT1257`:",
                 "",
