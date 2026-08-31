@@ -88,12 +88,27 @@ Verified **missing** on alt partitions:
 must be refit under `folds_alt*`. They already are. Update that line when this
 plan is committed.
 
-**0.2 Confirm the alt vectors are trustworthy.** The specialist alt OOF dates
-from the wave-4 partition study. Before building on it, re-derive the RT-600
-alt-partition mean from the stored vectors and check it against the number
-recorded in `FINAL_ARCHITECTURE_FREEZE.md` (+0.0083 ± 0.0011 ensemble delta
-across four partitions, alt1 specialisation delta +0.00254). If it does not
-reproduce, the vectors are stale and Phase 1 becomes a full refit.
+**0.2 Confirm the alt vectors are trustworthy. — DONE 2026-08-31, PASS.**
+Recomputed W4-E2 from the 52 vectors on disk using
+`wave4_partition_analyse.py` unchanged, and diffed against the committed
+`reports/ensemble_partition_stability.json`. **Worst absolute discrepancy across
+all 24 levels and deltas: `0.000e+00`.** All 52 SHA-256 values distinct, so no
+alt vector is a stale copy of its canonical counterpart. Summary reproduces the
+freeze exactly (total +0.00832 / sd 0.00113; specialisation +0.00333; single
+level spread sd 0.00394; 12/12 deltas positive).
+
+The vectors are **not stale**; Phase 1 does not need to refit the seven
+specialists or the seed clones. It also re-confirms from the vectors themselves
+the fact that motivates Phase 1: canonical is the most favourable of the four
+partitions on all three deltas, and alt1's specialisation delta (+0.00254) is
+below W4-E1's own +0.0030 bar.
+
+Caveat carried forward: this is **integrity, not provenance** — identical bytes,
+not proof those bytes came from the claimed configurations. Scope is the RT-600
+lane only; `RT-991`, `nested_Q_*`, `RT-1254` and `RT-1255` still have no alt
+vectors and remain the real cost of Phase 1.
+
+Full record: `reports/rt1320_promotion/PHASE0_ALT_REVERIFICATION.md`.
 
 **0.3 Plumbing delta.** `wave5_lib.Ctx` already accepts `folds_file=`;
 `armc_residual_student.py` already accepts `--folds-path`. Only

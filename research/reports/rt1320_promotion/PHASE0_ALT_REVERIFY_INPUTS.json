@@ -1,0 +1,314 @@
+{
+  "RT-300": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-300.npy",
+    "sha256": "bd3e6456fef300a7d0fefacec92095724ab2401fbe046c28733c9600b96879d3",
+    "mtime": 1787200506.0746245,
+    "bytes": 20146196
+  },
+  "RT-401": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-401.npy",
+    "sha256": "16e1a10e75f3a2adf12d0efdfe8f4dd9391cfb53f871909a3f7392d2f175f57e",
+    "mtime": 1787259818.2299457,
+    "bytes": 20146196
+  },
+  "RT-402": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-402.npy",
+    "sha256": "dd2901750916a5ad4ba66372a3c974fb7a4dc4f9f53fdb75da1637c1bc1ae730",
+    "mtime": 1787259818.2831144,
+    "bytes": 20146196
+  },
+  "RT-403": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-403.npy",
+    "sha256": "81f5fb6a3004adb4672b386c50e33fc97e6d08d6ab694fa2e929ba3fd2a4f4e6",
+    "mtime": 1787259818.289574,
+    "bytes": 20146196
+  },
+  "RT-404": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-404.npy",
+    "sha256": "512a8f4c3201939372bdcf2d861e6dbac49e80e2246214972759478acc677fc2",
+    "mtime": 1787261130.2152312,
+    "bytes": 20146196
+  },
+  "RT-405": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-405.npy",
+    "sha256": "5fb87cfd0373e045f0857b92da669dce56973a424df1f6f84de766b637a83a5f",
+    "mtime": 1787261130.2030692,
+    "bytes": 20146196
+  },
+  "RT-406": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-406.npy",
+    "sha256": "f9207bd78dab266c8ef8b0c1cc13b5961a4a916fe8968a4264172e9572b7fc0b",
+    "mtime": 1787261136.2990148,
+    "bytes": 20146196
+  },
+  "RT-410": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-410.npy",
+    "sha256": "cbe1282006585cdcceb020b8c67ba62e2cc8be551bb93b81d9a19bac8ec628cb",
+    "mtime": 1787261754.7563183,
+    "bytes": 20146196
+  },
+  "RT-411": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-411.npy",
+    "sha256": "f08248b3c47683046e4531637179a198df5cdcb024539ddc098eb88ca1158612",
+    "mtime": 1787261663.552907,
+    "bytes": 20146196
+  },
+  "RT-412": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-412.npy",
+    "sha256": "2684cec6917c22b44af0b37f5e5b055e6159d7d452b0989bdc21cee0f73a3ae0",
+    "mtime": 1787262708.1507332,
+    "bytes": 20146196
+  },
+  "RT-413": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-413.npy",
+    "sha256": "f101827affa4394e83b007c22cadaa06f1f4021771615a6db02c17c50b6ba4ac",
+    "mtime": 1787262795.9867525,
+    "bytes": 20146196
+  },
+  "RT-414": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-414.npy",
+    "sha256": "31e98d95f7453d2a9bdf22ad877df6c1e8a032a9b7d12464c76d77885921972f",
+    "mtime": 1787262031.5082562,
+    "bytes": 20146196
+  },
+  "RT-415": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-415.npy",
+    "sha256": "04e6cc609a4791021d164f8037a1f2df8f8bca9618d408a97cdd7253ee0127b6",
+    "mtime": 1787263316.5154104,
+    "bytes": 20146196
+  },
+  "RT-300.alt1": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-300.alt1.npy",
+    "sha256": "1585733e9c28d40b64e09634924f2623935da0545f53277c4db94f26e17fc3c6",
+    "mtime": 1787268234.9398706,
+    "bytes": 20146196
+  },
+  "RT-401.alt1": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-401.alt1.npy",
+    "sha256": "caad0f83ecce5be83e0644d0fcfc55bf47398806e5911a0d91698dac2e5c4d14",
+    "mtime": 1787269428.5099561,
+    "bytes": 20146196
+  },
+  "RT-402.alt1": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-402.alt1.npy",
+    "sha256": "f0edeced243eee558c8070a16d74e66644fd2de14f482c8a32ff72766a7c20da",
+    "mtime": 1787270466.1047504,
+    "bytes": 20146196
+  },
+  "RT-403.alt1": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-403.alt1.npy",
+    "sha256": "7c00ad6c08af6d72c6ade2b404627c5280bbed2bf108324b773dabc85332cc2e",
+    "mtime": 1787271623.0570967,
+    "bytes": 20146196
+  },
+  "RT-404.alt1": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-404.alt1.npy",
+    "sha256": "2ea2d234f40f87401dcbb1070312781afcc3cf141c858042b07752be81a9af82",
+    "mtime": 1787272744.1393588,
+    "bytes": 20146196
+  },
+  "RT-405.alt1": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-405.alt1.npy",
+    "sha256": "9a086fc3afb50c38e530ca6c1548ae3a8f3c181d1911fe4f10c83753219dae85",
+    "mtime": 1787273747.7727642,
+    "bytes": 20146196
+  },
+  "RT-406.alt1": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-406.alt1.npy",
+    "sha256": "ac2e0cd881ab048174d593d2af4db9db8485105165ea7cb7aaf868c53a2ede17",
+    "mtime": 1787274855.4474902,
+    "bytes": 20146196
+  },
+  "RT-410.alt1": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-410.alt1.npy",
+    "sha256": "f8356f5a533d8ddebded7ab1b60194192179498709c38af98096367863833324",
+    "mtime": 1787275387.3609438,
+    "bytes": 20146196
+  },
+  "RT-411.alt1": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-411.alt1.npy",
+    "sha256": "006da90126de5ce9d0a897bbc98136ec0467d21937bca104fde5c0ee57258f9d",
+    "mtime": 1787275869.64741,
+    "bytes": 20146196
+  },
+  "RT-412.alt1": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-412.alt1.npy",
+    "sha256": "88234ef72d3c830e6a80f859e3191fbaa4693879980de648f79ab9a71ea263ec",
+    "mtime": 1787277653.439225,
+    "bytes": 20146196
+  },
+  "RT-413.alt1": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-413.alt1.npy",
+    "sha256": "4f0bb5fee363d732a56ba6b598b771bae2052d5fcd26b44fc04e8d13beb378d8",
+    "mtime": 1787279203.279415,
+    "bytes": 20146196
+  },
+  "RT-414.alt1": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-414.alt1.npy",
+    "sha256": "09683fe0c9e4e6a05ab93da8c5f9a6441c865772641b50f429492f035ee99caa",
+    "mtime": 1787279482.307959,
+    "bytes": 20146196
+  },
+  "RT-415.alt1": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-415.alt1.npy",
+    "sha256": "1ea0109ac9a5d32155a51d896876f2a0bf4abbb6eff51b6be3e35188bab6535c",
+    "mtime": 1787280240.142024,
+    "bytes": 20146196
+  },
+  "RT-300.alt2": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-300.alt2.npy",
+    "sha256": "861a15cd5806755d4167dd32a38e98ac328c69a7bf30eafa65e963d11449f6af",
+    "mtime": 1787268233.2885683,
+    "bytes": 20146196
+  },
+  "RT-401.alt2": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-401.alt2.npy",
+    "sha256": "74b977c802250d70439cd9cc62caf225ef2342f7263919fe14b986bdb5cf49bb",
+    "mtime": 1787269459.095014,
+    "bytes": 20146196
+  },
+  "RT-402.alt2": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-402.alt2.npy",
+    "sha256": "14dddac10d0d393218d827ce7656272c1a3314cc21bd6dd41f2b807ccb211c1a",
+    "mtime": 1787270520.9269972,
+    "bytes": 20146196
+  },
+  "RT-403.alt2": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-403.alt2.npy",
+    "sha256": "91c1760779308dea892c9c6e637cd4e5c714bb51662bbfca9284fc44be7b949a",
+    "mtime": 1787271696.9425113,
+    "bytes": 20146196
+  },
+  "RT-404.alt2": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-404.alt2.npy",
+    "sha256": "b7f1a66fec4461af104f13a822b7bf5b18d11a381ed040d700c8f7bd2d1e603a",
+    "mtime": 1787272824.2367654,
+    "bytes": 20146196
+  },
+  "RT-405.alt2": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-405.alt2.npy",
+    "sha256": "105a33fdc3ae0e3be1105b4a99695c1dd28db27b010b673ba95b00d56ce0fb35",
+    "mtime": 1787273806.5015764,
+    "bytes": 20146196
+  },
+  "RT-406.alt2": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-406.alt2.npy",
+    "sha256": "088f828874a4b80ef2ceae91b10f2cce9de54d6a07f3f1116f42833f7ce2313a",
+    "mtime": 1787274884.5628252,
+    "bytes": 20146196
+  },
+  "RT-410.alt2": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-410.alt2.npy",
+    "sha256": "a1e3cd2d9a7754ad0f94ea795cfe30c4a15080e00b80730edd246d082f768dc3",
+    "mtime": 1787275419.60598,
+    "bytes": 20146196
+  },
+  "RT-411.alt2": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-411.alt2.npy",
+    "sha256": "e5bb9e290b5c867b4cf726785dd16872d631784577bb3a49e06872170c15aa42",
+    "mtime": 1787275890.5785701,
+    "bytes": 20146196
+  },
+  "RT-412.alt2": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-412.alt2.npy",
+    "sha256": "b3912b59fff1c7ae4f86e802f0e154474bd3dacc5f8def6ff8b279751ec0e647",
+    "mtime": 1787277704.1935716,
+    "bytes": 20146196
+  },
+  "RT-413.alt2": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-413.alt2.npy",
+    "sha256": "7c014e546621a3ca1cd93af7efb31e50116b6d5e59a0479b8adcaf2ad9dc9903",
+    "mtime": 1787279239.6339169,
+    "bytes": 20146196
+  },
+  "RT-414.alt2": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-414.alt2.npy",
+    "sha256": "f7cc9a341d263a15ba694cb38c74d7ba7ce65d484fefd762b16fe6934309402c",
+    "mtime": 1787279516.150959,
+    "bytes": 20146196
+  },
+  "RT-415.alt2": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-415.alt2.npy",
+    "sha256": "c65105117d9333f249a053976f6f35b36a43e36acc97f2cf6de9b5d338965a01",
+    "mtime": 1787280273.0480027,
+    "bytes": 20146196
+  },
+  "RT-300.alt3": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-300.alt3.npy",
+    "sha256": "55ae34f416385ff30deafbc906f1afc88e79d685ac6d23dfbccd90b6deb45df1",
+    "mtime": 1787268234.790122,
+    "bytes": 20146196
+  },
+  "RT-401.alt3": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-401.alt3.npy",
+    "sha256": "15d9d79e4ba894c027f25e9e8218caa9d154fe01930bac776511fbc6ccdb85c2",
+    "mtime": 1787269464.1687067,
+    "bytes": 20146196
+  },
+  "RT-402.alt3": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-402.alt3.npy",
+    "sha256": "8589b88b4c150c92532ed5634fa6ea5a695a4fd7c4c057ebb0cae47cf834953e",
+    "mtime": 1787270491.5367084,
+    "bytes": 20146196
+  },
+  "RT-403.alt3": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-403.alt3.npy",
+    "sha256": "d0c093200ab6004e58bb7ca57d64f98a75407ec43f2740c2b7824ec1a94dbb6f",
+    "mtime": 1787271676.6971965,
+    "bytes": 20146196
+  },
+  "RT-404.alt3": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-404.alt3.npy",
+    "sha256": "775746fbec8f00494215c0cb8583189b26c1b1c50cd62e45ef58b3c9634d78f9",
+    "mtime": 1787272819.7648056,
+    "bytes": 20146196
+  },
+  "RT-405.alt3": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-405.alt3.npy",
+    "sha256": "0a2ff2d2221a187631d81270abb17462d4baca4031ed6a19762301117b3352eb",
+    "mtime": 1787273805.4166877,
+    "bytes": 20146196
+  },
+  "RT-406.alt3": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-406.alt3.npy",
+    "sha256": "8be6f9a0848c58c3cfa372642c8951e729a745d3516bdbe2f5b44fe2eaec2c3e",
+    "mtime": 1787274976.7679834,
+    "bytes": 20146196
+  },
+  "RT-410.alt3": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-410.alt3.npy",
+    "sha256": "b9bd38a1fdac17ac200bc3cb9efe377fae16ca9efdfc8d96b8e34f1e3d500053",
+    "mtime": 1787275512.320748,
+    "bytes": 20146196
+  },
+  "RT-411.alt3": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-411.alt3.npy",
+    "sha256": "52e70a34421d92e8e3eb26ca199ad63ffe204ad831c746036d5b9c4da0a0a33d",
+    "mtime": 1787276025.1094837,
+    "bytes": 20146196
+  },
+  "RT-412.alt3": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-412.alt3.npy",
+    "sha256": "e52d0ed9f5e19cddd7591c4936e897a96e7a5a9b24272776ae39b22b4ccecc0d",
+    "mtime": 1787277801.2144773,
+    "bytes": 20146196
+  },
+  "RT-413.alt3": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-413.alt3.npy",
+    "sha256": "194168ec4fd6af3e6ef8e9478ff27ec4c3c4bd8bc36fe72c8d47dc505b0886a8",
+    "mtime": 1787279322.920071,
+    "bytes": 20146196
+  },
+  "RT-414.alt3": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-414.alt3.npy",
+    "sha256": "685fa9bbcf112ec592f355959b24957878504a21383c48d2d9294083a8dc3acb",
+    "mtime": 1787279601.8884673,
+    "bytes": 20146196
+  },
+  "RT-415.alt3": {
+    "path": "/path/to/workspace/structural-break-claude-wave3/research/oof/RT-415.alt3.npy",
+    "sha256": "e8cb572a8752727ebad3cffecafe48706ccfe3fe57dc3d9cdcf9a8c090d45d7f",
+    "mtime": 1787280326.3884807,
+    "bytes": 20146196
+  }
+}
