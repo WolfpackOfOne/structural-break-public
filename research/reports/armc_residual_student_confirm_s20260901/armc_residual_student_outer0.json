@@ -1,0 +1,278 @@
+{
+  "experiment": "armc_residual_student",
+  "outer_fold": 0,
+  "date": "2026-08-30T21:33:06",
+  "data_root": "/path/to/workspace/structural-break-wave8",
+  "folds_path": "/path/to/workspace/structural-break-multi-agent-frontier-20260829/research/folds/folds.parquet",
+  "feature_dir": "/path/to/workspace/structural-break-wave8/cache/features",
+  "oof_dir": "/path/to/workspace/structural-break-wave8/research/oof",
+  "output_path": "/path/to/workspace/structural-break-multi-agent-frontier-20260829/research/reports/armc_residual_student_confirm_s20260901/armc_residual_student_outer0.npy",
+  "teacher_meta": {
+    "outer_fold": 0,
+    "parts": [
+      {
+        "outer_fold": 0,
+        "inner_fold": 1,
+        "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer0_inner1.npy",
+        "sha256": "cdd56390d2acb4aced0b6469a1a07d84546df62e292387e0054f5845b8c8c250",
+        "finite_target_rows": 812939,
+        "target_rows": 812939,
+        "finite_non_target_rows": 0
+      },
+      {
+        "outer_fold": 0,
+        "inner_fold": 2,
+        "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer0_inner2.npy",
+        "sha256": "be445aa5e59e7dae8161eb877bea459ca9f37287c853551da53f9f9ad28f4751",
+        "finite_target_rows": 806691,
+        "target_rows": 806691,
+        "finite_non_target_rows": 0
+      },
+      {
+        "outer_fold": 0,
+        "inner_fold": 3,
+        "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer0_inner3.npy",
+        "sha256": "79fdda9359c6bcdadb8c5bcd72ae39f9a60c7f80dc04d93038f78ec4c68dfe0d",
+        "finite_target_rows": 802506,
+        "target_rows": 802506,
+        "finite_non_target_rows": 0
+      },
+      {
+        "outer_fold": 0,
+        "inner_fold": 4,
+        "path": "/path/to/workspace/structural-break-wave8/research/oof/nested_Q_outer0_inner4.npy",
+        "sha256": "bf16eb46c7fa7e8aa35296863704f74195ade4ce2d03478f57eec6d74174afde",
+        "finite_target_rows": 804054,
+        "target_rows": 804054,
+        "finite_non_target_rows": 0
+      }
+    ]
+  },
+  "student": {
+    "modules": [
+      "m00_core",
+      "m01_seq",
+      "m02_dist",
+      "m03_dyn",
+      "m04_resid",
+      "m06_loc",
+      "m07_bayes"
+    ],
+    "n_features": 500,
+    "forbidden_feature_tokens": [
+      "tau",
+      "cut",
+      "boundary",
+      "break_at",
+      "changepoint_true",
+      "has_break",
+      "n_online",
+      "n_hist",
+      "final_row",
+      "eligible",
+      "availability",
+      "pad"
+    ],
+    "params": {
+      "objective": "regression",
+      "metric": "l2",
+      "learning_rate": 0.05,
+      "num_leaves": 127,
+      "min_data_in_leaf": 150,
+      "feature_fraction": 1.0,
+      "bagging_fraction": 0.8,
+      "bagging_freq": 1,
+      "lambda_l2": 5.0,
+      "max_bin": 127,
+      "num_threads": 2,
+      "verbose": -1,
+      "rounds": 900
+    },
+    "max_train_rows": 1000000,
+    "sampled_train_rows": 1000000,
+    "available_train_rows": 3226190,
+    "validation_rows": 806334,
+    "target": "nested fold-pure residual logit(Q) - horizon_projection(logit(Q))"
+  },
+  "target_stats": {
+    "outer_fold": 0,
+    "t_groups": 999,
+    "fitted_fold_groups": 3996,
+    "fallback_fold_groups": 5,
+    "skipped_fold_groups": 0,
+    "skipped_predictions": 0,
+    "target_rows": 3226190,
+    "mean": -0.0006440364728594593,
+    "std": 1.9177715754371487,
+    "q01": -3.7233836327581065,
+    "q50": -0.21714507365541097,
+    "q99": 5.96878281493393
+  },
+  "scores": {
+    "whole_fold_ts_auc": 0.6168072133939414,
+    "dominant_cell_ts_auc": 0.6566479864505185
+  },
+  "top_feature_importance": [
+    {
+      "feature": "m07_bayes::ab_var_z",
+      "gain": 3944680.424226761
+    },
+    {
+      "feature": "m07_bayes::bf0_all",
+      "gain": 1399674.2613515854
+    },
+    {
+      "feature": "m06_loc::loc_h_rsq_gap",
+      "gain": 1285743.4467315674
+    },
+    {
+      "feature": "m07_bayes::ab_post_lvr",
+      "gain": 943680.2779884338
+    },
+    {
+      "feature": "m06_loc::fx_h_rsq_128",
+      "gain": 766797.4323101044
+    },
+    {
+      "feature": "m06_loc::loc_h_rsq_q",
+      "gain": 738297.7238235474
+    },
+    {
+      "feature": "m07_bayes::ev_pow_pk",
+      "gain": 539130.9870700836
+    },
+    {
+      "feature": "m07_bayes::ab_var",
+      "gain": 480789.44065761566
+    },
+    {
+      "feature": "m07_bayes::bo_lo_change_pk",
+      "gain": 407304.5795402527
+    },
+    {
+      "feature": "m07_bayes::abz_var_z",
+      "gain": 335397.39350509644
+    },
+    {
+      "feature": "m01_seq::gle_pkr",
+      "gain": 291368.39208316803
+    },
+    {
+      "feature": "m00_core::w8_sur_tail_x",
+      "gain": 270964.5460729599
+    },
+    {
+      "feature": "m01_seq::cz100_pkr",
+      "gain": 267511.65737247467
+    },
+    {
+      "feature": "m01_seq::phd_pkr",
+      "gain": 229966.31007003784
+    },
+    {
+      "feature": "m06_loc::fx_h_rsq_384",
+      "gain": 215066.3503484726
+    },
+    {
+      "feature": "m01_seq::sq50_pk",
+      "gain": 211295.8166027069
+    },
+    {
+      "feature": "m01_seq::xc_max_pk",
+      "gain": 210422.88556575775
+    },
+    {
+      "feature": "m02_dist::rk_cusum_u_raw",
+      "gain": 207068.33836078644
+    },
+    {
+      "feature": "m01_seq::phu_pkr",
+      "gain": 204197.69534778595
+    },
+    {
+      "feature": "m01_seq::glz_pk",
+      "gain": 203789.21422195435
+    },
+    {
+      "feature": "m04_resid::volM_e_acf1sq",
+      "gain": 199980.9141998291
+    },
+    {
+      "feature": "m01_seq::cz50_pk",
+      "gain": 193245.12842559814
+    },
+    {
+      "feature": "m07_bayes::abz_lpo_z",
+      "gain": 180995.83332252502
+    },
+    {
+      "feature": "m07_bayes::ab_lpo_pk_z",
+      "gain": 178239.4028301239
+    },
+    {
+      "feature": "m02_dist::tl_exp_asym01",
+      "gain": 178229.90147209167
+    },
+    {
+      "feature": "m01_seq::ce50_pk",
+      "gain": 174778.69458580017
+    },
+    {
+      "feature": "m07_bayes::ab_fast_z",
+      "gain": 166747.1213092804
+    },
+    {
+      "feature": "m01_seq::srz_pkr",
+      "gain": 164037.1508283615
+    },
+    {
+      "feature": "m03_dyn::az_x_exp_l20_z",
+      "gain": 150099.97177696228
+    },
+    {
+      "feature": "m03_dyn::hw_r12",
+      "gain": 145720.19677639008
+    },
+    {
+      "feature": "m06_loc::fx_h_rlab_128",
+      "gain": 142271.84708595276
+    },
+    {
+      "feature": "m06_loc::loc_h_rsq_sz",
+      "gain": 140172.3770160675
+    },
+    {
+      "feature": "m03_dyn::az_x_exp_l2_z",
+      "gain": 137237.8802947998
+    },
+    {
+      "feature": "m07_bayes::ab_pfam_var",
+      "gain": 128429.85847091675
+    },
+    {
+      "feature": "m03_dyn::hw_r24",
+      "gain": 127544.91122436523
+    },
+    {
+      "feature": "m04_resid::raw_e_acf1sq",
+      "gain": 125811.84193992615
+    },
+    {
+      "feature": "m07_bayes::bf0_var",
+      "gain": 125676.38191795349
+    },
+    {
+      "feature": "m04_resid::ar5_e_abs",
+      "gain": 124891.45272159576
+    },
+    {
+      "feature": "m04_resid::volG_e_acf1sq",
+      "gain": 122170.61212730408
+    },
+    {
+      "feature": "m02_dist::rk_cusum_r_raw",
+      "gain": 121814.2308473587
+    }
+  ],
+  "runtime_s": 486.0
+}

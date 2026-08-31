@@ -43,7 +43,15 @@ Key evidence:
 - RT-1263 / CAT-415 — research-alive.
 - RT-1262 / CAT-414 — research-alive.
 - RT-1260 / CAT-411 — research-alive with weaker corrected evidence.
+- RT-1320 / M1 Arm-C residual student — research-alive; the only candidate that adds an 8th member. Primary E2-E1 +0.001516 at 4/5 folds against RT-1257 plus a matched seed clone. Not deployable yet.
 - RT-995 / T2 — parked: real standalone teacher-distillation signal, mostly redundant in ensemble.
+
+RT-1320 evidence:
+- `research/reports/armc_residualization.md` — the endpoint/horizon decomposition of the Arm-C oracle.
+- `research/reports/armc_residual_student/armc_residual_student.md` — original run, seed 20260830.
+- `research/reports/armc_residual_student_confirm_s20260901/armc_residual_student.md` — confirmation run, seed 20260901.
+- `research/reports/armc_residual_student_confirm_s20260901/E2_E1_addition_contract.json` — the protocol-correct primary endpoint.
+- `research/reports/grok_response_followup.md` — roll-up, including the four sibling mechanisms that were killed.
 
 Corrected CatBoost-composition evidence:
 - `research/reports/deep_ensemble_frontier_2026/local/CSA04R_REANALYSIS.md`

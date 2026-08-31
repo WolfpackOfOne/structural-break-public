@@ -34,6 +34,7 @@ See `engineering/reports/rt1257_deployment/CONSOLIDATION_HYGIENE_REVIEW.md`.
 2. **RT-1263 / CAT-415** — research-alive individual specialist; no corrected evidence that it improves RT-1257 in a larger equal-replacement hybrid.
 3. **RT-1262 / CAT-414** — research-alive individual specialist; same caveat.
 4. **RT-1260 / CAT-411** — research-alive by the original individual gate, but weaker corrected E2-E0 / mature-vs-never evidence.
+5. **RT-1320 / M1 Arm-C residual student** — the first candidate that *adds* an 8th member instead of swapping a slot. Under the `PROTOCOL_CHAMPION_2026.md` addition contract the primary endpoint E2-E1 against a matched added seed clone (`RT-403`) is **+0.001516** at **4/5** positive folds, above the 0.0011 paired-bootstrap noise floor; secondary E2-E0 is +0.001416. Fold 0 is negative on both. The widely quoted **5/5** figure belongs to the RT-600 lane (+0.001965 marginal vs the seed-clone blend), **not** to the champion lane. Reproduced at a second seed inside ~1% of the noise floor. It is **not** an active component and not deployable: no alternate-partition leg, no causality gate on the student's inference path, and no final-10k fit of its teacher-derived target. See `MODEL_REGISTRY.md` for the full promotion checklist.
 
 ## Parked model
 
@@ -79,6 +80,6 @@ Use RT-1257 as the primary ensemble baseline and RT-600 as the permanent homogen
 
 ## Consolidation state
 
-Work is occurring on `release/2026-research-consolidation`; `main` has not been moved. The 2026-08-31 branch/tag pruning audit is recorded in `archive/2026-08-31/BRANCH_TAG_PRUNING_AUDIT.md`. No historical branch should be deleted unless that audit classifies it as reachable/tag-protected, or a later owner-approved tag/import decision preserves it first.
+PR #14 was merged and `main` now carries the consolidated tree. The 2026-08-31 branch/tag pruning audit is recorded in `archive/2026-08-31/BRANCH_TAG_PRUNING_AUDIT.md`. No historical branch should be deleted unless that audit classifies it as reachable/tag-protected, or a later owner-approved tag/import decision preserves it first.
 
-_Last updated: 2026-08-31 during PR #14 branch/tag audit follow-up._
+_Last updated: 2026-08-31 after the PR #14 merge, filing `RT-1320` (M1 Arm-C residual student) as research-alive._

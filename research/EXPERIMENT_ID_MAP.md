@@ -1087,3 +1087,25 @@ endpoint `E2-E0`.
 | ID | arm |
 |---|---|
 | `RT-1265` | CSA-04R selected `k*` hybrid under the fixed `E2-E0` endpoint. The selected composition is the two-slot CAT-413 + CAT-300 hybrid, identical to `RT-1257`; no new OOF vector is written. |
+
+## Multi-Agent Frontier 2026 -- Grok-Response Lane (M1)
+
+**Range `RT-1320` - `RT-1329` is reserved for the multi-agent frontier /
+agent-response lane.** Verified unused across `RESULTS.csv`, every file under
+`research/`, and `origin/main` before allocation. This lane is distinct from the
+LOCAL (`RT-1260`-`RT-1269`) and CRUNCH (`RT-1270`-`RT-1289`) ranges and does not
+allocate into either.
+
+**Honest deviation from the reservation convention.** The CSA-04 and CSA-04R
+sections above were reserved *prospectively*, before any score existed. This
+range was reserved **retrospectively**, on 2026-08-31, after the M1 result was
+already in hand on `grok-response-issues-20260830`. That ordering is weaker and
+is recorded here rather than smoothed over. The underlying work did carry its
+own preregistered gates in `agent_05_grok46.md`; what it lacked was an RT ID at
+the time it ran.
+
+| ID | arm |
+|---|---|
+| `RT-1320` | M1 Arm-C residual student. Distil the endpoint-orthogonal residual of the W7-D3R Arm-C oracle (`RT-991`, `ORACLE_NONCAUSAL`) into a causal 500-column LightGBM student, added as an 8th exchangeable member to `RT-1257`. The teacher never ships; only the student is causal. |
+
+`RT-1321` through `RT-1329` remain unallocated lane contingency IDs.
