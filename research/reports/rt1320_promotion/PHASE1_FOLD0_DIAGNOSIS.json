@@ -101,23 +101,58 @@
         "pre_break_only": 0.00015340163386734496
       },
       "overall": 0.0005587615552266056
+    },
+    "canonical": {
+      "by_horizon_bucket": {
+        "100<=t<200": {
+          "delta_E2_minus_E1": -0.0006218454423690956,
+          "n_rows": 684972
+        },
+        "200<=t<400": {
+          "delta_E2_minus_E1": -0.0032063526043842883,
+          "n_rows": 1129386
+        },
+        "400<=t<800": {
+          "delta_E2_minus_E1": -0.0001379647021334529,
+          "n_rows": 1293871
+        },
+        "50<=t<100": {
+          "delta_E2_minus_E1": 0.0002543189430078696,
+          "n_rows": 372721
+        },
+        "t<50": {
+          "delta_E2_minus_E1": -0.0015705090984708958,
+          "n_rows": 392604
+        },
+        "t>=800": {
+          "delta_E2_minus_E1": 0.0023779260990566264,
+          "n_rows": 158970
+        }
+      },
+      "by_negative_class": {
+        "dominant_cell": -0.0010852007381918494,
+        "never_break_only": -0.0014189130144621753,
+        "pre_break_only": -0.00015401593525876667
+      },
+      "overall": -0.0013627168096623787
     }
   },
   "verdict": {
     "Q1_negative_on_multiple_partitions": false,
     "fold_diagnosed": 0,
     "gates": false,
-    "interpretation": "Fold 0 is not negative on multiple partitions among those evaluated; on this evidence it looks partition-specific rather than a property of the mechanism. Incomplete until all four partitions exist.",
-    "n_negative": 0,
+    "interpretation": "Fold 0 is not negative on multiple partitions; on this evidence it is partition-specific rather than a property of the mechanism.",
+    "n_negative": 1,
     "note": "Phase 1 \u00a71.5 runs alongside and does not gate. Reports only.",
     "partitions_evaluated": [
       "alt1",
       "alt2",
-      "alt3"
+      "alt3",
+      "canonical"
     ],
-    "partitions_skipped": {
-      "canonical": "student outer vectors absent in armc_residual_student (folds [0, 1, 2, 3, 4]) -- refit needed before diagnosis"
-    },
-    "partitions_with_negative_fold": []
+    "partitions_skipped": {},
+    "partitions_with_negative_fold": [
+      "canonical"
+    ]
   }
 }

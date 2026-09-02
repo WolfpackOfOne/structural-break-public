@@ -21,20 +21,51 @@ def test_deployment_contract_is_an_eight_member_addition():
     assert contract["expected_provenance"]["partition"] == "folds_final10k"
 
 
-def test_current_audit_keeps_missing_promotion_gates_blocking():
-    report = prep.build_audit()
+def test_audit_keeps_gates_without_evidence_blocking():
+    """A gate blocks exactly while its evidence is absent.
+
+    This pins the *mechanism*, not a snapshot of which gates happen to be open.
+    The original version hardcoded six gates as blocking and went stale three
+    times over as evidence landed, so it is now split: gates whose evidence is
+    committed must be closed, and gates that depend on a model directory must
+    still block when build_audit() is called without one.
+    """
+    report = prep.build_audit()  # deliberately no model_dir
     assert report["status"] == "PROMOTION_BLOCKED"
-    assert "champion_relative_endpoint" not in report["promotion_blockers"]
-    assert "nested_teacher_student_report" not in report["promotion_blockers"]
+
+    # Evidence committed to the repo -- these must NOT block any more.
     for gate in (
-        "alternate_partition_leg",
-        "student_artifact_causality",
+        "champion_relative_endpoint",
+        "nested_teacher_student_report",
+        "student_artifact_causality",   # ARTIFACT_CAUSALITY.json
+        "crunch_test",                  # CRUNCH_TEST.json
+        "alternate_partition_leg",      # four E2_E1_addition_contract.json records
+    ):
+        assert gate not in report["promotion_blockers"], gate
+
+    # No model directory was supplied, so the artifact-dependent gates block,
+    # and external_score cannot close without a Crunch score.
+    for gate in (
         "final10k_target_and_fit",
         "production_artifact_manifest",
-        "crunch_test",
         "external_score",
     ):
-        assert gate in report["promotion_blockers"]
+        assert gate in report["promotion_blockers"], gate
+
+
+def test_alternate_partition_leg_reads_all_four_partitions():
+    """The leg gate must evaluate evidence, not assert a hardcoded status.
+
+    It was previously pinned to status="missing" with no reader, so it could
+    never close however much was run.
+    """
+    ev = prep.alt_partition_evidence()
+    assert ev["status"] == "passed"
+    assert ev["rule_verdict"] == "PASS"
+    assert sorted(ev["per_partition"]) == ["alt1", "alt2", "alt3", "canonical"]
+    assert ev["mean_E2_minus_E1"] >= prep.ALT_NOISE_FLOOR
+    assert ev["n_partitions_negative"] == 0
+    assert all(ev["checks"].values())
 
 
 def test_corrected_endpoint_contract_is_the_primary_evidence():

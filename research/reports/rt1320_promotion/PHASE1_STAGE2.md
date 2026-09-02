@@ -49,13 +49,32 @@ on multiple partitions. There is no damage regime to characterise.
 Record: `PHASE1_FOLD0_DIAGNOSIS.json`, produced by
 `research/scripts/rt1320_fold0_diagnosis.py`.
 
-**Known gap in that record.** The diagnostic recomputes fold 0 from the stored
-vectors and could only evaluate alt1/alt2/alt3 — canonical's student outer
-`.npy` files do not exist in this worktree, only committed JSON, so it is listed
-under `partitions_skipped`. Canonical's fold-0 value above comes from its
-endpoint JSON, not from a recomputation. Its `n_negative: 0` therefore reads one
-lower than reality. The conclusion is unchanged, but a ~29 min canonical student
-refit would make the §1.5 artifact self-contained.
+**Gap closed 2026-09-01.** All four partitions are now recomputed, none skipped.
+No refit was needed: canonical's student outer `.npy` vectors were never lost,
+they live in the `structural-break-multi-agent-frontier-20260829` worktree where
+that run wrote them (see `output_path` in `armc_residual_student_outer0.json`).
+Only the JSON summaries had been committed here. The diagnostic now resolves
+gitignored artifacts — student vectors and the materialised `cache/_folds_altK`
+tables — across sibling worktrees.
+
+The recomputation reproduces all four committed endpoints exactly:
+
+| partition | recomputed fold 0 | endpoint record |
+|-----------|-------------------|-----------------|
+| canonical | −0.0013627 | −0.0013627 |
+| alt1      | +0.0021428 | +0.0021428 |
+| alt2      | +0.0010623 | +0.0010623 |
+| alt3      | +0.0005588 | +0.0005588 |
+
+`n_negative: 1` (canonical), `Q1_negative_on_multiple_partitions: false`.
+
+**Canonical's fold-0 shape, for the record.** §1.5 does not require this because
+the conditional never fired, but the decomposition was computed and is worth
+keeping: the damage is concentrated in **never-break negatives** (−0.001419)
+rather than pre-break (−0.000154), and by horizon it is worst at **200 ≤ t < 400**
+(−0.003206) — the dominant remaining-loss region W7-D0 identified — while
+t ≥ 800 is positive (+0.002378). One partition out of four, so this describes
+canonical rather than the mechanism.
 
 ## What the leg was designed to expose, and what it found
 

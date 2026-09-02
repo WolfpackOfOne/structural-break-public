@@ -81,6 +81,13 @@ def partition_paths(part: str) -> tuple[str, Path]:
     """
     if part == "canonical":
         return "", REPO / "research" / "folds" / "folds.parquet"
+    # cache/ is gitignored, so the materialised table lives in whichever worktree
+    # ran the partition. Same resolution rule as the student vectors.
+    for cand in (REPO / "cache" / f"_folds_{part}.parquet",
+                 REPO.parent / "structural-break-rt1320-promotion-2026"
+                 / "cache" / f"_folds_{part}.parquet"):
+        if cand.exists():
+            return f".{part}", cand
     return f".{part}", REPO / "cache" / f"_folds_{part}.parquet"
 
 
@@ -94,9 +101,24 @@ def student_dir_for(part: str, override: Path | None) -> Path:
     """
     if override is not None:
         return override
-    base = REPO / "research" / "reports"
-    return base / ("armc_residual_student" if part == "canonical"
-                   else f"armc_residual_student.{part}")
+    # The outer .npy vectors are gitignored, so they exist only in the worktree
+    # that produced them; only the JSON summaries are committed. Resolve to the
+    # first candidate that actually holds the vectors.
+    if part != "canonical":
+        for cand in (REPO / "research" / "reports" / f"armc_residual_student.{part}",
+                     REPO.parent / "structural-break-rt1320-promotion-2026"
+                     / "research" / "reports" / f"armc_residual_student.{part}"):
+            if (cand / "armc_residual_student_outer0.npy").exists():
+                return cand
+    if part == "canonical":
+        # The canonical student was fitted in the multi-agent-frontier worktree
+        # (see output_path in armc_residual_student_outer0.json); its outer .npy
+        # vectors live there and were never copied across. Only the JSON summaries
+        # were committed here, which is why an earlier run of this script reported
+        # canonical as skipped.
+        return (REPO.parent / "structural-break-multi-agent-frontier-20260829"
+                / "research" / "reports" / "armc_residual_student_confirm_s20260901")
+    return REPO / "research" / "reports" / f"armc_residual_student.{part}"
 
 
 def build_blends(part: str, student_dir: Path):
@@ -207,9 +229,12 @@ def main() -> int:
             "regime be characterised before promotion is arguable regardless of "
             "the mean. See by_horizon_bucket and by_negative_class."
             if len(negatives) > 1 else
-            "Fold 0 is not negative on multiple partitions among those evaluated; "
-            "on this evidence it looks partition-specific rather than a property "
-            "of the mechanism. Incomplete until all four partitions exist."
+            "Fold 0 is not negative on multiple partitions"
+            + ("" if len(results) == 4 else " among those evaluated")
+            + "; on this evidence it is partition-specific rather than a property "
+            "of the mechanism."
+            + ("" if len(results) == 4
+               else " Incomplete: not all four partitions were evaluated.")
         ),
         "gates": False,
         "note": "Phase 1 §1.5 runs alongside and does not gate. Reports only.",
