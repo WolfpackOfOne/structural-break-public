@@ -1,0 +1,53 @@
+{
+  "artifact_root": "/path/to/workspace/structural-break-learner-diversity-2026",
+  "git_sha": "ffd341f",
+  "oof_dir": "/path/to/workspace/structural-break-learner-diversity-2026/research/oof",
+  "partition": "alt2",
+  "specialists": {
+    "CAT-300": {
+      "id": "RT-1255",
+      "oof_path": "/path/to/workspace/structural-break-learner-diversity-2026/research/oof/RT-1255.alt2.npy",
+      "runtime_s": 2186.264101743698,
+      "standalone": {
+        "fold_std": 0.007113087758152309,
+        "mean_ts_auc": 0.6219142319744557,
+        "per_fold_ts_auc": [
+          0.6277197734481331,
+          0.6316121513000872,
+          0.611337987663359,
+          0.6186662573178937,
+          0.6202349901428061
+        ],
+        "pooled_ts_auc": 0.6212930292486347
+      },
+      "status": "SCORED"
+    },
+    "CAT-413": {
+      "id": "RT-1254",
+      "oof_path": "/path/to/workspace/structural-break-learner-diversity-2026/research/oof/RT-1254.alt2.npy",
+      "runtime_s": 1515.3093361854553,
+      "standalone": {
+        "fold_std": 0.006899328729233304,
+        "mean_ts_auc": 0.6206523944899944,
+        "per_fold_ts_auc": [
+          0.6243613079870381,
+          0.6295394933635488,
+          0.6145479771030125,
+          0.6108136915497859,
+          0.6239995024465864
+        ],
+        "pooled_ts_auc": 0.6201214084584664
+      },
+      "status": "SCORED"
+    }
+  },
+  "suffix": ".alt2",
+  "versions": {
+    "catboost": "1.2.10",
+    "lightgbm": "4.7.0",
+    "numpy": "2.4.6",
+    "pandas": "2.3.3",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.17.1"
+  }
+}

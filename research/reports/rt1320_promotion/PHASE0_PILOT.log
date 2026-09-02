@@ -1,0 +1,15 @@
+[10:04:49] EQUIVALENCE CHECK: chunked predict == whole-matrix predict
+[10:05:15]   bitwise equal: True   max|diff| 0.000e+00
+
+[10:05:15] FULL-SCALE PILOT  rows=1,000,000 rounds=900 threads=8
+[10:05:16] train_folds=[2, 3, 4]  rows=1,000,000
+[10:05:31] stack           15.2s  3.73 GB  peak_rss 7.34 GB
+[10:05:45] dataset+free    14.6s  peak_rss 7.56 GB
+[10:12:09] train          383.6s  = 0.426 s/round  peak_rss 7.56 GB
+[10:12:26] predict fold 1: 812,939 rows    17.5s  mean 0.1563  peak_rss 7.56 GB
+[10:12:43] predict fold 0: 806,334 rows    16.8s  mean 0.1610  peak_rss 7.56 GB
+
+[10:12:43] TOTAL 7.5 min   peak_rss 7.56 GB
+  one teacher serving BOTH roles: 7.5 min
+  10 distinct teachers / partition: 1.2 h
+  three alt partitions:            3.7 h

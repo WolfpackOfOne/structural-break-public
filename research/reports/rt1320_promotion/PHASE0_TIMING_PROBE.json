@@ -1,0 +1,22 @@
+{
+  "probe": {
+    "rows": 250000,
+    "rounds": 60,
+    "stack_s": 17.1,
+    "train_s": 38.4,
+    "s_per_round": 0.6401,
+    "peak_rss_gb": 4.22
+  },
+  "projected_one_inner_teacher": {
+    "stack_s": 68.3,
+    "train_s": 2304.3,
+    "total_s": 2372.5,
+    "total_min": 39.5,
+    "matrix_gb": 3.73,
+    "matrix_peak_gb": 7.45
+  },
+  "projected_phase1": {
+    "one_partition_20_inner_h": 13.2,
+    "three_alt_partitions_60_inner_h": 39.5
+  }
+}

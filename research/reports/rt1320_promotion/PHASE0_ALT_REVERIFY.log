@@ -1,0 +1,64 @@
+=== input provenance ===
+hashed 52 OOF vectors
+
+=== recomputing W4-E2 from vectors on disk ===
+=== canonical ===
+  single      0.61605
+  seed clone  0.62164
+  specialist  0.62581
+  deltas: bagging +0.00559  specialisation +0.00417  total +0.00975
+=== alt1 ===
+  single      0.60985
+  seed clone  0.61526
+  specialist  0.61780
+  deltas: bagging +0.00541  specialisation +0.00254  total +0.00795
+=== alt2 ===
+  single      0.61904
+  seed clone  0.62364
+  specialist  0.62756
+  deltas: bagging +0.00460  specialisation +0.00392  total +0.00852
+=== alt3 ===
+  single      0.61314
+  seed clone  0.61752
+  specialist  0.62020
+  deltas: bagging +0.00438  specialisation +0.00269  total +0.00707
+
+=== SUMMARY ===
+  bagging          mean +0.00499  sd 0.00059  range [+0.00438, +0.00559]  all positive: True
+  specialisation   mean +0.00333  sd 0.00083  range [+0.00254, +0.00417]  all positive: True
+  total            mean +0.00832  sd 0.00113  range [+0.00707, +0.00975]  all positive: True
+  single LEVEL spread across partitions: 0.00918 (sd 0.00394) -- compare to the delta sds above
+
+  W4-E2 VERDICT: specialisation delta SURVIVES the partition draw
+
+wrote /private/tmp/claude-501/-Users-graham-Documents-crunch-2026/776544b7-4fd2-4b41-84a1-db12dda5821a/scratchpad/reverify_0_2_recomputed.json
+
+=== DIFF vs committed research/reports/ensemble_partition_stability.json ===
+partition  arm             committed   recomputed        delta
+canonical  single         0.61605365   0.61605365    +0.00e+00
+canonical  seed_clone     0.62163961   0.62163961    +0.00e+00
+canonical  specialist     0.62580863   0.62580863    +0.00e+00
+canonical  d_bagging      0.00558597   0.00558597    +0.00e+00
+canonical  d_specialisation   0.00416901   0.00416901    +0.00e+00
+canonical  d_total        0.00975498   0.00975498    +0.00e+00
+alt1       single         0.60985298   0.60985298    +0.00e+00
+alt1       seed_clone     0.61525820   0.61525820    +0.00e+00
+alt1       specialist     0.61780255   0.61780255    +0.00e+00
+alt1       d_bagging      0.00540521   0.00540521    +0.00e+00
+alt1       d_specialisation   0.00254436   0.00254436    +0.00e+00
+alt1       d_total        0.00794957   0.00794957    +0.00e+00
+alt2       single         0.61903740   0.61903740    +0.00e+00
+alt2       seed_clone     0.62363587   0.62363587    +0.00e+00
+alt2       specialist     0.62755959   0.62755959    +0.00e+00
+alt2       d_bagging      0.00459846   0.00459846    +0.00e+00
+alt2       d_specialisation   0.00392372   0.00392372    +0.00e+00
+alt2       d_total        0.00852219   0.00852219    +0.00e+00
+alt3       single         0.61313587   0.61313587    +0.00e+00
+alt3       seed_clone     0.61751581   0.61751581    +0.00e+00
+alt3       specialist     0.62020438   0.62020438    +0.00e+00
+alt3       d_bagging      0.00437995   0.00437995    +0.00e+00
+alt3       d_specialisation   0.00268857   0.00268857    +0.00e+00
+alt3       d_total        0.00706852   0.00706852    +0.00e+00
+
+worst absolute discrepancy across all levels and deltas: 0.000e+00
+VERDICT: VECTORS REPRODUCE THE COMMITTED RECORD
