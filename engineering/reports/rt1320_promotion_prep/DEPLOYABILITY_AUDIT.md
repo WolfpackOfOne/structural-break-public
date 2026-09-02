@@ -1,8 +1,8 @@
 # RT-1320 Promotion Prep
 
-Generated: `2026-09-02T00:54:56Z`
+Generated: `2026-09-02T01:52:39Z`
 Branch: `engineering/rt1320-promotion-prep`
-Git SHA: `9d2e6c962ac6a6a6fa9d376811632f0f775a90d2`
+Git SHA: `78ef264241a1dadddbb657c46072df98eaa0b55e`
 
 Status: **PROMOTION_BLOCKED**
 
@@ -33,7 +33,7 @@ Work on RT-1320, not another GPU tabular family. RT-1320 is the only current res
 | `final10k_target_and_fit` | `passed` | model manifest records an 8-member folds_final10k fit |
 | `production_artifact_manifest` | `passed` | model manifest matches the RT-1320 8-member production contract |
 | `crunch_test` | `passed` | Crunch test passed |
-| `external_score` | `missing` | RT-1320 has no official external score as an 8-member system |
+| `external_score` | `missing` | no external score filed. Needs a scored Crunch submission; file EXTERNAL_SCORE.json with ts_auc, submission_id, champion_ts_auc and an explicit improves_champion decision. |
 
 ## Next Server Work
 

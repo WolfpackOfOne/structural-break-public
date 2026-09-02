@@ -135,3 +135,47 @@ def test_manifest_probe_accepts_static_rt1320_shape(tmp_path):
     probe = prep.inspect_model_manifest(model_dir)
     assert probe["status"] == "passed"
     assert all(probe["checks"].values())
+
+
+def test_external_score_gate_reads_evidence(tmp_path):
+    """The last hardcoded gate now reads a record.
+
+    external_score was pinned to status="missing" with no reader -- the same
+    shape as alternate_partition_leg before it was fixed, and the same trap: an
+    external score could arrive and the audit would still report it missing
+    until somebody edited code.
+    """
+    missing = prep.external_score_evidence(tmp_path / "nope.json")
+    assert missing["status"] == "missing"
+    assert "EXTERNAL_SCORE.json" in missing["message"]
+
+    # A filed score that does not beat the champion must NOT close the gate.
+    worse = tmp_path / "worse.json"
+    worse.write_text(json.dumps({
+        "ts_auc": 0.6280, "champion_ts_auc": 0.6290,
+        "submission_id": 1, "improves_champion": False,
+    }))
+    assert prep.external_score_evidence(worse)["status"] == "failed"
+
+    better = tmp_path / "better.json"
+    better.write_text(json.dumps({
+        "ts_auc": 0.6305, "champion_ts_auc": 0.6290,
+        "submission_id": 2, "improves_champion": True,
+    }))
+    ev = prep.external_score_evidence(better)
+    assert ev["status"] == "passed"
+    assert ev["ts_auc"] == 0.6305
+
+
+def test_no_audit_gate_has_a_hardcoded_status():
+    """Guard against the hollow-gate pattern recurring.
+
+    Two gates shipped with a literal status and no evidence reader, so they
+    could never change however much work was done. Every gate must now take its
+    status from an evidence dict.
+    """
+    import inspect
+    src = inspect.getsource(prep.build_audit)
+    # A literal status inside the gate list is the defect; readers supply it via **.
+    assert '"status": "missing",' not in src, "a gate has a hardcoded status again"
+    assert '"status": "passed",' not in src, "a gate has a hardcoded status again"

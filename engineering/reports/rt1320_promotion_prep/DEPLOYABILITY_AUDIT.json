@@ -1,11 +1,11 @@
 {
   "schema": "sbr.rt1320_promotion_prep/1",
-  "generated_at": "2026-09-02T00:54:56Z",
-  "git_sha": "9d2e6c962ac6a6a6fa9d376811632f0f775a90d2",
+  "generated_at": "2026-09-02T01:52:39Z",
+  "git_sha": "78ef264241a1dadddbb657c46072df98eaa0b55e",
   "git_branch": "engineering/rt1320-promotion-prep",
   "status": "PROMOTION_BLOCKED",
   "summary": "RT-1320 remains the best live post-RT-1257 engineering target, but promotion is blocked until the missing gates are closed.",
-  "recommended_next_action": "Do the student artifact causality harness first if a model artifact exists; otherwise prepare the folds_final10k target/fit job for the competition server.",
+  "recommended_next_action": "no external score filed. Needs a scored Crunch submission; file EXTERNAL_SCORE.json with ts_auc, submission_id, champion_ts_auc and an explicit improves_champion decision.",
   "missing_or_failed_gates": [
     "external_score"
   ],
@@ -292,7 +292,8 @@
       "id": "external_score",
       "required_for": "active_component_status",
       "status": "missing",
-      "message": "RT-1320 has no official external score as an 8-member system"
+      "path": "/path/to/workspace/structural-break-main-current/engineering/reports/rt1320_promotion_prep/EXTERNAL_SCORE.json",
+      "message": "no external score filed. Needs a scored Crunch submission; file EXTERNAL_SCORE.json with ts_auc, submission_id, champion_ts_auc and an explicit improves_champion decision."
     }
   ]
 }

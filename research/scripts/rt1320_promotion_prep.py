@@ -403,6 +403,49 @@ def crunch_test_evidence(path: Path) -> dict[str, Any]:
     }
 
 
+def external_score_evidence(path: Path) -> dict[str, Any]:
+    """Read the external-score record, if one has been filed.
+
+    This gate used to be hardcoded status="missing" with no reader -- the same
+    shape as alternate_partition_leg before 9d2e6c9, and the same trap: when a
+    score finally arrives the audit would still report it missing until somebody
+    noticed and edited code. Filing EXTERNAL_SCORE.json now closes it.
+
+    The gate is required_for="active_component_status", and ACTIVE_COMPONENT
+    means membership of the external champion -- which is a judgement about
+    whether the score actually improves on the incumbent, not something to infer
+    from arithmetic here. So the record must carry an explicit
+    `improves_champion: true`. A filed score that did not improve leaves the gate
+    failed, with the number reported, which is the honest outcome.
+    """
+    data = read_json(path)
+    if data is None:
+        return {
+            "status": "missing",
+            "path": str(path),
+            "message": (
+                "no external score filed. Needs a scored Crunch submission; file "
+                "EXTERNAL_SCORE.json with ts_auc, submission_id, champion_ts_auc "
+                "and an explicit improves_champion decision."
+            ),
+        }
+    ts_auc = data.get("ts_auc")
+    champion = data.get("champion_ts_auc")
+    improves = bool(data.get("improves_champion"))
+    return {
+        "status": "passed" if improves else "failed",
+        "path": str(path),
+        "ts_auc": ts_auc,
+        "champion_ts_auc": champion,
+        "submission_id": data.get("submission_id"),
+        "improves_champion": improves,
+        "message": (
+            f"external TS-AUC {ts_auc} vs champion {champion}; improves_champion="
+            f"{improves}"
+        ),
+    }
+
+
 def build_audit(
     model_dir: Path | None = None,
     artifact_causality_path: Path = DEFAULT_ARTIFACT_CAUSALITY_JSON,
@@ -458,8 +501,7 @@ def build_audit(
         {
             "id": "external_score",
             "required_for": "active_component_status",
-            "status": "missing",
-            "message": "RT-1320 has no official external score as an 8-member system",
+            **external_score_evidence(DEFAULT_REPORT_DIR / "EXTERNAL_SCORE.json"),
         },
     ]
     missing = [g["id"] for g in gates if g["status"] != "passed"]
@@ -481,8 +523,11 @@ def build_audit(
             else "RT-1320 has no recorded promotion blockers in this audit."
         ),
         "recommended_next_action": (
-            "Do the student artifact causality harness first if a model artifact exists; "
-            "otherwise prepare the folds_final10k target/fit job for the competition server."
+            next(
+                (g["message"] for g in gates
+                 if g["status"] != "passed" and g["required_for"] != "research_survival"),
+                "No promotion blockers remain; the next step is an owner promotion decision.",
+            )
         ),
         "missing_or_failed_gates": missing,
         "promotion_blockers": promotion_blockers,
