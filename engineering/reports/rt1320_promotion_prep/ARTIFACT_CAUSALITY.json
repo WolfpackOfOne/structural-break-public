@@ -1,0 +1,59 @@
+{
+  "schema": "sbr.rt1320_artifact_causality/1",
+  "generated_at": "2026-09-01T12:13:35Z",
+  "model_dir": "/path/to/workspace/structural-break-main-current/models/rt1320_final",
+  "manifest_probe": {
+    "status": "passed",
+    "model_dir": "/path/to/workspace/structural-break-main-current/models/rt1320_final",
+    "manifest": "/path/to/workspace/structural-break-main-current/models/rt1320_final/manifest.json",
+    "experiment_id": "RT-1320",
+    "n_model_files": 8,
+    "n_booster_slices": 8,
+    "n_calibration_models": 8,
+    "stream_ids": [
+      "RT-1254",
+      "RT-1255",
+      "RT-1320",
+      "RT-410",
+      "RT-411",
+      "RT-412",
+      "RT-414",
+      "RT-415"
+    ],
+    "file_paths_exist": {
+      "model.cbm.0": true,
+      "model.cbm.4": true,
+      "model.txt.1": true,
+      "model.txt.2": true,
+      "model.txt.3": true,
+      "model.txt.5": true,
+      "model.txt.6": true,
+      "model.txt.7": true
+    },
+    "checks": {
+      "manifest_exists": true,
+      "experiment_id_is_rt1320": true,
+      "feature_manifest_is_rt600_bank": true,
+      "has_8_model_files": true,
+      "has_8_booster_slices": true,
+      "has_8_calibration_models": true,
+      "expected_provenance_n_boosters_is_8": true,
+      "trained_on_final10k_10000": true,
+      "folds_sha256_final10k": true,
+      "member_ids_include_rt1257_and_rt1320": true,
+      "expected_model_file_paths_present_in_manifest": true,
+      "expected_model_file_paths_exist": true
+    },
+    "message": "model manifest matches the RT-1320 8-member production contract"
+  },
+  "tests": [
+    "tests/test_no_n_online_leakage.py",
+    "tests/test_production_contract.py::test_infer_contract_single_pass_and_range",
+    "tests/test_production_contract.py::test_infer_is_deterministic_and_order_independent",
+    "tests/test_production_contract.py::test_frozen_model_passes_its_own_provenance_gate"
+  ],
+  "pytest_exit_code": 0,
+  "pytest_stdout_tail": ".......                                                                  [100%]\n=============================== warnings summary ===============================\ntests/test_no_n_online_leakage.py::test_infer_never_measures_the_online_length\n  /home/user/anaconda3/lib/python3.11/site-packages/jupyter_client/connect.py:27: DeprecationWarning: Jupyter is migrating its paths to use standard platformdirs\n  given by the platformdirs library.  To remove this warning and\n  see the appropriate new directories, set the environment variable\n  `JUPYTER_PLATFORM_DIRS=1` and then run `jupyter --paths`.\n  The use of platformdirs will be the default in `jupyter_core` v6\n    from jupyter_core.paths import jupyter_data_dir\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n7 passed, 1 warning in 14.08s\n",
+  "pytest_stderr_tail": "",
+  "PASS": true
+}

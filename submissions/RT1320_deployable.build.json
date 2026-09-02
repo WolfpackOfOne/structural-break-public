@@ -1,0 +1,34 @@
+{
+  "built_at": "2026-09-01T12:14:28Z",
+  "code_git_sha": "f1912b6ff461026612d8f41229c438d9180d1171",
+  "embedded_source_clean": true,
+  "embedded_source_dirty_paths": [],
+  "worktree_other_changes": [
+    "?? engineering/reports/rt1320_promotion_prep/",
+    "?? research/scripts/rt1320_assemble_artifact.py",
+    "?? research/scripts/rt1320_finish.sh",
+    "?? research/scripts/rt1320_promotion_prep.py",
+    "?? submissions/I_rt1320_final10k_fit.py",
+    "?? submissions/RT1320_deployable.py",
+    "?? tests/test_rt1320_promotion_prep.py",
+    "?? tests/test_rt1320_server_submission.py"
+  ],
+  "model_directory": "/path/to/workspace/structural-break-main-current/models/rt1320_final",
+  "source_zip_sha256": "6a36e641b7ad276703f3af4d5165bc4eb5c4b79e5ac4decdbc37d6c5e43a137c",
+  "model_zip_sha256": "2282ffeeed72f65d782b7a9697e7796b06062a08bea6ed01264de611aa35b0da",
+  "feature_manifest_sha256": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced",
+  "model_manifest_sha256": "c50b1908b7a0d228d659cf0ca3f151a49580839558a1c03f72db608cb01e7b0d",
+  "notebook": {
+    "path": "/path/to/workspace/structural-break-main-current/submissions/RT1320_deployable.ipynb",
+    "sha256": "b50938c30573e207fdc0d1f4f40add5d43ad5a4a257f08c712ee4ffaa43af70f",
+    "bytes": 30008955
+  },
+  "python_entrypoint": {
+    "path": "/path/to/workspace/structural-break-main-current/submissions/RT1320_deployable.py",
+    "sha256": "19fb2d4d53056397da0fe56698e0f7da260369338a824f56a5d5e0ea468c0dcb",
+    "bytes": 30006205
+  },
+  "infer_parallelism": 1,
+  "manifest_code_git_sha": "6b4fafacd30711bebf2bf977c3c390641f3ae522",
+  "manifest_matches_build_sha": false
+}

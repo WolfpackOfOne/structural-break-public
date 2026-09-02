@@ -1,0 +1,235 @@
+{
+  "schema": "sbr.rt1320_promotion_prep/1",
+  "generated_at": "2026-09-01T14:08:16Z",
+  "git_sha": "f1912b6ff461026612d8f41229c438d9180d1171",
+  "git_branch": "engineering/rt1320-promotion-prep",
+  "status": "PROMOTION_BLOCKED",
+  "summary": "RT-1320 remains the best live post-RT-1257 engineering target, but promotion is blocked until the missing gates are closed.",
+  "recommended_next_action": "Do the student artifact causality harness first if a model artifact exists; otherwise prepare the folds_final10k target/fit job for the competition server.",
+  "missing_or_failed_gates": [
+    "alternate_partition_leg",
+    "external_score"
+  ],
+  "promotion_blockers": [
+    "alternate_partition_leg",
+    "external_score"
+  ],
+  "evidence_paths": {
+    "endpoint_contract": "/path/to/workspace/structural-break-main-current/research/reports/armc_residual_student_confirm_s20260901/E2_E1_addition_contract.json",
+    "student_report": "/path/to/workspace/structural-break-main-current/research/reports/armc_residual_student_confirm_s20260901/armc_residual_student.json",
+    "artifact_causality": "/path/to/workspace/structural-break-main-current/engineering/reports/rt1320_promotion_prep/ARTIFACT_CAUSALITY.json",
+    "crunch_test": "/path/to/workspace/structural-break-main-current/engineering/reports/rt1320_promotion_prep/CRUNCH_TEST.json"
+  },
+  "deployment_contract": {
+    "experiment_id": "RT-1320",
+    "what": "RT-1257 plus one Arm-C residual-student member",
+    "member_contract": "addition of an 8th exchangeable member to RT-1257",
+    "members": [
+      {
+        "slot": 0,
+        "name": "CAT-300",
+        "id": "RT-1255",
+        "kind": "catboost",
+        "path": "model.cbm.0"
+      },
+      {
+        "slot": 1,
+        "name": "RT-410",
+        "id": "RT-410",
+        "kind": "lightgbm",
+        "path": "model.txt.1"
+      },
+      {
+        "slot": 2,
+        "name": "RT-411",
+        "id": "RT-411",
+        "kind": "lightgbm",
+        "path": "model.txt.2"
+      },
+      {
+        "slot": 3,
+        "name": "RT-412",
+        "id": "RT-412",
+        "kind": "lightgbm",
+        "path": "model.txt.3"
+      },
+      {
+        "slot": 4,
+        "name": "CAT-413",
+        "id": "RT-1254",
+        "kind": "catboost",
+        "path": "model.cbm.4"
+      },
+      {
+        "slot": 5,
+        "name": "RT-414",
+        "id": "RT-414",
+        "kind": "lightgbm",
+        "path": "model.txt.5"
+      },
+      {
+        "slot": 6,
+        "name": "RT-415",
+        "id": "RT-415",
+        "kind": "lightgbm",
+        "path": "model.txt.6"
+      },
+      {
+        "slot": 7,
+        "name": "M1 Arm-C residual student",
+        "id": "RT-1320",
+        "kind": "lightgbm",
+        "objective": "regression",
+        "path": "model.txt.7",
+        "calibration": "SCDF_NSEEN over raw regression output"
+      }
+    ],
+    "n_members": 8,
+    "feature_bank": {
+      "modules": [
+        "m00_core",
+        "m01_seq",
+        "m02_dist",
+        "m03_dyn",
+        "m04_resid",
+        "m06_loc",
+        "m07_bayes"
+      ],
+      "n_columns": 500,
+      "feature_manifest_sha256": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced"
+    },
+    "student": {
+      "id": "RT-1320",
+      "input_features": "same 500 causal columns as RT-1257",
+      "target": "nested fold-pure Arm-C teacher residual, regenerated on folds_final10k before final fit",
+      "model_kind": "LightGBM booster",
+      "objective": "regression",
+      "score_scale": "raw regression output is converted by the member's own fold-pure SmoothTimeCDFCal payload before blending",
+      "model_file": "model.txt.7",
+      "new_runtime_dependency": "none beyond RT-1257's LightGBM/CatBoost stack"
+    },
+    "calibration": {
+      "kind": "scdf",
+      "time_coord": "log_n_seen",
+      "integration": "equal_weight_mean_of_8_member_scdf_scores",
+      "student_payload_required": true
+    },
+    "expected_provenance": {
+      "n_series": 10000,
+      "partition": "folds_final10k",
+      "folds_sha256": "bf0cdf642bde018a632663ae7d211714a173fb64ef824b15416caf2649e0c716",
+      "n_boosters": 8,
+      "calibration_kind": "scdf",
+      "calibration_time_coord": "log_n_seen"
+    },
+    "production_code_assumption": "ProductionModel.load already accepts manifest model_files of mixed kind and uses manifest expected_provenance to override n_boosters."
+  },
+  "gates": [
+    {
+      "id": "champion_relative_endpoint",
+      "required_for": "research_survival",
+      "status": "passed",
+      "path": "/path/to/workspace/structural-break-main-current/research/reports/armc_residual_student_confirm_s20260901/E2_E1_addition_contract.json",
+      "primary_E2_minus_E1": 0.0015158545141192637,
+      "secondary_E2_minus_E0": 0.001416058613517901,
+      "primary_folds_positive": 4,
+      "noise_floor_paired_bootstrap": 0.0011,
+      "primary_clears_noise_floor": true,
+      "message": "champion-relative addition endpoint clears the current noise floor"
+    },
+    {
+      "id": "nested_teacher_student_report",
+      "required_for": "research_survival",
+      "status": "passed",
+      "path": "/path/to/workspace/structural-break-main-current/research/reports/armc_residual_student_confirm_s20260901/armc_residual_student.json",
+      "prebreak_damage_rate_vs_rt600": 0.013103808507255921,
+      "max_prebreak_damage_rate": 0.015,
+      "neverbreak_net_rate_vs_rt600": 0.0037064933005629113,
+      "nested_fold_purity_passed": true,
+      "old_scheme_sentinel_catches_defect": true,
+      "message": "nested teacher/student report gates are present and internally clean"
+    },
+    {
+      "id": "alternate_partition_leg",
+      "required_for": "promotion",
+      "status": "missing",
+      "message": "must refit comparable RT-1257 and RT-1320 OOF under predeclared folds_alt*.parquet partitions; canonical alone is insufficient"
+    },
+    {
+      "id": "student_artifact_causality",
+      "required_for": "promotion",
+      "status": "passed",
+      "path": "/path/to/workspace/structural-break-main-current/engineering/reports/rt1320_promotion_prep/ARTIFACT_CAUSALITY.json",
+      "pytest_exit_code": 0,
+      "manifest_status": "passed",
+      "message": "artifact-level causality tests ran and passed"
+    },
+    {
+      "id": "final10k_target_and_fit",
+      "required_for": "production_artifact",
+      "status": "passed",
+      "message": "model manifest records an 8-member folds_final10k fit"
+    },
+    {
+      "id": "production_artifact_manifest",
+      "required_for": "production_artifact",
+      "status": "passed",
+      "model_dir": "/path/to/workspace/structural-break-main-current/models/rt1320_final",
+      "manifest": "/path/to/workspace/structural-break-main-current/models/rt1320_final/manifest.json",
+      "experiment_id": "RT-1320",
+      "n_model_files": 8,
+      "n_booster_slices": 8,
+      "n_calibration_models": 8,
+      "stream_ids": [
+        "RT-1254",
+        "RT-1255",
+        "RT-1320",
+        "RT-410",
+        "RT-411",
+        "RT-412",
+        "RT-414",
+        "RT-415"
+      ],
+      "file_paths_exist": {
+        "model.cbm.0": true,
+        "model.cbm.4": true,
+        "model.txt.1": true,
+        "model.txt.2": true,
+        "model.txt.3": true,
+        "model.txt.5": true,
+        "model.txt.6": true,
+        "model.txt.7": true
+      },
+      "checks": {
+        "manifest_exists": true,
+        "experiment_id_is_rt1320": true,
+        "feature_manifest_is_rt600_bank": true,
+        "has_8_model_files": true,
+        "has_8_booster_slices": true,
+        "has_8_calibration_models": true,
+        "expected_provenance_n_boosters_is_8": true,
+        "trained_on_final10k_10000": true,
+        "folds_sha256_final10k": true,
+        "member_ids_include_rt1257_and_rt1320": true,
+        "expected_model_file_paths_present_in_manifest": true,
+        "expected_model_file_paths_exist": true
+      },
+      "message": "model manifest matches the RT-1320 8-member production contract"
+    },
+    {
+      "id": "crunch_test",
+      "required_for": "external_submission",
+      "status": "passed",
+      "path": "/path/to/workspace/structural-break-main-current/engineering/reports/rt1320_promotion_prep/CRUNCH_TEST.json",
+      "result": "PASSED",
+      "determinism_check": "passed: two full local crunch test runs produced bit-identical prediction parquet files; existing compare_predictions.py reported max_abs_prediction_delta=0.0",
+      "message": "Crunch test passed"
+    },
+    {
+      "id": "external_score",
+      "required_for": "active_component_status",
+      "status": "missing",
+      "message": "RT-1320 has no official external score as an 8-member system"
+    }
+  ]
+}

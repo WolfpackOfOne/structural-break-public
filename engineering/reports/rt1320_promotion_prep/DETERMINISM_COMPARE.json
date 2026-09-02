@@ -1,0 +1,15 @@
+{
+  "note": "no TS-AUC computed for either artifact",
+  "artifact_a": "engineering/reports/rt1320_promotion_prep/crunch_test_run1/predictions.npz",
+  "artifact_b": "engineering/reports/rt1320_promotion_prep/crunch_test_run2/predictions.npz",
+  "n_series": 100,
+  "n_predictions_compared": 50983,
+  "n_predictions_changed": 0,
+  "pct_changed": 0.0,
+  "max_abs_prediction_delta": 0.0,
+  "mean_abs_prediction_delta": 0.0,
+  "series_with_any_change": 0,
+  "per_series_changed": [],
+  "same_t_pairs_compared": 1652080,
+  "same_t_pair_order_flips": 0
+}
