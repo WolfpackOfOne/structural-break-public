@@ -24,7 +24,16 @@ The internal evidence that licensed RT-1257 was E2-E0 **+0.002026322**, marginal
 
 **RT-600 — official TS-AUC 0.6268.**
 
-RT-600 remains the formal production anchor during consolidation. RT-1257's build/manifest SHA split has been checked and the intervening tracked changes are packaging, dependency-declaration, and engineering-evidence changes rather than `src/sbr` model/feature changes. A fresh local Crunch test against the shipped/post-packaging entrypoint was recorded on 2026-08-31 and passed with determinism, and PR #14 CI passed. Formal RT-1257 production promotion is deliberately deferred to a separate owner tag/status action.
+RT-600 remains the formal production anchor during consolidation. A fresh local Crunch test against the shipped/post-packaging entrypoint was recorded on 2026-08-31 and passed with determinism, and PR #14 CI passed. Formal RT-1257 production promotion is deliberately deferred to a separate owner tag/status action.
+
+**Correction, 2026-09-01.** This section previously said the intervening tracked changes were "packaging, dependency-declaration, and engineering-evidence changes rather than `src/sbr` model/feature changes". That is **not accurate**. Between the recorded RT-1257 build (`e50098a4`) and `f1912b6`, `src/sbr` changed by 34 files and ~843 non-comment lines, including the stream modules `s_m03_dyn`, `s_m04_resid`, `s_m07_bayes` and `s_m12_rdep`. The changes predate the 2026-09-01 merge, which did not touch `src/sbr`.
+
+The changes are **legitimate and documented**, not a defect: `engineering/reports/rt600_final_reliability/release_candidate/PREDICTION_CHANGE_ROOTCAUSE.json` root-causes them to the `m06_loc` scalar-square ULP defect, measures the effect at **1 changed prediction in 38,723**, and finds the rebuilt artifact agrees with both the batch reference and the feature cache the frozen model was trained on while the shipped artifact does not — i.e. the change moves served features *toward* trained-on semantics.
+
+Two consequences worth stating plainly:
+
+- The unchanged RT-600 feature-manifest SHA (`1646c3b9…`) is **not** evidence that predictions are unchanged. It covers the declared column set, not the numerical implementation, and it did not move across this diff.
+- Promotion-gate item 1 in `CONSOLIDATION_HYGIENE_REVIEW.md` — "build RT-1257 from a clean tracked checkout using the canonical build script" — remains **outstanding**, and it is precisely the step that would quantify this for RT-1257 rather than for RT-600's release candidate. Item 7 says "only then", so RT-1257 cannot be formally promoted on the current record.
 
 See `engineering/reports/rt1257_deployment/CONSOLIDATION_HYGIENE_REVIEW.md`.
 
