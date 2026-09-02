@@ -4,7 +4,7 @@ Concise canonical pointer to the current state of the 2026 ADIA Lab / CrunchDAO 
 
 ## External champion
 
-**RT-1257 — official TS-AUC 0.6290 (submission #16, 2026-08-29).**
+**RT-1257 — official TS-AUC 0.6290 (submission #16, 2026-08-29). Formally promoted to production anchor 2026-09-02.**
 
 This is the best external score currently recorded in the repository. It improves on RT-600's 0.6268 by **+0.0022**.
 
@@ -22,9 +22,28 @@ The internal evidence that licensed RT-1257 was E2-E0 **+0.002026322**, marginal
 
 ## Formal production anchor
 
-**RT-600 — official TS-AUC 0.6268.**
+**RT-1257 — official TS-AUC 0.6290. Promoted 2026-09-02.**
 
-RT-600 remains the formal production anchor during consolidation. A fresh local Crunch test against the shipped/post-packaging entrypoint was recorded on 2026-08-31 and passed with determinism, and PR #14 CI passed. Formal RT-1257 production promotion is deliberately deferred to a separate owner tag/status action.
+RT-1257 is both the external champion and the formal production anchor. The
+seven-item promotion gate in `engineering/reports/rt1257_deployment/CONSOLIDATION_HYGIENE_REVIEW.md`
+is complete: items 2-6 closed on 2026-08-31, item 1 (clean rebuild) on 2026-09-02,
+and item 7 — this status change and the `rt1257-production-0.6290` tag — is the
+owner action recorded here.
+
+The evidence that closed item 1 (`RT1257_REBUILD_2026.json`): a clean rebuild at
+`f1912b6` with `embedded_source_clean=true`, whose `model_zip_sha256`,
+`model_manifest_sha256` and `feature_manifest_sha256` all match the recorded
+`e50098a4` build. Predictions were compared against a shipped-behaviour proxy
+rebuilt from clean `e50098a4`, verified byte-identical to the recorded shipped
+source zip: **0 changed out of 89,706 predictions** across two independent
+samples (0/38,723 on the 67-series packaged battery, 0/50,983 on the 100-series
+Crunch reduced set). That matters because the intervening `src/sbr` changes had
+moved 1 prediction in 38,723 for RT-600's release candidate; they move none of
+RT-1257's, measured on the same sample where RT-600's change was found.
+
+**RT-600 — official TS-AUC 0.6268 — is retained as `REFERENCE`**, the permanent
+homogeneous-LightGBM comparison model, at tag `rt600-production-0.6268` on branch
+`production/rt600`. It is no longer the formal anchor.
 
 **Correction, 2026-09-01.** This section previously said the intervening tracked changes were "packaging, dependency-declaration, and engineering-evidence changes rather than `src/sbr` model/feature changes". That is **not accurate**. Between the recorded RT-1257 build (`e50098a4`) and `f1912b6`, `src/sbr` changed by 34 files and ~843 non-comment lines, including the stream modules `s_m03_dyn`, `s_m04_resid`, `s_m07_bayes` and `s_m12_rdep`. The changes predate the 2026-09-01 merge, which did not touch `src/sbr`.
 
