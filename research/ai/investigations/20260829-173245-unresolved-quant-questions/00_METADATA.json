@@ -1,0 +1,43 @@
+{
+  "investigation_id": "20260829-173245-unresolved-quant-questions",
+  "created_at": "2026-08-29T17:32:45Z",
+  "repo_path": "structural-break",
+  "repo_sha": "33fa041921f2e29d3b7bfbffcfac565997f9789a",
+  "branch": "claude/local-model-results-review-lk0f7i",
+  "dirty_worktree": true,
+  "dirty_worktree_notes": "30 changed/untracked paths at investigation start, including untracked RESULTS.csv, STATE_OF_RESEARCH.md, research/, wave2/, several .bundle files, and modified files under experiments/, scripts/, src/structural_break/, tests/.",
+  "workspace_root": "/path/to/workspace",
+  "workspace_root_is_git_repo": false,
+  "sibling_directories_note": "Workspace root contains ~25 sibling structural-break-* directories with no .git; treated as historical/context snapshots only unless scout finds evidence otherwise.",
+  "question": "Identify the three most important unresolved quantitative research questions documented in this repository, based only on current research reports, RESULTS.csv, and recent Git history. Do not propose new training runs.",
+  "status": "INITIALIZED",
+  "protocol_version": 1,
+  "opencode_version": "",
+  "models": {
+    "scout": "opencode/deepseek-v4-pro",
+    "researcher": "opencode/kimi-k3",
+    "skeptic": "opencode/grok-4.6",
+    "statistician": "opencode/qwen3.7-max",
+    "literature": "opencode/gemini-3.1-pro",
+    "synthesizer": "opencode/claude-opus-5",
+    "implementer": "opencode/gpt-5.3-codex",
+    "verifier": "opencode/gpt-5.6-sol"
+  },
+  "artifacts": {
+    "00_QUESTION.md": "created",
+    "00_METADATA.json": "created",
+    "01_EVIDENCE_MANIFEST.md": "pending",
+    "02_PRIMARY_RESEARCH.md": "pending",
+    "03_INDEPENDENT_SKEPTIC.md": "pending",
+    "03B_LITERATURE_REVIEW.md": "not_planned",
+    "04_STATISTICAL_AUDIT.md": "pending",
+    "05_SYNTHESIS.md": "pending",
+    "06_PREREGISTRATION.md": "conditional"
+  },
+  "usage": {
+    "input_tokens": null,
+    "cached_input_tokens": null,
+    "output_tokens": null,
+    "cost": null
+  }
+}
