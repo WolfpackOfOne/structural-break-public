@@ -1,9 +1,9 @@
 # Phase 1, alt2 + alt3 — Stage 2, all four partitions
 
 Date: 2026-09-01. Plan: `RT1320_PROMOTION_PLAN.md` §1.4 Stage 2, §9.
-Verdict: **NOT RECORDED HERE.** Every §4 PASS condition is met and no KILL
-condition fires, but the verdict against a preregistered gate is an owner
-action. This document reports; it does not decide.
+Verdict: **PASS**, recorded by the owner 2026-09-01. Every §4 PASS condition is
+met and no KILL condition fires. This closes the alternate-partition leg; it does
+not promote RT-1320, which needs an external score.
 
 ## The gate, as frozen before alt1 was run
 
@@ -79,13 +79,18 @@ still carry its provenance: these are development-partition OOF endpoints, not
 an external score. `external_score` remains an open blocker and needs Crunch
 quota.
 
-## What is NOT done here
+## Where the outcome is recorded
 
-Per §9 the outcome must be recorded whichever way it goes, including rows in
-`FAILED_EXPERIMENTS.md` and `NEGATIVE_RESULTS_INDEX.md`, and a status change in
-`MODEL_REGISTRY.md`. Those are deliberately **not** written by this document,
-because each presumes a verdict, and the verdict has not been recorded. They
-follow the owner's §4 call.
+- `MODEL_REGISTRY.md` — RT-1320 row updated with the four-partition result and
+  the status qualified to "Phase 1 PASSED; blocked only on external_score".
+- `STATUS.md` — research-alive entry rewritten.
+- `RT1320_PROMOTION_PLAN.md` §4 — Stage 2 marked PASS.
+
+**Not** written to `FAILED_EXPERIMENTS.md` or `NEGATIVE_RESULTS_INDEX.md`. §9's
+"either way" clause anticipated this leg killing the candidate; both files are
+explicitly indices of failed, invalid, redundant, superseded or infeasible
+directions. A passing result does not belong in either. Had the verdict been
+KILL or INCONCLUSIVE, both would have taken a row.
 
 ## Provenance
 

@@ -28,7 +28,7 @@ This file answers **what matters now**. It does not replace `RESULTS.csv` (the q
 | **RT-1263** | CAT-415 | Additional CatBoost slot replacement | RT-1257-relative adjudication: primary E2-E1 +0.000283602 (3/5) and deployment E2-E0 +0.000175228 (3/5; 95% CI [-0.000756519, +0.001139340]); dominant-cell net -16 and mature-vs-never net -3. | **RESEARCH_ALIVE_WEAK — no new lane absent new evidence** |
 | **RT-1262** | CAT-414 | Additional CatBoost slot replacement | RT-1257-relative adjudication: primary E2-E1 +0.001057324 (4/5) but deployment E2-E0 +0.000178858 (4/5; 95% CI [-0.000729204, +0.001056890]); dominant-cell net -84. | **RESEARCH_ALIVE_WEAK — no new lane absent new evidence** |
 | **RT-1260** | CAT-411 | Additional CatBoost slot replacement | RT-1257-relative adjudication: primary E2-E1 +0.001317358 (5/5) is driven by a degraded clone control; deployment E2-E0 is only +0.000133942 (2/5; 95% CI [-0.000455188, +0.000748957]). | **PARKED / NO_PROMOTION** |
-| **RT-1320** | M1 Arm-C residual student | First candidate to *add* an 8th member rather than swap a slot | Addition contract vs RT-1257: primary E2-E1 **+0.001516** (4/5 folds, fold 0 negative); secondary E2-E0 +0.001416. On the RT-600 lane +0.001965 at 5/5. Confirmed at a second seed. | **RESEARCH_ALIVE — clears the primary endpoint; NOT deployable, NOT a member of any promoted system** |
+| **RT-1320** | M1 Arm-C residual student | First candidate to *add* an 8th member rather than swap a slot | **Phase 1 four-partition gate PASSED 2026-09-01.** Addition contract vs RT-1257, E1 = RT-1257 + one matched added RT-403 clone. Mean E2-E1 across canonical/alt1/alt2/alt3 **+0.0017678**, 4/4 partitions positive, worst +0.0014825, none negative (rule: mean ≥ +0.0011, >0 on ≥3 of 4, none < −0.0011). Per partition: canonical +0.0015159 (4/5), alt1 +0.0021146 (5/5), alt2 +0.0014825 (5/5), alt3 +0.0019582 (4/5). E1 control flat-to-negative on all four, so the RT-1264/CSA-04 inflation shape is absent. Causality passes at research and artifact level; final10k fit and 8-member artifact built. | **RESEARCH_ALIVE — Phase 1 PASSED; artifact built and causality-verified; blocked only on `external_score`. NOT an ACTIVE_COMPONENT: that requires membership of the external champion, which needs a Crunch score.** |
 | **RT-995 / T2** | Teacher-distilled causal LightGBM | Privileged-information student | Strong standalone improvement (~+0.00943 vs matched T0) but final ensemble marginal vs matched seed clone only ~+0.000237; mostly redundant. | **PARKED** |
 | **RT-1265** | CSA-04R corrected reanalysis identity | Corrected hybrid-selection result | Fixed E2-E0 + preregistered parsimony selects k*=2 = CAT-413 + CAT-300, exactly RT-1257. `delta_vs_RT1257=0`; no new OOF vector. | **SUPERSEDING_ANALYSIS / NOT_DISTINGUISHABLE** |
 | **RT-1264** | Original CSA-04 five-slot hybrid | Historical best-k result under flawed selection endpoint | Original E2-E1 endpoint was contaminated by worsening clone control as k grew. Descriptive 63-subset appendix cannot select a champion. | **SUPERSEDED BY RT-1265** |
@@ -79,24 +79,27 @@ means *a member of the current external champion*. RT-1257 scored 0.6290
 externally without RT-1320 in it, so RT-1320 cannot be an active component today
 no matter how good its internal evidence is.
 
-Outstanding before promotion is even arguable:
+Status as of 2026-09-01: **items 1–4 are done; item 5 is the sole remaining
+blocker** and needs Crunch quota rather than local work. The original list is
+kept below with each item marked, so the checklist reads as a record rather than
+being rewritten.
 
-1. **Alternate-partition leg.** All evidence is on canonical `folds.parquet`, and
+1. **Alternate-partition leg. — DONE 2026-09-01, PASS.** Four-partition mean E2−E1 +0.0017678, 4/4 positive. See `reports/rt1320_promotion/PHASE1_STAGE2.md`. Note the premise below is stale: the seven specialists did *not* need refitting, their alt OOF vectors were already on disk from wave 4/5. All evidence is on canonical `folds.parquet`, and
    `FINAL_ARCHITECTURE_FREEZE.md` records that canonical was the most favourable
    of the four partitions for the RT-600 specialisation delta. The leg requires
    refitting the seven specialists under `folds_alt*.parquet` first, because
    their OOF is cross-fitted on the canonical partition.
-2. **Causality gate.** `PROTOCOL_CHAMPION_2026.md` requires prefix invariance,
+2. **Causality gate. — DONE.** Research-stage PASS (`PHASE2_CAUSALITY.md`) and artifact-level PASS on the assembled 8-member artifact (`engineering/reports/rt1320_promotion_prep/ARTIFACT_CAUSALITY.json`). `PROTOCOL_CHAMPION_2026.md` requires prefix invariance,
    no total-horizon dependence, per-series independence, deterministic replay,
    and output-contract checks before a predictive score is interpreted. The
    student reuses the already-verified 500-column causal bank and adds no new
    features, so much of this is inherited — but none of it has been run against
    the student's own inference path. `causal_verified=no` in the ledger.
-3. **Final-10k fit.** Production fits use `folds_final10k.parquet` over 10,000
+3. **Final-10k fit. — DONE 2026-09-01.** Regenerated at 10k locally after the Crunch run was lost to quota; `model.txt.7` and `RT-1320_student_scdf.json` built. Production fits use `folds_final10k.parquet` over 10,000
    series. The nested Arm-C teacher that generates RT-1320's training target
    exists only over the 8,000 dev series, so the target itself must be
    regenerated at 10k before an artifact can be built.
-4. **Production artifact and manifest.** `src/sbr/production/model.py` is
+4. **Production artifact and manifest. — DONE.** `models/rt1320_final` built by `research/scripts/rt1320_assemble_artifact.py`; 8 model files, 8 booster slices, 8 calibration models. `src/sbr/production/model.py` is
    member-count agnostic and manifest-driven, so an 8th member is an artifact and
    calibration-payload change rather than a code redesign. The student is a
    `regression`-objective booster whose raw output is a residual prediction, not
@@ -110,6 +113,6 @@ protocol's primary endpoint against RT-1257 + one matched clone, and labels the
 old quantity `all_clone_control (NOT an E1)`. The two committed reports carry a
 correction header; their numbers were left as produced.
 
-5. **A fresh Crunch test and an external score.** RT-1257 itself is still not the
+5. **A fresh Crunch test and an external score. — HALF DONE; THE REMAINING BLOCKER.** Local Crunch test passed twice with bit-identical predictions (`CRUNCH_TEST.json`, `max_abs_prediction_delta=0.0`). The external score is not obtained and needs quota. RT-1257 itself is still not the
    formal production anchor pending its own promotion action, so an 8th member
    stacks on top of an unpromoted champion.

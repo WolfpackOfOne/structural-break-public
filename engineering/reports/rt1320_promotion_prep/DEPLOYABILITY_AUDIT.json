@@ -1,7 +1,7 @@
 {
   "schema": "sbr.rt1320_promotion_prep/1",
-  "generated_at": "2026-09-02T00:30:56Z",
-  "git_sha": "6e32e4305b5737a9ef76fb6f9faccab19fdb0688",
+  "generated_at": "2026-09-02T00:54:56Z",
+  "git_sha": "9d2e6c962ac6a6a6fa9d376811632f0f775a90d2",
   "git_branch": "engineering/rt1320-promotion-prep",
   "status": "PROMOTION_BLOCKED",
   "summary": "RT-1320 remains the best live post-RT-1257 engineering target, but promotion is blocked until the missing gates are closed.",
