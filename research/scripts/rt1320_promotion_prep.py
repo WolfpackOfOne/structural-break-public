@@ -278,6 +278,89 @@ def inspect_model_manifest(model_dir: Path | None) -> dict[str, Any]:
     }
 
 
+ALT_PARTITION_SOURCES = {
+    "canonical": ("research/reports/armc_residual_student_confirm_s20260901"
+                  "/E2_E1_addition_contract.json"),
+    "alt1": "research/reports/rt1320_promotion/PHASE1_ALT1_E2_E1_addition_contract.json",
+    "alt2": "research/reports/rt1320_promotion/PHASE1_ALT2_E2_E1_addition_contract.json",
+    "alt3": "research/reports/rt1320_promotion/PHASE1_ALT3_E2_E1_addition_contract.json",
+}
+ALT_NOISE_FLOOR = 0.0011
+
+
+def alt_partition_evidence() -> dict[str, Any]:
+    """Read the four addition-contract endpoints and apply plan §4's frozen rule.
+
+    The rule was fixed in RT1320_PROMOTION_PLAN.md before alt1 was run, so
+    applying it is arithmetic, not judgement:
+
+      PASS  mean E2-E1 >= +0.0011 AND E2-E1 > 0 on >= 3 of 4 AND none < -0.0011
+      KILL  mean below the floor, OR two or more partitions negative
+      INCONCLUSIVE otherwise
+
+    This reports whether the evidence satisfies the rule. It is NOT the owner's
+    sign-off -- that is the MODEL_REGISTRY.md status change, which this script
+    has never written and still does not.
+    """
+    per, missing = {}, []
+    for name, rel in ALT_PARTITION_SOURCES.items():
+        data = read_json(REPO / rel)
+        if data is None:
+            missing.append(name)
+            continue
+        per[name] = {
+            "E2_minus_E1": data.get("PRIMARY_E2_minus_E1"),
+            "E2_minus_E0": data.get("SECONDARY_E2_minus_E0"),
+            "folds_positive": data.get("primary_folds_positive"),
+            "per_fold": data.get("primary_per_fold"),
+            "control_lift_E1_minus_E0": data.get("control_lift_E1_minus_E0"),
+        }
+    if missing:
+        return {
+            "status": "missing",
+            "message": (
+                "alternate-partition leg incomplete; no endpoint record for: "
+                + ", ".join(sorted(missing))
+            ),
+            "partitions_present": sorted(per),
+            "partitions_missing": sorted(missing),
+        }
+
+    vals = [v["E2_minus_E1"] for v in per.values()]
+    mean = sum(vals) / len(vals)
+    n_pos = sum(v > 0 for v in vals)
+    n_neg = sum(v < 0 for v in vals)
+    checks = {
+        "mean_clears_noise_floor": mean >= ALT_NOISE_FLOOR,
+        "positive_on_at_least_3_of_4": n_pos >= 3,
+        "no_partition_worse_than_minus_floor": min(vals) >= -ALT_NOISE_FLOOR,
+    }
+    killed = (mean < ALT_NOISE_FLOOR) or (n_neg >= 2)
+    if killed:
+        verdict = "KILL"
+    elif all(checks.values()):
+        verdict = "PASS"
+    else:
+        verdict = "INCONCLUSIVE"
+
+    return {
+        "status": "passed" if verdict == "PASS" else "failed",
+        "rule_verdict": verdict,
+        "mean_E2_minus_E1": mean,
+        "n_partitions_positive": n_pos,
+        "n_partitions_negative": n_neg,
+        "worst_partition_E2_minus_E1": min(vals),
+        "noise_floor": ALT_NOISE_FLOOR,
+        "checks": checks,
+        "per_partition": per,
+        "message": (
+            f"four-partition leg complete; plan §4 rule evaluates to {verdict} "
+            f"(mean {mean:+.7f}, {n_pos}/4 positive, worst {min(vals):+.7f}). "
+            "This is the frozen arithmetic, not the owner's promotion sign-off."
+        ),
+    }
+
+
 def artifact_validation_evidence(path: Path) -> dict[str, Any]:
     data = read_json(path)
     if data is None:
@@ -345,11 +428,7 @@ def build_audit(
         {
             "id": "alternate_partition_leg",
             "required_for": "promotion",
-            "status": "missing",
-            "message": (
-                "must refit comparable RT-1257 and RT-1320 OOF under predeclared "
-                "folds_alt*.parquet partitions; canonical alone is insufficient"
-            ),
+            **alt_partition_evidence(),
         },
         {
             "id": "student_artifact_causality",

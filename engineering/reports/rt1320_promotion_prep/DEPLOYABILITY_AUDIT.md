@@ -1,8 +1,8 @@
 # RT-1320 Promotion Prep
 
-Generated: `2026-09-01T14:08:16Z`
+Generated: `2026-09-02T00:30:56Z`
 Branch: `engineering/rt1320-promotion-prep`
-Git SHA: `f1912b6ff461026612d8f41229c438d9180d1171`
+Git SHA: `6e32e4305b5737a9ef76fb6f9faccab19fdb0688`
 
 Status: **PROMOTION_BLOCKED**
 
@@ -28,7 +28,7 @@ Work on RT-1320, not another GPU tabular family. RT-1320 is the only current res
 |---|---|---|
 | `champion_relative_endpoint` | `passed` | champion-relative addition endpoint clears the current noise floor |
 | `nested_teacher_student_report` | `passed` | nested teacher/student report gates are present and internally clean |
-| `alternate_partition_leg` | `missing` | must refit comparable RT-1257 and RT-1320 OOF under predeclared folds_alt*.parquet partitions; canonical alone is insufficient |
+| `alternate_partition_leg` | `passed` | four-partition leg complete; plan §4 rule evaluates to PASS (mean +0.0017678, 4/4 positive, worst +0.0014825). This is the frozen arithmetic, not the owner's promotion sign-off. |
 | `student_artifact_causality` | `passed` | artifact-level causality tests ran and passed |
 | `final10k_target_and_fit` | `passed` | model manifest records an 8-member folds_final10k fit |
 | `production_artifact_manifest` | `passed` | model manifest matches the RT-1320 8-member production contract |
