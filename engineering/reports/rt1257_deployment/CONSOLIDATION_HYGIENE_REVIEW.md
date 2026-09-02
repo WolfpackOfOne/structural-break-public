@@ -109,12 +109,12 @@ Before merge, the PR check for the latest head must still be green; any later do
 
 Before changing the formal production anchor from RT-600 to RT-1257:
 
-1. Build RT-1257 from a clean tracked checkout using the canonical build script. Existing final build identity is recorded; a new clean rebuild was not performed in this follow-up.
+1. Build RT-1257 from a clean tracked checkout using the canonical build script. **DONE 2026-09-02** — clean rebuild at `f1912b6`, `embedded_source_clean=true`. `model_zip_sha256`, `model_manifest_sha256` and `feature_manifest_sha256` all match the recorded `e50098a4` build; `source_zip_sha256` and the entrypoint/notebook hashes differ as expected because `src/sbr` changed. Prediction equivalence against a shipped-behaviour proxy rebuilt at `e50098a4` (proxy `source_zip_sha256` verified identical to the recorded build): **0 changed out of 89,706 predictions** across two independent samples — 0/38,723 on the 67-series packaged battery and 0/50,983 on the 100-series local Crunch reduced set. Full record: `RT1257_REBUILD_2026.json`.
 2. Record the new source/build/model/manifest/entrypoint hashes. DONE in `CRUNCH_TEST.json`.
 3. Run `crunch test` against that exact build. DONE locally on 2026-08-31.
 4. Regenerate `engineering/reports/rt1257_deployment/CRUNCH_TEST.json` so it identifies the entrypoint hash/build manifest it tested. DONE.
 5. Re-run deterministic/prefix/series-independence/streaming-parity/production-contract tests in the clean environment. DONE locally through `pytest -q`; real-store CRF tests skip when the non-redistributable store is absent.
 6. Ensure GitHub CI reaches and passes the intended production test set. DONE for PR #14 follow-up commit `770d626` in GitHub Actions run `33347734538`.
-7. Only then create the production promotion tag and change `STATUS.md` from "external champion" + "RT-600 formal anchor" to "RT-1257 production champion." DEFERRED; not part of PR #14.
+7. Only then create the production promotion tag and change `STATUS.md` from "external champion" + "RT-600 formal anchor" to "RT-1257 production champion." **STILL DEFERRED — owner action.** Items 1-6 are now all satisfied (2026-09-02), so this is the only remaining step, and it is deliberately not automated.
 
 No consolidation document may claim RT-1257 is formally production-promoted unless that separate owner action is later performed.

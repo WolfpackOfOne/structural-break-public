@@ -1,0 +1,323 @@
+{
+  "schema": "rt1257_deployment/rebuild_gate_item_1/1",
+  "generated_at_utc": "2026-09-02T03:15:43Z",
+  "scope": "Gate item 1 clean rebuild and RT-1257-specific prediction equivalence. Gate item 7 was not performed.",
+  "worktrees": {
+    "original_requested_worktree": "/path/to/workspace/structural-break-main-current",
+    "original_requested_branch": "engineering/rt1320-promotion-prep",
+    "access_note": "The original Documents checkout was not readable by this shell/Python process (macOS Operation not permitted on listing/reading). The clean rebuild used an accessible detached worktree at the same requested code SHA f1912b6ff461026612d8f41229c438d9180d1171.",
+    "source_checkout_used_for_git_objects": "/home/user/rt1320-queue-work-20260901",
+    "clean_rebuild_worktree": "/home/user/.codex/tmp/rt1257-clean-f1912b6",
+    "shipped_proxy_worktree": "/home/user/.codex/tmp/rt1257-shipped-e50098a",
+    "evidence_dir": "/home/user/.codex/tmp/rt1257-gate-20260902"
+  },
+  "model_artifact_guard": {
+    "requested_model_directory": "/path/to/workspace/structural-break-rt1257-deployment/models/rt1257_final",
+    "read_note": "The requested model directory existed but file reads were denied by macOS privacy permissions, so the model directory used for the clean rebuild was reconstructed from the accessible RT-1320 artifact, which contains the seven RT-1257 member files plus an eighth student. Only the seven RT-1257 files were copied, and the original RT-1257 manifest was reconstructed byte-for-byte before use.",
+    "reconstructed_model_directory": "/home/user/.codex/tmp/rt1257-clean-f1912b6/models/rt1257_final",
+    "manifest_built_at_recovered": "2026-08-27T18:03:23Z",
+    "manifest_sha256": "ba4bee741d3d16ccc874724757167b9a7478005c14587bb329b845efca126d4c",
+    "manifest_bytes": 773863,
+    "model_zip_sha256": "952422d7ddb5a5d60719e909d1f0669c612952c72a26fc1859035dfae0381f0a",
+    "matches_recorded_model_manifest_sha256": true,
+    "matches_recorded_model_zip_sha256": true,
+    "member_hashes": {
+      "model.cbm.0": "d5922e5395586d2d71a0b8fd73a8b07d1f9e6ede6077b53488a2c3987d109759",
+      "model.txt.1": "31bd0b7a8734fdd258d048faee7af8f62d0e7b4930f404d07d93897099853211",
+      "model.txt.2": "7f732c73f81bb20cb1f142c4c035e03a6a8db6191a218af36dfede63ecafe125",
+      "model.txt.3": "009c2e880ae0c3aa22f1ea632cb8256563239749dcf03c72dca7a08cf8131092",
+      "model.cbm.4": "5f49e7f224ee0e2676aa11b1c237ce98fd8a302bddbe1543c725b2b58686cf5e",
+      "model.txt.5": "261b3bcf4a7e2cdda306cc909e236e07cec56411e5e7e73f9c40f099e9f8e953",
+      "model.txt.6": "c1edd219d7501232ccc127f84fd51c66a690ec882c00d2f5ba2d2b0ef2207c39"
+    }
+  },
+  "recorded_build_identity": {
+    "built_at": "2026-08-29T12:52:38Z",
+    "code_git_sha": "e50098a42f28b1007746cb20bbabc157e285b036",
+    "embedded_source_clean": true,
+    "embedded_source_dirty_paths": [],
+    "worktree_other_changes": [
+      "M submissions/RT1257_deployable.build.json",
+      "?? engineering/reports/rt1257_deployment/oof/",
+      "?? submissions/RT1257_deployable.py"
+    ],
+    "model_directory": "/path/to/workspace/structural-break-rt1257-deployment/models/rt1257_final",
+    "source_zip_sha256": "c8e35854675b038103cec6b6da827e1186bf8235bef6a8d3d8d6e00691429676",
+    "model_zip_sha256": "952422d7ddb5a5d60719e909d1f0669c612952c72a26fc1859035dfae0381f0a",
+    "feature_manifest_sha256": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced",
+    "model_manifest_sha256": "ba4bee741d3d16ccc874724757167b9a7478005c14587bb329b845efca126d4c",
+    "notebook": {
+      "path": "/path/to/workspace/structural-break-rt1257-deployment/submissions/RT1257_deployable.ipynb",
+      "sha256": "2461c7002fce3d0a0057f99acfa6749940bc7e2d3fc764351ee21e6bcb3de2e1",
+      "bytes": 24009226
+    },
+    "python_entrypoint": {
+      "path": "/path/to/workspace/structural-break-rt1257-deployment/submissions/RT1257_deployable.py",
+      "sha256": "05eafb66f4589f5b426f4af43779f428f7a90f2d64b423530d6f315a798e888b",
+      "bytes": 24006505
+    },
+    "infer_parallelism": 1,
+    "manifest_code_git_sha": "6b4fafacd30711bebf2bf977c3c390641f3ae522",
+    "manifest_matches_build_sha": false
+  },
+  "new_clean_rebuild_identity": {
+    "built_at": "2026-09-02T02:37:22Z",
+    "code_git_sha": "f1912b6ff461026612d8f41229c438d9180d1171",
+    "embedded_source_clean": true,
+    "embedded_source_dirty_paths": [],
+    "worktree_other_changes": [],
+    "model_directory": "/home/user/.codex/tmp/rt1257-clean-f1912b6/models/rt1257_final",
+    "source_zip_sha256": "6a36e641b7ad276703f3af4d5165bc4eb5c4b79e5ac4decdbc37d6c5e43a137c",
+    "model_zip_sha256": "952422d7ddb5a5d60719e909d1f0669c612952c72a26fc1859035dfae0381f0a",
+    "feature_manifest_sha256": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced",
+    "model_manifest_sha256": "ba4bee741d3d16ccc874724757167b9a7478005c14587bb329b845efca126d4c",
+    "notebook": {
+      "path": "/home/user/.codex/tmp/rt1257-gate-20260902/submissions/RT1257_REBUILD_2026.ipynb",
+      "sha256": "c3dc3462ffb858fa6159ccddf689fac09db854d88e220aa15cc51deda7a09ada",
+      "bytes": 24010404
+    },
+    "python_entrypoint": {
+      "path": "/home/user/.codex/tmp/rt1257-gate-20260902/submissions/RT1257_REBUILD_2026.py",
+      "sha256": "211c2ec969beb35f450f37407f267cc52f2d81bcd946a629d8c99d9198036823",
+      "bytes": 24007653
+    },
+    "infer_parallelism": 1,
+    "manifest_code_git_sha": "6b4fafacd30711bebf2bf977c3c390641f3ae522",
+    "manifest_matches_build_sha": false
+  },
+  "new_clean_rebuild_build_manifest_sha256": "bb80205681603f201c775336fc82583e6f384e2d445fb042351fcc1c9c4832f9",
+  "hash_verdicts_against_recorded_build": [
+    {
+      "field": "code_git_sha",
+      "new": "f1912b6ff461026612d8f41229c438d9180d1171",
+      "recorded": "e50098a42f28b1007746cb20bbabc157e285b036",
+      "verdict": "DIFFER",
+      "note": "expected_current_HEAD_rebuild"
+    },
+    {
+      "field": "source_zip_sha256",
+      "new": "6a36e641b7ad276703f3af4d5165bc4eb5c4b79e5ac4decdbc37d6c5e43a137c",
+      "recorded": "c8e35854675b038103cec6b6da827e1186bf8235bef6a8d3d8d6e00691429676",
+      "verdict": "DIFFER",
+      "note": "expected_to_differ_src_sbr_changed_since_recorded_build"
+    },
+    {
+      "field": "model_zip_sha256",
+      "new": "952422d7ddb5a5d60719e909d1f0669c612952c72a26fc1859035dfae0381f0a",
+      "recorded": "952422d7ddb5a5d60719e909d1f0669c612952c72a26fc1859035dfae0381f0a",
+      "verdict": "MATCH",
+      "note": "must_match_model_artifact_unchanged"
+    },
+    {
+      "field": "feature_manifest_sha256",
+      "new": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced",
+      "recorded": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced",
+      "verdict": "MATCH",
+      "note": "matches_declared_column_set_not_prediction_equivalence_evidence"
+    },
+    {
+      "field": "model_manifest_sha256",
+      "new": "ba4bee741d3d16ccc874724757167b9a7478005c14587bb329b845efca126d4c",
+      "recorded": "ba4bee741d3d16ccc874724757167b9a7478005c14587bb329b845efca126d4c",
+      "verdict": "MATCH",
+      "note": "must_match_frozen_model_manifest"
+    },
+    {
+      "field": "python_entrypoint.sha256",
+      "new": "211c2ec969beb35f450f37407f267cc52f2d81bcd946a629d8c99d9198036823",
+      "recorded": "05eafb66f4589f5b426f4af43779f428f7a90f2d64b423530d6f315a798e888b",
+      "verdict": "DIFFER",
+      "note": "expected_to_differ_rebuilt_payload_and_build_metadata"
+    },
+    {
+      "field": "notebook.sha256",
+      "new": "c3dc3462ffb858fa6159ccddf689fac09db854d88e220aa15cc51deda7a09ada",
+      "recorded": "2461c7002fce3d0a0057f99acfa6749940bc7e2d3fc764351ee21e6bcb3de2e1",
+      "verdict": "DIFFER",
+      "note": "expected_to_differ_rebuilt_payload_and_build_metadata"
+    },
+    {
+      "field": "build_manifest_sha256",
+      "new": "bb80205681603f201c775336fc82583e6f384e2d445fb042351fcc1c9c4832f9",
+      "recorded": "8e27b96c0b7cb4ac6998ff89c37ac180cf54a5253a3141d2e096e52feac6b344",
+      "verdict": "DIFFER",
+      "note": "expected_to_differ_new_build_identity_file"
+    }
+  ],
+  "clean_checkout_assertions": {
+    "code_git_sha": "f1912b6ff461026612d8f41229c438d9180d1171",
+    "embedded_source_clean": true,
+    "embedded_source_dirty_paths": [],
+    "worktree_other_changes_in_build_manifest": [],
+    "git_status_short_after_build": [
+      "## HEAD (no branch)"
+    ],
+    "canonical_build_command": "python3 research/scripts/build_submission.py --model models/rt1257_final --out /home/user/.codex/tmp/rt1257-gate-20260902/submissions/RT1257_REBUILD_2026.ipynb --title \"RT-1257 clean production-gate rebuild 2026-09-02\" --py /home/user/.codex/tmp/rt1257-gate-20260902/submissions/RT1257_REBUILD_2026.py"
+  },
+  "crunch_test": {
+    "command_template": "crunch test --main-file /home/user/.codex/tmp/rt1257-gate-20260902/submissions/RT1257_REBUILD_2026.py --model-directory <fresh_tmp_model_dir>",
+    "forbidden_commands_not_run": [
+      "crunch push",
+      "crunch setup"
+    ],
+    "cli_version": "crunch, version 11.12.0",
+    "run1": {
+      "result": "PASSED",
+      "model_directory": "/tmp/rt1257_gate_run1_model_20260902",
+      "duration_reported": "00:03:33",
+      "time_command_real_s": 220.79,
+      "maximum_resident_set_size_bytes": 3707863040,
+      "peak_memory_footprint_bytes": 3692236592,
+      "cli_internal_determinism_check": "passed",
+      "prediction_parquet": "/home/user/.codex/tmp/rt1257-gate-20260902/crunch_run1/prediction/prediction.parquet",
+      "prediction_parquet_sha256": "cd6c5fe9f376ef4c5e620e77f5f94cf4bb77843d1e12820a02256e08e7a80b1b"
+    },
+    "run2": {
+      "result": "PASSED",
+      "model_directory": "/tmp/rt1257_gate_run2_model_20260902",
+      "duration_reported": "00:03:40",
+      "time_command_real_s": 226.46,
+      "maximum_resident_set_size_bytes": 3264806912,
+      "peak_memory_footprint_bytes": 3694710504,
+      "cli_internal_determinism_check": "passed",
+      "prediction_parquet": "/home/user/.codex/tmp/rt1257-gate-20260902/crunch_run2/prediction/prediction.parquet",
+      "prediction_parquet_sha256": "cd6c5fe9f376ef4c5e620e77f5f94cf4bb77843d1e12820a02256e08e7a80b1b"
+    },
+    "determinism": {
+      "prediction_parquets_byte_identical_cmp_exit": 0,
+      "compare_predictions": {
+        "note": "no TS-AUC computed for either artifact",
+        "artifact_a": "/home/user/.codex/tmp/rt1257-gate-20260902/crunch_run1/predictions.npz",
+        "artifact_b": "/home/user/.codex/tmp/rt1257-gate-20260902/crunch_run2/predictions.npz",
+        "n_series": 100,
+        "n_predictions_compared": 50983,
+        "n_predictions_changed": 0,
+        "pct_changed": 0.0,
+        "max_abs_prediction_delta": 0.0,
+        "mean_abs_prediction_delta": 0.0,
+        "series_with_any_change": 0,
+        "per_series_changed": [],
+        "same_t_pairs_compared": 1652080,
+        "same_t_pair_order_flips": 0
+      }
+    }
+  },
+  "prediction_equivalence_vs_shipped_build": {
+    "method": "Built a shipped-behavior proxy from clean e50098a42f28b1007746cb20bbabc157e285b036 with the exact recorded source_zip_sha256 and model_zip_sha256, then used packaged_release_check.py --phase predict and compare_predictions.py over the same 67-series sample used by the RT-600 release-candidate tooling.",
+    "shipped_proxy_identity": {
+      "built_at": "2026-09-02T02:48:35Z",
+      "code_git_sha": "e50098a42f28b1007746cb20bbabc157e285b036",
+      "embedded_source_clean": true,
+      "embedded_source_dirty_paths": [],
+      "worktree_other_changes": [],
+      "model_directory": "/home/user/.codex/tmp/rt1257-shipped-e50098a/models/rt1257_final",
+      "source_zip_sha256": "c8e35854675b038103cec6b6da827e1186bf8235bef6a8d3d8d6e00691429676",
+      "model_zip_sha256": "952422d7ddb5a5d60719e909d1f0669c612952c72a26fc1859035dfae0381f0a",
+      "feature_manifest_sha256": "1646c3b9e09d8a7fb3c564483a1d1d999680caeefe848b092f907a6cac80cced",
+      "model_manifest_sha256": "ba4bee741d3d16ccc874724757167b9a7478005c14587bb329b845efca126d4c",
+      "notebook": {
+        "path": "/home/user/.codex/tmp/rt1257-gate-20260902/submissions/RT1257_SHIPPED_E50098A_PROXY.ipynb",
+        "sha256": "e2dcac711e6c26501bd8f6bc59004693b0b473a0a2b67e2dc185322b79fb451b",
+        "bytes": 24009237
+      },
+      "python_entrypoint": {
+        "path": "/home/user/.codex/tmp/rt1257-gate-20260902/submissions/RT1257_SHIPPED_E50098A_PROXY.py",
+        "sha256": "2f78eb45b2666e0bb128f7a455f8cf7e40b381d6ebb1e057f7af9235753715c5",
+        "bytes": 24006505
+      },
+      "infer_parallelism": 1,
+      "manifest_code_git_sha": "6b4fafacd30711bebf2bf977c3c390641f3ae522",
+      "manifest_matches_build_sha": false
+    },
+    "shipped_proxy_build_manifest_sha256": "ef6221ecf57cd2ea02df33ebc7b01a1487f096e4d4dfe006096cbf799bbd9a5b",
+    "primary_67_series_packaged_battery": {
+      "note": "no TS-AUC computed for either artifact",
+      "artifact_a": "/home/user/.codex/tmp/rt1257-gate-20260902/preds/shipped_67.npz",
+      "artifact_b": "/home/user/.codex/tmp/rt1257-gate-20260902/preds/rebuilt_67.npz",
+      "n_series": 67,
+      "n_predictions_compared": 38723,
+      "n_predictions_changed": 0,
+      "pct_changed": 0.0,
+      "max_abs_prediction_delta": 0.0,
+      "mean_abs_prediction_delta": 0.0,
+      "series_with_any_change": 0,
+      "per_series_changed": [],
+      "same_t_pairs_compared": 953123,
+      "same_t_pair_order_flips": 0
+    },
+    "supplemental_local_crunch_reduced_set": {
+      "note": "no TS-AUC computed for either artifact",
+      "artifact_a": "/home/user/.codex/tmp/rt1257-gate-20260902/shipped_proxy/predictions.npz",
+      "artifact_b": "/home/user/.codex/tmp/rt1257-gate-20260902/crunch_run1/predictions.npz",
+      "n_series": 100,
+      "n_predictions_compared": 50983,
+      "n_predictions_changed": 0,
+      "pct_changed": 0.0,
+      "max_abs_prediction_delta": 0.0,
+      "mean_abs_prediction_delta": 0.0,
+      "series_with_any_change": 0,
+      "per_series_changed": [],
+      "same_t_pairs_compared": 1652080,
+      "same_t_pair_order_flips": 0
+    },
+    "root_cause": "No feature-level root-cause analysis was required because n_predictions_changed was 0 in both the 67-series packaged battery and the 100-series local Crunch reduced-set comparison.",
+    "no_ts_auc_computed": true
+  },
+  "pytest": {
+    "full_command": "PYTHONPATH=src SBR_ROOT=/home/user/.codex/tmp/rt1257-clean-f1912b6 SBR_STORE=/home/user/.codex/tmp/rt1257-clean-f1912b6/cache/store SBR_FEATURES=/home/user/.codex/tmp/rt1257-clean-f1912b6/cache/features python3 -m pytest -q",
+    "initial_run_before_feature_cache": {
+      "result": "FAILED",
+      "totals": {
+        "failed": 1,
+        "passed": 778,
+        "skipped": 21,
+        "warnings": 90,
+        "duration_s": 250.45
+      },
+      "failure_group": "environment/pre-existing cache availability, not RT-1257-caused",
+      "failure": "tests/test_wave8_causality.py::test_nested_oof_regressor_purity_live FileNotFoundError for cache/features/m00_core.cols.json",
+      "remediation_without_source_or_test_edits": "Materialized cache/store from local Crunch release-234 parquet files and cache/features/m00_core via sbr.features.driver."
+    },
+    "targeted_rerun_of_initial_failure": {
+      "command": "python3 -m pytest -q tests/test_wave8_causality.py::test_nested_oof_regressor_purity_live",
+      "result": "PASSED",
+      "totals": {
+        "passed": 1,
+        "duration_s": 3.32
+      }
+    },
+    "final_full_rerun": {
+      "result": "PASSED",
+      "totals": {
+        "passed": 779,
+        "skipped": 21,
+        "warnings": 89,
+        "duration_s": 252.0
+      },
+      "rt1257_caused_failures": [],
+      "pre_existing_or_environment_failures_remaining": []
+    },
+    "named_production_subset": {
+      "files": [
+        "tests/test_no_tau_leakage.py",
+        "tests/test_no_n_online_leakage.py",
+        "tests/test_production_contract.py",
+        "tests/test_calibration_time_coord.py",
+        "tests/test_stream_engine_parity.py"
+      ],
+      "result": "PASSED",
+      "totals": {
+        "passed": 104,
+        "skipped": 16,
+        "warnings": 2,
+        "duration_s": 57.44
+      }
+    }
+  },
+  "gate_status": {
+    "items_1_through_6_satisfied_after_this_run": true,
+    "item_1": "SATISFIED: clean tracked checkout at f1912b6ff461026612d8f41229c438d9180d1171 rebuilt RT-1257 with canonical build_submission.py; embedded_source_clean=true; source hash changed as expected; model hash stayed fixed; Crunch, packaged prediction equivalence, and pytest passed.",
+    "items_2_through_6": "Already marked DONE in CONSOLIDATION_HYGIENE_REVIEW.md; this run supplies the missing clean rebuild/prediction-equivalence evidence for item 1 at current HEAD.",
+    "item_7": "NOT PERFORMED: no production tag was created and STATUS.md was not changed."
+  }
+}
