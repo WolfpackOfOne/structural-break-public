@@ -1,0 +1,123 @@
+{
+  "per_partition": {
+    "alt1": {
+      "by_horizon_bucket": {
+        "100<=t<200": {
+          "delta_E2_minus_E1": 0.0022689263229977996,
+          "n_rows": 684972
+        },
+        "200<=t<400": {
+          "delta_E2_minus_E1": 0.0022406254523495983,
+          "n_rows": 1129386
+        },
+        "400<=t<800": {
+          "delta_E2_minus_E1": 0.0025701329429284048,
+          "n_rows": 1293871
+        },
+        "50<=t<100": {
+          "delta_E2_minus_E1": 0.002454986017812688,
+          "n_rows": 372721
+        },
+        "t<50": {
+          "delta_E2_minus_E1": -0.0027229333210774254,
+          "n_rows": 392604
+        },
+        "t>=800": {
+          "delta_E2_minus_E1": -9.87789015913787e-05,
+          "n_rows": 158970
+        }
+      },
+      "by_negative_class": {
+        "dominant_cell": 0.003334358344323607,
+        "never_break_only": 0.002548764009575488,
+        "pre_break_only": 0.00558773494548459
+      },
+      "overall": 0.0021428326814187937
+    },
+    "alt2": {
+      "by_horizon_bucket": {
+        "100<=t<200": {
+          "delta_E2_minus_E1": 0.0005114352129304001,
+          "n_rows": 684972
+        },
+        "200<=t<400": {
+          "delta_E2_minus_E1": -0.000251660704630563,
+          "n_rows": 1129386
+        },
+        "400<=t<800": {
+          "delta_E2_minus_E1": 0.0030930490837792757,
+          "n_rows": 1293871
+        },
+        "50<=t<100": {
+          "delta_E2_minus_E1": 0.00330748169920414,
+          "n_rows": 372721
+        },
+        "t<50": {
+          "delta_E2_minus_E1": -0.004257884897253095,
+          "n_rows": 392604
+        },
+        "t>=800": {
+          "delta_E2_minus_E1": 0.0009176750923530763,
+          "n_rows": 158970
+        }
+      },
+      "by_negative_class": {
+        "dominant_cell": 0.0021292582388859893,
+        "never_break_only": 0.002489296390626894,
+        "pre_break_only": 0.0011015710295989578
+      },
+      "overall": 0.0010622928550513278
+    },
+    "alt3": {
+      "by_horizon_bucket": {
+        "100<=t<200": {
+          "delta_E2_minus_E1": -1.7836823977823713e-05,
+          "n_rows": 684972
+        },
+        "200<=t<400": {
+          "delta_E2_minus_E1": 0.000183020407313772,
+          "n_rows": 1129386
+        },
+        "400<=t<800": {
+          "delta_E2_minus_E1": 0.0008059930786835645,
+          "n_rows": 1293871
+        },
+        "50<=t<100": {
+          "delta_E2_minus_E1": 0.002518943565282039,
+          "n_rows": 372721
+        },
+        "t<50": {
+          "delta_E2_minus_E1": -0.0002606253105511547,
+          "n_rows": 392604
+        },
+        "t>=800": {
+          "delta_E2_minus_E1": 0.005454230260402038,
+          "n_rows": 158970
+        }
+      },
+      "by_negative_class": {
+        "dominant_cell": 0.0005243006744143353,
+        "never_break_only": 0.0006553499491198655,
+        "pre_break_only": 0.00015340163386734496
+      },
+      "overall": 0.0005587615552266056
+    }
+  },
+  "verdict": {
+    "Q1_negative_on_multiple_partitions": false,
+    "fold_diagnosed": 0,
+    "gates": false,
+    "interpretation": "Fold 0 is not negative on multiple partitions among those evaluated; on this evidence it looks partition-specific rather than a property of the mechanism. Incomplete until all four partitions exist.",
+    "n_negative": 0,
+    "note": "Phase 1 \u00a71.5 runs alongside and does not gate. Reports only.",
+    "partitions_evaluated": [
+      "alt1",
+      "alt2",
+      "alt3"
+    ],
+    "partitions_skipped": {
+      "canonical": "student outer vectors absent in armc_residual_student (folds [0, 1, 2, 3, 4]) -- refit needed before diagnosis"
+    },
+    "partitions_with_negative_fold": []
+  }
+}

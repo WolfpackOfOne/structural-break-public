@@ -453,7 +453,15 @@ promote. A positive alt1 on its own is one draw from a partition chosen for
 being pessimistic, which is a weak basis for a promotion and a strong basis for
 continuing.
 
-**Stage 2 — alt2 + alt3 (26.4 h), evaluated on all four partitions together.**
+**Stage 2 — alt2 + alt3 (26.4 h), evaluated on all four partitions together.
+RUN 2026-09-01. Actual cost ~5.5 h, not 26.4 — alt2's nested teachers were
+already on disk and §0.7's levers had not been folded into the estimate.**
+
+Result and evaluation against the rule below: `reports/rt1320_promotion/PHASE1_STAGE2.md`.
+Mean E2−E1 across the four partitions +0.0017678; 4/4 partitions positive;
+worst +0.0014825; none negative. Fold 0 negative on canonical only (1 of 4).
+**The §4 verdict is not recorded there** — every PASS condition is met and no
+KILL condition fires, but calling a preregistered gate is an owner action.
 
 - **PASS** — mean E2−E1 across the four partitions ≥ 0.0011, *and* E2−E1 > 0 on
   at least 3 of 4 partitions, *and* no partition worse than −0.0011.
