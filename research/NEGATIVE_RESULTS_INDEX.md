@@ -4,6 +4,7 @@ Fast searchable index of major failed, invalid, redundant, superseded, or infeas
 
 | Family | Experiment / mechanism | Outcome | Why it did not promote | Retry guidance / nuance |
 | --- | --- | --- | --- | --- |
+| Ensemble slots | Residual CatBoost specialists CAT-411 / CAT-412 / CAT-414 / CAT-415 (RT-1260 / RT-1261 / RT-1262 / RT-1263) | LANE CLOSED 2026-09-01 | RT-1257-relative adjudication put every deployment endpoint below the 0.0011 paired-bootstrap noise floor: CAT-412 +0.000338234 (the best of them), CAT-414 +0.000178858, CAT-415 +0.000175228, CAT-411 +0.000133942. CAT-412's optional alt-partition leg was scoped, costed at ~a day of partition plumbing, and declined against a sub-floor lift. | Only with a new mechanism, not a new partition. Reviving CAT-412 needs partition support in `deep_ensemble_local_2026.py` and `rt1257_slot_adjudication.py`, then the same RT-1257-relative E0/E1/E2 contract with a deployment endpoint above the floor. |
 | Sequential | slope-of-evidence channels | DEAD | zero LightGBM gain; noisy/redundant with current-minus-decayed-peak information already present | Low priority; only as replacement with much longer lag |
 | Sequential | hard threshold cross-channel count `xc_n_hot` | DEAD | thresholding destroyed rank information a tree could exploit directly from continuous features | No |
 | Sequential | detector current-level channels | REDUNDANT | levels have standalone signal but add almost nothing conditional on `m00_core`; recursive peaks carry the useful new memory | Do not re-add as ordinary extra columns |
