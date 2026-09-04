@@ -25,6 +25,22 @@ repair mechanism, not a broad improvement, and should not be described as one.
 **Formal production anchor is unchanged.** RT-1257 remains the anchor; promoting
 RT-1320 to anchor is a separate explicit action that has not been taken.
 
+> ## ⚠ OUTSTANDING ACTION — SELECT THE SUBMISSION
+>
+> **0.6303 is a PUBLIC-set score. It does not decide prizes.** At close, only each
+> participant's **selected** submission is scored once on the unseen private set,
+> and selection is **not** automatically the latest submission
+> (`PLATFORM_CONSTRAINTS.md` §0).
+>
+> **Verify that submission #19 / RT-1320 is explicitly selected.** An unset or
+> stale selection forfeits up to 0.0035 — more than every remaining modelling
+> gain combined. This is the highest-leverage open item in the project.
+>
+> Expect the private *level* to come in below 0.6303 (`FINAL_ARCHITECTURE_FREEZE.md`
+> §4 base case ~0.615). The **delta** is what transfers, and RT-1320's delta over
+> RT-1257 is positive on all five populations measured: canonical +0.0015159,
+> alt1 +0.0021146, alt2 +0.0014825, alt3 +0.0019582, public +0.0013.
+
 ### Prior external champion
 
 **RT-1257 — official TS-AUC 0.6290 (submission #16, 2026-08-29). Formally promoted to production anchor 2026-09-02. Ceased to be external champion 2026-09-03.**

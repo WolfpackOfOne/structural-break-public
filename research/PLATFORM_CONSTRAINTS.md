@@ -8,6 +8,98 @@ original; only this note was added. -->
 Sources: [competition docs](https://docs.crunchdao.com/competitions/competitions/structural-break-real-time)
 and the [forum thread on cross-series state](https://forum.crunchdao.com/t/structural-break-real-time-may-infer-use-prior-completed-series-state/1186).
 
+## 0. Scoring structure — the public feedback set is NOT the prize set
+
+**Added 2026-09-03.** Source: clarification from **Emanuele Olivetti (ADIA)** on
+the competition's scoring process, relayed by the repository owner. This is not
+a URL that has been fetched and verified in-repo; it is recorded here as owner-
+supplied authoritative information because it is the single most consequential
+operational fact in the project and was previously documented nowhere.
+
+**The process:**
+
+1. During the competition, **repeated submissions are scored on the same public
+   test set.** This is leaderboard feedback.
+2. When the competition closes, **each participant's SELECTED submission is
+   evaluated once on the unseen private test set.**
+3. **That private score determines the prizes.**
+4. **It is NOT automatically your latest submission.** Selection is a required,
+   explicit action.
+
+### Consequence 1 — selection is the highest-leverage action in the project
+
+An unset or stale selection forfeits more than every remaining modelling gain
+combined. The measured external ladder is RT-600 0.6268 → RT-1257 0.6290 →
+RT-1320 0.6303; the difference between selecting the best and the worst of those
+is 0.0035, larger than any candidate now in reach. **Verify the selection
+explicitly. Do not rely on a default.**
+
+### Consequence 2 — public deltas are PAIRED, and are better evidence than they look
+
+Because every submission is scored on *the same* public series, a difference
+between two submissions is a paired comparison on identical data and the
+series-sampling noise largely cancels. RT-1320's +0.0013 over RT-1257 is
+therefore a more precise estimate of the ordering than an unpaired comparison of
+two independent 10,000-series draws would be.
+
+### Consequence 3 — but a fixed, repeatedly-queried set is a selection trap
+
+The corresponding hazard is not noise in a single delta; it is **multiplicity**.
+A fixed public set that can be queried repeatedly is exactly the configuration in
+which climbing the public leaderboard by selecting on that draw's idiosyncrasies
+produces a drop on the private set. Every submission is another look at the same
+data.
+
+**The existing protocol is the correct defence and must not be relaxed.** Every
+promotion in this project was decided on dev folds *before* the external number
+existed — RT-1320 passed its four-partition gate on 2026-09-01, two days before
+submission #19 scored on 2026-09-03. `STATUS.md`'s standing instruction, "one
+useful external calibration point, not a license to tune on the leaderboard", is
+the rule that protects the private score. The project currently carries
+essentially zero public-set selection debt; that is an asset, not an accident.
+
+**Decision rule going forward:** decide on dev, use public only to confirm. A
+candidate that is flat on dev and strongly positive on public is the signature of
+public-set overfitting and must not be selected over an incumbent.
+
+### Consequence 4 — what transfers to private is the DELTA, not the level
+
+`FINAL_ARCHITECTURE_FREEZE.md` §4 already states this for the earlier lane: "The
+delta is the durable asset. The level is not." Its base-case estimate for the
+*level* on an unseen draw was ~0.615, well below the public 0.6303. A lower
+private level is expected and is not evidence of a problem; the ranking is what
+pays.
+
+RT-1320's delta over RT-1257 is stable across every population it has been
+measured on — canonical +0.0015159, alt1 +0.0021146, alt2 +0.0014825, alt3
++0.0019582, public (release 234) +0.0013. Five draws, five positive, spread
+~0.0006.
+
+### Consequence 5 — a further candidate is a free option, not a risk
+
+Because only the *selected* submission is privately scored, building another
+candidate cannot damage the final score. Build it, decide it on dev, submit it,
+and select it only if dev and public agree; otherwise select RT-1320 and lose
+nothing. The costs are compute and submission quota only.
+
+### Terminology note — this resolves an inconsistency in the repo
+
+§2 below quotes the docs as "10,000 series public, 10,000 private", while
+`FINAL_ARCHITECTURE_FREEZE.md` §4 discusses the external score as though it were
+already the private set. **§0 is authoritative on the process**: external scores
+recorded in this repository (0.6268, 0.6290, 0.6303) are **public-set** figures
+and are leaderboard feedback. No private-set score has been observed, and none
+will be until the competition closes.
+
+### Still unverified
+
+- The submission quota, and whether selection can be changed after it is set.
+- Whether the private set is a fresh 10,000-series draw or a rolling accumulation
+  over data releases. Both submissions #16 and #19 ran against `data release 234`,
+  so all comparisons in this repo are same-release and clean.
+
+---
+
 ## 1. The metric is confirmed — our implementation is correct
 
 > `TS-AUC = (Σ_t w(t)·AUC(t)) / Σ_t w(t)` where `w(t) = n_pos(t) · n_neg(t)`

@@ -165,6 +165,19 @@ scikit-learn 1.9.0, lightgbm 4.7.0, numba 0.67.0, pyarrow 25.0.1, macOS/arm64.
 
 ## 4. EXPECTED EXTERNAL PERFORMANCE
 
+> **Terminology correction, 2026-09-03.** This section uses "the private set" for
+> what is actually the **public feedback set**. The competition has both: repeated
+> submissions are scored on a fixed public set, and only a participant's
+> *selected* submission is scored once on the unseen private set at close, which
+> determines prizes. Every external number in this repository (0.6268, 0.6290,
+> 0.6303) is a **public-set** figure. No private-set score has been observed.
+> See `PLATFORM_CONSTRAINTS.md` §0, which is authoritative on the process.
+>
+> The reasoning below is unaffected — it concerns an unseen draw of series, which
+> is exactly what the private set is — and its central claim ("the delta is the
+> durable asset, the level is not") is the right frame for the private scoring.
+> Note the observed public levels exceed even this section's optimistic ~0.625.
+
 **Do not quote a development OOF as an expected leaderboard score.**
 
 Development OOF is 0.62581 on the canonical partition. Adjustments:
