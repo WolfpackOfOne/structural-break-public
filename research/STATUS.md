@@ -4,9 +4,32 @@ Concise canonical pointer to the current state of the 2026 ADIA Lab / CrunchDAO 
 
 ## External champion
 
-**RT-1257 — official TS-AUC 0.6290 (submission #16, 2026-08-29). Formally promoted to production anchor 2026-09-02.**
+**RT-1320 — official TS-AUC 0.6303 (submission #19, 2026-09-03).**
 
-This is the best external score currently recorded in the repository. It improves on RT-600's 0.6268 by **+0.0022**.
+RT-1320 is RT-1257 plus the M1 Arm-C residual student as an 8th member. It
+improves on RT-1257's 0.6290 by **+0.0013** and on RT-600's 0.6268 by **+0.0035**.
+
+The internal evidence predicted this closely. The secondary endpoint E2-E0
+against RT-1257 — the estimate of what the student adds to the champion — was
+**+0.001416**; the realized external gain is **+0.0013**. That is the second
+consecutive external calibration point matching its internal estimate to about
+0.0001, after RT-1257's (+0.0020/+0.0024 predicted, +0.0022 realized). The
+dev-fold addition contract, the 0.0011 noise floor and the four-partition gate
+are now externally validated twice. This is a reason to trust the internal
+machinery, **not** a license to tune on the leaderboard.
+
+**Scope.** RT-1320's gain is a never-break-cut gain (never-break pair net
++0.003409; pre-break +0.000363, approximately zero). It is a false-positive
+repair mechanism, not a broad improvement, and should not be described as one.
+
+**Formal production anchor is unchanged.** RT-1257 remains the anchor; promoting
+RT-1320 to anchor is a separate explicit action that has not been taken.
+
+### Prior external champion
+
+**RT-1257 — official TS-AUC 0.6290 (submission #16, 2026-08-29). Formally promoted to production anchor 2026-09-02. Ceased to be external champion 2026-09-03.**
+
+It improves on RT-600's 0.6268 by **+0.0022**.
 
 RT-1257 preserves the seven RT-600 specialist slots and replaces exactly two learners:
 
@@ -24,7 +47,9 @@ The internal evidence that licensed RT-1257 was E2-E0 **+0.002026322**, marginal
 
 **RT-1257 — official TS-AUC 0.6290. Promoted 2026-09-02.**
 
-RT-1257 is both the external champion and the formal production anchor. The
+RT-1257 is the formal production anchor. It is no longer the external champion —
+RT-1320 took that on 2026-09-03 at 0.6303 — and moving the anchor to RT-1320 is a
+separate explicit action that has not been taken. The
 seven-item promotion gate in `engineering/reports/rt1257_deployment/CONSOLIDATION_HYGIENE_REVIEW.md`
 is complete: items 2-6 closed on 2026-08-31, item 1 (clean rebuild) on 2026-09-02,
 and item 7 — this status change and the `rt1257-production-0.6290` tag — is the
@@ -58,8 +83,8 @@ See `engineering/reports/rt1257_deployment/CONSOLIDATION_HYGIENE_REVIEW.md`.
 
 ## Current research-alive models
 
-The residual CatBoost slot lane (**RT-1260 / CAT-411**, **RT-1261 / CAT-412**, **RT-1262 / CAT-414**, **RT-1263 / CAT-415**) is **closed as of 2026-09-01** — all four are `PARKED / NO_PROMOTION`. See "Closed lanes" below. The only research-alive model is RT-1320.
-1. **RT-1320 / M1 Arm-C residual student** — the first candidate that *adds* an 8th member instead of swapping a slot. Under the `PROTOCOL_CHAMPION_2026.md` addition contract the primary endpoint E2-E1 against a matched added seed clone (`RT-403`) is **+0.001516** at **4/5** positive folds, above the 0.0011 paired-bootstrap noise floor; secondary E2-E0 is +0.001416. Fold 0 is negative on both. The widely quoted **5/5** figure belongs to the RT-600 lane (+0.001965 marginal vs the seed-clone blend), **not** to the champion lane. Reproduced at a second seed inside ~1% of the noise floor. **Phase 1's four-partition gate PASSED on 2026-09-01**: mean E2-E1 across canonical/alt1/alt2/alt3 is **+0.0017678** with 4/4 partitions positive and none negative, against a rule frozen before alt1 was run. The leg found the opposite of what it was designed to expose — canonical, recorded in the freeze as the most favourable partition, is the weakest of the four and the only one with a negative fold 0 (1 of 4, so §9's majority criterion is not triggered). The alternate-partition leg, the causality gate and the final-10k fit are now all done, and the 8-member artifact is built and causality-verified. It is still **not** an active component: that requires membership of the external champion, and `external_score` remains the sole open blocker, needing Crunch quota. See `reports/rt1320_promotion/PHASE1_STAGE2.md` and `MODEL_REGISTRY.md`.
+The residual CatBoost slot lane (**RT-1260 / CAT-411**, **RT-1261 / CAT-412**, **RT-1262 / CAT-414**, **RT-1263 / CAT-415**) is **closed as of 2026-09-01** — all four are `PARKED / NO_PROMOTION`. See "Closed lanes" below. RT-1320 is no longer research-alive: it cleared its `external_score` blocker on 2026-09-03 and is the external champion. **There is now no research-alive model.**
+1. **RT-1320 / M1 Arm-C residual student** — the first candidate that *adds* an 8th member instead of swapping a slot. Under the `PROTOCOL_CHAMPION_2026.md` addition contract the primary endpoint E2-E1 against a matched added seed clone (`RT-403`) is **+0.001516** at **4/5** positive folds, above the 0.0011 paired-bootstrap noise floor; secondary E2-E0 is +0.001416. Fold 0 is negative on both. The widely quoted **5/5** figure belongs to the RT-600 lane (+0.001965 marginal vs the seed-clone blend), **not** to the champion lane. Reproduced at a second seed inside ~1% of the noise floor. **Phase 1's four-partition gate PASSED on 2026-09-01**: mean E2-E1 across canonical/alt1/alt2/alt3 is **+0.0017678** with 4/4 partitions positive and none negative, against a rule frozen before alt1 was run. The leg found the opposite of what it was designed to expose — canonical, recorded in the freeze as the most favourable partition, is the weakest of the four and the only one with a negative fold 0 (1 of 4, so §9's majority criterion is not triggered). The alternate-partition leg, the causality gate and the final-10k fit are now all done, and the 8-member artifact is built and causality-verified. **RESOLVED 2026-09-03: submission #19 scored 0.6303**, beating RT-1257's 0.6290 by +0.0013 against a predicted E2-E0 of +0.001416. The `external_score` blocker is cleared and RT-1320 is the external champion; its student is an ACTIVE_COMPONENT. See `reports/rt1320_promotion/PHASE1_STAGE2.md` and `MODEL_REGISTRY.md`.
 
 ## Closed lanes
 
@@ -115,4 +140,4 @@ Use RT-1257 as the primary ensemble baseline and RT-600 as the permanent homogen
 
 PR #14 was merged and `main` now carries the consolidated tree. The 2026-08-31 branch/tag pruning audit is recorded in `archive/2026-08-31/BRANCH_TAG_PRUNING_AUDIT.md`. No historical branch should be deleted unless that audit classifies it as reachable/tag-protected, or a later owner-approved tag/import decision preserves it first.
 
-_Last updated: 2026-09-01. RT-1320's Phase 1 four-partition gate PASSED (mean E2-E1 +0.0017678, 4/4 partitions positive); `external_score` is its sole remaining blocker. The residual CatBoost slot lane (CAT-411 / 412 / 414 / 415) was closed, all four PARKED / NO_PROMOTION._
+_Last updated: 2026-09-03. **RT-1320 is the external champion at 0.6303** (submission #19), +0.0013 over RT-1257 against a predicted +0.001416 — the second consecutive external point matching its internal estimate to ~0.0001. Its `external_score` blocker is cleared; the formal production anchor is still RT-1257 pending an explicit promotion. The residual CatBoost slot lane (CAT-411 / 412 / 414 / 415) remains closed, all four PARKED / NO_PROMOTION._

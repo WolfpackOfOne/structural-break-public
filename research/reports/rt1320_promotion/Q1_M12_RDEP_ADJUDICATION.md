@@ -140,8 +140,67 @@ Every lane is now closed on evidence rather than exhaustion:
 `RT-1320` is submitted and its external score is pending; that number is outside
 this analysis and nothing here bears on it.
 
-**Recorded as finished for this information set.** A confirmed ceiling reached by
-three independent preregistered routes is a result, not a failure.
+~~**Recorded as finished for this information set.**~~ **See the correction
+below — this call was premature.**
+
+---
+
+## CORRECTION — 2026-09-03 — "finished for this information set" was premature
+
+**What happened.** Hours after this document was written, submission #19 scored
+**0.6303**, beating the RT-1257 champion's 0.6290 by **+0.0013**. The model is
+`RT-1320` — RT-1257 plus the M1 Arm-C residual student.
+
+**What survives unchanged.** Nothing in the measurements above is retracted:
+
+- H1b binding (bank ≈ 3 effective dimensions) stands.
+- H1a strengthened (Arm C's oracle gain is largely not prefix-visible) stands.
+- `m12_rdep` closed by W5-E11 at `S' − S = −0.00268` stands.
+- Pilot 3 / `RT-1201` killing the growth-exponent channel stands.
+
+**What was wrong.** The *inference* drawn from them — that the score itself
+could no longer be moved — was overreach. The three closed lanes concern
+**new feature families and same-bank additions**. `RT-1320` is neither: it is a
+student distilled from Arm C, and it was a live, gated candidate the whole time.
+
+**The analysis above actually predicted this and it was read backwards.**
+`Q1_H1A.md` measured that a legal student recovers **39.5%** of Arm C's corrected
+pairs, and that **56.2%** of those are pairs E0 already wins. That was presented
+as the explanation for why distillation *fails*. The complement — the roughly
+17% of Arm C's repair set that is both transferable and not already held — is
+precisely what `RT-1320` converted into external alpha. The measurement was
+right; the framing around it was pessimistic.
+
+Three independent measurements agree on the mechanism, which is worth recording
+because it is now the only evidenced live lane:
+
+| source | finding |
+|---|---|
+| `RT-1320` promotion plan | gain is never-break-cut: never-break pair net +0.003409, pre-break +0.000363 (~0) |
+| `Q1_H1A.md` locality | Arm C's corrected pairs are **78.4%** never-break negatives |
+| W7-D0 exact loss cube | never-break negatives carry **74.0%** of dominant-cell loss |
+
+**External calibration, now twice confirmed.** `RT-1320`'s secondary endpoint
+E2−E0 against RT-1257 predicted **+0.001416**; realized **+0.0013**. `RT-1257`
+predicted +0.0020/+0.0024 and realized +0.0022. The dev-fold addition contract
+and the 0.0011 noise floor are externally validated instruments, not proxies.
+
+**Revised state.** The ceiling is real and close, but **not yet reached**. The
+external ladder is 0.6268 → 0.6290 (+0.0022) → 0.6303 (+0.0013) — decelerating,
+and a further step on the same trend lands near +0.0007, *below* the 0.0011
+noise floor. That is the honest quantitative statement: one or possibly two more
+steps of diminishing size, not an open frontier and not a closed one.
+
+The single evidenced live lane is **a second Arm-C student aimed specifically at
+the never-break cut**, preregistered under the same addition contract with its
+bar fixed first, and treated as probably the last one. `RT-1320` is a single
+unoptimised design with a negative fold 0 on both endpoints; the never-break
+pool it draws from is the largest remaining block of loss.
+
+Documents superseded by this correction: the "Programme state after this"
+table's implication that all lanes are closed, and the answer given in session
+that the score could not be improved by modelling. The per-lane closures in that
+table are individually correct and stand.
 
 ## Residual open items, stated so the record is honest
 
