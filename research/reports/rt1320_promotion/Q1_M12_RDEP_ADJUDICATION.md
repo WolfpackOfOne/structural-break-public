@@ -178,7 +178,16 @@ because it is now the only evidenced live lane:
 |---|---|
 | `RT-1320` promotion plan | gain is never-break-cut: never-break pair net +0.003409, pre-break +0.000363 (~0) |
 | `Q1_H1A.md` locality | Arm C's corrected pairs are **78.4%** never-break negatives |
-| W7-D0 exact loss cube | never-break negatives carry **74.0%** of dominant-cell loss |
+| W7-D0 exact loss cube | never-break negatives carry **74.0%** of dominant-cell loss — but that is **73.99% of loss against 74.25% of weight**, i.e. proportional. See the precision note below. |
+
+**Precision note (2026-09-03).** The "74% of loss" figure identifies where the
+*pair weight* is, not a disproportionate weakness. Loss-to-weight ratios inside
+the dominant cell are never-break **0.9965** and pre-break **1.0100** — the
+champion is very slightly *better* than proportional on never-break and very
+slightly worse on pre-break. Difficulty is essentially uniform across negative
+type. Targeting the never-break cut is justified because it is the largest pool
+(37.5% of total pair weight), not because it is the weakest, and this document
+should not be read as claiming the latter.
 
 **External calibration, now twice confirmed.** `RT-1320`'s secondary endpoint
 E2−E0 against RT-1257 predicted **+0.001416**; realized **+0.0013**. `RT-1257`
