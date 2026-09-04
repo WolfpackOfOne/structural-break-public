@@ -100,16 +100,61 @@ Same-bank candidates are finished. Q3's decision rule already said the ceiling i
 binding "**for this bank**"; H1b now says *why*. The only paths that can move the
 score are ones that change the information set:
 
-1. **Add a module to the bank.** `m12_rdep` is the concrete candidate — already in
-   the streaming engine's `MODULE_ORDER` with parity tests, excluded from
-   `PRODUCTION_MODULES` by a one-line tuple, and the only block ever to beat a
-   seed clone (+0.00141). It failed a **+0.0030** bar that the programme no longer
-   uses; the current floor is 0.0011. Whether that reversal is legitimate or is
-   re-reading an old negative under a friendlier standard must be settled by a
-   preregistered test, not by noticing the number now clears.
+1. ~~**Add a module to the bank.** `m12_rdep` is the concrete candidate…~~
+   **WITHDRAWN 2026-09-03 — this bullet was factually wrong. See the correction
+   below.**
 2. **Settle H1a** — how much of Arm C's advantage is shadowable at all. If little,
    the bank is near the true ceiling and the programme is finished. If much, a new
    feature family is worth building.
+   **RESOLVED 2026-09-03: H1a STRENGTHENED — `Q1_H1A.md` (AN-Q1-D1).** Little is
+   shadowable. Arm C's corrected pairs are prefix-inaccessible: three
+   causality-verified excursion channels that discriminate at 0.561/0.604/0.562
+   across the dominant cell score 0.5023/0.4999/0.5027 on exactly those pairs, all
+   99% CIs containing 0.50. No prefix analogue exists to name, so no new feature
+   family is indicated.
+
+---
+
+## CORRECTION — 2026-09-03 — the `m12_rdep` bullet above was wrong
+
+**What this document said.** That `m12_rdep` is "the only block ever to beat a
+seed clone (+0.00141)", that it "failed a +0.0030 bar that the programme no
+longer uses", and that whether the reversal under the current 0.0011 floor is
+legitimate "must be settled by a preregistered test".
+
+**What is actually true.** That preregistered test already existed when this
+document was written. It is **W5-E11** (`research/RDOF_LEDGER.md`, written
+2026-08-21 before any arm was trained), it was executed as seven training runs
+(`RT-751`, `RT-811`–`RT-816`, all in `research/RESULTS.csv`), and it answered the
+question negative:
+
+```
+S  incumbent seven            0.625811264
+S' seven rebuilt + m12_rdep   0.623133406
+B  seven seed clones          0.621640484
+
+S' - S = -0.002677858   1/5 folds positive
+         bootstrap 95% CI [-0.00611, +0.00079], fraction positive 0.09
+recorded outcome: "H0 ACCEPTED: the block adds nothing the bank did not
+                   already reach"
+```
+
+**Why the error mattered.** The "+0.00141 beat a seed clone" figure is a
+comparison against `B`, and `B` is itself −0.00417 *worse* than the incumbent `S`.
+"Beats a seed clone by +0.0015" and "loses to the incumbent by −0.0027" are the
+same experiment. W5-E11's own preregistration ruled the clone control
+inapplicable to an architecture rebuild in advance, precisely because there is no
+bagging channel for a gain to arrive through — the correct control is `S`.
+
+The floor change is a red herring: 0.0030 and 0.0011 are both **positive** bars,
+and the measured quantity against the preregistered control is **−0.00268**. No
+floor makes that a pass. Reaching the clone comparison to make it clear would
+have been the exact error this bullet warned against, aimed at the wrong number.
+
+**Consequence.** `m12_rdep` is closed, not open. Path 1 above is withdrawn; path
+2 is resolved. Full adjudication: `Q1_M12_RDEP_ADJUDICATION.md`. Nothing in the
+rest of this document — the H1b analysis, the rank measurement, the exhibit
+table — depends on the withdrawn bullet, and none of it is affected.
 
 ## Provenance
 

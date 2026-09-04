@@ -352,8 +352,11 @@ Two things this does *not* close, stated so the record is honest:
   channel from an entirely different mechanism is not excluded by this test. It
   is, however, no longer *indicated*: nothing here points at one.
 - It does not speak to RT-1320, whose external score is still pending, nor to
-  `m12_rdep`, which is a bank-membership question that `Q1_H1B_RESOLVED.md`
-  already routed to its own preregistered test.
+  `m12_rdep`, which is a bank-membership question on a different mechanism
+  (dependence structure — a φ change with σ profiled out — not excursion
+  duration). `m12_rdep` was settled separately and negatively by **W5-E11**
+  (`S' − S = −0.00268`, 1/5 folds); see `Q1_M12_RDEP_ADJUDICATION.md`. It is
+  closed on its own evidence, with or without this result.
 
 ### Reproduction
 
