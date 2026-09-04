@@ -200,6 +200,14 @@ The candidate must beat `E1`, not merely `E0`, and `E2-E0` must be inspected as 
 secondary deployment endpoint. **Do not assume the historical +0.00003 control
 lift carries over to RT-1320 or to a ninth-member ensemble.**
 
+**Measured 2026-09-04, and the warning above was right.** `RT-1321` ran that
+ninth-member control for the first time: `E1 - E0 = **−0.000554**`. It is not
++0.00003 and it is not zero — it is *negative*, an order of magnitude larger in
+absolute value than the eighth-member figure, and with the opposite sign. A
+candidate scoring `E2 - E1 = +0.0005` against it has not added +0.0005 to
+anything; `RT-1321`'s `E2 - E0` was −0.000034. **Report `E1 - E0` on the same
+line as your primary endpoint.** See §7's saturation finding.
+
 - **Noise floor: 0.0011** (paired series-level bootstrap). Below that is not a result.
 - Requires fold consistency (4/5 or 5/5) and positive dominant-cell pair flow.
 - Robustness across four alternate fold partitions is expected for promotion.
@@ -233,6 +241,7 @@ CUSUM/CUSUMSQ paths, AR-coefficient likelihood ratio), `m13_scale_survival`,
 |---|---|
 | Hankel-DMD observers on the raw prefix (delay 16, rank 4, rolling windows; reconstruction error, **subspace-angle residual**, **effective-rank monitors**) | marginal +0.000226, **rho vs RT-600 0.886**, cell pair flow net −11. **This is "PCA/SSA/dynamic PCA/Koopman as a break detector" and it is CLOSED.** |
 | Frozen Kalman/NIS observer residuals | marginal +0.000135, rho 0.884 |
+| **LS-KD / RT-1321** — lag-space characteristic-kernel discrepancy on the raw prefix (Gaussian RBF via random Fourier features, R=32, depths 3/5/8, half-lives 32/128, history-only median-heuristic bandwidth, MMD of an online EWMA kernel mean against a frozen historical kernel mean, on raw-PIT and AR(2)-residual-PIT delay vectors) | 9th-member contract on RT-1320: **E2−E1 +0.000519** (4/5, floor +0.0011), **E2−E0 −0.000034**, **E1−E0 −0.000554**, bootstrap 95% CI [−0.000116, +0.001069] contains zero. Block **rho 0.162** — more decorrelated than anything except RT-1202 — and **0.4712 on the incumbent's own inverted pairs, below chance**. Mature-vs-never pair flow −25 vs E1 and **−54 vs E0**; mature-vs-pre −32 vs E0. **This is "kernel PCA / MMD / NEWMA / Scan-B / kernel two-sample as a break detector" and it is CLOSED**, together with avenues G5 and H3. Tested against a *coordinate-separable* kernel control, not a seed clone, so "joint lag structure beyond nonlinear marginal structure" is what was measured — and it is worth nothing here. |
 | IM2 matched-length run null + dwell bank incl. **max-run growth exponent** | marginal +0.000301, cell pair flow **net −1151**, rho **0.38** — the most decorrelated candidate ever produced, still strongly negative |
 | Trajectory geometry (NN provenance, arc-rate) | marginal −0.002587 |
 | Spectral impulse, ordinal irreversibility, joint rarity, weighted CTM, difficulty gating, failure-manifold routing, relay logic, scale survival | all KILL |
@@ -251,12 +260,30 @@ CUSUM/CUSUMSQ paths, AR-coefficient likelihood ratio), `m13_scale_survival`,
 | Calibration anchor placement | total spread across all schemes including random: 0.00006 |
 | Within-timestep rank averaging | ILLEGAL — cross-sectional, forfeits determinism |
 
-**Two preregistered structural findings that bound the search:**
+**Structural findings that bound the search.** The first two are preregistered;
+the third is a single measured observation and is labelled as such.
 
 - **Bank saturation.** 72 fitted OOF vectors over this bank have a participation
   ratio of **2.730** — roughly three effective dimensions, 60% of variance in one
   component. A cross-fitted convex blend of all 72 cannot reliably beat the
   incumbent (mean +0.0022, 95% CI containing zero, needing 22 members).
+- **RT-1320 may be saturated with respect to ordinary additive ninth members.**
+  In the RT-1321 contract the *matched control* ninth member — an ordinary
+  production-configuration LightGBM on the 500-column bank plus a feature block —
+  scored `E1 − E0 = **−0.000554**`. Adding an exchangeable ninth member made the
+  champion **worse**. Treat this as evidence, not a theorem: it is one matched
+  control in one experiment, and the historical RT-1257→RT-1320 eighth-member
+  contract measured an ordinary added clone at only about +0.00003, which is
+  small but not negative. Two consequences you must act on anyway:
+  **(a)** any candidate whose primary endpoint is `E2 − E1` must report
+  `E1 − E0` next to it, because a degrading control manufactures a positive-
+  looking primary — this has now happened three times (RT-1260/CAT-411,
+  RT-1264/CSA-04, RT-1321), and in RT-1321 the entire +0.00052 headline was the
+  control's own damage; **(b)** justify *why your idea belongs as a ninth
+  member at all* rather than as a slot **replacement**, a **residual corrector**
+  on the champion's own errors, or a **fundamentally different inference
+  mechanism**. "Add one more member" is now the weakest available integration
+  contract, and it is the one that has to argue for itself.
 - **The oracle gap is largely not shadowable.** On the pairs the oracle repairs
   and the legal model misses, three causality-verified excursion channels that
   discriminate at 0.561/0.604/0.562 across the cell generally score
@@ -269,18 +296,60 @@ CUSUM/CUSUMSQ paths, AR-coefficient likelihood ratio), `m13_scale_survival`,
   pairs Arm C fixes. Teacher transfer is reaching the oracle's problem region;
   most of the remaining oracle information is still not legally observable.
 
-**The two-sided squeeze you must escape.** High-correlation channels (rho
-0.86–0.89) are redundant and add nothing. The single most decorrelated channel
-ever produced (rho 0.38) still damaged 1.6 pairs per repair. Being *different* is
-not sufficient and being *good standalone* is not sufficient. You need a reason
-your mechanism repairs pairs the bank actually gets wrong, without damaging the
-ones it gets right.
+**The two-sided squeeze you must escape.** This is the single most important
+paragraph in the brief, and it now rests on a monotone sequence in rho rather
+than on two endpoints:
+
+| mechanism | rho vs incumbent | what happened |
+|---|---:|---|
+| Hankel-DMD (`RT-1215`) | **0.886** | redundant; marginal +0.000226, cell pair flow −11 |
+| Frozen Kalman/NIS (`RT-1214`) | 0.884 | redundant; marginal +0.000135 |
+| GPU TabM (`RT-1258`) | 0.585 | different learner, standalone 0.601, marginal +0.00004 |
+| IM2 dwell/growth (`RT-1201`) | **0.38** | decorrelated; cell pair flow **−1151**, 1.6 damaged per repair |
+| **LS-KD block (`RT-1321`)** | **0.162** | most decorrelated channel with real construction discipline; **below chance (0.4712) on the incumbent's own inverted pairs** |
+| Trajectory geometry (`RT-1202`) | 0.004 | orthogonal and worthless; marginal −0.002587 |
+
+(The rho column is not all against the same incumbent — the pre-2026-09 rows are
+within-`t` rank correlation against **RT-600**, the `RT-1321` rows against
+**RT-1320**. The two incumbents correlate very highly with each other, so the
+ordering is safe, but do not quote these as five decimal places of the same
+quantity.)
+
+Read down that table. Redundancy is not the binding constraint and decorrelation
+is not the missing ingredient: **as rho falls, the marginal does not rise.**
+`RT-1321` is the cleanest statement of it, because its block was measured
+directly on the pairs the champion gets wrong and scored *worse than a coin*.
+
+There is a second lesson inside the same experiment. The LS-KD *block* has rho
+0.162, but the *ninth member trained on the bank plus that block* has rho
+**0.835** — the learner maps most of the novelty back onto an incumbent-like
+ranking, and still returns `E2 − E0 = −0.000034`. So "my channel is decorrelated"
+is not even a durable property once a booster has seen it alongside the bank:
+what survives training is the part that already agrees with the bank, and what
+is discarded is the part that was different.
+
+Being *different* is not sufficient, being *good standalone* is not sufficient,
+and being *different after training* is not something you get to assume. You need
+a reason your mechanism repairs pairs the bank actually gets wrong, without
+damaging the ones it gets right — and the cheapest honest test of that is the one
+`RT-1321` ran early and should have been believed on: **score your channel on the
+incumbent's own inverted pairs before you train anything.** It costs no training
+run — you need only the champion's OOF vector and your raw channel — and in
+`RT-1321` it returned 0.4712 in the Stage-1 screen and correctly predicted the
+Stage-2 verdict hours before the matched contract confirmed it.
+
+Note this is a *different and stricter* population from the oracle-shadowing
+analysis above, which scored three excursion channels at 0.5023/0.4999/0.5027 on
+the pairs **Arm C** repairs. That one bounds what the legal prefix can see; this
+one bounds whether *your* channel is aimed at the errors the deployed model
+actually makes. Run both; they can disagree.
 
 ---
 
 ## 8. WHAT IS GENUINELY STILL OPEN
 
-Short list. Be sceptical of all of it.
+Short list, be sceptical of all of it — and it got shorter on 2026-09-04.
+**There are now two entries, not three.**
 
 1. **A second, better Arm-C-derived student.** This is the only mechanism with a
    *confirmed external gain* (+0.0013). The existing one is a single unoptimised
@@ -292,13 +361,29 @@ Short list. Be sceptical of all of it.
    materially different residual target or pair-repair mechanism, ideally one
    that repairs errors beyond the current never-break false-positive cut; ordinary
    "use the future as teacher" variants remain closed.
-2. **Explicitly nonlinear representation learning on the raw prefix** — kernel
-   PCA and similar. The Hankel-DMD arm was *linear*, so this is not strictly
-   covered. But note the linear version failed by *redundancy*, which a nonlinear
-   version would also have to escape.
-3. **Anything that genuinely changes the information set** while staying inside
-   {history, online prefix}, per-series, causal, deterministic. Nobody has found
-   such a thing in ~40 attempts.
+2. **Something that genuinely changes the legal information-extraction
+   mechanism**, while staying inside {history, online prefix}, per-series, causal,
+   deterministic — and beyond the families already tested. Nobody has found such a
+   thing in ~40 attempts. Note the emphasis: it is no longer enough to change the
+   *statistic*. Delay embeddings, kernel two-sample distances, spectral,
+   ordinal, dwell, conformal, Bayesian, observer, distributional and residual
+   statistics have all been tried on the same extraction mechanism — a frozen
+   history-fitted null, a causal online statistic, and a boosted tree over the
+   result. What is untested is a different *mechanism*, not a 41st statistic
+   inside this one.
+
+**REMOVED 2026-09-04 — "Explicitly nonlinear representation learning on the raw
+prefix (kernel PCA and similar)".** That lane is **CLOSED** by `RT-1321` / LS-KD.
+It was open only because the Hankel-DMD kill (`RT-1215`) was explicitly linear;
+`RT-1321` ran the explicitly nonlinear characteristic-kernel version of the same
+hypothesis, against a coordinate-separable control that isolated exactly the
+nonlinear-joint-versus-nonlinear-marginal question, and got `E2 − E0 = −0.000034`.
+The delay-embedding lane is now shut from both ends: the linear version failed by
+**redundancy** (rho 0.886), the nonlinear version failed by producing genuinely
+novel information (rho 0.162) that **does not repair pairs**. Do not reopen it
+without a reason that defeats both failure modes at once, and note that
+"escape the redundancy" — the obvious response to `RT-1215` — is precisely what
+`RT-1321` did successfully and it changed nothing.
 
 ---
 
@@ -330,7 +415,11 @@ For each proposal, give:
 3. **Why it will have low rank correlation with a 500-column bank containing
    CUSUM paths, PIT distances, AR-residual monitors and a Bayesian changepoint
    posterior** — and why that decorrelation will convert into *repaired pairs*
-   rather than damage, given that a rho-0.38 channel already failed.
+   rather than damage, given that a rho-0.38 channel already failed and a
+   rho-0.162 channel scored *below chance* on the incumbent's own errors. State
+   your channel's expected AUC **on the pairs the champion currently inverts**;
+   that number, not rho, is the one that has predicted every outcome so far, and
+   it costs no training run to measure.
 4. **Causality argument**: how every column is computable from history +
    `online[:t+1]` with no dependence on `tau` or `n_online`.
 5. **Integration contract and repair target, declared before training.** State
@@ -338,6 +427,16 @@ For each proposal, give:
    residual correction; define `E0/E1/E2` and the matched control explicitly.
    Name the pair population you expect to repair — never-break, pre-break,
    dominant-cell mature breaks, or another predeclared slice — and why.
+   **If you choose "ninth-member addition", justify it.** §7 records
+   `E1 - E0 = −0.000554` for an ordinary matched ninth member: that contract now
+   starts from a deficit your candidate has to pay off before it adds anything,
+   and a slot replacement, a residual corrector on the champion's own errors, or
+   a different inference mechanism may be strictly better places to put the same
+   idea. Whichever you choose, commit to reporting `E1 - E0` alongside `E2 - E1`.
+   Prefer a **mechanism-matched** control to a seed clone whenever your
+   hypothesis names a mechanism — `RT-1321`'s coordinate-separable control is the
+   worked example: it turned "does joint lag structure add anything beyond
+   nonlinear marginal structure" from a rhetorical question into a measurement.
 6. **Cost estimate** against §9, and the cheapest experiment that could kill it.
 7. **A preregistered falsification**: the number, the threshold, the control
    (which must be the incumbent-relevant one), and the fold-consistency
