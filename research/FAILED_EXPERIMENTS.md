@@ -2413,8 +2413,8 @@ store series and 10 synthetic families; **batch/stream bitwise parity at
 no-`tau`, no-`n_online`, deterministic replay, series-order independence and
 parallel-vs-serial build equality all pass; RFF basis SHA-pinned. RT-1320 was
 never modified and rebuilt read-only to 0.629253722 against the recorded
-0.6292537222254164. Streaming cost 211 us/observation, ~4 kB bounded state per
-series. **No final-10k fit, no production artifact, no Crunch test and NO
+0.6292537222254164. Streaming cost 211 us/observation; measured per-series state 5.0 kB live plus a
+16 kB frozen residual ECDF reference, independent of `t`. **No final-10k fit, no production artifact, no Crunch test and NO
 SUBMISSION.**
 
 One implementation note worth carrying forward: the joint RFF projection must be

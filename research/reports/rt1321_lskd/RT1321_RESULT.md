@@ -310,7 +310,7 @@ not — it is just not something that repairs pairs.
 | batch feature build, both blocks, 10,000 series / 5,036,517 rows | **200 s** (5 workers) |
 | batch cost per online point (both blocks) | ~40 µs |
 | **streaming cost per observation** | **211 µs** (`m19_lskd`), 225 µs (`m19_lskm`) |
-| streaming state per series | ~4 kB (bounded; no prefix retained) |
+| streaming state per series | **5.0 kB** of live state + 16 kB frozen residual ECDF reference = 20.6 kB, measured; independent of `t`, nothing grows with the prefix |
 | ninth-member training | 113 s per fold, 700k rows × 528 columns |
 | total experiment compute | ~1.5 h wall clock |
 
