@@ -1,0 +1,282 @@
+{
+  "experiment_id": "RT-1321",
+  "stage": "1_information_screen",
+  "fold": 0,
+  "epsilons": [
+    0.01,
+    0.02,
+    0.04
+  ],
+  "standalone": {
+    "candidate_joint": {
+      "whole_dev": 0.5424669646419377,
+      "dominant_cell": 0.5575942211246703,
+      "dominant_never_break_only": 0.5614927193578313,
+      "dominant_pre_break_only": 0.5467159209627624
+    },
+    "control_marginal": {
+      "whole_dev": 0.54439585395838,
+      "dominant_cell": 0.5671392639935823,
+      "dominant_never_break_only": 0.5726841345674394,
+      "dominant_pre_break_only": 0.5516669557215738
+    }
+  },
+  "rt1320_reference": {
+    "whole_dev": 0.6402807313140136,
+    "dominant_cell": 0.6808908310986199,
+    "dominant_never_break_only": 0.6797261793571102,
+    "dominant_pre_break_only": 0.6841406546128295
+  },
+  "within_t_rank_rho_vs_rt1320": {
+    "candidate_joint": {
+      "whole_dev": 0.12329186764851698,
+      "dominant_cell": 0.1622880555147518,
+      "dominant_never_break_only": 0.18192457889788144,
+      "dominant_pre_break_only": 0.19721685009344786
+    },
+    "control_marginal": {
+      "whole_dev": 0.11462302104373527,
+      "dominant_cell": 0.13973988387017233,
+      "dominant_never_break_only": 0.15045168831245492,
+      "dominant_pre_break_only": 0.17850308703741244
+    }
+  },
+  "candidate_vs_control_rho": {
+    "whole_dev": 0.29582574654438154,
+    "dominant_cell": 0.3032376111063292,
+    "dominant_never_break_only": 0.3199652610442365,
+    "dominant_pre_break_only": 0.30096970328698147
+  },
+  "perturbation_grid": {
+    "candidate_joint": {
+      "eps_0.01": {
+        "whole_dev": {
+          "repairs": 17,
+          "damage": 20,
+          "net": -3,
+          "net_rate": -0.00015335855229526633,
+          "ts_auc_base": 0.6402807313140136,
+          "ts_auc_perturbed": 0.6403701343007923
+        },
+        "dominant_cell": {
+          "repairs": 16,
+          "damage": 9,
+          "net": 7,
+          "net_rate": 0.00044877548403641495,
+          "ts_auc_base": 0.6808908310986199,
+          "ts_auc_perturbed": 0.6809975662073308
+        },
+        "dominant_never_break_only": {
+          "repairs": 18,
+          "damage": 9,
+          "net": 9,
+          "net_rate": 0.0005775895263765884,
+          "ts_auc_base": 0.6797261793571102,
+          "ts_auc_perturbed": 0.6798609149844212
+        },
+        "dominant_pre_break_only": {
+          "repairs": 4,
+          "damage": 10,
+          "net": -6,
+          "net_rate": -0.00044849753326356705,
+          "ts_auc_base": 0.6841406546128295,
+          "ts_auc_perturbed": 0.6841692575722347
+        }
+      },
+      "eps_0.02": {
+        "whole_dev": {
+          "repairs": 49,
+          "damage": 40,
+          "net": 9,
+          "net_rate": 0.000460075656885799,
+          "ts_auc_base": 0.6402807313140136,
+          "ts_auc_perturbed": 0.6404485089284789
+        },
+        "dominant_cell": {
+          "repairs": 34,
+          "damage": 26,
+          "net": 8,
+          "net_rate": 0.0005128862674701885,
+          "ts_auc_base": 0.6808908310986199,
+          "ts_auc_perturbed": 0.6810878883441923
+        },
+        "dominant_never_break_only": {
+          "repairs": 34,
+          "damage": 24,
+          "net": 10,
+          "net_rate": 0.0006417661404184315,
+          "ts_auc_base": 0.6797261793571102,
+          "ts_auc_perturbed": 0.6799777614263943
+        },
+        "dominant_pre_break_only": {
+          "repairs": 20,
+          "damage": 28,
+          "net": -8,
+          "net_rate": -0.0005979967110180894,
+          "ts_auc_base": 0.6841406546128295,
+          "ts_auc_perturbed": 0.6841855667596648
+        }
+      },
+      "eps_0.04": {
+        "whole_dev": {
+          "repairs": 111,
+          "damage": 85,
+          "net": 26,
+          "net_rate": 0.0013291074532256416,
+          "ts_auc_base": 0.6402807313140136,
+          "ts_auc_perturbed": 0.6405464708012505
+        },
+        "dominant_cell": {
+          "repairs": 68,
+          "damage": 62,
+          "net": 6,
+          "net_rate": 0.0003846647006026414,
+          "ts_auc_base": 0.6808908310986199,
+          "ts_auc_perturbed": 0.681195973060668
+        },
+        "dominant_never_break_only": {
+          "repairs": 71,
+          "damage": 60,
+          "net": 11,
+          "net_rate": 0.0007059427544602747,
+          "ts_auc_base": 0.6797261793571102,
+          "ts_auc_perturbed": 0.6801476347648513
+        },
+        "dominant_pre_break_only": {
+          "repairs": 47,
+          "damage": 58,
+          "net": -11,
+          "net_rate": -0.0008222454776498729,
+          "ts_auc_base": 0.6841406546128295,
+          "ts_auc_perturbed": 0.6841212376038487
+        }
+      }
+    },
+    "control_marginal": {
+      "eps_0.01": {
+        "whole_dev": {
+          "repairs": 17,
+          "damage": 18,
+          "net": -1,
+          "net_rate": -5.1119517431755445e-05,
+          "ts_auc_base": 0.6402807313140136,
+          "ts_auc_perturbed": 0.6403947520897422
+        },
+        "dominant_cell": {
+          "repairs": 11,
+          "damage": 14,
+          "net": -3,
+          "net_rate": -0.0001923323503013207,
+          "ts_auc_base": 0.6808908310986199,
+          "ts_auc_perturbed": 0.6810912115719143
+        },
+        "dominant_never_break_only": {
+          "repairs": 20,
+          "damage": 12,
+          "net": 8,
+          "net_rate": 0.0005134129123347452,
+          "ts_auc_base": 0.6797261793571102,
+          "ts_auc_perturbed": 0.6799807281728333
+        },
+        "dominant_pre_break_only": {
+          "repairs": 11,
+          "damage": 19,
+          "net": -8,
+          "net_rate": -0.0005979967110180894,
+          "ts_auc_base": 0.6841406546128295,
+          "ts_auc_perturbed": 0.6841898847064212
+        }
+      },
+      "eps_0.02": {
+        "whole_dev": {
+          "repairs": 46,
+          "damage": 46,
+          "net": 0,
+          "net_rate": 0.0,
+          "ts_auc_base": 0.6402807313140136,
+          "ts_auc_perturbed": 0.6405064499486386
+        },
+        "dominant_cell": {
+          "repairs": 33,
+          "damage": 30,
+          "net": 3,
+          "net_rate": 0.0001923323503013207,
+          "ts_auc_base": 0.6808908310986199,
+          "ts_auc_perturbed": 0.6812928908612834
+        },
+        "dominant_never_break_only": {
+          "repairs": 45,
+          "damage": 27,
+          "net": 18,
+          "net_rate": 0.0011551790527531767,
+          "ts_auc_base": 0.6797261793571102,
+          "ts_auc_perturbed": 0.6802493813545171
+        },
+        "dominant_pre_break_only": {
+          "repairs": 23,
+          "damage": 41,
+          "net": -18,
+          "net_rate": -0.001345492599790701,
+          "ts_auc_base": 0.6841406546128295,
+          "ts_auc_perturbed": 0.6842046812373442
+        }
+      },
+      "eps_0.04": {
+        "whole_dev": {
+          "repairs": 110,
+          "damage": 104,
+          "net": 6,
+          "net_rate": 0.00030671710459053266,
+          "ts_auc_base": 0.6402807313140136,
+          "ts_auc_perturbed": 0.64066238581673
+        },
+        "dominant_cell": {
+          "repairs": 83,
+          "damage": 64,
+          "net": 19,
+          "net_rate": 0.0012181048852416977,
+          "ts_auc_base": 0.6808908310986199,
+          "ts_auc_perturbed": 0.6816153310217793
+        },
+        "dominant_never_break_only": {
+          "repairs": 104,
+          "damage": 60,
+          "net": 44,
+          "net_rate": 0.002823771017841099,
+          "ts_auc_base": 0.6797261793571102,
+          "ts_auc_perturbed": 0.6807056689280897
+        },
+        "dominant_pre_break_only": {
+          "repairs": 55,
+          "damage": 88,
+          "net": -33,
+          "net_rate": -0.0024667364329496186,
+          "ts_auc_base": 0.6841406546128295,
+          "ts_auc_perturbed": 0.6841536359559441
+        }
+      }
+    }
+  },
+  "hard_pair_conditional": {
+    "whole_dev": {
+      "n_inverted_pairs": 6637,
+      "candidate_joint": 0.476721410275727,
+      "control_marginal": 0.4945005273466928
+    },
+    "dominant_cell": {
+      "n_inverted_pairs": 4894,
+      "candidate_joint": 0.4711892112791173,
+      "control_marginal": 0.4891704127503065
+    },
+    "dominant_never_break_only": {
+      "n_inverted_pairs": 4874,
+      "candidate_joint": 0.47496922445629874,
+      "control_marginal": 0.48933114485022566
+    },
+    "dominant_pre_break_only": {
+      "n_inverted_pairs": 4167,
+      "candidate_joint": 0.46388288936885047,
+      "control_marginal": 0.45308375329973605
+    }
+  }
+}
