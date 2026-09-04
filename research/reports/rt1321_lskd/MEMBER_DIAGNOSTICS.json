@@ -1,0 +1,46 @@
+{
+  "member_rank_correlations": {
+    "whole_dev": {
+      "rho_candidate_member_vs_RT1320": 0.7983443452646956,
+      "rho_control_member_vs_RT1320": 0.7964269455866633,
+      "rho_candidate_vs_control_member": 0.8228379330284462
+    },
+    "dominant_cell": {
+      "rho_candidate_member_vs_RT1320": 0.8345873336616678,
+      "rho_control_member_vs_RT1320": 0.8358876579401932,
+      "rho_candidate_vs_control_member": 0.8491746856979273
+    },
+    "dominant_never_break_only": {
+      "rho_candidate_member_vs_RT1320": 0.8403285662071057,
+      "rho_control_member_vs_RT1320": 0.8403337008694257,
+      "rho_candidate_vs_control_member": 0.8541475699758898
+    },
+    "dominant_pre_break_only": {
+      "rho_candidate_member_vs_RT1320": 0.8515685507980993,
+      "rho_control_member_vs_RT1320": 0.854466968430787,
+      "rho_candidate_vs_control_member": 0.865553659923201
+    }
+  },
+  "member_standalone": {
+    "candidate": {
+      "per_fold": [
+        0.633624,
+        0.612816,
+        0.621022,
+        0.607086,
+        0.599643
+      ],
+      "mean": 0.6148380052355964
+    },
+    "control": {
+      "per_fold": [
+        0.629668,
+        0.606204,
+        0.625737,
+        0.601541,
+        0.596142
+      ],
+      "mean": 0.6118583199335135
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "per_fold_standalone_ts_auc": {
+    "0": 0.633628747533513,
+    "1": 0.6128213495994714,
+    "2": 0.62102596617934,
+    "3": 0.6070893716861019,
+    "4": 0.599648094672592
+  },
+  "runtime_s": 568.4,
+  "arm": "candidate",
+  "block": "m19_lskd",
+  "folds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "params": {
+    "objective": "pairwise_t",
+    "learning_rate": 0.05,
+    "num_leaves": 63,
+    "min_data_in_leaf": 300,
+    "feature_fraction": 0.5,
+    "bagging_fraction": 0.7,
+    "bagging_freq": 1,
+    "lambda_l2": 5.0,
+    "max_bin": 127,
+    "num_threads": 8,
+    "verbose": -1
+  },
+  "n_estimators": 600,
+  "max_train_rows": 700000,
+  "seed": 0
+}

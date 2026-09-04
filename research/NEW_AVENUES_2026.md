@@ -1273,3 +1273,36 @@ writes "+0.010 here plus +0.008 there" is doing the thing the T2 result exists t
 40. `research/reports/wave8_final.md` (branch `research/wave8-future-aware-distillation`) — five KILLs.
 41. `research/FAILED_EXPERIMENTS.md`, `research/RDOF_LEDGER.md`, `research/RESULTS.csv`, `research/FINAL_ARCHITECTURE_FREEZE.md`.
 42. `research/reports/new_avenues_2026_diagnostics.json` — D1–D6, produced for this document.
+
+---
+
+## Closure note — G5 and H3, 2026-09-04 (`RT-1321`)
+
+**G5 ("delay-embedded attractor separation", priority HIGH, `after Pilot 4`) and
+H3 ("sequential kernel MMD", explicitly filed as collapsing into G5) are now
+EXECUTED and CLOSED.**
+
+G5's own gap analysis was correct and is worth quoting because it was the reason
+the arm was funded: *"every incumbent distance is on the MARGINAL (1-D); the
+delay-embedded cloud is joint over d lags."* `RT-1321` built exactly that — a
+Gaussian characteristic-kernel (RFF) discrepancy between the online kernel mean
+of causal delay vectors and a frozen history-only kernel mean — and tested it
+against a **coordinate-separable kernel control** that isolates the joint-vs-
+marginal distinction and nothing else.
+
+The gap was real. The joint block is genuinely decorrelated from the champion
+(within-`t` rho **0.16**) and measurably beats its own marginal control both as a
+member and in dominant-cell pair flow. It is also worth nothing: block standalone
+**0.5425** against the incumbent's 0.6403, conditional AUC of **0.4712** — below
+chance — on exactly the pairs the incumbent inverts, and a ninth-member
+deployment endpoint of **`E2-E0 = -0.000034`**.
+
+G5's own preregistered falsification (`cand-clone < +0.0010`) fires. Its
+predeclared risk column said `LOW-MODERATE` redundancy and `HIGH` novelty; both
+were right, and both were irrelevant — the failure is not redundancy, it is that
+decorrelated information does not repair pairs. That is the fourth confirmation
+of the two-sided squeeze after `RT-1201` (rho 0.38), `RT-1258` (rho 0.585) and
+`RT-1202` (rho 0.004).
+
+See `research/reports/rt1321_lskd/RT1321_RESULT.md` and the `RT-1321` /
+`RT-1322` rows in `NEGATIVE_RESULTS_INDEX.md` and `FAILED_EXPERIMENTS.md`.

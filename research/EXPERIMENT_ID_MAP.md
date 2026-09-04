@@ -1108,4 +1108,13 @@ the time it ran.
 |---|---|
 | `RT-1320` | M1 Arm-C residual student. Distil the endpoint-orthogonal residual of the W7-D3R Arm-C oracle (`RT-991`, `ORACLE_NONCAUSAL`) into a causal 500-column LightGBM student, added as an 8th exchangeable member to `RT-1257`. The teacher never ships; only the student is causal. |
 
-`RT-1321` through `RT-1329` remain unallocated lane contingency IDs.
+| `RT-1321` | LS-KD lag-space characteristic-kernel discrepancy. RFF (R=32, seed 1321) Gaussian-kernel discrepancy between an online EWMA kernel mean of causal delay vectors and a frozen history-only kernel mean, on the raw-PIT and AR(2)-residual-PIT streams, added as a 9th exchangeable member to `RT-1320`. Executes avenue **G5** and the "kernel PCA / explicitly nonlinear" gap `RT-1215` left open. **KILL.** |
+| `RT-1322` | LS-KD mechanism-matched **control**: identical in every respect except a coordinate-separable feature map whose induced kernel is additive across lag coordinates (nonlinear *marginal* information, no cross-coordinate interaction). The `E1` arm of RT-1321's addition contract. |
+
+Allocated 2026-09-04 on `research/rt1321-lskd`, **prospectively**: both IDs were
+reserved and written into the preregistration
+(`research/reports/rt1321_lskd/RT1321_PREREG.md` §0) before any RT-1321 feature
+was evaluated against a label, and `RT-1321`/`RT-1322` were verified absent from
+`RESULTS.csv`, every file under `research/`, and all source before allocation.
+
+`RT-1323` through `RT-1329` remain unallocated lane contingency IDs.

@@ -16,8 +16,8 @@ import inspect
 import numpy as np
 import pytest
 
-from sbr.features.base import REGISTRY, check_prefix_invariance, load_all, make_ctx
 from sbr.features import m19_lskd as M
+from sbr.features.base import REGISTRY, check_prefix_invariance, load_all, make_ctx
 
 MODULES = ("m19_lskd", "m19_lskm")
 

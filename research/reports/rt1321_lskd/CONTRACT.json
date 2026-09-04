@@ -1,0 +1,201 @@
+{
+  "experiment_id": "RT-1321",
+  "stage": "2_ninth_member_contract",
+  "contract": "addition of a 9th exchangeable member to RT-1320",
+  "E1_control": "coordinate-separable marginal kernel block m19_lskm",
+  "E2_candidate": "joint lag-space kernel block m19_lskd",
+  "folds_evaluated": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "E0_per_fold": {
+    "0": 0.6402807313140136,
+    "1": 0.6232441589338197,
+    "2": 0.6360341990907918,
+    "3": 0.6244624506466419,
+    "4": 0.6222470711418149
+  },
+  "E0_mean": 0.6292537222254164,
+  "E1_per_fold": {
+    "0": 0.6409899757125489,
+    "1": 0.6223627381247078,
+    "2": 0.6368189860206607,
+    "3": 0.6232301364312823,
+    "4": 0.620098045858038
+  },
+  "E1_mean": 0.6286999764294474,
+  "E2_per_fold": {
+    "0": 0.641470841480213,
+    "1": 0.6235203100903648,
+    "2": 0.6360358166024926,
+    "3": 0.6241920503874928,
+    "4": 0.6208773216874593
+  },
+  "E2_mean": 0.6292192680496045,
+  "PRIMARY_E2_minus_E1_per_fold": {
+    "0": 0.00048086576766415146,
+    "1": 0.0011575719656570227,
+    "2": -0.0007831694181680282,
+    "3": 0.0009619139562104806,
+    "4": 0.0007792758294213886
+  },
+  "PRIMARY_E2_minus_E1": 0.0005192916201570031,
+  "primary_folds_positive": 4,
+  "SECONDARY_E2_minus_E0_per_fold": {
+    "0": 0.0011901101661994096,
+    "1": 0.00027615115654511246,
+    "2": 1.6175117008021545e-06,
+    "3": -0.00027040025914903953,
+    "4": -0.0013697494543555289
+  },
+  "SECONDARY_E2_minus_E0": -3.445417581184884e-05,
+  "control_lift_E1_minus_E0": -0.0005537457959688518,
+  "pair_flow_E2_vs_E1": {
+    "whole_dev": {
+      "total_pairs_sampled": 19900,
+      "used_t_groups": 999,
+      "repairs": 234,
+      "damage": 238,
+      "net_pair_lift": -4,
+      "repair_rate": 0.011758793969849246,
+      "damage_rate": 0.011959798994974874,
+      "net_rate": -0.00020100502512562814,
+      "sample_base_auc": 0.6421105527638191,
+      "sample_candidate_auc": 0.6419095477386935,
+      "both_right": 12540,
+      "both_wrong": 6888
+    },
+    "dominant_cell": {
+      "total_pairs_sampled": 15900,
+      "used_t_groups": 799,
+      "repairs": 174,
+      "damage": 143,
+      "net_pair_lift": 31,
+      "repair_rate": 0.010943396226415094,
+      "damage_rate": 0.008993710691823899,
+      "net_rate": 0.001949685534591195,
+      "sample_base_auc": 0.6671698113207547,
+      "sample_candidate_auc": 0.6691194968553459,
+      "both_right": 10465,
+      "both_wrong": 5118
+    },
+    "dominant_never_break_only": {
+      "total_pairs_sampled": 15900,
+      "used_t_groups": 799,
+      "repairs": 154,
+      "damage": 179,
+      "net_pair_lift": -25,
+      "repair_rate": 0.009685534591194969,
+      "damage_rate": 0.011257861635220126,
+      "net_rate": -0.0015723270440251573,
+      "sample_base_auc": 0.6679874213836478,
+      "sample_candidate_auc": 0.6664150943396226,
+      "both_right": 10442,
+      "both_wrong": 5125
+    },
+    "dominant_pre_break_only": {
+      "total_pairs_sampled": 14700,
+      "used_t_groups": 784,
+      "repairs": 152,
+      "damage": 135,
+      "net_pair_lift": 17,
+      "repair_rate": 0.010340136054421769,
+      "damage_rate": 0.009183673469387756,
+      "net_rate": 0.0011564625850340137,
+      "sample_base_auc": 0.6656462585034013,
+      "sample_candidate_auc": 0.6668027210884354,
+      "both_right": 9650,
+      "both_wrong": 4763
+    }
+  },
+  "pair_flow_E2_vs_E0": {
+    "whole_dev": {
+      "total_pairs_sampled": 19900,
+      "used_t_groups": 999,
+      "repairs": 227,
+      "damage": 210,
+      "net_pair_lift": 17,
+      "repair_rate": 0.011407035175879397,
+      "damage_rate": 0.010552763819095477,
+      "net_rate": 0.0008542713567839196,
+      "sample_base_auc": 0.6410552763819095,
+      "sample_candidate_auc": 0.6419095477386935,
+      "both_right": 12547,
+      "both_wrong": 6916
+    },
+    "dominant_cell": {
+      "total_pairs_sampled": 15900,
+      "used_t_groups": 799,
+      "repairs": 156,
+      "damage": 161,
+      "net_pair_lift": -5,
+      "repair_rate": 0.009811320754716982,
+      "damage_rate": 0.010125786163522013,
+      "net_rate": -0.00031446540880503143,
+      "sample_base_auc": 0.669433962264151,
+      "sample_candidate_auc": 0.6691194968553459,
+      "both_right": 10483,
+      "both_wrong": 5100
+    },
+    "dominant_never_break_only": {
+      "total_pairs_sampled": 15900,
+      "used_t_groups": 799,
+      "repairs": 123,
+      "damage": 177,
+      "net_pair_lift": -54,
+      "repair_rate": 0.007735849056603773,
+      "damage_rate": 0.011132075471698113,
+      "net_rate": -0.0033962264150943396,
+      "sample_base_auc": 0.6698113207547169,
+      "sample_candidate_auc": 0.6664150943396226,
+      "both_right": 10473,
+      "both_wrong": 5127
+    },
+    "dominant_pre_break_only": {
+      "total_pairs_sampled": 14700,
+      "used_t_groups": 784,
+      "repairs": 118,
+      "damage": 150,
+      "net_pair_lift": -32,
+      "repair_rate": 0.008027210884353741,
+      "damage_rate": 0.01020408163265306,
+      "net_rate": -0.0021768707482993197,
+      "sample_base_auc": 0.6689795918367347,
+      "sample_candidate_auc": 0.6668027210884354,
+      "both_right": 9684,
+      "both_wrong": 4748
+    }
+  },
+  "cell_ts_auc": {
+    "E0": {
+      "whole_dev": 0.6289981090537223,
+      "dominant_cell": 0.6693692719534188,
+      "dominant_never_break_only": 0.6703525192593901,
+      "dominant_pre_break_only": 0.6665346900215251
+    },
+    "E1": {
+      "whole_dev": 0.6284750928509185,
+      "dominant_cell": 0.66856269919724,
+      "dominant_never_break_only": 0.6696568990623079,
+      "dominant_pre_break_only": 0.6654082545844091
+    },
+    "E2": {
+      "whole_dev": 0.6289839214072792,
+      "dominant_cell": 0.6691093713825977,
+      "dominant_never_break_only": 0.6701900826705461,
+      "dominant_pre_break_only": 0.6659938126906919
+    }
+  },
+  "paired_series_bootstrap_E2_minus_E1": {
+    "n_boot": 400,
+    "mean": 0.0005250695037951943,
+    "ci95": [
+      -0.00011612795631862181,
+      0.001069042835997539
+    ],
+    "fraction_positive": 0.9425
+  }
+}

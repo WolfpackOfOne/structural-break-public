@@ -38,6 +38,7 @@ for p in (REPO / "src", REPO / "research" / "scripts", ROOT / "src",
         sys.path.insert(0, str(p))
 
 import armc_residual_student as A  # noqa: E402
+
 from sbr.metric import ts_auc_flat  # noqa: E402
 
 FOLDS = (0, 1, 2, 3, 4)
@@ -118,7 +119,7 @@ def load_block(modules):
 # ---------------------------------------------------------------------- masks
 def diagnostic_masks(rows):
     """Cuts used for REPORTING ONLY.  tau never reaches a feature or a model."""
-    y, t, age, dev = rows["y"], rows["t"], rows["age"], rows["dev"]
+    y, dev = rows["y"], rows["dev"]
     hb = rows["has_break_by_row"]
     dom = rows["dominant_cell"]
     return {
@@ -143,6 +144,7 @@ def auc_on(vec, rows, mask, fold=None):
 def train_block_fold0(block: str, rows) -> np.ndarray:
     """Fold-0 standalone score of ONE kernel block, trained on folds 1-4."""
     import lightgbm as lgb
+
     from sbr.pipeline import _stack
 
     mats, names = load_block([block])
@@ -175,6 +177,7 @@ def A_pairwise(t, y, seed):
 def train_member(block: str, rows, folds=FOLDS, out_path: Path | None = None):
     """The matched ninth member: 500 bank columns + one kernel block."""
     import lightgbm as lgb
+
     from sbr.pipeline import _stack
 
     modules = list(BANK) + [block]
@@ -315,8 +318,9 @@ def hard_pair_conditional(base, scores, rows, masks, fold=0, n_pairs_per_t=20, s
         row = {"n_inverted_pairs": int(len(pp))}
         for label, v in scores.items():
             ok = np.isfinite(v[pp]) & np.isfinite(v[nn])
-            row[label] = float(np.mean((v[pp][ok] > v[nn][ok]).astype(np.float64)
-                                       + 0.5 * (v[pp][ok] == v[nn][ok]))) if ok.any() else float("nan")
+            row[label] = float(np.mean(
+                (v[pp][ok] > v[nn][ok]).astype(np.float64)
+                + 0.5 * (v[pp][ok] == v[nn][ok]))) if ok.any() else float("nan")
         out[name] = row
     return out
 
@@ -342,8 +346,11 @@ def cmd_contract(args):
     members = rt1320_members(rows)
     folds = tuple(int(x) for x in args.folds.split(",")) if args.folds else FOLDS
 
-    ctrl = A.crossfit_calibrate(np.load(OOFDIR / "RT-1321_member_control.npy", mmap_mode="r"), rows)
-    cand = A.crossfit_calibrate(np.load(OOFDIR / "RT-1321_member_candidate.npy", mmap_mode="r"), rows)
+    def _cal(arm):
+        return A.crossfit_calibrate(
+            np.load(OOFDIR / f"RT-1321_member_{arm}.npy", mmap_mode="r"), rows)
+
+    ctrl, cand = _cal("control"), _cal("candidate")
     packs = {"E0": A.blend(members),
              "E1": A.blend(members + [ctrl]),
              "E2": A.blend(members + [cand])}
@@ -357,11 +364,16 @@ def cmd_contract(args):
         pf[k] = {str(f): auc_on(v, rows, masks["whole_dev"], f) for f in folds}
         res[f"{k}_per_fold"] = pf[k]
         res[f"{k}_mean"] = float(np.mean([pf[k][str(f)] for f in folds]))
-    res["PRIMARY_E2_minus_E1_per_fold"] = {str(f): pf["E2"][str(f)] - pf["E1"][str(f)] for f in folds}
-    res["PRIMARY_E2_minus_E1"] = float(np.mean(list(res["PRIMARY_E2_minus_E1_per_fold"].values())))
-    res["primary_folds_positive"] = int(sum(x > 0 for x in res["PRIMARY_E2_minus_E1_per_fold"].values()))
-    res["SECONDARY_E2_minus_E0_per_fold"] = {str(f): pf["E2"][str(f)] - pf["E0"][str(f)] for f in folds}
-    res["SECONDARY_E2_minus_E0"] = float(np.mean(list(res["SECONDARY_E2_minus_E0_per_fold"].values())))
+    res["PRIMARY_E2_minus_E1_per_fold"] = {
+        str(f): pf["E2"][str(f)] - pf["E1"][str(f)] for f in folds}
+    res["PRIMARY_E2_minus_E1"] = float(
+        np.mean(list(res["PRIMARY_E2_minus_E1_per_fold"].values())))
+    res["primary_folds_positive"] = int(
+        sum(x > 0 for x in res["PRIMARY_E2_minus_E1_per_fold"].values()))
+    res["SECONDARY_E2_minus_E0_per_fold"] = {
+        str(f): pf["E2"][str(f)] - pf["E0"][str(f)] for f in folds}
+    res["SECONDARY_E2_minus_E0"] = float(
+        np.mean(list(res["SECONDARY_E2_minus_E0_per_fold"].values())))
     res["control_lift_E1_minus_E0"] = float(np.mean(
         [pf["E1"][str(f)] - pf["E0"][str(f)] for f in folds]))
 
@@ -391,8 +403,6 @@ def paired_bootstrap(e1, e2, rows, n_boot=400, seed=1321):
     """Series-level paired bootstrap of the mean-fold TS-AUC difference."""
     rng = np.random.default_rng(seed)
     folds_df = rows["folds"]
-    sidx = rows["sidx"]
-    row_fold = rows["row_fold"]
     y, t = rows["y"], rows["t"]
     deltas = []
     per_fold_series = {f: np.flatnonzero(folds_df["fold"].to_numpy() == f) for f in FOLDS}

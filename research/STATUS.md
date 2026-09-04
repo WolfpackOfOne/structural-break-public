@@ -109,6 +109,31 @@ The residual CatBoost slot lane (**RT-1260 / CAT-411**, **RT-1261 / CAT-412**, *
 
 ## Closed lanes
 
+**Delay-embedding / kernel two-sample lane — closed 2026-09-04 (`RT-1321`).**
+LS-KD, a Gaussian characteristic-kernel (RFF) discrepancy between the online
+kernel mean of causal delay vectors and a frozen history-only kernel mean, was
+run as a ninth member on RT-1320 against a **mechanism-matched
+coordinate-separable (marginal) kernel control**. Primary `E2-E1 = +0.000519`
+(4/5) against the +0.0011 floor; deployment **`E2-E0 = -0.000034`**; paired
+bootstrap 95% CI [-0.000116, +0.001069] contains zero. **KILL, no submission.**
+
+Two findings from it are worth carrying forward independently of the verdict:
+
+* **`E1 - E0 = -0.000554`.** Adding an ordinary matched ninth LightGBM member
+  *degrades* RT-1320. RT-1321's nominally positive primary endpoint is therefore
+  mostly "less damaging than the control", the RT-1264/CSA-04 inflation shape.
+  Any future ninth-member proposal must report `E1 - E0` explicitly, and at eight
+  members the champion looks **saturated with respect to ordinary additive
+  LightGBM members**.
+* **Avenue G5 is closed and the RT-1215 gap is answered.**
+  `NEGATIVE_RESULTS_INDEX.md` recorded that "kernel PCA and other explicitly
+  nonlinear variants" were not covered by the linear Hankel-DMD kill. They are
+  now. The linear version failed by redundancy (rho 0.886); the nonlinear
+  characteristic-kernel version fails by having genuinely decorrelated
+  information (rho **0.16**) that scores **below chance (0.471)** on exactly the
+  pairs the incumbent inverts. The delay-embedding lane is closed from both ends.
+
+
 **Residual CatBoost slots — closed 2026-09-01.** `RT1257_SLOT_ADJUDICATION.md` already directed "do not open new training lanes for CAT-411, CAT-414, or CAT-415 from these frozen OOF results", leaving CAT-412 as the only open question and marking even that optional: a follow-up was to be run "only if a preregistered alt-partition adjudication is desired despite the sub-noise RT-1257 lift".
 
 That alt-partition leg was scoped and costed on 2026-09-01 and **declined**. It would have needed partition-awareness added to `deep_ensemble_local_2026.py` (which trains CAT-412 and has none) and to `rt1257_slot_adjudication.py`, plus a single-specialist train path — roughly a day of plumbing before any compute — to test a candidate whose deployment endpoint is already **+0.000338234 against a 0.0011 noise floor**. Declining is permitted by the adjudication's own wording; the leg was never mandatory, and unlike RT-1320's Phase 1 Stage 2 there is no preregistered clause making an early stop invalid. The leg could only have rescued a sub-floor result, and nothing obliges funding a rescue.
@@ -161,4 +186,4 @@ Use RT-1257 as the primary ensemble baseline and RT-600 as the permanent homogen
 
 PR #14 was merged and `main` now carries the consolidated tree. The 2026-08-31 branch/tag pruning audit is recorded in `archive/2026-08-31/BRANCH_TAG_PRUNING_AUDIT.md`. No historical branch should be deleted unless that audit classifies it as reachable/tag-protected, or a later owner-approved tag/import decision preserves it first.
 
-_Last updated: 2026-09-03. **RT-1320 is the external champion at 0.6303** (submission #19), +0.0013 over RT-1257 against a predicted +0.001416 — the second consecutive external point matching its internal estimate to ~0.0001. Its `external_score` blocker is cleared; the formal production anchor is still RT-1257 pending an explicit promotion. The residual CatBoost slot lane (CAT-411 / 412 / 414 / 415) remains closed, all four PARKED / NO_PROMOTION._
+_Last updated: 2026-09-04 (RT-1321 LS-KD KILL appended; no submission was pushed and the elected entry is unchanged). Previously 2026-09-03. **RT-1320 is the external champion at 0.6303** (submission #19), +0.0013 over RT-1257 against a predicted +0.001416 — the second consecutive external point matching its internal estimate to ~0.0001. Its `external_score` blocker is cleared; the formal production anchor is still RT-1257 pending an explicit promotion. The residual CatBoost slot lane (CAT-411 / 412 / 414 / 415) remains closed, all four PARKED / NO_PROMOTION._

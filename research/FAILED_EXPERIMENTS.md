@@ -2305,3 +2305,125 @@ repairs. This is an arbitration failure, not a training failure.
 **Retry warranted?** Not inside Deep Ensemble Frontier as preregistered. The
 negative H3 result gates against opening another neural detector lane unless a
 new retention mechanism is proposed and preregistered.
+
+---
+
+## RT-1321 / RT-1322 -- LS-KD lag-space characteristic-kernel discrepancy -- KILL (2026-09-04)
+
+**Mechanism.** `RT-1321` compares the JOINT law of short consecutive states
+`P(U_t, U_{t-1}, ..., U_{t-d+1})` against a frozen historical joint law using a
+Gaussian characteristic kernel approximated by Random Fourier Features. Per
+series, stream and depth: history-only median-distance bandwidth (192
+deterministic subsample rows, clamped), a frozen historical kernel mean
+`mu_H = mean phi(z)` over all history delay vectors, an online EWMA kernel mean
+`mu_t = (1-lambda) mu_{t-1} + lambda phi(z_t)` initialised at `mu_H` with
+`lambda = 1 - 2^(-1/h)`, and `D = ||mu_t - mu_H||^2` normalised by a history-only
+causal replay (median/MAD of `log1p D`, burn-in dropped). `R = 32`, seed `1321`
+(`RandomState`, SHA-pinned), depths `3/5/8`, half-lives `32/128`, streams =
+historical-ECDF PIT and AR(2)-residual historical-ECDF PIT. 28 columns: 12
+primitive channels plus 16 generic Page/peak/drawdown/persistence summaries over
+4 aggregate paths. `src/sbr/features/m19_lskd.py`, streaming twin
+`src/sbr/stream/s_m19_lskd.py`.
+
+**Preregistered deviation.** The commissioning brief named an AR(5) residual
+stream; the repository's canonical residual is AR(2) and there is exactly one
+residual pipeline, in both `make_ctx` and `StreamCtx`. Building a second would
+have been the "subtly different version of the AR residual normalization" the
+brief forbids and would have risked the bitwise `StreamCtx` parity contract.
+Declared in the preregistration before any label was evaluated.
+
+**Variant / control.** `RT-1322` is the mechanism-matched control: identical
+inputs, depths, half-lives, RFF dimension, frozen bandwidth, frozen historical
+kernel mean, history-only normalization, summary geometry, column count,
+training rows, seed, hyperparameters, objective, calibration and member weight.
+The ONLY difference is the feature map -- a coordinate-separable
+`phi_j(z) = sqrt(2/R)/sqrt(d) * sum_c cos(w_{j,c} z_c + b_{j,c})`, whose induced
+kernel `(1/d) sum_c k_1(z_c, z'_c)` is additive across lag coordinates and
+therefore carries nonlinear MARGINAL distribution information with no
+cross-coordinate interaction. Fully causal; not a shuffled or future-aware
+control. This is the point of the experiment: the candidate is measured against
+another nonlinear distribution-distance channel, not against a degraded clone.
+
+**Contract.** `PROTOCOL_CHAMPION_2026.md` addition contract, 9th exchangeable
+member on the frozen `RT-1320`, canonical five folds, learner = the repository's
+canonical production `pairwise_t` specialist configuration (RT-123R / the RT-413
+slot), 700k sampled rows, `seed=0`, fold-pure `SCDF_NSEEN`, equal weight.
+
+**Result.**
+
+| arm | mean OOF TS-AUC |
+|---|---:|
+| E0 = RT-1320 | 0.629253722 |
+| E1 = RT-1320 + matched marginal-kernel member | 0.628699976 |
+| E2 = RT-1320 + joint lag-kernel member | 0.629219268 |
+
+PRIMARY `E2-E1` = **+0.000519292**, 4/5 folds positive
+(+0.000481, +0.001158, **-0.000783**, +0.000962, +0.000779).
+SECONDARY `E2-E0` = **-0.000034454**.
+Control lift `E1-E0` = **-0.000553746**.
+Paired series bootstrap of `E2-E1` (400 reps): mean +0.000525,
+95% CI **[-0.000116, +0.001069]**, fraction positive 0.9425.
+
+Pair flow `E2` vs `E1`: whole dev -4, dominant cell +31, mature-vs-never -25,
+mature-vs-pre +17. Pair flow `E2` vs `E0`: whole dev +17, dominant cell -5,
+mature-vs-never -54, mature-vs-pre -32.
+
+Stage-1 block screen, fold 0: standalone whole-fold **0.542467** against
+RT-1320's 0.640281; dominant cell 0.557594 vs 0.680891; within-`t` rank
+correlation with RT-1320 **0.1623**; candidate/control correlation 0.3032;
+conditional AUC on exactly the same-`t` pairs RT-1320 inverts **0.4712**, below
+chance. The marginal control beat the joint candidate on **every** standalone
+cut and bought a larger dominant-cell perturbation ΔAUC at every preregistered
+epsilon (0.01/0.02/0.04).
+
+**Binding gate.** KILL. The preregistered fold-0 authorization gate failed on
+its first condition (`E2-E1 >= +0.0008` on fold 0; observed +0.000481), and the
+five-fold promotion gate failed four requirements: `E2-E1 >= +0.0011`
+(+0.000519), `E2-E0 > 0` (-0.000034), mature-vs-never nonnegative (-25), and
+paired-bootstrap support (CI contains zero). No alternate-partition leg was run;
+the preregistration makes it conditional on reaching threshold.
+
+**The decisive fact.** `E1-E0 = -0.000554`: adding an ordinary matched ninth
+LightGBM member *degrades* RT-1320. The nominally positive primary endpoint is
+therefore almost entirely "degrades the champion less than the control does" --
+the RT-1264/CSA-04 inflation mode `PROTOCOL_CHAMPION_2026.md` warns about, and
+the brief's failure mode 1. `E2-E0 ~ 0` states it directly. **Do not revive this
+on the "+0.00052 at 4/5 folds" figure.**
+
+**What this falsifies.** Avenue **G5** ("delay-embedded attractor separation",
+priority HIGH, previously unexecuted) and avenue **H3** (sequential kernel MMD,
+filed as collapsing into G5). It also answers the gap
+`NEGATIVE_RESULTS_INDEX.md` explicitly left open under `RT-1215`: kernel PCA and
+other explicitly nonlinear delay-embedding variants ARE now covered, and the
+answer is no. Together the two close the delay-embedding lane from both ends --
+the linear version (`RT-1215`) failed by redundancy at rho 0.886, the nonlinear
+characteristic-kernel version fails by having genuinely decorrelated information
+(rho 0.16) that does not repair pairs.
+
+**What this does not falsify.** It does not falsify every possible kernel
+construction: this is one preregistered design point (Gaussian RBF, R=32,
+d in {3,5,8}, half-lives 32/128, median-heuristic bandwidth, MMD-to-a-frozen-
+reference rather than a two-window scan). It does establish that the *joint vs
+marginal* distinction, isolated cleanly for the first time in this programme, is
+real and detectable and worth about nothing to this champion.
+
+**Causality and status.** Bitwise prefix invariance at `atol=0.0` on 12 real
+store series and 10 synthetic families; **batch/stream bitwise parity at
+`atol=0.0`** on 15 synthetic families and 30 real series; future-mutation,
+no-`tau`, no-`n_online`, deterministic replay, series-order independence and
+parallel-vs-serial build equality all pass; RFF basis SHA-pinned. RT-1320 was
+never modified and rebuilt read-only to 0.629253722 against the recorded
+0.6292537222254164. Streaming cost 211 us/observation, ~4 kB bounded state per
+series. **No final-10k fit, no production artifact, no Crunch test and NO
+SUBMISSION.**
+
+One implementation note worth carrying forward: the joint RFF projection must be
+accumulated as `d` explicit rank-1 updates rather than written `Z @ W.T`. BLAS
+`gemm` regroups the length-`d` inner sum differently for one row than for many
+and disagreed in the last ulp on ~25% of entries, which makes batch/stream
+parity unreachable. Any future module whose streaming twin must be bitwise
+should avoid a matmul over a short inner dimension.
+
+Report: `research/reports/rt1321_lskd/RT1321_RESULT.md` (with
+`RT1321_PREREG.md`, `STAGE1_ADJUDICATION.md`, `STAGE1_SCREEN.json`,
+`CONTRACT.json`).

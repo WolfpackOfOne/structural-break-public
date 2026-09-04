@@ -30,6 +30,8 @@ This file answers **what matters now**. It does not replace `RESULTS.csv` (the q
 | **RT-1260** | CAT-411 | Additional CatBoost slot replacement | RT-1257-relative adjudication: primary E2-E1 +0.001317358 (5/5) is driven by a degraded clone control; deployment E2-E0 is only +0.000133942 (2/5; 95% CI [-0.000455188, +0.000748957]). | **PARKED / NO_PROMOTION** |
 | **RT-1320** | RT-1257 + M1 Arm-C residual student (8th member) | **Current external champion** | **Official submission #19 TS-AUC 0.6303 (2026-09-03), vs RT-1257 0.6290 — realized +0.0013; vs RT-600 0.6268 — +0.0035.** The secondary endpoint E2-E0 against RT-1257 predicted **+0.001416**; realized **+0.0013**. Second consecutive external calibration point matching its internal estimate to ~0.0001 (RT-1257 predicted +0.0020/+0.0024, realized +0.0022). **Phase 1 four-partition gate PASSED 2026-09-01.** Addition contract vs RT-1257, E1 = RT-1257 + one matched added RT-403 clone. Mean E2-E1 across canonical/alt1/alt2/alt3 **+0.0017678**, 4/4 partitions positive, worst +0.0014825, none negative (rule: mean >= +0.0011, >0 on >=3 of 4, none < -0.0011). Per partition: canonical +0.0015159 (4/5), alt1 +0.0021146 (5/5), alt2 +0.0014825 (5/5), alt3 +0.0019582 (4/5). E1 control flat-to-negative on all four, so the RT-1264/CSA-04 inflation shape is absent. Fold 0 negative on both endpoints. Gain is a **never-break-cut** gain (never-break pair net +0.003409; pre-break +0.000363, ~0) - a false-positive repair mechanism, not a broad improvement. Causality passes at research and artifact level. | **EXTERNAL_CHAMPION — promoted 2026-09-03 on submission #19. `external_score` blocker CLEARED. Formal production-anchor promotion is a separate explicit action, not yet taken.** |
 | **M1 student** | Arm-C residual student, the 8th member of RT-1320 | Added member of the current external champion | Carried into the champion by submission #19 (0.6303). Its lift over the matched added clone is RT-1320's primary endpoint above. | **ACTIVE_COMPONENT — since 2026-09-03** |
+| **RT-1321** | LS-KD joint lag-space characteristic-kernel discrepancy (`m19_lskd`), proposed 9th member of RT-1320 | Candidate ninth member; executes avenue G5 and the "kernel PCA / explicitly nonlinear" gap RT-1215 left open | Addition contract on RT-1320: E0 0.629253722, E1 0.628699976, E2 0.629219268. Primary **E2-E1 +0.000519292** (4/5) against a +0.0011 floor; deployment **E2-E0 -0.000034454**; paired bootstrap 95% CI **[-0.000116, +0.001069]** contains zero. Block standalone 0.542467 vs the incumbent's 0.640281; within-`t` rho **0.16**; conditional AUC on the pairs RT-1320 inverts **0.4712, below chance**. Pair flow E2 vs E0: dominant -5, mature-vs-never -54, mature-vs-pre -32. Full causality suite passes including batch/stream bitwise parity. | **KILL** — no final fit, no artifact, no submission |
+| **RT-1322** | LS-KD matched marginal-kernel control (`m19_lskm`) | The `E1` arm of RT-1321's addition contract; also a standalone finding about ensemble saturation | **E1-E0 = -0.000553746**: an ordinary matched ninth LightGBM member *degrades* RT-1320, which is why RT-1321's positive primary endpoint must not be read as a near-miss (RT-1264/CSA-04 inflation mode). The control block also beat the joint candidate on every standalone cut (fold-0 whole 0.544396 vs 0.542467; dominant cell 0.567139 vs 0.557594). | **CONTROL** |
 | **RT-995 / T2** | Teacher-distilled causal LightGBM | Privileged-information student | Strong standalone improvement (~+0.00943 vs matched T0) but final ensemble marginal vs matched seed clone only ~+0.000237; mostly redundant. | **PARKED** |
 | **RT-1265** | CSA-04R corrected reanalysis identity | Corrected hybrid-selection result | Fixed E2-E0 + preregistered parsimony selects k*=2 = CAT-413 + CAT-300, exactly RT-1257. `delta_vs_RT1257=0`; no new OOF vector. | **SUPERSEDING_ANALYSIS / NOT_DISTINGUISHABLE** |
 | **RT-1264** | Original CSA-04 five-slot hybrid | Historical best-k result under flawed selection endpoint | Original E2-E1 endpoint was contaminated by worsening clone control as k grew. Descriptive 63-subset appendix cannot select a champion. | **SUPERSEDED BY RT-1265** |
@@ -70,6 +72,25 @@ RT-1257 is the current **external champion** at 0.6290. RT-600 remains the forma
 Serious new candidates should be evaluated for **marginal information relative to RT-1257**, not just standalone AUC. RT-600 remains a permanent homogeneous LightGBM reference. For a candidate C, prefer a matched test of E0=RT-1257, E1=RT-1257 with an exchangeable matched control, and E2=RT-1257 with C, with E2-E1 as the primary endpoint and E2-E0, fold consistency, pair flow, dominant-cell repair, mature-vs-never repair, correlation, runtime, causality, and deployment complexity as supporting evidence.
 
 First application of this rule to the four residual CSA-04 slot candidates is filed in `research/reports/deep_ensemble_frontier_2026/local/RT1257_SLOT_ADJUDICATION.md`.
+
+**Amended 2026-09-04 after RT-1321.** The champion is now RT-1320, so the
+addition contract for a new candidate is `E0 = RT-1320`, `E1 = RT-1320 + matched
+control`, `E2 = RT-1320 + candidate`. Two requirements are now explicit:
+
+1. **Report `E1 - E0` as a first-class number.** RT-1321 measured it at
+   **-0.000554** — an ordinary matched ninth LightGBM member makes RT-1320
+   *worse*. A primary endpoint of `+0.00052` against that control is "degrades
+   the champion less than the control does", not a marginal gain, and `E2 - E0`
+   said so directly (-0.000034). This is the third time in the programme that a
+   degrading control has manufactured a positive-looking primary
+   (RT-1260/CAT-411, RT-1264/CSA-04, RT-1321).
+2. **A matched control should be mechanism-matched, not a seed clone, whenever
+   the hypothesis names a mechanism.** RT-1321's control shared its inputs,
+   depths, half-lives, RFF dimension, bandwidth, historical reference,
+   normalization and column count and differed only in whether the kernel map was
+   joint or coordinate-separable. That is what made "joint lag structure adds
+   nothing beyond nonlinear marginal structure" a measurable statement rather
+   than a rhetorical one.
 
 ## RT-1320 — what it would take to become an ACTIVE_COMPONENT
 
