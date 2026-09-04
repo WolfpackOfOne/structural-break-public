@@ -25,16 +25,21 @@ repair mechanism, not a broad improvement, and should not be described as one.
 **Formal production anchor is unchanged.** RT-1257 remains the anchor; promoting
 RT-1320 to anchor is a separate explicit action that has not been taken.
 
-> ## ⚠ OUTSTANDING ACTION — SELECT THE SUBMISSION
+> ## ✅ SUBMISSION SELECTED — #19 / RT-1320, confirmed by the owner 2026-09-04
 >
 > **0.6303 is a PUBLIC-set score. It does not decide prizes.** At close, only each
 > participant's **selected** submission is scored once on the unseen private set,
 > and selection is **not** automatically the latest submission
 > (`PLATFORM_CONSTRAINTS.md` §0).
 >
-> **Verify that submission #19 / RT-1320 is explicitly selected.** An unset or
-> stale selection forfeits up to 0.0035 — more than every remaining modelling
-> gain combined. This is the highest-leverage open item in the project.
+> Submission **#19 / RT-1320** is the elected entry (owner-reported). The
+> highest-leverage open item in the project is closed.
+>
+> **STANDING RULE — any further submission re-opens this.** Electing a new entry
+> is a separate manual act. If a later candidate is submitted, the selection must
+> be revisited *and* re-confirmed; and it should only displace RT-1320 if the dev
+> folds and the public score agree. A candidate that is flat on dev and strong on
+> public is the signature of public-set overfitting and must not be elected.
 >
 > Expect the private *level* to come in below 0.6303 (`FINAL_ARCHITECTURE_FREEZE.md`
 > §4 base case ~0.615). The **delta** is what transfers, and RT-1320's delta over
