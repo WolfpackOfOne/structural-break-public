@@ -58,3 +58,15 @@ def skip_on_missing_store(fn, *args, **kwargs):
         return fn(*args, **kwargs)
     except FileNotFoundError as e:
         pytest.skip(f"real competition-data store unavailable: {e}")
+
+
+@pytest.fixture(scope="session")
+def store():
+    """The competition store, skipped when the cache is not present."""
+    import os
+    root = os.environ.get("SBR_ROOT", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    path = os.path.join(root, "cache", "store")
+    if not os.path.exists(os.path.join(path, "meta.parquet")):
+        pytest.skip(f"no store cache at {path}")
+    from sbr.store import load_store
+    return load_store(path)

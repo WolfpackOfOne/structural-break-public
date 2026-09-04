@@ -174,8 +174,25 @@ def bandwidth(Zh: np.ndarray, d: int) -> float:
 
 
 def phi_joint(Z: np.ndarray, d: int, sigma: float) -> np.ndarray:
-    """sqrt(2/R) cos(omega_j' z + b_j) over the JOINT lag vector.  (n, R)"""
-    return SQRT2R * np.cos(Z @ (W_BASE[d].T / sigma) + B_JOINT[d][None, :])
+    """sqrt(2/R) cos(omega_j' z + b_j) over the JOINT lag vector.  (n, R)
+
+    The projection is accumulated as ``d`` explicit rank-1 updates rather than
+    written ``Z @ W.T``.  That is deliberate and load-bearing: BLAS ``gemm``
+    regroups the length-``d`` inner sum differently depending on how many rows
+    it is given, so the matrix form disagrees with a one-row call in the last
+    ulp on ~25% of entries (measured: `test_m19_lskd.py::
+    test_row_batch_projection_is_bitwise_identical`).  A streaming module sees
+    exactly one row per step, so with the matrix form batch/stream parity would
+    be unreachable, and this repository has already had a single-ulp feature
+    defect move a shipped prediction.  The explicit accumulation is elementwise,
+    therefore independent of the row count, therefore bitwise reproducible from
+    a stream.
+    """
+    acc = np.repeat(B_JOINT[d][None, :], Z.shape[0], axis=0)
+    Wt = W_BASE[d].T / sigma                      # (d, R)
+    for k in range(d):
+        acc += Z[:, k:k + 1] * Wt[k]
+    return SQRT2R * np.cos(acc)
 
 
 def phi_marginal(Z: np.ndarray, d: int, sigma: float) -> np.ndarray:
@@ -187,33 +204,49 @@ def phi_marginal(Z: np.ndarray, d: int, sigma: float) -> np.ndarray:
     cross-coordinate interaction.
     """
     A = Z[:, None, :] * (W_BASE[d][None, :, :] / sigma) + B_COORD[d][None, :, :]
+    # sum over the last (contiguous, length-d) axis: numpy uses the same
+    # sequential order regardless of the leading dimension, so this is already
+    # row-count independent.  Pinned by the same parity test as `phi_joint`.
     return (SQRT2R / np.sqrt(d)) * np.cos(A).sum(axis=2)
 
 
-def _ewma_discrepancy(P: np.ndarray, mu_H: np.ndarray, lm: float) -> np.ndarray:
-    """||mu_t - mu_H||^2 for mu_t = (1-lm) mu_{t-1} + lm phi_t, mu_{-1} = mu_H.
+def _ewma_run(P: np.ndarray, mu: np.ndarray, mu_H: np.ndarray, lm: float,
+              out: np.ndarray) -> None:
+    """Advance the EWMA over the rows of ``P``, filling ``out`` with ||mu-mu_H||^2.
 
-    Written as an explicit sequential recursion, not a closed form: that is what
-    makes the batch module bitwise identical to a prefix rebuild and to the
-    streaming implementation.
+    ``mu`` is updated IN PLACE, so the batch path (one call over the whole
+    online segment) and the streaming path (one call per observation, carrying
+    ``mu`` across calls) execute the identical arithmetic in the identical
+    order.  There is one definition of the recursion and no second
+    implementation to drift.  The squared norm is accumulated with an explicit
+    scalar loop rather than ``e @ e`` for the same reason ``phi_joint`` avoids
+    ``gemm``: BLAS ``ddot`` may regroup the sum.
     """
     n = P.shape[0]
-    out = np.empty(n, dtype=np.float64)
-    mu = mu_H.copy()
+    k = mu.shape[0]
     one = 1.0 - lm
     for i in range(n):
-        mu = one * mu + lm * P[i]
-        e = mu - mu_H
-        out[i] = float(e @ e)
-    return out
+        s = 0.0
+        for j in range(k):
+            mu[j] = one * mu[j] + lm * P[i, j]
+            e = mu[j] - mu_H[j]
+            s += e * e
+        out[i] = s
 
 
 try:                                                     # pragma: no cover
     from numba import njit
 
-    _ewma_discrepancy = njit(cache=True, fastmath=False)(_ewma_discrepancy)
+    _ewma_run = njit(cache=True, fastmath=False)(_ewma_run)
 except Exception:                                        # pragma: no cover
     pass
+
+
+def _ewma_discrepancy(P: np.ndarray, mu_H: np.ndarray, lm: float) -> np.ndarray:
+    """Batch convenience wrapper: run the recursion from mu = mu_H."""
+    out = np.empty(P.shape[0], dtype=np.float64)
+    _ewma_run(np.ascontiguousarray(P), mu_H.copy(), mu_H, lm, out)
+    return out
 
 
 def robust_center_scale(D_hist: np.ndarray, h: int) -> tuple[float, float]:
@@ -250,26 +283,37 @@ def _page(v: np.ndarray, k: float = PAGE_DRIFT) -> np.ndarray:
 
 
 # ----------------------------------------------------------------- the streams
-def _streams(ctx) -> dict[str, tuple[np.ndarray, np.ndarray]]:
-    """(historical PIT, online PIT) for each input stream.
+def hist_streams(ctx) -> tuple[dict[str, np.ndarray], np.ndarray | None]:
+    """Historical PIT of each input stream, plus the residual PIT reference.
 
-    Both are the repository's own constructions: `HistParams.pit` via
-    `ctx.tr["u"]`, and `m02_dist`'s AR-residual PIT block reproduced by importing
-    that module's `_pit_against` -- there is no second definition of either.
+    Split out of `_streams` so the STREAMING module can fit its history without
+    also evaluating the (not yet populated) online buffers -- there is still one
+    definition of each historical object, which is what parity depends on.
+
+    Both constructions are the repository's own: `HistParams.pit` via
+    `ctx.hist_tr["u"]`, and `m02_dist`'s AR-residual PIT block reproduced by
+    importing that module's `_pit_against`.  Availability is decided by
+    `nh - p_ar > 50`, a property of the HISTORY alone, so it can never depend on
+    the online segment.
     """
-    uo = np.asarray(ctx.tr["u"], dtype=np.float64)
     uh = np.asarray(ctx.hist_tr["u"], dtype=np.float64)
     p_ar = len(ctx.hp.ar_coef)
     nh = len(ctx.hist)
-    if "res_mean" in ctx.tr and nh - p_ar > 50:
+    if "res_mean" in ctx.hist_tr and nh - p_ar > 50:
         rh = np.asarray(ctx.hist_tr["res_mean"], dtype=np.float64)[p_ar:]
-        ro = np.asarray(ctx.tr["res_mean"], dtype=np.float64)
         sref = np.sort(rh)
-        urh = _pit_against(sref, rh)
-        uro = _pit_against(sref, ro)
-    else:
-        urh, uro = uh, uo
-    return {"u": (uh, uo), "r": (urh, uro)}
+        return {"u": uh, "r": _pit_against(sref, rh)}, sref
+    return {"u": uh, "r": uh}, None
+
+
+def _streams(ctx) -> dict[str, tuple[np.ndarray, np.ndarray]]:
+    """(historical PIT, online PIT) for each input stream."""
+    H, sref = hist_streams(ctx)
+    uo = np.asarray(ctx.tr["u"], dtype=np.float64)
+    if sref is None:
+        return {"u": (H["u"], uo), "r": (H["r"], uo)}
+    uro = _pit_against(sref, np.asarray(ctx.tr["res_mean"], dtype=np.float64))
+    return {"u": (H["u"], uo), "r": (H["r"], uro)}
 
 
 def _cols() -> list[str]:
