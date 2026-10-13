@@ -1,190 +1,143 @@
-# Structural Break Detection — 2026 Real-Time Edition
+# Structural Break Detection — Real-Time Edition
 
-[![CI](https://github.com/WolfpackOfOne/structural-break/actions/workflows/ci.yml/badge.svg)](https://github.com/WolfpackOfOne/structural-break/actions/workflows/ci.yml)
+[![CI](https://github.com/WolfpackOfOne/structural-break-public/actions/workflows/ci.yml/badge.svg)](https://github.com/WolfpackOfOne/structural-break-public/actions/workflows/ci.yml)
 
-Research and deployment repository for the **2026 ADIA Lab / CrunchDAO Structural Break Challenge — Real-Time Edition**.
+Research and deployment work for the [**ADIA Lab Structural Break Challenge: Real-Time Edition**](https://hub.crunchdao.com/competitions/structural-break-real-time), hosted by CrunchDAO.
 
-The system must emit a continuous structural-break score at each online time step using only information available at that prefix. Inference is causal, streaming, and independent across series.
+The system emits a continuous structural-break score at each online time step using only information available at that prefix. Inference must be causal, streaming, and independent across series; future-data leakage is a correctness failure, not a modelling choice.
 
-## Current result
+## Results and repository status
 
-| System | Role | Official TS-AUC |
-| --- | --- | ---: |
-| **RT-1257** | **Current external champion** | **0.6290** |
-| RT-600 | Formal production anchor / pure-LightGBM reference | 0.6268 |
-| Difference | RT-1257 vs RT-600 | **+0.0022** |
+| System | Role | Public-set TS-AUC | Status date |
+| --- | --- | ---: | --- |
+| **RT-1320** | Best public-set score recorded in this repository | **0.6303** | 2026-09-03 |
+| **RT-1257** | Formal production anchor | **0.6290** | 2026-09-02 |
+| RT-600 | Homogeneous-LightGBM reference | 0.6268 | — |
 
-RT-1257 is the first recorded external improvement beyond the RT-600 anchor in this research program. It was selected using internal evidence before the external score was known; the leaderboard result is treated as validation, not as a tuning oracle.
+RT-1320 added an eighth residual-student member to RT-1257 and improved this program's recorded public-set score by **+0.0013**. Submission #19 was selected on 2026-09-04. The 0.6303 value is a public-set score, not the competition's final private-set result.
 
-**Production-status nuance:** RT-1257 is the best externally measured deployable system, but RT-600 remains the formal production anchor during consolidation. The build/manifest source gap has been verified as packaging/dependency/report-only at the tracked-code level, a fresh local post-build Crunch test passed on 2026-08-31 against entrypoint SHA `05eafb66f4589f5b426f4af43779f428f7a90f2d64b423530d6f315a798e888b`, and PR #14 CI passed. Formal RT-1257 production promotion is deferred to a separate owner tag/status action.
+The default `main` branch is an earlier consolidated snapshot. It records RT-1320 as a research candidate, but predates RT-1257's formal production promotion on 2026-09-02 and RT-1320's public score and submission selection on 2026-09-03–04. Those later status changes are documented on public branches:
 
-## RT-1257 architecture
+- [RT-1320 external-champion status](https://github.com/WolfpackOfOne/structural-break-public/blob/engineering/rt1320-promotion-prep/research/STATUS.md)
+- [RT-1257 production-promotion status](https://github.com/WolfpackOfOne/structural-break-public/blob/production/rt1257/research/STATUS.md)
 
-RT-1257 preserves the seven-slot RT-600 specialist architecture and changes exactly two learner implementations:
+## Architecture
+
+The `main` snapshot contains the RT-1257 seven-member specialist ensemble:
 
 ```text
 500 causal streaming features
         |
-        +-- RT-1255 / CAT-300     (replaces RT-300 LightGBM)
-        +-- RT-410 LightGBM
-        +-- RT-411 LightGBM
-        +-- RT-412 LightGBM
-        +-- RT-1254 / CAT-413     (replaces RT-413 LightGBM)
-        +-- RT-414 LightGBM
-        +-- RT-415 LightGBM
+        +-- five LightGBM specialists
+        +-- two CatBoost specialists
         |
-fold-pure smooth time-conditional CDF calibration
+fold-pure, time-conditional CDF calibration
         |
       equal blend
         |
       RT-1257
-        |
-official Crunch TS-AUC 0.6290
 ```
 
-CAT-300 and CAT-413 are replacement slots inside the seven-member system; they are not extra eighth/ninth members.
+RT-1320 retains that system and adds a residual-student model as an eighth member. The feature bank covers historical-null, sequential-memory, distributional, dynamic/dependence, residual, location-related, and Bayesian modules under `src/sbr/features/`.
 
-The mature causal feature bank contains 500 columns across the core historical-null, sequential-memory, distributional, dynamic/dependence, residual, location-related, and Bayesian modules under `src/sbr/features/`.
+## My role
 
-## Research survivors
+I defined the system objectives, causal constraints, experiment protocol, review gates, and promotion decisions. I used coding agents for implementation and accepted work only after it passed the relevant tests and evidence gates.
 
-The corrected current-state model set is maintained in [`research/MODEL_REGISTRY.md`](research/MODEL_REGISTRY.md).
+## Engineering evidence
 
-The main research-alive candidates beyond RT-1257 are:
+- **Causal streaming controls:** batch/stream parity checks and dedicated tests against `tau` and `n_online` leakage (`tests/test_stream_*`, `tests/test_no_tau_leakage.py`, and `tests/test_no_n_online_leakage.py`).
+- **Testing and CI:** [GitHub Actions](.github/workflows/ci.yml) runs ruff, research-ledger hygiene checks, and pytest; a separate [research-hygiene workflow](.github/workflows/research-hygiene.yml) protects experiment IDs.
+- **Experiment governance:** matched-control ensemble tests, an append-only [results ledger](research/RESULTS.csv), a [degrees-of-freedom ledger](research/RDOF_LEDGER.md), and explicit model classifications.
+- **Reproducibility metadata:** versioned configuration; fold seeds, summaries, and hashes; dependency records; build manifests; and artifact hashes.
+- **Deployment provenance:** tracked build tooling in [`research/scripts/build_submission.py`](research/scripts/build_submission.py), RT-1257 build metadata in [`submissions/RT1257_deployable.build.json`](submissions/RT1257_deployable.build.json), and qualification evidence under [`engineering/reports/rt1257_deployment/`](engineering/reports/rt1257_deployment/).
+- **Negative-result preservation:** failed, parked, and superseded approaches remain searchable through the [negative-results index](research/NEGATIVE_RESULTS_INDEX.md) and [lessons learned](research/LESSONS_LEARNED.md).
 
-- **RT-1261 / CAT-412** — strongest residual single-slot candidate. A three-slot CAT-413 + CAT-300 + CAT-412 composition is nominally only +0.000338 over RT-1257, below the 0.0011 paired-bootstrap noise floor.
-- **RT-1263 / CAT-415** — positive individual evidence, no demonstrated corrected multi-slot improvement over RT-1257.
-- **RT-1262 / CAT-414** — same status.
-- **RT-1260 / CAT-411** — survives the original individual gate, with weaker corrected evidence.
-- **RT-995 / T2** — parked rather than killed: strong standalone teacher-distillation signal, but mostly redundant when integrated with the ensemble.
+## Reproducibility boundaries
 
-### Important correction: RT-1264 is not live
+Raw competition data, large feature caches, out-of-fold arrays, trained-model directories, and the generated RT-1257/RT-1320 deployment entrypoints and payloads are not distributed in this public repository. The repository does include the earlier RT-600 deployment notebook and Python entrypoint under `submissions/`, together with their build metadata, for audit and provenance.
 
-RT-1264 was the original five-slot CatBoost best-k hybrid. The later CSA-04R reanalysis found that its selection endpoint was inflated by deterioration in the matched clone control as k grew. The corrected fixed E2-E0 analysis is registered as **RT-1265** and selects k=2: CAT-413 + CAT-300, exactly RT-1257.
+The exact permanent fold-assignment artifact is also not distributed. The repository records its seeds, summaries, and hashes; exact reproduction requires the external artifact matching the recorded SHA-256. The tracked code and metadata support audit and reconstruction, but the public clone alone cannot reproduce the exact submitted deployment artifact.
 
-RT-1264 remains immutable historical evidence but is classified **SUPERSEDED**, not as a current upside candidate.
+## Quickstart
 
-## What did not work
+### Compact baseline and focused tests
 
-This repository deliberately preserves negative results. Start with:
-
-- [`research/NEGATIVE_RESULTS_INDEX.md`](research/NEGATIVE_RESULTS_INDEX.md) — fast searchable summary.
-- [`research/FAILED_EXPERIMENTS.md`](research/FAILED_EXPERIMENTS.md) — detailed hypothesis, result, why-it-failed, and retry guidance.
-- [`research/LESSONS_LEARNED.md`](research/LESSONS_LEARNED.md) — cross-program synthesis.
-
-Major completed negative directions include:
-
-- TabM and RealMLP full five-fold GPU arms: **KILL** at the binding ensemble-marginal endpoint.
-- CAT-410 replacement: **KILL**.
-- Causal Representation Frontier: no surviving model.
-- Leaderboard Alpha: no surviving mechanism.
-- Wave 8 future-aware transfer: all five mechanisms killed.
-- New Avenues executed pilot sweeps: no confirmation candidate.
-- Many intuitive sequential/trend/threshold summaries: redundant or harmful conditional on the mature bank.
-
-### TabM / RealMLP experiment IDs
-
-The repository contains two ID generations that must not be misread as two independent KILL tests:
-
-- **RT-1250 TabM / RT-1252 RealMLP** — original Learner Diversity arms, recorded **INFEASIBLE** under their frozen original compute contract; they did not produce binding predictive scores.
-- **RT-1258 TabM / RT-1259 RealMLP** — distinct fresh GPU-authorized arms after RTX 4090 benchmarking removed the compute blocker without shrinking the intended full-scale configurations. These completed five folds and are the binding **KILL** results.
-
-## Research navigation
-
-Start here:
-
-- [`research/STATUS.md`](research/STATUS.md) — concise current state.
-- [`research/MODEL_REGISTRY.md`](research/MODEL_REGISTRY.md) — models that matter now.
-- [`research/INDEX.md`](research/INDEX.md) — research-program table of contents.
-- [`research/RESULTS.csv`](research/RESULTS.csv) — quantitative experiment ledger.
-- [`research/EXPERIMENT_ID_MAP.md`](research/EXPERIMENT_ID_MAP.md) — ID/provenance map.
-- [`research/RDOF_LEDGER.md`](research/RDOF_LEDGER.md) — degrees-of-freedom accounting.
-- [`research/NEGATIVE_RESULTS_INDEX.md`](research/NEGATIVE_RESULTS_INDEX.md) — failed-idea lookup.
-- [`research/LESSONS_LEARNED.md`](research/LESSONS_LEARNED.md) — synthesis.
-
-The exact pre-consolidation branch and model state is preserved under [`research/archive/2026-08-30/`](research/archive/2026-08-30/).
-
-## Research standard going forward
-
-The primary question is no longer simply “does this model have good standalone TS-AUC?”
-
-It is:
-
-> **Does this candidate add complementary information to RT-1257?**
-
-For serious candidates, prefer a matched ensemble test:
-
-```text
-C0 = candidate standalone
-C1 = matched control standalone
-
-E0 = RT-1257
-E1 = RT-1257 with an exchangeable matched control
-E2 = RT-1257 with the candidate
-
-primary endpoint: E2 - E1
-secondary:        E2 - E0
-```
-
-Also examine fold consistency, pair-flow repair/damage, dominant-cell behavior, mature-vs-never behavior, within-t correlation, causality, runtime, memory, and deployment complexity.
-
-RT-600 remains a permanent homogeneous-LightGBM reference because it isolates the value of learner-family diversity.
-
-## Repository layout
-
-```text
-structural-break/
-├── src/
-│   ├── sbr/                         # 2026 causal research/production pipeline
-│   └── structural_break/            # original compact baseline package
-├── research/
-│   ├── STATUS.md
-│   ├── MODEL_REGISTRY.md
-│   ├── INDEX.md
-│   ├── RESULTS.csv
-│   ├── EXPERIMENT_ID_MAP.md
-│   ├── NEGATIVE_RESULTS_INDEX.md
-│   ├── FAILED_EXPERIMENTS.md
-│   ├── LESSONS_LEARNED.md
-│   ├── RDOF_LEDGER.md
-│   ├── reports/
-│   ├── scripts/
-│   └── archive/
-├── engineering/
-│   └── reports/                     # production/deployment evidence
-├── submissions/                     # reproducible submission builders/artifact metadata
-├── tests/
-├── docs/
-└── .github/workflows/
-```
-
-The original Random Forest / CUSUM / rolling-z / PELT package remains in the repository as an accessible baseline and general change-point example. It is no longer the headline competition architecture.
-
-## Reproducibility and artifact policy
-
-Raw competition data, large feature caches, OOF arrays, trained-model directories, and rebuildable generated payloads are not intended to be committed merely for convenience. Reproducibility is based on versioned code/configuration, permanent fold assignments, manifests/hashes, final reports, and explicit experiment provenance.
-
-Historical experiment rows are not rewritten when a later analysis changes their interpretation. Corrections are recorded in the ID map, model registry, reports, and later ledger entries while the original measurement remains intact.
-
-## Consolidation status
-
-The research-to-production consolidation is being validated on `release/2026-research-consolidation`. `main` must not move until the consolidation report's merge gates are satisfied. See [`docs/MAIN_CONSOLIDATION_REPORT_2026.md`](docs/MAIN_CONSOLIDATION_REPORT_2026.md).
-
-## Development
-
-Create an environment and install the core/development dependencies:
+The following runs the original Random Forest, CUSUM, rolling-z, and PELT examples plus their focused 52-test subset:
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements-dev.txt
 pip install -e .
+pytest tests/test_detectors.py tests/test_cli.py tests/test_features.py \
+  tests/test_models.py tests/test_change_point_eval.py \
+  tests/test_prediction_output.py tests/test_visualization.py
+python scripts/compare_methods.py --dataset mean_shift --output outputs/method_comparison.csv
 ```
 
-Optional GPU-tabular dependencies for reproducing the completed RT-1258/RT-1259 research are isolated in:
+The comparison and baseline-training examples use small synthetic samples committed under `data/`:
 
 ```bash
-pip install -r research/requirements-gpu-tabular.txt
+python scripts/baseline.py \
+  --train data/train.csv \
+  --test data/test.csv \
+  --output outputs/submission.csv
 ```
 
-Run repository checks with the commands defined in `.github/workflows/ci.yml`. Research that requires the official competition store/caches must not silently substitute synthetic data for the binding result; such tests should explicitly skip or report missing external data.
+Official competition data must be obtained separately and adapted to the schema described in [`docs/data.md`](docs/data.md).
+
+### Research checks used by CI
+
+On macOS, install the OpenMP runtime before importing LightGBM:
+
+```bash
+brew install libomp
+```
+
+The following reproduces the GitHub Actions checks:
+
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements-dev.txt
+pip install -r requirements-research.txt
+pip install -e .
+python -c "import lightgbm, numba, pyarrow, catboost; import sbr"
+ruff check src tests scripts
+python research/scripts/check_research_hygiene.py
+pytest -q
+```
+
+The frozen RT-1257 deployment environment is recorded separately in [`requirements-rt1257.txt`](requirements-rt1257.txt) and was built with Python 3.11.6. CI does not install that pinned file. Research requiring the official competition store or caches must explicitly skip or report missing external data rather than substitute synthetic data for a binding result.
+
+## Research lessons
+
+- Standalone model quality was not enough; candidates had to add complementary information to the existing ensemble against a matched control.
+- Several plausible deep-learning, transfer, and feature directions failed their binding ensemble-marginal tests and were preserved rather than hidden.
+- Internal estimates closely anticipated the external improvements for RT-1257 and RT-1320, supporting the experiment protocol without treating the public leaderboard as a tuning oracle.
+
+## Research navigation
+
+The `main`-branch research record is preserved as an auditable historical snapshot:
+
+- [`research/STATUS.md`](research/STATUS.md) — snapshot status
+- [`research/MODEL_REGISTRY.md`](research/MODEL_REGISTRY.md) — model classifications
+- [`research/INDEX.md`](research/INDEX.md) — research table of contents
+- [`research/RESULTS.csv`](research/RESULTS.csv) — experiment ledger
+- [`research/EXPERIMENT_ID_MAP.md`](research/EXPERIMENT_ID_MAP.md) — experiment provenance
+- [`research/FAILED_EXPERIMENTS.md`](research/FAILED_EXPERIMENTS.md) — detailed negative evidence
+- [`docs/MAIN_CONSOLIDATION_REPORT_2026.md`](docs/MAIN_CONSOLIDATION_REPORT_2026.md) — consolidation provenance
+
+## Repository layout
+
+```text
+structural-break-public/
+├── src/sbr/                  # causal research and streaming pipeline
+├── src/structural_break/     # compact baseline package
+├── research/                 # protocols, ledgers, reports, and scripts
+├── engineering/reports/      # deployment and reliability evidence
+├── submissions/              # selected historical deployment artifacts and build metadata
+├── tests/
+├── docs/
+└── .github/workflows/
+```

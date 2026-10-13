@@ -19,7 +19,7 @@ dependencies = [
 
 [project.optional-dependencies]
 # The 2026 Real-Time research pipeline (src/sbr + research/). Kept out of the
-# core dependency set so the baseline package stays light.
+# core package dependencies, which cover only the compact baseline.
 research = [
     "pyarrow>=12",
     "lightgbm>=4.0",
@@ -27,7 +27,7 @@ research = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/WolfpackOfOne/structural-break"
+Homepage = "https://github.com/WolfpackOfOne/structural-break-public"
 
 [tool.setuptools.packages.find]
 where = ["src"]
